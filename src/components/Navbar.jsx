@@ -44,14 +44,12 @@ const Navbar = () => {
                 <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Previous Year</Link>
                 <Link to="/videos" className={isActive('/videos')}><i className="fas fa-video"></i> Study Videos</Link>
                 <Link to="/courses" className={isActive('/courses')}><i className="fas fa-book"></i> Courses</Link>
-                <Link to="/courses" className={isActive('/courses')}><i className="fas fa-book"></i> Courses</Link>
                 <Link to="/blog" className={isActive('/blog')}><i className="fas fa-blog"></i> Blog</Link>
                 {localStorage.getItem('userRole') === 'ADMIN' && (
-                    <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Dashboard</Link>
+                    <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin Dashboard</Link>
                 )}
-
-                {localStorage.getItem('userRole') === 'ADMIN' && (
-                    <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Dashboard</Link>
+                {localStorage.getItem('authToken') && localStorage.getItem('userRole') === 'USER' && (
+                    <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-tachometer-alt"></i> My Dashboard</Link>
                 )}
             </div>
 
