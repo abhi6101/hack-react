@@ -22,6 +22,8 @@ const AdminDashboard = () => {
     const token = localStorage.getItem('authToken');
     const role = localStorage.getItem('userRole');
 
+    const [activeTab, setActiveTab] = useState('dashboard');
+
     useEffect(() => {
         if (!token || role !== 'ADMIN') {
             alert('Access Denied. Admins only.');
@@ -118,6 +120,162 @@ const AdminDashboard = () => {
         }
     };
 
+    const renderContent = () => {
+        switch (activeTab) {
+            case 'dashboard':
+                return (
+                    <div className="dashboard-overview">
+                        <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
+                                <i className="fas fa-briefcase" style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                                <h3>Total Jobs</h3>
+                                <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{jobs.length}</p>
+                            </div>
+                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
+                                <i className="fas fa-users" style={{ fontSize: '2.5rem', color: 'var(--accent)', marginBottom: '1rem' }}></i>
+                                <h3>Total Users</h3>
+                                <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{users.length}</p>
+                            </div>
+                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
+                                <i className="fas fa-user-shield" style={{ fontSize: '2.5rem', color: '#28a745', marginBottom: '1rem' }}></i>
+                                <h3>Admin Status</h3>
+                                <p style={{ fontSize: '1.2rem', color: '#28a745' }}>Active</p>
+                            </div>
+                        </div>
+
+                        <div className="recent-activity">
+                            <h2>Recent Jobs</h2>
+                            <div className="table-responsive surface-glow" style={{ marginTop: '1rem' }}>
+                                <table className="table">
+                                    <thead>
+                                        <tr><th>Title</th><th>Company</th><th>Date</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        {jobs.slice(0, 5).map(job => (
+                                            <tr key={job.id}>
+                                                <td>{job.title}</td>
+                                                <td>{job.company_name}</td>
+                                                <td>{new Date(job.last_date).toLocaleDateString()}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case 'jobs':
+                return (
+                    <>
+                        <section id="jobs-section" className="card surface-glow">
+                            <div className="card-header">
+                                <h3><i className="fas fa-plus-circle"></i> Post New Job</h3>
+                            </div>
+                            {message.text && (
+                                <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ display: 'flex' }}>
+                                    {message.text}
+                                </div>
+                            )}
+                            <form id="jobForm" onSubmit={handleSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label htmlFor="jobTitle">Job Title</label>
+                                        <input type="text" id="jobTitle" className="form-control" required value={formData.jobTitle} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="companyName">Company Name</label>
+                                        <input type="text" id="companyName" className="form-control" required value={formData.companyName} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label htmlFor="jobDescription">Job Description</label>
+                                        <textarea id="jobDescription" className="form-control" rows="4" required value={formData.jobDescription} onChange={handleInputChange}></textarea>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="applyLink">Apply Link</label>
+                                        <input type="url" id="applyLink" className="form-control" required value={formData.applyLink} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="lastDate">Last Date to Apply</label>
+                                        <input type="date" id="lastDate" className="form-control" required value={formData.lastDate} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="salary">Salary (₹ per annum)</label>
+                                        <input type="number" id="salary" className="form-control" min="0" required value={formData.salary} onChange={handleInputChange} />
+                                    </div>
+                                </div>
+                                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Post Job</button>
+                            </form>
+                        </section>
+
+                        <section className="card surface-glow">
+                            <div className="card-header">
+                                <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
+                            </div>
+                            {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
+                            {!loadingJobs && (
+                                <div className="table-responsive">
+                                    {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
+                                        <table id="jobsTable">
+                                            <thead>
+                                                <tr><th>Title</th><th>Company</th><th>Last Date</th><th>Salary</th><th>Actions</th></tr>
+                                            </thead>
+                                            <tbody id="jobsList">
+                                                {jobs.map(job => (
+                                                    <tr key={job.id}>
+                                                        <td>{job.title}</td>
+                                                        <td>{job.company_name}</td>
+                                                        <td>{new Date(job.last_date).toLocaleDateString('en-IN')}</td>
+                                                        <td>₹{job.salary.toLocaleString()}</td>
+                                                        <td className="action-btns">
+                                                            <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    )}
+                                </div>
+                            )}
+                        </section>
+                    </>
+                );
+            case 'users':
+                return (
+                    <section id="users-section" className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className="fas fa-users"></i> Registered Users</h3>
+                        </div>
+                        {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
+                        {!loadingUsers && (
+                            <div className="table-responsive">
+                                {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
+                                    <table id="usersTable">
+                                        <thead>
+                                            <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th></tr>
+                                        </thead>
+                                        <tbody id="userList">
+                                            {users.map(user => (
+                                                <tr key={user.id}>
+                                                    <td>{user.id}</td>
+                                                    <td>{user.username}</td>
+                                                    <td>{user.email}</td>
+                                                    <td>{user.role}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
+                        )}
+                    </section>
+                );
+            default:
+                return <div>Select a tab</div>;
+        }
+    };
+
     return (
         <div className="admin-container">
             <aside className="sidebar">
@@ -126,120 +284,38 @@ const AdminDashboard = () => {
                 </div>
                 <nav className="sidebar-menu">
                     <ul>
-                        <li><a href="#" className="active"><i className="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                        <li><a href="#jobs-section"><i className="fas fa-briefcase"></i> Manage Jobs</a></li>
-                        <li><a href="#users-section"><i className="fas fa-users"></i> Manage Users</a></li>
-                        <li><a href="/"><i className="fas fa-sign-out-alt"></i> Back to Portal</a></li>
+                        <li>
+                            <button onClick={() => setActiveTab('dashboard')} className={activeTab === 'dashboard' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
+                                <i className="fas fa-tachometer-alt"></i> Dashboard
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => setActiveTab('jobs')} className={activeTab === 'jobs' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
+                                <i className="fas fa-briefcase"></i> Manage Jobs
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
+                                <i className="fas fa-users"></i> Manage Users
+                            </button>
+                        </li>
+                        <li><a href="/" style={{ textDecoration: 'none' }}><i className="fas fa-sign-out-alt"></i> Back to Portal</a></li>
                     </ul>
                 </nav>
             </aside>
 
             <main className="main-content">
-                <header className="main-header">
-                    <h1>Dashboard</h1>
-                    <p className="subtitle">Welcome, Admin! Manage your portal content from here.</p>
+                <header className="main-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
+                        <p className="subtitle">Welcome, Admin! Manage your portal content from here.</p>
+                    </div>
+                    <button onClick={() => navigate('/')} className="btn btn-outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
+                        <i className="fas fa-arrow-left"></i> Back to Portal
+                    </button>
                 </header>
 
-                <section id="jobs-section" className="card surface-glow">
-                    <div className="card-header">
-                        <h3><i className="fas fa-plus-circle"></i> Post New Job</h3>
-                    </div>
-                    {message.text && (
-                        <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ display: 'flex' }}>
-                            {message.text}
-                        </div>
-                    )}
-                    <form id="jobForm" onSubmit={handleSubmit}>
-                        <div className="form-grid">
-                            <div className="form-group">
-                                <label htmlFor="jobTitle">Job Title</label>
-                                <input type="text" id="jobTitle" className="form-control" required value={formData.jobTitle} onChange={handleInputChange} />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="companyName">Company Name</label>
-                                <input type="text" id="companyName" className="form-control" required value={formData.companyName} onChange={handleInputChange} />
-                            </div>
-                            <div className="form-group full-width">
-                                <label htmlFor="jobDescription">Job Description</label>
-                                <textarea id="jobDescription" className="form-control" rows="4" required value={formData.jobDescription} onChange={handleInputChange}></textarea>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="applyLink">Apply Link</label>
-                                <input type="url" id="applyLink" className="form-control" required value={formData.applyLink} onChange={handleInputChange} />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="lastDate">Last Date to Apply</label>
-                                <input type="date" id="lastDate" className="form-control" required value={formData.lastDate} onChange={handleInputChange} />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="salary">Salary (₹ per annum)</label>
-                                <input type="number" id="salary" className="form-control" min="0" required value={formData.salary} onChange={handleInputChange} />
-                            </div>
-                        </div>
-                        <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Post Job</button>
-                    </form>
-                </section>
-
-                <section className="card surface-glow">
-                    <div className="card-header">
-                        <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
-                    </div>
-                    {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
-                    {!loadingJobs && (
-                        <div className="table-responsive">
-                            {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
-                                <table id="jobsTable">
-                                    <thead>
-                                        <tr><th>Title</th><th>Company</th><th>Last Date</th><th>Salary</th><th>Actions</th></tr>
-                                    </thead>
-                                    <tbody id="jobsList">
-                                        {jobs.map(job => (
-                                            <tr key={job.id}>
-                                                <td>{job.title}</td>
-                                                <td>{job.company_name}</td>
-                                                <td>{new Date(job.last_date).toLocaleDateString('en-IN')}</td>
-                                                <td>₹{job.salary.toLocaleString()}</td>
-                                                <td className="action-btns">
-                                                    <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
-                                                        <i className="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )}
-                        </div>
-                    )}
-                </section>
-
-                <section id="users-section" className="card surface-glow">
-                    <div className="card-header">
-                        <h3><i className="fas fa-users"></i> Registered Users</h3>
-                    </div>
-                    {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
-                    {!loadingUsers && (
-                        <div className="table-responsive">
-                            {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
-                                <table id="usersTable">
-                                    <thead>
-                                        <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th></tr>
-                                    </thead>
-                                    <tbody id="userList">
-                                        {users.map(user => (
-                                            <tr key={user.id}>
-                                                <td>{user.id}</td>
-                                                <td>{user.username}</td>
-                                                <td>{user.email}</td>
-                                                <td>{user.role}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )}
-                        </div>
-                    )}
-                </section>
+                {renderContent()}
             </main>
         </div>
     );
