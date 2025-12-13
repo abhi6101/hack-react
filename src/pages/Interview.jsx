@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ApplicationModal from '../components/ApplicationModal';
 import '../styles/interview.css';
 
 const mockInterviewData = [
@@ -56,6 +57,10 @@ const Interview = () => {
     const [interviews, setInterviews] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
     const [future, setFuture] = useState([]);
+    const [showApplicationModal, setShowApplicationModal] = useState(false);
+    const [selectedInterview, setSelectedInterview] = useState(null);
+    const [myApplications, setMyApplications] = useState([]);
+    const token = localStorage.getItem('authToken');
 
     useEffect(() => {
         const fetchInterviews = async () => {
@@ -120,6 +125,57 @@ const Interview = () => {
         setInterviews(updatedInterviews);
     };
 
+    // Application handlers
+    const handleApplyClick = (interview) => {
+        setSelectedInterview(interview);
+        setShowApplicationModal(true);
+    };
+
+    const handleApplicationSubmit = async (applicationData) => {
+        try {
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/applications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(applicationData)
+            });
+
+            if (!res.ok) {
+                const error = await res.text();
+                throw new Error(error);
+            }
+
+            // Refresh applications list
+            fetchMyApplications();
+            alert('Application submitted successfully!');
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    const fetchMyApplications = async () => {
+        if (!token) return;
+
+        try {
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/applications/my', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const apps = await res.json();
+                setMyApplications(apps);
+            }
+        } catch (err) {
+            console.error('Failed to fetch applications', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchMyApplications();
+    }, [token]);
+
+    const hasApplied = (interviewId) => {
+        return myApplications.some(app => app.interviewDrive.id === interviewId);
+    };
+
     const renderCard = (interview) => {
         const total = interview.totalSlots || 20;
         const booked = interview.bookedSlots || 0;
@@ -171,13 +227,19 @@ const Interview = () => {
                     <div className="criteria">
                         <i className="fas fa-graduation-cap"></i> {interview.eligibility}
                     </div>
-                    <button
-                        className="btn btn-primary"
-                        disabled={slotsLeft === 0}
-                        onClick={() => handleBookClick(interview)}
-                    >
-                        {slotsLeft === 0 ? 'Full' : 'Book Slot'}
-                    </button>
+                    {hasApplied(interview.id) ? (
+                        <button className="btn btn-success" disabled>
+                            <i className="fas fa-check"></i> Applied
+                        </button>
+                    ) : (
+                        <button
+                            className="btn btn-primary"
+                            disabled={slotsLeft === 0}
+                            onClick={() => handleApplyClick(interview)}
+                        >
+                            {slotsLeft === 0 ? 'Full' : 'Apply Now'}
+                        </button>
+                    )}
                 </div>
             </div>
         );
@@ -244,6 +306,14 @@ const Interview = () => {
                         </form>
                     </div>
                 </div>
+            )}
+
+            {showApplicationModal && selectedInterview && (
+                <ApplicationModal
+                    interview={selectedInterview}
+                    onClose={() => setShowApplicationModal(false)}
+                    onSubmit={handleApplicationSubmit}
+                />
             )}
         </div>
     );
