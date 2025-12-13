@@ -27,6 +27,10 @@ const AdminDashboard = () => {
     const [interviewForm, setInterviewForm] = useState({
         company: '', date: '', time: '', venue: '', positions: '', eligibility: ''
     });
+    const [userForm, setUserForm] = useState({
+        username: '', email: '', password: '', role: 'USER'
+    });
+    const [editingUser, setEditingUser] = useState(null);
 
     useEffect(() => {
         // Load interviews
@@ -315,33 +319,74 @@ const AdminDashboard = () => {
                 );
             case 'users':
                 return (
-                    <section id="users-section" className="card surface-glow">
-                        <div className="card-header">
-                            <h3><i className="fas fa-users"></i> Registered Users</h3>
-                        </div>
-                        {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
-                        {!loadingUsers && (
-                            <div className="table-responsive">
-                                {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
-                                    <table id="usersTable">
-                                        <thead>
-                                            <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th></tr>
-                                        </thead>
-                                        <tbody id="userList">
-                                            {users.map(user => (
-                                                <tr key={user.id}>
-                                                    <td>{user.id}</td>
-                                                    <td>{user.username}</td>
-                                                    <td>{user.email}</td>
-                                                    <td>{user.role}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                )}
+                    <>
+                        <section className="card surface-glow">
+                            <div className="card-header">
+                                <h3><i className="fas fa-user-plus"></i> {editingUser ? 'Edit User' : 'Add New User'}</h3>
                             </div>
-                        )}
-                    </section>
+                            <form onSubmit={handleUserSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>Username</label>
+                                        <input type="text" className="form-control" required value={userForm.username} onChange={e => setUserForm({ ...userForm, username: e.target.value })} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Email</label>
+                                        <input type="email" className="form-control" required value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Password {editingUser && '(leave blank to keep current)'}</label>
+                                        <input type="password" className="form-control" required={!editingUser} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Role</label>
+                                        <select className="form-control" value={userForm.role} onChange={e => setUserForm({ ...userForm, role: e.target.value })}>
+                                            <option value="USER">USER</option>
+                                            <option value="ADMIN">ADMIN</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
+                                {editingUser && <button type="button" className="btn btn-secondary" onClick={() => { setEditingUser(null); setUserForm({ username: '', email: '', password: '', role: 'USER' }); }}>Cancel</button>}
+                            </form>
+                        </section>
+
+                        <section id="users-section" className="card surface-glow">
+                            <div className="card-header">
+                                <h3><i className="fas fa-users"></i> Registered Users</h3>
+                            </div>
+                            {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
+                            {!loadingUsers && (
+                                <div className="table-responsive">
+                                    {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
+                                        <table id="usersTable">
+                                            <thead>
+                                                <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr>
+                                            </thead>
+                                            <tbody id="userList">
+                                                {users.map(user => (
+                                                    <tr key={user.id}>
+                                                        <td>{user.id}</td>
+                                                        <td>{user.username}</td>
+                                                        <td>{user.email}</td>
+                                                        <td>{user.role}</td>
+                                                        <td className="action-btns">
+                                                            <button className="btn btn-secondary" onClick={() => startEditUser(user)}>
+                                                                <i className="fas fa-edit"></i>
+                                                            </button>
+                                                            <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    )}
+                                </div>
+                            )}
+                        </section>
+                    </>
                 );
             case 'interviews':
                 return (
