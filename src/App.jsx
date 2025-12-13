@@ -20,6 +20,8 @@ import Gallery from './pages/Gallery';
 import Videos from './pages/Videos';
 import Contact from './pages/Contact';
 import VerifyAccount from './pages/VerifyAccount';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function Layout({ children }) {
     const location = useLocation();
@@ -44,6 +46,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/jobs" element={<Jobs />} />
                     <Route path="/resume" element={<Resume />} />
                     <Route path="/interview" element={<Interview />} />

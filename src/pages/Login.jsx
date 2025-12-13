@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
@@ -6,9 +6,20 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    // Load remembered username on component mount
+    useEffect(() => {
+        const remembered = localStorage.getItem('rememberMe');
+        const savedUsername = localStorage.getItem('savedUsername');
+        if (remembered === 'true' && savedUsername) {
+            setUsername(savedUsername);
+            setRememberMe(true);
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,6 +38,15 @@ const Login = () => {
             if (response.ok) {
                 localStorage.setItem('authToken', data.token); // Store JWT token
                 if (data.username) localStorage.setItem('username', data.username);
+
+                // Handle Remember Me
+                if (rememberMe) {
+                    localStorage.setItem('rememberMe', 'true');
+                    localStorage.setItem('savedUsername', username);
+                } else {
+                    localStorage.removeItem('rememberMe');
+                    localStorage.removeItem('savedUsername');
+                }
 
                 // Backend returns "roles": ["ROLE_ADMIN"]
                 const roles = data.roles || [];
@@ -102,15 +122,27 @@ const Login = () => {
                             </div>
                         </div>
 
+                        <div className="form-options" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                />
+                                <span>Remember Me</span>
+                            </label>
+                            <Link to="/forgot-password" style={{ color: 'var(--primary)', textDecoration: 'none' }}>
+                                Forgot Password?
+                            </Link>
+                        </div>
+
                         <button type="submit" id="loginButton" className="btn btn-primary" disabled={loading}>
-                            {loading ? (
-                                <span className="spinner" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid white', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
-                            ) : (
-                                <span className="button-text">Login <i className="fas fa-arrow-right"></i></span>
-                            )}
+                            {loading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
-                    <p>Don't have an account? <Link to="/register">Register here</Link></p>
+                    <div className="login-footer">
+                        <p>Don't have an account? <Link to="/register">Register here</Link></p>
+                    </div>
                 </div>
             </section>
         </div>
