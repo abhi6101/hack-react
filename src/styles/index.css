@@ -1096,6 +1096,39 @@ padding: 0.5rem 0;
     width: 100%;
 }
 
+.nav-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.logout-btn {
+    border-color: var(--neon-pink, #ff477b);
+}
+
+.logout-btn:hover {
+    background: rgba(255, 71, 123, 0.1);
+    border-color: var(--neon-pink, #ff477b);
+    box-shadow: 0 0 10px var(--neon-pink, #ff477b);
+}
+
 .nav-links a:hover,
 .nav-links a.active {
     color: #fff;

@@ -50,6 +50,18 @@ const Navbar = () => {
                     <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Dashboard</Link>
                 )}
 
+                {localStorage.getItem('authToken') ? (
+                    <button onClick={() => {
+                        localStorage.clear();
+                        window.location.href = '/login';
+                    }} className="nav-btn logout-btn">
+                        <i className="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                ) : (
+                    <Link to="/login" className="nav-btn login-btn">
+                        <i className="fas fa-sign-in-alt"></i> Login
+                    </Link>
+                )}
             </div>
 
             <div className="hamburger" onClick={toggleMenu}>
