@@ -150,15 +150,15 @@ const Interview = () => {
                         <i className="fas fa-building"></i> <span>{interview.venue}</span>
                     </div>
                     <div className="positions-list">
-                        {interview.positions.map((pos, idx) => (
-                            <span key={idx} className="position-tag">{pos}</span>
+                        {interview.positions && interview.positions.split(',').map((pos, idx) => (
+                            <span key={idx} className="position-tag">{pos.trim()}</span>
                         ))}
                     </div>
 
                     <div className="slots-container">
                         <div className="slots-info">
                             <span>Slots Filled</span>
-                            <span>{interview.slots.booked} / {interview.slots.total}</span>
+                            <span>{booked} / {total}</span>
                         </div>
                         <div className="progress-bar">
                             <div className="progress-fill" style={{ width: `${progress}%`, backgroundColor: slotsLeft < 5 ? '#ff477b' : 'var(--primary)' }}></div>
