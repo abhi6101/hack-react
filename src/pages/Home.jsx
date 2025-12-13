@@ -46,15 +46,15 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
-        // Simulating checking for logged in user
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch (error) {
-                console.error("Failed to parse user from localStorage:", error);
-                localStorage.removeItem('user'); // Clean up corrupt data
-            }
+        // Check for logged in user using individual keys set by Login.jsx
+        const storedUsername = localStorage.getItem('username');
+        const storedRole = localStorage.getItem('userRole');
+
+        if (storedUsername) {
+            setUser({
+                username: storedUsername,
+                role: storedRole || 'User'
+            });
         }
     }, []);
 
