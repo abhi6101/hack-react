@@ -29,10 +29,15 @@ const Login = () => {
                 // Optionally store user info if returned, e.g. role/username
                 if (data.username) localStorage.setItem('username', data.username);
                 if (data.role) localStorage.setItem('userRole', data.role);
+                // Also store a simplified flag for quick checks if needed
+                if (data.role === 'ADMIN') localStorage.setItem('isAdmin', 'true');
 
                 setLoading(false);
-                // navigate users based on role perhaps? For now just home
-                navigate('/');
+                if (data.role === 'ADMIN') {
+                    navigate('/admin');
+                } else {
+                    navigate('/');
+                }
             } else {
                 setError(data.message || 'Login failed. Please check your credentials.');
                 setLoading(false);
