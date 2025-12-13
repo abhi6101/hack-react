@@ -46,7 +46,7 @@ const ProfilePictureUpload = ({ currentPicture, username, onUploadSuccess }) => 
         formData.append('file', selectedFile);
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('authToken');
             const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/profile/picture', {
                 method: 'POST',
                 headers: {
@@ -84,7 +84,7 @@ const ProfilePictureUpload = ({ currentPicture, username, onUploadSuccess }) => 
         setSuccess('');
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('authToken');
             const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/profile/picture', {
                 method: 'DELETE',
                 headers: {
