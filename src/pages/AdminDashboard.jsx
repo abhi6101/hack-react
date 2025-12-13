@@ -418,7 +418,7 @@ const AdminDashboard = () => {
                                         <input type="text" className="form-control" required value={interviewForm.positions} onChange={e => setInterviewForm({ ...interviewForm, positions: e.target.value })} />
                                     </div>
                                     <div className="form-group full-width">
-                                        <label>Eligibility (e.g., CGPA > 7.0)</label>
+                                        <label>Eligibility (e.g., CGPA &gt; 7.0)</label>
                                         <input type="text" className="form-control" required value={interviewForm.eligibility} onChange={e => setInterviewForm({ ...interviewForm, eligibility: e.target.value })} />
                                     </div>
                                 </div>
