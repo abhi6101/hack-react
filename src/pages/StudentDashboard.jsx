@@ -6,6 +6,7 @@ const StudentDashboard = () => {
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [interviews, setInterviews] = useState([]);
+    const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -41,6 +42,18 @@ const StudentDashboard = () => {
             }
         } catch (err) {
             console.error('Failed to load interviews');
+        }
+
+        // Fetch my applications
+        try {
+            const appsRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/applications/my', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (appsRes.ok) {
+                setApplications(await appsRes.json());
+            }
+        } catch (err) {
+            console.error('Failed to load applications');
         }
 
         setLoading(false);
@@ -102,6 +115,40 @@ const StudentDashboard = () => {
                         <p>No upcoming interviews</p>
                     )}
                     <Link to="/interview" className="btn btn-outline">View All Interviews</Link>
+                </section>
+
+                <section className="dashboard-card surface-glow">
+                    <div className="card-header">
+                        <h2><i className="fas fa-file-alt"></i> My Applications</h2>
+                    </div>
+                    {applications.length > 0 ? (
+                        <div className="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Company</th>
+                                        <th>Applied On</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {applications.map(app => (
+                                        <tr key={app.id}>
+                                            <td>{app.interviewDrive.company}</td>
+                                            <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
+                                            <td>
+                                                <span className={`status-badge status-${app.status.toLowerCase()}`}>
+                                                    {app.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p>No applications yet. <Link to="/interview">Apply to interviews</Link></p>
+                    )}
                 </section>
             </div>
         </main>
