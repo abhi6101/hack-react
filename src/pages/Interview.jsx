@@ -117,7 +117,7 @@ const Interview = () => {
         // Update slots locally
         const updatedInterviews = interviews.map(i => {
             if (i.id === selectedCompany.id) {
-                return { ...i, slots: { ...i.slots, booked: i.slots.booked + 1 } };
+                return { ...i, bookedSlots: (i.bookedSlots || 0) + 1 };
             }
             return i;
         });
@@ -125,8 +125,10 @@ const Interview = () => {
     };
 
     const renderCard = (interview) => {
-        const slotsLeft = interview.slots.total - interview.slots.booked;
-        const progress = (interview.slots.booked / interview.slots.total) * 100;
+        const total = interview.totalSlots || 20;
+        const booked = interview.bookedSlots || 0;
+        const slotsLeft = total - booked;
+        const progress = (booked / total) * 100;
 
         return (
             <div key={interview.id} className="interview-card surface-glow">
