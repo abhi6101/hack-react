@@ -118,24 +118,24 @@ const Papers = () => {
                     </a>
 
                     {/* MST Papers (Placeholder) */}
-                    <a href="#" className="semester-card surface-glow">
+                    <div className="semester-card surface-glow" onClick={() => alert('Coming Soon!')} style={{ cursor: 'pointer' }}>
                         <div className="card-content">
                             <h2>MST Papers</h2>
                         </div>
                         <div className="card-icon">
                             <i className="fas fa-folder-open"></i>
                         </div>
-                    </a>
+                    </div>
 
                     {/* NOTES (Placeholder) */}
-                    <a href="#" className="semester-card surface-glow">
+                    <div className="semester-card surface-glow" onClick={() => alert('Coming Soon!')} style={{ cursor: 'pointer' }}>
                         <div className="card-content">
                             <h2>NOTES</h2>
                         </div>
                         <div className="card-icon">
                             <i className="fas fa-folder-open"></i>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </main>
         </>
