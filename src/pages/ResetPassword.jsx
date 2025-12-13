@@ -25,13 +25,16 @@ const ResetPassword = () => {
         // Validate token
         const validateToken = async () => {
             try {
+                console.log('Validating token:', token);
                 const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/validate-token', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token })
                 });
 
+                console.log('Validation response status:', response.status);
                 const data = await response.json();
+                console.log('Validation response data:', data);
 
                 if (response.ok && data.valid) {
                     setTokenValid(true);
@@ -39,7 +42,8 @@ const ResetPassword = () => {
                     setError(data.message || 'Invalid or expired reset link');
                 }
             } catch (err) {
-                setError('Failed to validate reset link');
+                console.error('Token validation error:', err);
+                setError('Failed to validate reset link: ' + err.message);
             } finally {
                 setValidatingToken(false);
             }
