@@ -46,6 +46,40 @@ const AdminDashboard = () => {
             });
     }, []);
 
+    const loadApplications = async () => {
+        setLoadingApplications(true);
+        try {
+            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/applications/all`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error('Failed to fetch applications');
+            const data = await response.json();
+            setApplications(data);
+        } catch (error) {
+            console.error('Error loading applications:', error);
+            setMessage({ text: 'Failed to load applications.', type: 'error' });
+        } finally {
+            setLoadingApplications(false);
+        }
+    };
+
+    const updateApplicationStatus = async (appId, newStatus) => {
+        try {
+            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/applications/${appId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (res.ok) {
+                loadApplications();
+                setMessage({ text: 'Application status updated!', type: 'success' });
+            }
+        } catch (err) {
+            setMessage({ text: 'Failed to update status', type: 'error' });
+        }
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    };
+
     const handleInterviewSubmit = async (e) => {
         e.preventDefault();
         const newInterview = {
@@ -437,6 +471,80 @@ const AdminDashboard = () => {
                         </section>
                     </>
                 );
+            case 'applications':
+                return (
+                    <section className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className="fas fa-file-alt"></i> Manage Applications</h3>
+                        </div>
+                        {loadingApplications ? (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
+                        ) : applications.length > 0 ? (
+                            <div className="table-responsive" style={{ padding: '1rem' }}>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th>Company</th>
+                                            <th>Applied On</th>
+                                            <th>Resume</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {applications.map(app => (
+                                            <tr key={app.id}>
+                                                <td>{app.student.username}</td>
+                                                <td>{app.interviewDrive.company}</td>
+                                                <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
+                                                <td>
+                                                    <a href={app.resumeUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                                                        <i className="fas fa-file-pdf"></i> View
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <span style={{
+                                                        padding: '0.25rem 0.75rem',
+                                                        borderRadius: '12px',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: '600',
+                                                        textTransform: 'uppercase',
+                                                        background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
+                                                            app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
+                                                                app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
+                                                                    'rgba(99, 102, 241, 0.2)',
+                                                        color: app.status === 'PENDING' ? '#fbbf24' :
+                                                            app.status === 'SHORTLISTED' ? '#22c55e' :
+                                                                app.status === 'REJECTED' ? '#ef4444' :
+                                                                    'var(--primary)'
+                                                    }}>
+                                                        {app.status}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <select
+                                                        value={app.status}
+                                                        onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+                                                        className="form-control"
+                                                        style={{ width: 'auto', padding: '0.5rem' }}
+                                                    >
+                                                        <option value="PENDING">Pending</option>
+                                                        <option value="SHORTLISTED">Shortlist</option>
+                                                        <option value="REJECTED">Reject</option>
+                                                        <option value="SELECTED">Select</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>No applications yet.</p>
+                        )}
+                    </section>
+                );
             case 'interviews':
                 return (
                     <>
@@ -539,6 +647,14 @@ const AdminDashboard = () => {
                         <li>
                             <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <i className="fas fa-sign-out-alt"></i> Back to Portal
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                className={activeTab === 'applications' ? 'active' : ''}
+                                onClick={() => { setActiveTab('applications'); loadApplications(); }}
+                            >
+                                <i className="fas fa-file-alt"></i> Applications
                             </button>
                         </li>
                     </ul>
