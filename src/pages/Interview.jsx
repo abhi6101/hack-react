@@ -60,21 +60,17 @@ const Interview = () => {
     useEffect(() => {
         const fetchInterviews = async () => {
             try {
-                // Try fetching from backend
                 const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives');
                 if (response.ok) {
                     const data = await response.json();
                     setInterviews(data);
                 } else {
-                    // Fallback if backend not ready yet (avoid breaking UI)
-                    console.warn("Backend not ready, falling back to local/mock");
-                    const stored = localStorage.getItem('interviews');
-                    setInterviews(stored ? JSON.parse(stored) : mockInterviewData);
+                    console.error("Failed to fetch interviews from backend");
+                    setInterviews([]); // Show empty if backend fails
                 }
             } catch (err) {
                 console.error("API Fetch Error", err);
-                const stored = localStorage.getItem('interviews');
-                setInterviews(stored ? JSON.parse(stored) : mockInterviewData);
+                setInterviews([]); // Show empty if API fails
             }
         };
         fetchInterviews();
