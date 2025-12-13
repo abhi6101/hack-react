@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/index.css';
 
 const Home = () => {
@@ -21,6 +21,8 @@ const Home = () => {
     const prevSlide = () => {
         setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
     };
+
+    const navigate = useNavigate();
 
     // Auto-Slideshow Effect
     useEffect(() => {
@@ -56,6 +58,11 @@ const Home = () => {
         }
     }, []);
 
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/login');
+    };
+
     return (
         <main>
             {/* Hero Section */}
@@ -75,10 +82,7 @@ const Home = () => {
                         {localStorage.getItem('authToken') ? (
                             <>
                                 <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
-                                <button onClick={() => {
-                                    localStorage.clear();
-                                    window.location.href = '/login';
-                                }} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
+                                <button onClick={handleLogout} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
                                     Logout
                                 </button>
                             </>
