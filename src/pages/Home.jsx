@@ -72,9 +72,22 @@ const Home = () => {
                     )}
                     <p id="heroSubtitle">Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.</p>
                     <div className="cta-btns">
-                        <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
-                        <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
-                        <Link to="/login" className="btn btn-outline">Login</Link>
+                        {localStorage.getItem('authToken') ? (
+                            <>
+                                <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
+                                <button onClick={() => {
+                                    localStorage.clear();
+                                    window.location.href = '/login';
+                                }} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
+                                <Link to="/login" className="btn btn-outline">Login</Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </section>
