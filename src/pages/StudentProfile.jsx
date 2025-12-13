@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ProfilePictureUpload from '../components/ProfilePictureUpload';
+import { getProfilePicture } from '../utils/avatar';
 import '../styles/profile.css';
+import '../styles/profile-picture.css';
 
 const StudentProfile = () => {
     const navigate = useNavigate();
+    const [user, setUser] = useState({ username: '', profilePictureUrl: '' });
     const [profile, setProfile] = useState({
         fullName: '', phoneNumber: '', dateOfBirth: '', address: '',
         enrollmentNumber: '', branch: '', semester: '', cgpa: '', backlogs: '',
@@ -19,8 +23,24 @@ const StudentProfile = () => {
             navigate('/login');
             return;
         }
+        fetchUser();
         fetchProfile();
     }, [navigate]);
+
+    const fetchUser = async () => {
+        const token = localStorage.getItem('authToken');
+        try {
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/user/current', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setUser(data);
+            }
+        } catch (err) {
+            console.error('Failed to load user', err);
+        }
+    };
 
     const fetchProfile = async () => {
         const token = localStorage.getItem('authToken');
@@ -37,6 +57,10 @@ const StudentProfile = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleProfilePictureUpdate = (newUrl) => {
+        setUser({ ...user, profilePictureUrl: newUrl });
     };
 
     const handleSubmit = async (e) => {
@@ -76,6 +100,12 @@ const StudentProfile = () => {
                 )}
 
                 <form onSubmit={handleSubmit} className="profile-form">
+                    <ProfilePictureUpload
+                        currentPicture={getProfilePicture(user)}
+                        username={user.username}
+                        onUploadSuccess={handleProfilePictureUpdate}
+                    />
+
                     <h2>Personal Details</h2>
                     <div className="form-grid">
                         <div className="form-group">
