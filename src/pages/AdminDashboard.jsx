@@ -23,6 +23,43 @@ const AdminDashboard = () => {
     const role = localStorage.getItem('userRole');
 
     const [activeTab, setActiveTab] = useState('dashboard');
+    const [interviews, setInterviews] = useState([]);
+    const [interviewForm, setInterviewForm] = useState({
+        company: '', date: '', time: '', venue: '', positions: '', eligibility: ''
+    });
+
+    useEffect(() => {
+        // Load interviews
+        const stored = localStorage.getItem('interviews');
+        if (stored) setInterviews(JSON.parse(stored));
+    }, []);
+
+    const handleInterviewSubmit = (e) => {
+        e.preventDefault();
+        const newInterview = {
+            id: Date.now(),
+            company: interviewForm.company,
+            date: interviewForm.date,
+            time: interviewForm.time,
+            venue: interviewForm.venue,
+            positions: interviewForm.positions.split(',').map(p => p.trim()),
+            eligibility: interviewForm.eligibility,
+            slots: { total: 20, booked: 0 } // Default slots
+        };
+        const updated = [...interviews, newInterview];
+        setInterviews(updated);
+        localStorage.setItem('interviews', JSON.stringify(updated));
+        setMessage({ text: 'Interview posted successfully!', type: 'success' });
+        setInterviewForm({ company: '', date: '', time: '', venue: '', positions: '', eligibility: '' });
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    };
+
+    const deleteInterview = (id) => {
+        if (!window.confirm('Delete this interview?')) return;
+        const updated = interviews.filter(i => i.id !== id);
+        setInterviews(updated);
+        localStorage.setItem('interviews', JSON.stringify(updated));
+    };
 
     useEffect(() => {
         if (!token || role !== 'ADMIN') {
@@ -271,6 +308,72 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            case 'interviews':
+                return (
+                    <>
+                        <section className="card surface-glow">
+                            <div className="card-header">
+                                <h3><i className="fas fa-calendar-plus"></i> Post New Interview</h3>
+                            </div>
+                            <form onSubmit={handleInterviewSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>Company Name</label>
+                                        <input type="text" className="form-control" required value={interviewForm.company} onChange={e => setInterviewForm({ ...interviewForm, company: e.target.value })} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Date</label>
+                                        <input type="date" className="form-control" required value={interviewForm.date} onChange={e => setInterviewForm({ ...interviewForm, date: e.target.value })} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Time (e.g., 10:00 AM - 2:00 PM)</label>
+                                        <input type="text" className="form-control" required value={interviewForm.time} onChange={e => setInterviewForm({ ...interviewForm, time: e.target.value })} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Venue / Mode</label>
+                                        <input type="text" className="form-control" required value={interviewForm.venue} onChange={e => setInterviewForm({ ...interviewForm, venue: e.target.value })} />
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label>Positions (comma separated)</label>
+                                        <input type="text" className="form-control" required value={interviewForm.positions} onChange={e => setInterviewForm({ ...interviewForm, positions: e.target.value })} />
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label>Eligibility (e.g., CGPA > 7.0)</label>
+                                        <input type="text" className="form-control" required value={interviewForm.eligibility} onChange={e => setInterviewForm({ ...interviewForm, eligibility: e.target.value })} />
+                                    </div>
+                                </div>
+                                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Post Interview</button>
+                            </form>
+                        </section>
+
+                        <section className="card surface-glow">
+                            <div className="card-header">
+                                <h3><i className="fas fa-calendar-check"></i> Scheduled Interviews</h3>
+                            </div>
+                            <div className="table-responsive">
+                                <table className="table">
+                                    <thead>
+                                        <tr><th>Company</th><th>Date</th><th>Venue</th><th>Actions</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        {interviews.map(interview => (
+                                            <tr key={interview.id}>
+                                                <td>{interview.company}</td>
+                                                <td>{new Date(interview.date).toLocaleDateString()}</td>
+                                                <td>{interview.venue}</td>
+                                                <td>
+                                                    <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </>
+                );
             default:
                 return <div>Select a tab</div>;
         }
@@ -297,6 +400,11 @@ const AdminDashboard = () => {
                         <li>
                             <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
                                 <i className="fas fa-users"></i> Manage Users
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => setActiveTab('interviews')} className={activeTab === 'interviews' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <i className="fas fa-calendar-alt"></i> Manage Interviews
                             </button>
                         </li>
                         <li>

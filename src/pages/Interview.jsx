@@ -53,9 +53,20 @@ const Interview = () => {
         }
     }, [navigate]);
 
-    const [interviews, setInterviews] = useState(mockInterviewData);
+    const [interviews, setInterviews] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
     const [future, setFuture] = useState([]);
+
+    useEffect(() => {
+        const storedInterviews = localStorage.getItem('interviews');
+        if (storedInterviews) {
+            setInterviews(JSON.parse(storedInterviews));
+        } else {
+            // Seed mock data if empty
+            localStorage.setItem('interviews', JSON.stringify(mockInterviewData));
+            setInterviews(mockInterviewData);
+        }
+    }, []);
 
     // Booking Form State
     const [bookingData, setBookingData] = useState({
