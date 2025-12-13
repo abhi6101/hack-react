@@ -10,6 +10,8 @@ import Interview from './pages/Interview';
 import Papers from './pages/Papers';
 import Quiz from './pages/Quiz';
 import AdminDashboard from './pages/AdminDashboard';
+import StudentDashboard from './pages/StudentDashboard';
+import StudentProfile from './pages/StudentProfile';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import Blog from './pages/Blog';
@@ -48,6 +50,8 @@ function App() {
                     <Route path="/papers" element={<Papers />} />
                     <Route path="/quiz" element={<Quiz />} />
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/dashboard" element={<StudentDashboard />} />
+                    <Route path="/profile" element={<StudentProfile />} />
                     <Route path="/courses" element={<Courses />} />
                     <Route path="/courses/:slug" element={<CourseDetail />} />
                     <Route path="/blog" element={<Blog />} />
