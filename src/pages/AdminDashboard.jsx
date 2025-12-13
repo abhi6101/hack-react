@@ -140,6 +140,53 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleUserSubmit = async (e) => {
+        e.preventDefault();
+        const endpoint = editingUser
+            ? `${API_BASE_URL}/users/${editingUser.id}`
+            : `${API_BASE_URL}/users`;
+        const method = editingUser ? 'PUT' : 'POST';
+
+        try {
+            const res = await fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(userForm)
+            });
+
+            if (res.ok) {
+                setMessage({ text: editingUser ? 'User updated!' : 'User created!', type: 'success' });
+                loadUsers();
+                setUserForm({ username: '', email: '', password: '', role: 'USER' });
+                setEditingUser(null);
+            } else {
+                const error = await res.text();
+                setMessage({ text: error, type: 'error' });
+            }
+        } catch (err) {
+            setMessage({ text: 'Failed to save user', type: 'error' });
+        }
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    };
+
+    const deleteUser = async (userId) => {
+        if (!window.confirm('Delete this user?')) return;
+        try {
+            await fetch(`${API_BASE_URL}/users/${userId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            loadUsers();
+        } catch (err) {
+            alert('Failed to delete user');
+        }
+    };
+
+    const startEditUser = (user) => {
+        setUserForm({ username: user.username, email: user.email, password: '', role: user.role });
+        setEditingUser(user);
+    };
+
     const deleteJob = async (jobId) => {
         if (!window.confirm('Are you sure you want to delete this job?')) return;
 
