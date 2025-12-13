@@ -31,6 +31,8 @@ const AdminDashboard = () => {
         username: '', email: '', password: '', role: 'USER'
     });
     const [editingUser, setEditingUser] = useState(null);
+    const [applications, setApplications] = useState([]);
+    const [loadingApplications, setLoadingApplications] = useState(false);
 
     useEffect(() => {
         // Load interviews
