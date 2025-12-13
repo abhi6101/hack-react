@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Placement Portal</title>
+    <script>
+      // SPA Fallback for Static Hosts without Rewrite Support
+      // If we are on a 404 page (e.g. /admin), redirect to home but preserve the path
+      // This is a last-resort fix.
+      sessionStorage.setItem('redirect', window.location.pathname);
+      window.location.replace('/');
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
