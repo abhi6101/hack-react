@@ -30,35 +30,70 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         // Load interviews
-        const stored = localStorage.getItem('interviews');
-        if (stored) setInterviews(JSON.parse(stored));
+        fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives')
+            .then(res => res.json())
+            .then(data => setInterviews(Array.isArray(data) ? data : []))
+            .catch(() => {
+                // Fallback
+                const stored = localStorage.getItem('interviews');
+                if (stored) setInterviews(JSON.parse(stored));
+            });
     }, []);
 
-    const handleInterviewSubmit = (e) => {
+    const handleInterviewSubmit = async (e) => {
         e.preventDefault();
         const newInterview = {
-            id: Date.now(),
             company: interviewForm.company,
             date: interviewForm.date,
             time: interviewForm.time,
             venue: interviewForm.venue,
-            positions: interviewForm.positions.split(',').map(p => p.trim()),
+            positions: interviewForm.positions, // Backend expects string
             eligibility: interviewForm.eligibility,
-            slots: { total: 20, booked: 0 } // Default slots
+            totalSlots: 20, bookedSlots: 0
         };
-        const updated = [...interviews, newInterview];
-        setInterviews(updated);
-        localStorage.setItem('interviews', JSON.stringify(updated));
-        setMessage({ text: 'Interview posted successfully!', type: 'success' });
+
+        try {
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(newInterview)
+            });
+
+            if (res.ok) {
+                const saved = await res.json();
+                setInterviews([...interviews, saved]);
+                setMessage({ text: 'Interview posted to database!', type: 'success' });
+            } else {
+                throw new Error('Backend save failed');
+            }
+        } catch (err) {
+            // Fallback for demo
+            console.error(err);
+            const localInterview = { ...newInterview, id: Date.now(), positions: newInterview.positions.split(',') };
+            const updated = [...interviews, localInterview];
+            setInterviews(updated);
+            localStorage.setItem('interviews', JSON.stringify(updated));
+            setMessage({ text: 'Backend unavailable. Saved locally!', type: 'success' });
+        }
         setInterviewForm({ company: '', date: '', time: '', venue: '', positions: '', eligibility: '' });
         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     };
 
-    const deleteInterview = (id) => {
+    const deleteInterview = async (id) => {
         if (!window.confirm('Delete this interview?')) return;
-        const updated = interviews.filter(i => i.id !== id);
-        setInterviews(updated);
-        localStorage.setItem('interviews', JSON.stringify(updated));
+
+        try {
+            await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setInterviews(interviews.filter(i => i.id !== id));
+        } catch (err) {
+            // Fallback
+            const updated = interviews.filter(i => i.id !== id);
+            setInterviews(updated);
+            localStorage.setItem('interviews', JSON.stringify(updated));
+        }
     };
 
     useEffect(() => {

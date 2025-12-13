@@ -58,14 +58,26 @@ const Interview = () => {
     const [future, setFuture] = useState([]);
 
     useEffect(() => {
-        const storedInterviews = localStorage.getItem('interviews');
-        if (storedInterviews) {
-            setInterviews(JSON.parse(storedInterviews));
-        } else {
-            // Seed mock data if empty
-            localStorage.setItem('interviews', JSON.stringify(mockInterviewData));
-            setInterviews(mockInterviewData);
-        }
+        const fetchInterviews = async () => {
+            try {
+                // Try fetching from backend
+                const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives');
+                if (response.ok) {
+                    const data = await response.json();
+                    setInterviews(data);
+                } else {
+                    // Fallback if backend not ready yet (avoid breaking UI)
+                    console.warn("Backend not ready, falling back to local/mock");
+                    const stored = localStorage.getItem('interviews');
+                    setInterviews(stored ? JSON.parse(stored) : mockInterviewData);
+                }
+            } catch (err) {
+                console.error("API Fetch Error", err);
+                const stored = localStorage.getItem('interviews');
+                setInterviews(stored ? JSON.parse(stored) : mockInterviewData);
+            }
+        };
+        fetchInterviews();
     }, []);
 
     // Booking Form State
