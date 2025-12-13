@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/register.css';
 
 const Register = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -53,7 +54,7 @@ const Register = () => {
                     // Navigate to verify page with email param
                     // Using window.location to ensure fresh state or useNavigate
                     // Since I am in a component, I likely have access to navigate (wait, Register.jsx used Link. I need to add useNavigate)
-                    window.location.href = `/verify-account?email=${encodeURIComponent(formData.email)}`;
+                    navigate(`/verify-account?email=${encodeURIComponent(formData.email)}`);
                 }, 1500);
             } else {
                 setError(result.message || 'Registration failed. Please try again.');

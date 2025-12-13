@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/quiz.css';
 import { quizData } from '../data/quizData';
 
@@ -16,6 +17,7 @@ const subjects = [
 ];
 
 const Quiz = () => {
+    const navigate = useNavigate();
     const [step, setStep] = useState('subject-selection'); // subject-selection, quiz, quiz-results
     const [currentSubject, setCurrentSubject] = useState(null);
     const [questions, setQuestions] = useState([]);
@@ -226,7 +228,7 @@ const Quiz = () => {
                         </div>
                         <div className="result-actions">
                             <button id="play-again-btn" className="btn btn-primary" onClick={handleRestart}>Play Another Quiz</button>
-                            <button id="back-to-home-btn" className="btn btn-outline" onClick={() => window.location.href = '/'}>Back to Home</button>
+                            <button id="back-to-home-btn" className="btn btn-outline" onClick={() => navigate('/')}>Back to Home</button>
                         </div>
                     </div>
                 </section>
