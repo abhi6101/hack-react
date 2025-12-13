@@ -26,18 +26,21 @@ const Login = () => {
 
             if (response.ok) {
                 localStorage.setItem('authToken', data.token); // Store JWT token
-                // Optionally store user info if returned, e.g. role/username
                 if (data.username) localStorage.setItem('username', data.username);
-                if (data.role) localStorage.setItem('userRole', data.role);
-                // Also store a simplified flag for quick checks if needed
-                if (data.role === 'ADMIN') localStorage.setItem('isAdmin', 'true');
 
-                setLoading(false);
-                if (data.role === 'ADMIN') {
+                // Backend returns "roles": ["ROLE_ADMIN"]
+                const roles = data.roles || [];
+                const isAdmin = roles.includes('ROLE_ADMIN');
+
+                if (isAdmin) {
+                    localStorage.setItem('userRole', 'ADMIN');
+                    localStorage.setItem('isAdmin', 'true');
                     navigate('/admin');
                 } else {
+                    localStorage.setItem('userRole', 'USER');
                     navigate('/');
                 }
+                setLoading(false);
             } else {
                 setError(data.message || 'Login failed. Please check your credentials.');
                 setLoading(false);
