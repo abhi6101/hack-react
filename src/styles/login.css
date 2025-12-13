@@ -1,0 +1,246 @@
+/* === LOGIN PAGE: PRO-LEVEL STYLESHEET === */
+
+/* --- 1. Root Variables & Global Styles (Identical to Homepage) --- */
+:root {
+    --dark-bg: #0A0A10;
+    --surface-bg: #111119;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --primary: #00d4ff;
+    --primary-glow: rgba(0, 212, 255, 0.5);
+    --accent: #ff477b;
+    --text-primary: #ECEFF1;
+    --text-secondary: #90A4AE;
+    --error: #ff477b; /* Using accent color for error */
+    --success: #28a745;
+    --font-family: 'Poppins', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* Animated background for visual interest */
+    background-image: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
+    animation: background-pan 20s infinite alternate ease-in-out;
+}
+
+@keyframes background-pan {
+    from { background-position: 0% center; }
+    to { background-position: 100% center; }
+}
+
+/* --- 2. Navigation (Identical to Homepage) --- */
+nav {
+    padding: 1rem 5%;
+    background: rgba(10, 10, 16, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1000;
+}
+.logo { font-size: 1.8rem; font-weight: 800; }
+.logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
+nav ul { display: flex; list-style: none; gap: 1.5rem; }
+nav a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+nav a:hover { color: var(--primary); }
+
+/* --- 3. Login Section & Card --- */
+.login-section {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.login-card {
+    max-width: 420px;
+    width: 100%;
+    padding: 3rem;
+    position: relative;
+    /* Staggered entry animation */
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    animation: card-pop-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.2s;
+}
+
+@keyframes card-pop-in {
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.login-card h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+/* --- 4. Interactive Glowing Border (Identical to Homepage) --- */
+.surface-glow {
+    background: var(--surface-bg);
+    border-radius: 16px;
+}
+.surface-glow::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: inherit; padding: 1px;
+    background: conic-gradient(from var(--angle), transparent 20%, var(--primary), var(--accent), transparent 80%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spin 5s linear infinite paused; opacity: 0; transition: opacity 0.4s ease;
+}
+.surface-glow:hover::before { animation-play-state: running; opacity: 1; }
+@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes spin { to { --angle: 360deg; } }
+
+/* --- 5. Form Styling with Staggered Animations --- */
+.login-card form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.input-group {
+    position: relative;
+    /* Staggered entry animation for inputs */
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in-slide 0.5s ease-out forwards;
+}
+/* Stagger the delays */
+.input-group:nth-of-type(1) { animation-delay: 0.4s; }
+.input-group:nth-of-type(2) { animation-delay: 0.5s; }
+.login-card form button { animation-delay: 0.6s; }
+.login-card p { animation-delay: 0.7s; }
+
+@keyframes fade-in-slide { to { opacity: 1; transform: translateX(0); } }
+
+.input-group label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* --- 6. Button Styling (Identical to Homepage) --- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+    padding: 0.9rem 1.8rem; border-radius: 50px; font-weight: 600;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: all 0.3s ease;
+    /* Animation properties for the form */
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in-slide 0.5s ease-out forwards;
+}
+.btn-primary { background: var(--primary); color: #000; box-shadow: 0 0 25px var(--primary-glow); }
+.btn-primary:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 0 40px var(--primary-glow); }
+
+/* --- 7. Form Bottom & Alerts --- */
+.login-card p {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in-slide 0.5s ease-out forwards;
+}
+.login-card p a { font-weight: 600; color: var(--primary); }
+.login-card p a:hover { color: white; }
+
+.alert {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    border-left: 4px solid;
+    background-color: var(--surface-bg);
+}
+.alert-error { border-color: var(--error); color: var(--error); }
+.alert-success { border-color: var(--success); color: var(--success); }
+
+/* --- 8. Spinner & Loading State --- */
+.spinner {
+    display: none; /* Hide by default */
+    border: 3px solid rgba(0, 0, 0, 0.3); /* Dark spinner on a light button */
+    border-top-color: #000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin-button 1s linear infinite;
+}
+
+@keyframes spin-button { to { transform: rotate(360deg); } }
+
+button:disabled { cursor: not-allowed; opacity: 0.7; }
+/* When loading class is added by JS */
+button.loading .button-text { display: none; }
+button.loading .spinner { display: block; }
+
+
+/* --- 5. Form Styling with Staggered Animations --- */
+/* ... (your existing .input-group and input styles) ... */
+
+/* NEW STYLES for the password toggle */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    /* Make room for the icon on the right */
+    padding-right: 3.5rem; 
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 1.25rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.password-toggle-icon:hover {
+    color: var(--primary);
+}
+
+
+.server-wait-note {
+    background: rgba(255, 245, 157, 0.3);
+    padding: 10px 15px;
+    border-left: 4px solid #f1c40f;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #333;
+}

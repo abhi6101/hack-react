@@ -1,0 +1,110 @@
+/* === ADMIN PANEL: PRO-LEVEL STYLESHEET === */
+
+/* --- 1. Root Variables & Global Styles --- */
+:root {
+    --dark-bg: #0A0A10; --surface-bg: #111119; --border-color: rgba(255, 255, 255, 0.1);
+    --primary: #00d4ff; --primary-glow: rgba(0, 212, 255, 0.5); --accent: #ff477b;
+    --text-primary: #ECEFF1; --text-secondary: #90A4AE; --font-family: 'Poppins', sans-serif;
+    --danger: #ff477b; --success: #28a745; --info: #0077b6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: var(--dark-bg); color: var(--text-primary); font-family: var(--font-family); line-height: 1.6; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--dark-bg); }
+::-webkit-scrollbar-thumb { background: var(--surface-bg); border-radius: 10px; border: 2px solid var(--dark-bg); }
+
+/* --- 2. Main Layout & Sidebar --- */
+.admin-container { display: flex; min-height: 100vh; }
+.sidebar {
+    width: 260px; background-color: var(--surface-bg); border-right: 1px solid var(--border-color);
+    position: fixed; top: 0; left: 0; height: 100%; z-index: 100; display: flex; flex-direction: column;
+}
+.sidebar-header {
+    padding: 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+.sidebar-header h2 { font-size: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; color: var(--text-primary); }
+.sidebar-header i { color: var(--primary); }
+.sidebar-menu { flex-grow: 1; padding: 1rem; }
+.sidebar-menu ul { list-style: none; }
+.sidebar-menu a {
+    display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1rem; color: var(--text-secondary);
+    text-decoration: none; border-radius: 8px; margin-bottom: 0.5rem; font-weight: 500;
+    transition: all 0.3s ease; position: relative;
+}
+.sidebar-menu a:hover { color: var(--text-primary); background-color: rgba(255,255,255,0.05); }
+.sidebar-menu a.active { color: #000; background-color: var(--primary); font-weight: 600; box-shadow: 0 0 20px var(--primary-glow); }
+.main-content { margin-left: 260px; flex: 1; padding: 2.5rem; }
+
+/* --- 3. Header, Cards & Surface Glow --- */
+.main-header { margin-bottom: 2.5rem; }
+.main-header h1 { font-size: 2.5rem; }
+.main-header .subtitle { color: var(--text-secondary); font-size: 1.1rem; }
+.card { padding: 2rem; margin-bottom: 2.5rem; }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+.card-header h3 { font-size: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+.card-header i { color: var(--primary); }
+.surface-glow { background: var(--surface-bg); border-radius: 16px; }
+.surface-glow::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: inherit; padding: 1px;
+    background: conic-gradient(from var(--angle), transparent 20%, var(--primary), var(--accent), transparent 80%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spin 5s linear infinite paused; opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+}
+.surface-glow:hover::before { animation-play-state: running; opacity: 1; }
+@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes spin { to { --angle: 360deg; } }
+
+/* --- 4. Forms & Buttons --- */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { display: block; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.form-control {
+    width: 100%; padding: 0.9rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);
+    color: var(--text-primary); border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;
+}
+.form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+textarea.form-control { resize: vertical; min-height: 100px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.7rem 1.4rem; border-radius: 8px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; }
+.btn-primary { background: var(--primary); color: #000; }
+.btn-primary:hover { background: #fff; box-shadow: 0 0 20px var(--primary-glow); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-edit { background: var(--info); color: white; }
+
+/* --- 5. Tables & Loading --- */
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; }
+th, td { padding: 1rem; text-align: left; vertical-align: middle; }
+thead th { background-color: rgba(255,255,255,0.05); color: var(--text-secondary); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; border-bottom: 1px solid var(--border-color); }
+tbody tr { transition: background-color 0.2s ease; }
+tbody tr:hover { background-color: rgba(255,255,255,0.03); }
+td { border-bottom: 1px solid var(--border-color); }
+.action-btns { display: flex; gap: 0.5rem; }
+.loading-indicator { padding: 2rem; text-align: center; color: var(--text-secondary); }
+
+/* --- 6. Alerts --- */
+.alert { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-weight: 500; border-left: 4px solid; display: flex; align-items: center; gap: 0.75rem; }
+.alert-success { background-color: rgba(40, 167, 69, 0.1); color: #58f591; border-color: var(--success); }
+.alert-danger { background-color: rgba(255, 71, 123, 0.1); color: var(--danger); border-color: var(--danger); }
+
+/* --- Responsive Design --- */
+@media (max-width: 992px) {
+    .sidebar { width: 70px; }
+    .sidebar-header h2 span, .sidebar-menu a span { display: none; }
+    .sidebar-header h2 { font-size: 1.8rem; }
+    .sidebar-menu a { justify-content: center; }
+    .main-content { margin-left: 70px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full-width { grid-column: auto; }
+}
+@media (max-width: 768px) {
+    .admin-container { flex-direction: column; }
+    .sidebar { width: 100%; position: relative; height: auto; flex-direction: row; align-items: center; padding: 0.5rem 1rem; }
+    .sidebar-header { border: none; padding: 0.5rem; }
+    .sidebar-menu { flex-direction: row; overflow-x: auto; padding: 0; }
+    .sidebar-menu a span { display: inline-block; }
+    .main-content { margin-left: 0; padding: 1.5rem; }
+    .main-header h1 { font-size: 2rem; }
+}

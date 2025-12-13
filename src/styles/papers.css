@@ -1,0 +1,89 @@
+/* === PAPERS PAGE: PRO-LEVEL STYLESHEET (Simplified Card Layout) === */
+
+/* --- 1. Root Variables & Global Styles --- */
+:root {
+    --dark-bg: #0A0A10; --surface-bg: #111119; --border-color: rgba(255, 255, 255, 0.1);
+    --primary: #00d4ff; --primary-glow: rgba(0, 212, 255, 0.5); --accent: #ff477b;
+    --text-primary: #ECEFF1; --text-secondary: #90A4AE; --font-family: 'Poppins', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: var(--dark-bg); color: var(--text-primary); font-family: var(--font-family); line-height: 1.7; }
+a { color: var(--primary); text-decoration: none; transition: color 0.3s ease; }
+a:hover { color: white; }
+
+/* --- 2. Navigation --- */
+nav { padding: 1rem 5%; background: rgba(10, 10, 16, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
+nav:last-of-type { position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; }
+.logo { font-size: 1.8rem; font-weight: 800; } .logo span { color: var(--primary); }
+nav ul { display: flex; list-style: none; gap: 1rem; align-items: center; overflow-x: auto; padding-bottom: 0.5rem; }
+nav a { color: var(--text-secondary); padding: 0.5rem 1rem; border-radius: 8px; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; transition: all 0.3s ease; }
+nav a:hover { color: var(--text-primary); background-color: var(--surface-bg); }
+nav a.active { color: var(--primary); background: var(--surface-bg); }
+
+/* --- 3. Surface Glow Effect --- */
+.surface-glow { background: var(--surface-bg); border-radius: 16px; position: relative; }
+.surface-glow::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: inherit; padding: 1px;
+    background: conic-gradient(from var(--angle), transparent 20%, var(--primary), var(--accent), transparent 80%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spin 5s linear infinite paused; opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+}
+.surface-glow:hover::before { animation-play-state: running; opacity: 1; }
+@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes spin { to { --angle: 360deg; } }
+
+/* === PAPERS-SPECIFIC STYLES START HERE === */
+
+/* --- 4. Page Header & Layout --- */
+.page-header { text-align: center; padding: 4rem 1rem 3rem; }
+.page-header h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); }
+.page-header .subtitle { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0.5rem auto 0; }
+.papers-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+/* --- 5. Semester Grid & Cards --- */
+.semester-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.semester-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.semester-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.card-content h2 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.card-content p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.card-icon i {
+    font-size: 3rem;
+    color: var(--primary);
+    opacity: 0.3;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.semester-card:hover .card-icon i {
+    opacity: 1;
+    transform: scale(1.1);
+}
