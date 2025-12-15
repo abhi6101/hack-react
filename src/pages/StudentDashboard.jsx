@@ -197,241 +197,239 @@ const StudentDashboard = () => {
                     </div>
                 </section>
 
-            </section>
+                <div className="dashboard-container">
+                    {/* Progress Tracker and Quick Actions Grid */}
+                    <div className="dashboard-grid" style={{ marginBottom: '2rem' }}>
+                        {/* Quick Actions */}
+                        <section className="quick-actions-section glass-panel">
+                            <h2><i className="fas fa-bolt"></i> Quick Actions</h2>
+                            <div className="actions-grid">
+                                <Link to="/interview" className="action-btn">
+                                    <i className="fas fa-calendar-plus"></i>
+                                    <span>Apply</span>
+                                </Link>
+                                <Link to="/resume" className="action-btn">
+                                    <i className="fas fa-file-pdf"></i>
+                                    <span>Resume</span>
+                                </Link>
+                                <Link to="/jobs" className="action-btn">
+                                    <i className="fas fa-briefcase"></i>
+                                    <span>Jobs</span>
+                                </Link>
+                                <Link to="/quiz" className="action-btn">
+                                    <i className="fas fa-brain"></i>
+                                    <span>Quiz</span>
+                                </Link>
+                            </div>
+                        </section>
 
-            <div className="dashboard-container">
-                {/* Progress Tracker and Quick Actions Grid */}
-                <div className="dashboard-grid" style={{ marginBottom: '2rem' }}>
-                    {/* Quick Actions */}
-                    <section className="quick-actions-section glass-panel">
-                        <h2><i className="fas fa-bolt"></i> Quick Actions</h2>
-                        <div className="actions-grid">
-                            <Link to="/interview" className="action-btn">
-                                <i className="fas fa-calendar-plus"></i>
-                                <span>Apply</span>
-                            </Link>
-                            <Link to="/resume" className="action-btn">
-                                <i className="fas fa-file-pdf"></i>
-                                <span>Resume</span>
-                            </Link>
-                            <Link to="/jobs" className="action-btn">
-                                <i className="fas fa-briefcase"></i>
-                                <span>Jobs</span>
-                            </Link>
-                            <Link to="/quiz" className="action-btn">
-                                <i className="fas fa-brain"></i>
-                                <span>Quiz</span>
-                            </Link>
-                        </div>
-                    </section>
+                        {/* Progress Section */}
+                        <section className="progress-section glass-panel">
+                            <h2><i className="fas fa-tasks"></i> Your Progress</h2>
+                            <div className="progress-grid">
+                                <div className="progress-item">
+                                    <div className="progress-circle">
+                                        <svg viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+                                            <circle cx="50" cy="50" r="45" fill="none"
+                                                stroke={stats.profileCompletion >= 70 ? '#06ffa5' : stats.profileCompletion >= 40 ? '#ffd60a' : '#f72585'}
+                                                strokeWidth="8"
+                                                strokeDasharray={`${stats.profileCompletion * 2.83} 283`}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 50 50)"
+                                                style={{ transition: 'stroke-dasharray 1s ease' }} />
+                                        </svg>
+                                        <div className="progress-text">
+                                            <span className="progress-value">{stats.profileCompletion}%</span>
+                                            <span className="progress-label">Profile</span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    {/* Progress Section */}
-                    <section className="progress-section glass-panel">
-                        <h2><i className="fas fa-tasks"></i> Your Progress</h2>
-                        <div className="progress-grid">
-                            <div className="progress-item">
-                                <div className="progress-circle">
-                                    <svg viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
-                                        <circle cx="50" cy="50" r="45" fill="none"
-                                            stroke={stats.profileCompletion >= 70 ? '#06ffa5' : stats.profileCompletion >= 40 ? '#ffd60a' : '#f72585'}
-                                            strokeWidth="8"
-                                            strokeDasharray={`${stats.profileCompletion * 2.83} 283`}
-                                            strokeLinecap="round"
-                                            transform="rotate(-90 50 50)"
-                                            style={{ transition: 'stroke-dasharray 1s ease' }} />
-                                    </svg>
-                                    <div className="progress-text">
-                                        <span className="progress-value">{stats.profileCompletion}%</span>
-                                        <span className="progress-label">Profile</span>
+                                <div className="progress-item">
+                                    <div className="progress-circle">
+                                        <svg viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+                                            <circle cx="50" cy="50" r="45" fill="none"
+                                                stroke={stats.successRate >= 70 ? '#06ffa5' : stats.successRate >= 40 ? '#ffd60a' : '#f72585'}
+                                                strokeWidth="8"
+                                                strokeDasharray={`${stats.successRate * 2.83} 283`}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 50 50)"
+                                                style={{ transition: 'stroke-dasharray 1s ease' }} />
+                                        </svg>
+                                        <div className="progress-text">
+                                            <span className="progress-value">{stats.successRate}%</span>
+                                            <span className="progress-label">Success</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </section>
+                    </div>
 
-                            <div className="progress-item">
-                                <div className="progress-circle">
-                                    <svg viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
-                                        <circle cx="50" cy="50" r="45" fill="none"
-                                            stroke={stats.successRate >= 70 ? '#06ffa5' : stats.successRate >= 40 ? '#ffd60a' : '#f72585'}
-                                            strokeWidth="8"
-                                            strokeDasharray={`${stats.successRate * 2.83} 283`}
-                                            strokeLinecap="round"
-                                            transform="rotate(-90 50 50)"
-                                            style={{ transition: 'stroke-dasharray 1s ease' }} />
-                                    </svg>
-                                    <div className="progress-text">
-                                        <span className="progress-value">{stats.successRate}%</span>
-                                        <span className="progress-label">Success</span>
+                    {/* Two Column Layout */}
+                    <div className="dashboard-grid">
+                        {/* Profile Status */}
+                        <section className="dashboard-card glass-panel">
+                            <div className="card-header">
+                                <h2><i className="fas fa-user"></i> Profile Status</h2>
+                                <Link to="/profile" className="btn btn-primary">Edit Profile</Link>
+                            </div>
+                            {profile ? (
+                                <div className="profile-summary">
+                                    <div className="profile-item">
+                                        <strong>Enrollment:</strong> {profile.enrollmentNumber}
+                                    </div>
+                                    <div className="profile-item">
+                                        <strong>Branch:</strong> {profile.branch}
+                                    </div>
+                                    <div className="profile-item">
+                                        <strong>CGPA:</strong> {profile.cgpa}
+                                    </div>
+                                    <div className="profile-item">
+                                        <strong>Skills:</strong> {profile.skills || 'Not specified'}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
+                            ) : (
+                                <div className="alert alert-warning">
+                                    <i className="fas fa-exclamation-triangle"></i> Please complete your profile to access placement opportunities.
+                                    <Link to="/profile" className="btn btn-secondary">Complete Profile</Link>
+                                </div>
+                            )}
+                        </section>
 
-                {/* Two Column Layout */}
-                <div className="dashboard-grid">
-                    {/* Profile Status */}
+                        {/* Recent Activity */}
+                        <section className="dashboard-card glass-panel">
+                            <div className="card-header">
+                                <h2><i className="fas fa-history"></i> Recent Activity</h2>
+                            </div>
+                            <div className="activity-timeline">
+                                {recentActivity.map((activity, index) => (
+                                    <div key={index} className="timeline-item">
+                                        <div className="timeline-icon">
+                                            <i className={activity.icon}></i>
+                                        </div>
+                                        <div className="timeline-content">
+                                            <h4>{activity.title}</h4>
+                                            <p>{activity.description}</p>
+                                            <span className="timeline-time">{activity.time}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* Upcoming Interviews */}
                     <section className="dashboard-card glass-panel">
                         <div className="card-header">
-                            <h2><i className="fas fa-user"></i> Profile Status</h2>
-                            <Link to="/profile" className="btn btn-primary">Edit Profile</Link>
+                            <h2><i className="fas fa-calendar-alt"></i> Upcoming Interviews</h2>
                         </div>
-                        {profile ? (
-                            <div className="profile-summary">
-                                <div className="profile-item">
-                                    <strong>Enrollment:</strong> {profile.enrollmentNumber}
-                                </div>
-                                <div className="profile-item">
-                                    <strong>Branch:</strong> {profile.branch}
-                                </div>
-                                <div className="profile-item">
-                                    <strong>CGPA:</strong> {profile.cgpa}
-                                </div>
-                                <div className="profile-item">
-                                    <strong>Skills:</strong> {profile.skills || 'Not specified'}
-                                </div>
+                        {interviews.length > 0 ? (
+                            <div className="interviews-list">
+                                {interviews.slice(0, 5).map(interview => (
+                                    <div key={interview.id} className="interview-item">
+                                        <div className="interview-company">{interview.company}</div>
+                                        <div className="interview-date">{new Date(interview.date).toLocaleDateString()}</div>
+                                        <div className="interview-venue">{interview.venue}</div>
+                                    </div>
+                                ))}
                             </div>
                         ) : (
-                            <div className="alert alert-warning">
-                                <i className="fas fa-exclamation-triangle"></i> Please complete your profile to access placement opportunities.
-                                <Link to="/profile" className="btn btn-secondary">Complete Profile</Link>
+                            <p>No upcoming interviews</p>
+                        )}
+                        <Link to="/interview" className="btn btn-outline">View All Interviews</Link>
+                    </section>
+
+                    {/* Job Applications */}
+                    <section className="dashboard-card glass-panel">
+                        <div className="card-header">
+                            <h2><i className="fas fa-briefcase"></i> My Job Applications</h2>
+                        </div>
+
+                        {/* Shortlist Notification */}
+                        {jobApplications.some(app => app.status === 'SHORTLISTED') && (
+                            <div className="notification-banner success">
+                                <i className="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Congratulations!</strong> You have been shortlisted for {jobApplications.filter(app => app.status === 'SHORTLISTED').length} job(s).
+                                    Check your Interview section for details.
+                                </div>
                             </div>
+                        )}
+
+                        {jobApplications.length > 0 ? (
+                            <div className="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <th>Company</th>
+                                            <th>Applied On</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {jobApplications.map(app => (
+                                            <tr key={app.id}>
+                                                <td>{app.jobTitle || app.job?.title || 'N/A'}</td>
+                                                <td>{app.companyName || app.job?.company_name || 'N/A'}</td>
+                                                <td>{new Date(app.appliedAt || app.createdAt).toLocaleDateString()}</td>
+                                                <td>
+                                                    <span className={`status-badge status-${app.status.toLowerCase()}`}>
+                                                        {app.status === 'SHORTLISTED' && '✓ '}
+                                                        {app.status === 'REJECTED' && '✗ '}
+                                                        {app.status}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <p>No job applications yet. <Link to="/jobs">Browse jobs</Link></p>
                         )}
                     </section>
 
-                    {/* Recent Activity */}
-                    <section className="dashboard-card glass-panel">
+                    {/* My Applications */}
+                    <section className="dashboard-card surface-glow">
                         <div className="card-header">
-                            <h2><i className="fas fa-history"></i> Recent Activity</h2>
+                            <h2><i className="fas fa-file-alt"></i> My Applications</h2>
                         </div>
-                        <div className="activity-timeline">
-                            {recentActivity.map((activity, index) => (
-                                <div key={index} className="timeline-item">
-                                    <div className="timeline-icon">
-                                        <i className={activity.icon}></i>
-                                    </div>
-                                    <div className="timeline-content">
-                                        <h4>{activity.title}</h4>
-                                        <p>{activity.description}</p>
-                                        <span className="timeline-time">{activity.time}</span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        {applications.length > 0 ? (
+                            <div className="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Company</th>
+                                            <th>Applied On</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {applications.map(app => (
+                                            <tr key={app.id}>
+                                                <td>{app.interviewDrive.company}</td>
+                                                <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
+                                                <td>
+                                                    <span className={`status-badge status-${app.status.toLowerCase()}`}>
+                                                        {app.status}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <p>No applications yet. <Link to="/interview">Apply to interviews</Link></p>
+                        )}
                     </section>
                 </div>
-
-                {/* Upcoming Interviews */}
-                <section className="dashboard-card glass-panel">
-                    <div className="card-header">
-                        <h2><i className="fas fa-calendar-alt"></i> Upcoming Interviews</h2>
-                    </div>
-                    {interviews.length > 0 ? (
-                        <div className="interviews-list">
-                            {interviews.slice(0, 5).map(interview => (
-                                <div key={interview.id} className="interview-item">
-                                    <div className="interview-company">{interview.company}</div>
-                                    <div className="interview-date">{new Date(interview.date).toLocaleDateString()}</div>
-                                    <div className="interview-venue">{interview.venue}</div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p>No upcoming interviews</p>
-                    )}
-                    <Link to="/interview" className="btn btn-outline">View All Interviews</Link>
-                </section>
-
-                {/* Job Applications */}
-                <section className="dashboard-card glass-panel">
-                    <div className="card-header">
-                        <h2><i className="fas fa-briefcase"></i> My Job Applications</h2>
-                    </div>
-
-                    {/* Shortlist Notification */}
-                    {jobApplications.some(app => app.status === 'SHORTLISTED') && (
-                        <div className="notification-banner success">
-                            <i className="fas fa-check-circle"></i>
-                            <div>
-                                <strong>Congratulations!</strong> You have been shortlisted for {jobApplications.filter(app => app.status === 'SHORTLISTED').length} job(s).
-                                Check your Interview section for details.
-                            </div>
-                        </div>
-                    )}
-
-                    {jobApplications.length > 0 ? (
-                        <div className="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Job Title</th>
-                                        <th>Company</th>
-                                        <th>Applied On</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {jobApplications.map(app => (
-                                        <tr key={app.id}>
-                                            <td>{app.jobTitle || app.job?.title || 'N/A'}</td>
-                                            <td>{app.companyName || app.job?.company_name || 'N/A'}</td>
-                                            <td>{new Date(app.appliedAt || app.createdAt).toLocaleDateString()}</td>
-                                            <td>
-                                                <span className={`status-badge status-${app.status.toLowerCase()}`}>
-                                                    {app.status === 'SHORTLISTED' && '✓ '}
-                                                    {app.status === 'REJECTED' && '✗ '}
-                                                    {app.status}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <p>No job applications yet. <Link to="/jobs">Browse jobs</Link></p>
-                    )}
-                </section>
-
-                {/* My Applications */}
-                <section className="dashboard-card surface-glow">
-                    <div className="card-header">
-                        <h2><i className="fas fa-file-alt"></i> My Applications</h2>
-                    </div>
-                    {applications.length > 0 ? (
-                        <div className="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Company</th>
-                                        <th>Applied On</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {applications.map(app => (
-                                        <tr key={app.id}>
-                                            <td>{app.interviewDrive.company}</td>
-                                            <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
-                                            <td>
-                                                <span className={`status-badge status-${app.status.toLowerCase()}`}>
-                                                    {app.status}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <p>No applications yet. <Link to="/interview">Apply to interviews</Link></p>
-                    )}
-                </section>
-            </div>
-        </main>
-        </div >
+            </main>
+        </div>
     );
 };
 
