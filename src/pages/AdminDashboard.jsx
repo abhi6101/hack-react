@@ -610,7 +610,7 @@ const AdminDashboard = () => {
                 return (
                     <section className="card surface-glow">
                         <div className="card-header">
-                            <h3><i className="fas fa-file-alt"></i> Manage Applications</h3>
+                            <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
                         </div>
                         {loadingApplications ? (
                             <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
@@ -811,7 +811,7 @@ const AdminDashboard = () => {
                                 className={activeTab === 'applications' ? 'active' : ''}
                                 onClick={() => { setActiveTab('applications'); loadApplications(); }}
                             >
-                                <i className="fas fa-file-alt"></i> Applications
+                                <i className="fas fa-file-alt"></i> Job Applications
                             </button>
                         </li>
                     </ul>
