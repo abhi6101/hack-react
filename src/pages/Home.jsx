@@ -11,7 +11,7 @@ const Home = () => {
         "/images/lab1.jpg",
         "/images/Group-photo-1-copy-4.jpg",
         "/images/fair.jpg",
-        "/images/dscf2122-copy.jpg"
+        "/images/DSCF2122-copy.jpg"
     ];
 
     const nextSlide = () => {
