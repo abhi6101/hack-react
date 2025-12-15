@@ -1045,14 +1045,15 @@ footer .heart {
 .logo {
     font-family: 'Poppins', sans-serif;
     font-weight: 800;
-    font-size: 1.5rem;
-    /* Clean size */
+    font-size: 1.3rem;
+    /* Reduced for better fit */
     letter-spacing: -0.5px;
     color: #fff;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .logo .highlight {
