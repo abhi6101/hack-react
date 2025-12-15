@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import InterviewRoundsForm from '../components/InterviewRoundsForm';
 import '../styles/admin.css';
 
 const AdminDashboard = () => {
@@ -33,6 +34,12 @@ const AdminDashboard = () => {
     const [editingUser, setEditingUser] = useState(null);
     const [applications, setApplications] = useState([]);
     const [loadingApplications, setLoadingApplications] = useState(false);
+    const [interviewDetails, setInterviewDetails] = useState({
+        codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
+        technicalInterview: { enabled: false, date: '', time: '', venue: '', topics: '' },
+        hrRound: { enabled: false, date: '', time: '', venue: '', questions: '' },
+        projectTask: { enabled: false, description: '', deadline: '24', requirements: '' }
+    });
 
     useEffect(() => {
         // Load interviews
@@ -255,7 +262,8 @@ const AdminDashboard = () => {
             company_name: formData.companyName,
             apply_link: formData.applyLink,
             last_date: formData.lastDate,
-            salary: parseInt(formData.salary)
+            salary: parseInt(formData.salary),
+            interview_details: JSON.stringify(interviewDetails)
         };
 
         try {
@@ -272,6 +280,12 @@ const AdminDashboard = () => {
 
             setMessage({ text: 'Job posted successfully!', type: 'success' });
             setFormData({ jobTitle: '', companyName: '', jobDescription: '', applyLink: '', lastDate: '', salary: '' });
+            setInterviewDetails({
+                codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
+                technicalInterview: { enabled: false, date: '', time: '', venue: '', topics: '' },
+                hrRound: { enabled: false, date: '', time: '', venue: '', questions: '' },
+                projectTask: { enabled: false, description: '', deadline: '24', requirements: '' }
+            });
             loadJobs();
             setTimeout(() => setMessage({ text: '', type: '' }), 3000);
         } catch (error) {
@@ -362,6 +376,13 @@ const AdminDashboard = () => {
                                         <input type="number" id="salary" className="form-control" min="0" required value={formData.salary} onChange={handleInputChange} />
                                     </div>
                                 </div>
+
+                                {/* Interview Rounds Section */}
+                                <InterviewRoundsForm
+                                    interviewDetails={interviewDetails}
+                                    setInterviewDetails={setInterviewDetails}
+                                />
+
                                 <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Post Job</button>
                             </form>
                         </section>
