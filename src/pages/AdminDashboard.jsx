@@ -638,9 +638,13 @@ const AdminDashboard = () => {
                                                 <td>{app.jobTitle}</td>
                                                 <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
                                                 <td>
-                                                    <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
-                                                        <i className="fas fa-file-pdf"></i> View
-                                                    </a>
+                                                    {app.resumePath ? (
+                                                        <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                                                            <i className="fas fa-file-pdf"></i> View
+                                                        </a>
+                                                    ) : (
+                                                        <span style={{ color: '#888' }}>No resume</span>
+                                                    )}
                                                 </td>
                                                 <td>
                                                     <span style={{
