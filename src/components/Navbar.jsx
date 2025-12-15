@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../styles/index.css';
+import '../styles/dropdown.css';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [resourcesOpen, setResourcesOpen] = useState(false);
+    const [exploreOpen, setExploreOpen] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
@@ -41,14 +44,35 @@ const Navbar = () => {
                 <Link to="/interview" className={isActive('/interview')}><i className="fas fa-comments"></i> Interviews</Link>
                 <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Previous Year</Link>
 
-                {/* Show these only if authenticated OR on mobile */}
-                {(localStorage.getItem('authToken') || isMenuOpen) && (
+                {/* Show dropdown menus only if authenticated */}
+                {localStorage.getItem('authToken') && (
                     <>
-                        <Link to="/quiz" className={isActive('/quiz')}><i className="fas fa-brain"></i> Quiz</Link>
-                        <Link to="/gallery" className={isActive('/gallery')}><i className="fas fa-images"></i> Gallery</Link>
-                        <Link to="/videos" className={isActive('/videos')}><i className="fas fa-video"></i> Study Videos</Link>
-                        <Link to="/courses" className={isActive('/courses')}><i className="fas fa-book"></i> Courses</Link>
-                        <Link to="/blog" className={isActive('/blog')}><i className="fas fa-blog"></i> Blog</Link>
+                        {/* Resources Dropdown */}
+                        <div className="dropdown"
+                            onMouseEnter={() => setResourcesOpen(true)}
+                            onMouseLeave={() => setResourcesOpen(false)}>
+                            <button className="dropdown-toggle">
+                                <i className="fas fa-book-reader"></i> Resources <i className="fas fa-chevron-down"></i>
+                            </button>
+                            <div className={`dropdown-menu ${resourcesOpen ? 'show' : ''}`}>
+                                <Link to="/quiz" className={isActive('/quiz')}><i className="fas fa-brain"></i> Quiz</Link>
+                                <Link to="/videos" className={isActive('/videos')}><i className="fas fa-video"></i> Study Videos</Link>
+                                <Link to="/courses" className={isActive('/courses')}><i className="fas fa-book"></i> Courses</Link>
+                            </div>
+                        </div>
+
+                        {/* Explore Dropdown */}
+                        <div className="dropdown"
+                            onMouseEnter={() => setExploreOpen(true)}
+                            onMouseLeave={() => setExploreOpen(false)}>
+                            <button className="dropdown-toggle">
+                                <i className="fas fa-compass"></i> Explore <i className="fas fa-chevron-down"></i>
+                            </button>
+                            <div className={`dropdown-menu ${exploreOpen ? 'show' : ''}`}>
+                                <Link to="/gallery" className={isActive('/gallery')}><i className="fas fa-images"></i> Gallery</Link>
+                                <Link to="/blog" className={isActive('/blog')}><i className="fas fa-blog"></i> Blog</Link>
+                            </div>
+                        </div>
                     </>
                 )}
 
