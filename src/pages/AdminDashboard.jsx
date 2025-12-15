@@ -393,24 +393,6 @@ const AdminDashboard = () => {
         setTimeout(() => setMessage({ text: '', type: '' }), 2000);
     };
 
-    const deleteApplication = async (appId) => {
-        if (!window.confirm('Are you sure you want to delete this application?')) return;
-        try {
-            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (response.ok) {
-                loadApplications();
-                setMessage({ text: 'Application deleted successfully!', type: 'success' });
-            } else {
-                throw new Error('Failed to delete application');
-            }
-        } catch (error) {
-            setMessage({ text: 'Failed to delete application', type: 'error' });
-        }
-        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
