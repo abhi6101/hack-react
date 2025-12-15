@@ -269,144 +269,135 @@ const Interview = () => {
         );
     };
 
-    return (
-        <div className="interview-page">
-            <header className="page-hero">
-                <div className="hero-content">
-                    <span className="hero-badge">Placement Season 2025</span>
-                    <h1>Interview Schedules</h1>
-                    <p>Track upcoming campus drives, check eligibility, and book your interview slots instantly.</p>
-                </div>
-            </header>
-
-            <main className="interview-container">
-                {/* Statistics Cards */}
-                <section className="stats-section">
-                    <div className="stats-grid">
-                        <div className="stat-card" style={{ borderTop: '4px solid #4361ee' }}>
-                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
-                                <i className="fas fa-calendar-check"></i>
-                            </div>
-                            <div className="stat-content">
-                                <h3 className="stat-value">{stats.total}</h3>
-                                <p className="stat-label">Total Drives</p>
-                            </div>
+    <div className="interview-page">
+        <main className="interview-container" style={{ paddingTop: '100px' }}>
+            {/* Statistics Cards */}
+            <section className="stats-section">
+                <div className="stats-grid">
+                    <div className="stat-card" style={{ borderTop: '4px solid #4361ee' }}>
+                        <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
+                            <i className="fas fa-calendar-check"></i>
                         </div>
-
-                        <div className="stat-card" style={{ borderTop: '4px solid #06ffa5' }}>
-                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
-                                <i className="fas fa-door-open"></i>
-                            </div>
-                            <div className="stat-content">
-                                <h3 className="stat-value">{stats.available}</h3>
-                                <p className="stat-label">Slots Available</p>
-                            </div>
-                        </div>
-
-                        <div className="stat-card" style={{ borderTop: '4px solid #f72585' }}>
-                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
-                                <i className="fas fa-paper-plane"></i>
-                            </div>
-                            <div className="stat-content">
-                                <h3 className="stat-value">{stats.applied}</h3>
-                                <p className="stat-label">Applications Sent</p>
-                            </div>
+                        <div className="stat-content">
+                            <h3 className="stat-value">{stats.total}</h3>
+                            <p className="stat-label">Total Drives</p>
                         </div>
                     </div>
-                </section>
 
-                {/* Search and Filter */}
-                <section className="filter-section">
-                    <div className="search-bar">
-                        <i className="fas fa-search"></i>
-                        <input
-                            type="text"
-                            placeholder="Search by company or position..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                    <div className="stat-card" style={{ borderTop: '4px solid #06ffa5' }}>
+                        <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
+                            <i className="fas fa-door-open"></i>
+                        </div>
+                        <div className="stat-content">
+                            <h3 className="stat-value">{stats.available}</h3>
+                            <p className="stat-label">Slots Available</p>
+                        </div>
                     </div>
-                    <div className="filter-bar">
-                        <label><i className="fas fa-filter"></i> Location:</label>
-                        <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)}>
-                            {locations.map(loc => (
-                                <option key={loc} value={loc}>
-                                    {loc === 'all' ? 'All Locations' : loc}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </section>
 
-                <section className="upcoming-section">
-                    <div className="section-header">
-                        <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
-                        <span className="result-count">{filteredInterviews.length} drives found</span>
-                    </div>
-                    <div className="interview-grid">
-                        {filteredInterviews.length > 0 ? (
-                            filteredInterviews.map(renderCard)
-                        ) : (
-                            <div className="no-results">
-                                <i className="fas fa-search"></i>
-                                <h3>No interviews found</h3>
-                                <p>Try adjusting your search or filter criteria</p>
-                            </div>
-                        )}
-                    </div>
-                </section>
-            </main>
-
-            {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal-content surface-glow" onClick={e => e.stopPropagation()}>
-                        <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
-                        <h2>Book Interview: {selectedCompany?.company}</h2>
-                        <form onSubmit={handleBookingSubmit} className="booking-form">
-                            <div className="form-group">
-                                <label>Full Name</label>
-                                <input
-                                    type="text"
-                                    name="studentName"
-                                    value={bookingData.studentName}
-                                    onChange={handleBookingInput}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>College Email</label>
-                                <input
-                                    type="email"
-                                    name="studentEmail"
-                                    value={bookingData.studentEmail}
-                                    onChange={handleBookingInput}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Roll Number</label>
-                                <input
-                                    type="text"
-                                    name="studentRoll"
-                                    value={bookingData.studentRoll}
-                                    onChange={handleBookingInput}
-                                    required
-                                />
-                            </div>
-                            <button type="submit" className="btn btn-primary btn-block">Confirm Booking</button>
-                        </form>
+                    <div className="stat-card" style={{ borderTop: '4px solid #f72585' }}>
+                        <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
+                            <i className="fas fa-paper-plane"></i>
+                        </div>
+                        <div className="stat-content">
+                            <h3 className="stat-value">{stats.applied}</h3>
+                            <p className="stat-label">Applications Sent</p>
+                        </div>
                     </div>
                 </div>
-            )}
+            </section>
 
-            {showApplicationModal && selectedInterview && (
-                <ApplicationModal
-                    interview={selectedInterview}
-                    onClose={() => setShowApplicationModal(false)}
-                    onSubmit={handleApplicationSubmit}
-                />
-            )}
-        </div>
+            {/* Search and Filter */}
+            <section className="filter-section">
+                <div className="search-bar">
+                    <i className="fas fa-search"></i>
+                    <input
+                        type="text"
+                        placeholder="Search by company or position..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <div className="filter-bar">
+                    <label><i className="fas fa-filter"></i> Location:</label>
+                    <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)}>
+                        {locations.map(loc => (
+                            <option key={loc} value={loc}>
+                                {loc === 'all' ? 'All Locations' : loc}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </section>
+
+            <section className="upcoming-section">
+                <div className="section-header">
+                    <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
+                    <span className="result-count">{filteredInterviews.length} drives found</span>
+                </div>
+                <div className="interview-grid">
+                    {filteredInterviews.length > 0 ? (
+                        filteredInterviews.map(renderCard)
+                    ) : (
+                        <div className="no-results">
+                            <i className="fas fa-search"></i>
+                            <h3>No interviews found</h3>
+                            <p>Try adjusting your search or filter criteria</p>
+                        </div>
+                    )}
+                </div>
+            </section>
+        </main>
+
+        {showModal && (
+            <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                <div className="modal-content surface-glow" onClick={e => e.stopPropagation()}>
+                    <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
+                    <h2>Book Interview: {selectedCompany?.company}</h2>
+                    <form onSubmit={handleBookingSubmit} className="booking-form">
+                        <div className="form-group">
+                            <label>Full Name</label>
+                            <input
+                                type="text"
+                                name="studentName"
+                                value={bookingData.studentName}
+                                onChange={handleBookingInput}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>College Email</label>
+                            <input
+                                type="email"
+                                name="studentEmail"
+                                value={bookingData.studentEmail}
+                                onChange={handleBookingInput}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Roll Number</label>
+                            <input
+                                type="text"
+                                name="studentRoll"
+                                value={bookingData.studentRoll}
+                                onChange={handleBookingInput}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary btn-block">Confirm Booking</button>
+                    </form>
+                </div>
+            </div>
+        )}
+
+        {showApplicationModal && selectedInterview && (
+            <ApplicationModal
+                interview={selectedInterview}
+                onClose={() => setShowApplicationModal(false)}
+                onSubmit={handleApplicationSubmit}
+            />
+        )}
+    </div>
     );
 };
 
