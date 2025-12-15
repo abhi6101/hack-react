@@ -156,19 +156,36 @@ const Jobs = () => {
         formData.append('companyName', selectedJob.company_name);
 
         try {
-            // Mocking successful submission for demo if backend fails or auth missing
-            // const response = await fetch(APPLY_JOB_API_URL, ...);
-            console.log("Submitting application...");
+            const token = localStorage.getItem('authToken');
+            const response = await fetch(APPLY_JOB_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
 
-            setTimeout(() => {
-                alert(`Application for "${selectedJob.title}" submitted successfully!`);
-                setShowModal(false);
-                setSubmitting(false);
-            }, 1500);
+            if (!response.ok) {
+                throw new Error('Failed to submit application');
+            }
+
+            alert(`Application for "${selectedJob.title}" submitted successfully! You will receive a confirmation email shortly.`);
+            setShowModal(false);
+            setSubmitting(false);
+
+            // Reset form
+            setApplicationData({
+                applicantName: '',
+                applicantEmail: '',
+                applicantPhone: '',
+                applicantRollNo: '',
+                coverLetter: ''
+            });
+            setResumeFile(null);
 
         } catch (error) {
-            console.error(error);
-            alert('Failed to submit application');
+            console.error('Error submitting application:', error);
+            alert('Failed to submit application. Please try again later.');
             setSubmitting(false);
         }
     };
