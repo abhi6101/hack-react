@@ -3,7 +3,10 @@ import '../styles/modal.css';
 
 const ApplicationModal = ({ interview, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
-        resumeUrl: '',
+        applicantName: '',
+        applicantEmail: '',
+        applicantPhone: '',
+        resume: null,
         coverLetter: ''
     });
     const [loading, setLoading] = useState(false);
@@ -37,15 +40,45 @@ const ApplicationModal = ({ interview, onClose, onSubmit }) => {
 
                 <form onSubmit={handleSubmit} className="application-form">
                     <div className="form-group">
-                        <label>Resume URL *</label>
+                        <label>Full Name *</label>
                         <input
-                            type="url"
+                            type="text"
+                            className="form-control"
                             required
-                            placeholder="https://drive.google.com/your-resume"
-                            value={formData.resumeUrl}
-                            onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })}
+                            value={formData.applicantName}
+                            onChange={(e) => setFormData({ ...formData, applicantName: e.target.value })}
                         />
-                        <small>Provide a link to your resume (Google Drive, Dropbox, etc.)</small>
+                    </div>
+                    <div className="form-group">
+                        <label>Email Address *</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            required
+                            value={formData.applicantEmail}
+                            onChange={(e) => setFormData({ ...formData, applicantEmail: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Phone Number *</label>
+                        <input
+                            type="tel"
+                            className="form-control"
+                            required
+                            value={formData.applicantPhone}
+                            onChange={(e) => setFormData({ ...formData, applicantPhone: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Resume (PDF) *</label>
+                        <input
+                            type="file"
+                            className="form-control"
+                            accept=".pdf"
+                            onChange={(e) => setFormData({ ...formData, resume: e.target.files[0] })}
+                            required
+                        />
+                        <small>Upload your resume in PDF format (Max 5MB)</small>
                     </div>
 
                     <div className="form-group">

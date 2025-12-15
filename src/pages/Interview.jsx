@@ -157,10 +157,19 @@ const Interview = () => {
 
     const handleApplicationSubmit = async (applicationData) => {
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/applications', {
+            const formData = new FormData();
+            formData.append('interviewDriveId', applicationData.interviewDriveId);
+            formData.append('companyName', selectedInterview.company);
+            formData.append('interviewDate', selectedInterview.date);
+            formData.append('applicantName', applicationData.applicantName);
+            formData.append('applicantEmail', applicationData.applicantEmail);
+            formData.append('applicantPhone', applicationData.applicantPhone);
+            formData.append('resume', applicationData.resume);
+
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-applications/apply', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(applicationData)
+                headers: { 'Authorization': `Bearer ${token}` }, // No Content-Type for FormData
+                body: formData
             });
 
             if (!res.ok) {

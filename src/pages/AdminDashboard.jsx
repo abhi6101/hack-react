@@ -70,6 +70,42 @@ const AdminDashboard = () => {
         }
     };
 
+    const [interviewApplications, setInterviewApplications] = useState([]);
+    const [loadingInterviewApps, setLoadingInterviewApps] = useState(false);
+
+    const loadInterviewApplications = async () => {
+        setLoadingInterviewApps(true);
+        try {
+            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/interview-applications`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error('Failed to fetch interview applications');
+            const data = await response.json();
+            setInterviewApplications(data);
+        } catch (error) {
+            console.error('Error loading interview apps:', error);
+            setMessage({ text: 'Failed to load interview applications.', type: 'error' });
+        } finally {
+            setLoadingInterviewApps(false);
+        }
+    };
+
+    const updateInterviewAppStatus = async (appId, newStatus) => {
+        try {
+            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/interview-applications/${appId}/status?status=${newStatus}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                loadInterviewApplications();
+                setMessage({ text: 'Application status updated!', type: 'success' });
+            }
+        } catch (err) {
+            setMessage({ text: 'Failed to update status', type: 'error' });
+        }
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    };
+
     const updateApplicationStatus = async (appId, newStatus) => {
         try {
             const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}/status?status=${newStatus}`, {
@@ -779,57 +815,74 @@ const AdminDashboard = () => {
                         <div className="card-header">
                             <h3><i className="fas fa-user-check"></i> Interview Drive Applications</h3>
                         </div>
-                        <div className="table-responsive" style={{ padding: '1rem' }}>
-                            {interviews.length > 0 ? (
+                        {loadingInterviewApps ? (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
+                        ) : interviewApplications.length > 0 ? (
+                            <div className="table-responsive" style={{ padding: '1rem' }}>
                                 <table className="table">
                                     <thead>
                                         <tr>
+                                            <th>Applicant Name</th>
                                             <th>Company</th>
                                             <th>Date</th>
-                                            <th>Venue</th>
-                                            <th>Total Slots</th>
-                                            <th>Booked Slots</th>
-                                            <th>Available</th>
+                                            <th>Resume</th>
                                             <th>Status</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {interviews.map(interview => (
-                                            <tr key={interview.id}>
-                                                <td>{interview.company}</td>
-                                                <td>{new Date(interview.date).toLocaleDateString()}</td>
-                                                <td>{interview.venue}</td>
-                                                <td>{interview.totalSlots || 20}</td>
-                                                <td>{interview.bookedSlots || 0}</td>
-                                                <td>{(interview.totalSlots || 20) - (interview.bookedSlots || 0)}</td>
+                                        {interviewApplications.map(app => (
+                                            <tr key={app.id}>
+                                                <td>
+                                                    {app.applicantName}
+                                                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{app.applicantEmail}</div>
+                                                </td>
+                                                <td>{app.companyName}</td>
+                                                <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
+                                                <td>
+                                                    <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                                                        <i className="fas fa-file-pdf"></i> View Resume
+                                                    </a>
+                                                </td>
                                                 <td>
                                                     <span style={{
                                                         padding: '0.25rem 0.75rem',
                                                         borderRadius: '12px',
                                                         fontSize: '0.85rem',
                                                         fontWeight: '600',
-                                                        background: (interview.bookedSlots || 0) >= (interview.totalSlots || 20) ?
-                                                            'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)',
-                                                        color: (interview.bookedSlots || 0) >= (interview.totalSlots || 20) ?
-                                                            '#ef4444' : '#22c55e'
+                                                        background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
+                                                            app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
+                                                                app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
+                                                                    'rgba(99, 102, 241, 0.2)',
+                                                        color: app.status === 'PENDING' ? '#fbbf24' :
+                                                            app.status === 'SHORTLISTED' ? '#22c55e' :
+                                                                app.status === 'REJECTED' ? '#ef4444' :
+                                                                    'var(--primary)'
                                                     }}>
-                                                        {(interview.bookedSlots || 0) >= (interview.totalSlots || 20) ? 'FULL' : 'OPEN'}
+                                                        {app.status}
                                                     </span>
+                                                </td>
+                                                <td>
+                                                    <select
+                                                        value={app.status}
+                                                        onChange={(e) => updateInterviewAppStatus(app.id, e.target.value)}
+                                                        className="form-control"
+                                                        style={{ width: 'auto', padding: '0.5rem' }}
+                                                    >
+                                                        <option value="PENDING">Pending</option>
+                                                        <option value="SHORTLISTED">Shortlist</option>
+                                                        <option value="REJECTED">Reject</option>
+                                                        <option value="SELECTED">Select</option>
+                                                    </select>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-                            ) : (
-                                <p style={{ padding: '2rem', textAlign: 'center' }}>No interview drives posted yet.</p>
-                            )}
-                        </div>
-                        <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '8px', margin: '1rem' }}>
-                            <p style={{ margin: 0, color: '#6366f1' }}>
-                                <i className="fas fa-info-circle"></i> <strong>Note:</strong> This shows interview drive slot availability.
-                                Full student registration tracking will be available soon.
-                            </p>
-                        </div>
+                            </div>
+                        ) : (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>No interview applications received yet.</p>
+                        )}
                     </section>
                 );
             default:
@@ -876,7 +929,7 @@ const AdminDashboard = () => {
                         <li>
                             <button
                                 className={activeTab === 'interview-applications' ? 'active' : ''}
-                                onClick={() => setActiveTab('interview-applications')}
+                                onClick={() => { setActiveTab('interview-applications'); loadInterviewApplications(); }}
                                 style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
                             >
                                 <i className="fas fa-user-check"></i> Interview Applications
