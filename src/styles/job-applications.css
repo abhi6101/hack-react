@@ -1,0 +1,319 @@
+/* Job Applications Manager Styles */
+
+.job-applications-manager {
+    background: rgba(10, 10, 16, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.applications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary);
+}
+
+.applications-header h3 {
+    color: var(--primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.job-filter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.job-filter label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.job-selector {
+    padding: 0.8rem 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    min-width: 300px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.job-selector:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+.job-selector option {
+    background: var(--dark-bg);
+    color: white;
+}
+
+/* No Applications State */
+.no-applications {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+}
+
+.no-applications i {
+    font-size: 4rem;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+}
+
+.no-applications h4 {
+    color: white;
+    margin: 1rem 0 0.5rem;
+}
+
+/* Applications Table */
+.applications-table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+.applications-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.applications-table thead {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.applications-table th {
+    padding: 1rem;
+    text-align: left;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.applications-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.applications-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.applications-table td {
+    padding: 1.2rem 1rem;
+    color: white;
+}
+
+.student-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.student-name i {
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.student-email {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.job-title strong {
+    color: white;
+    font-size: 1rem;
+}
+
+.job-title small {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.resume-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+}
+
+.no-resume {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.applied-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-accept,
+.btn-reject {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-accept {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+}
+
+.btn-accept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+}
+
+.btn-reject {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.btn-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+}
+
+.status-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Applications Summary */
+.applications-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.summary-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.summary-value {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.summary-value.pending {
+    color: #fbbf24;
+}
+
+.summary-value.shortlisted {
+    color: #22c55e;
+}
+
+.summary-value.rejected {
+    color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .applications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .job-filter {
+        width: 100%;
+    }
+
+    .job-selector {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .job-applications-manager {
+        padding: 1rem;
+    }
+
+    .applications-table {
+        font-size: 0.85rem;
+    }
+
+    .applications-table th,
+    .applications-table td {
+        padding: 0.8rem 0.5rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-accept,
+    .btn-reject {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .applications-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+}
