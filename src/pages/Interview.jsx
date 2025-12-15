@@ -189,7 +189,7 @@ const Interview = () => {
         if (!token) return;
 
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/applications/my', {
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-applications/my', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -206,7 +206,8 @@ const Interview = () => {
     }, [token]);
 
     const hasApplied = (interviewId) => {
-        return myApplications.some(app => app.interviewDrive.id === interviewId);
+        // Check if any application matches the interview drive ID
+        return myApplications.some(app => app.interviewDriveId === interviewId);
     };
 
     const renderCard = (interview) => {
