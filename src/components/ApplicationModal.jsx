@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../styles/modal.css';
 
 const ApplicationModal = ({ interview, onClose, onSubmit }) => {
+    const fileInputRef = useRef(null);
     const [formData, setFormData] = useState({
         applicantName: '',
         applicantEmail: '',
@@ -30,12 +31,43 @@ const ApplicationModal = ({ interview, onClose, onSubmit }) => {
         }
     };
 
+    const fillSampleData = () => {
+        setFormData({
+            ...formData,
+            applicantName: 'John Doe',
+            applicantEmail: 'john.doe@example.com',
+            applicantPhone: '9876543210',
+            coverLetter: 'I am highly interested in this opportunity and believe my skills align well with the requirements.'
+        });
+    };
+
+    const clearForm = () => {
+        setFormData({
+            applicantName: '',
+            applicantEmail: '',
+            applicantPhone: '',
+            resume: null,
+            coverLetter: ''
+        });
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2>Apply for {interview.company}</h2>
-                    <button className="close-btn" onClick={onClose}>&times;</button>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <button type="button" className="btn btn-sm btn-outline-info" onClick={fillSampleData} title="Fill Sample Data">
+                            <i className="fas fa-magic"></i> Fill Sample
+                        </button>
+                        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={clearForm} title="Clear Form">
+                            <i className="fas fa-eraser"></i> Clear
+                        </button>
+                        <button className="close-btn" onClick={onClose}>&times;</button>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="application-form">
@@ -75,6 +107,7 @@ const ApplicationModal = ({ interview, onClose, onSubmit }) => {
                             type="file"
                             className="form-control"
                             accept=".pdf"
+                            ref={fileInputRef}
                             onChange={(e) => setFormData({ ...formData, resume: e.target.files[0] })}
                             required
                         />
