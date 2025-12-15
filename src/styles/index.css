@@ -711,10 +711,24 @@ footer .heart {
 
     .hamburger {
         display: block;
-        font-size: 1.5rem;
+        position: fixed;
+        top: 1.5rem;
+        right: 5%;
+        font-size: 1.8rem;
         cursor: pointer;
         color: var(--text-primary);
-        z-index: 1001;
+        z-index: 1002;
+        background: rgba(10, 10, 16, 0.8);
+        padding: 0.5rem;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .hamburger:hover {
+        background: rgba(0, 212, 255, 0.2);
+        color: var(--primary);
+        transform: scale(1.1);
     }
 
     .nav-links {
@@ -722,16 +736,19 @@ footer .heart {
         top: 0;
         right: -100%;
         height: 100vh;
-        width: 70%;
-        max-width: 300px;
-        background: rgba(10, 10, 16, 0.95);
-        backdrop-filter: blur(15px);
+        width: 75%;
+        max-width: 320px;
+        background: rgba(10, 10, 16, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
-        transition: right 0.3s ease-in-out;
-        z-index: 1000;
-        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+        padding-top: 5rem;
+        transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 1001;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.7);
+        overflow-y: auto;
     }
 
     .nav-links.active {
@@ -740,10 +757,28 @@ footer .heart {
 
     .nav-links a,
     .nav-links button {
+        font-size: 1.1rem;
+        margin: 0.8rem 0;
+        padding: 1rem 2rem;
+        width: 90%;
+        text-align: left;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links button:hover {
+        background: rgba(0, 212, 255, 0.1);
+        transform: translateX(-5px);
+        color: var(--primary);
+    }
+
+    .nav-links a i {
         font-size: 1.2rem;
-        margin: 1rem 0;
-        width: 100%;
-        text-align: center;
+        min-width: 24px;
     }
 
     /* Hero Section */
