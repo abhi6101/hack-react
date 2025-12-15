@@ -7,6 +7,7 @@ const StudentDashboard = () => {
     const [profile, setProfile] = useState(null);
     const [interviews, setInterviews] = useState([]);
     const [applications, setApplications] = useState([]);
+    const [jobApplications, setJobApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
         totalApplications: 0,
@@ -63,6 +64,19 @@ const StudentDashboard = () => {
             }
         } catch (err) {
             console.error('Failed to load applications');
+        }
+
+        // Fetch job applications
+        try {
+            const jobAppsRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/job-applications/my', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (jobAppsRes.ok) {
+                const jobAppsData = await jobAppsRes.json();
+                setJobApplications(jobAppsData);
+            }
+        } catch (err) {
+            console.error('Failed to load job applications');
         }
 
         setLoading(false);
@@ -315,6 +329,57 @@ const StudentDashboard = () => {
                         <p>No upcoming interviews</p>
                     )}
                     <Link to="/interview" className="btn btn-outline">View All Interviews</Link>
+                </section>
+
+                {/* Job Applications */}
+                <section className="dashboard-card surface-glow">
+                    <div className="card-header">
+                        <h2><i className="fas fa-briefcase"></i> My Job Applications</h2>
+                    </div>
+
+                    {/* Shortlist Notification */}
+                    {jobApplications.some(app => app.status === 'SHORTLISTED') && (
+                        <div className="notification-banner success">
+                            <i className="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Congratulations!</strong> You have been shortlisted for {jobApplications.filter(app => app.status === 'SHORTLISTED').length} job(s).
+                                Check your Interview section for details.
+                            </div>
+                        </div>
+                    )}
+
+                    {jobApplications.length > 0 ? (
+                        <div className="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <th>Company</th>
+                                        <th>Applied On</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {jobApplications.map(app => (
+                                        <tr key={app.id}>
+                                            <td>{app.jobTitle || app.job?.title || 'N/A'}</td>
+                                            <td>{app.companyName || app.job?.company_name || 'N/A'}</td>
+                                            <td>{new Date(app.appliedAt || app.createdAt).toLocaleDateString()}</td>
+                                            <td>
+                                                <span className={`status-badge status-${app.status.toLowerCase()}`}>
+                                                    {app.status === 'SHORTLISTED' && '✓ '}
+                                                    {app.status === 'REJECTED' && '✗ '}
+                                                    {app.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p>No job applications yet. <Link to="/jobs">Browse jobs</Link></p>
+                    )}
                 </section>
 
                 {/* My Applications */}

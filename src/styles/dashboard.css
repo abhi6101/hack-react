@@ -444,6 +444,49 @@ table tr:hover {
     gap: 1rem;
 }
 
+/* Notification Banner */
+.notification-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-banner.success {
+    background: rgba(34, 197, 94, 0.1);
+    border-left-color: #22c55e;
+}
+
+.notification-banner i {
+    font-size: 1.5rem;
+    color: #22c55e;
+}
+
+.notification-banner strong {
+    color: #22c55e;
+}
+
+.notification-banner div {
+    flex: 1;
+    color: var(--text-secondary);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-hero h1 {
