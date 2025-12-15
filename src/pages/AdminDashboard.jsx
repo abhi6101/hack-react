@@ -773,6 +773,65 @@ const AdminDashboard = () => {
                         </section>
                     </>
                 );
+            case 'interview-applications':
+                return (
+                    <section className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className="fas fa-user-check"></i> Interview Drive Applications</h3>
+                        </div>
+                        <div className="table-responsive" style={{ padding: '1rem' }}>
+                            {interviews.length > 0 ? (
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Company</th>
+                                            <th>Date</th>
+                                            <th>Venue</th>
+                                            <th>Total Slots</th>
+                                            <th>Booked Slots</th>
+                                            <th>Available</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {interviews.map(interview => (
+                                            <tr key={interview.id}>
+                                                <td>{interview.company}</td>
+                                                <td>{new Date(interview.date).toLocaleDateString()}</td>
+                                                <td>{interview.venue}</td>
+                                                <td>{interview.totalSlots || 20}</td>
+                                                <td>{interview.bookedSlots || 0}</td>
+                                                <td>{(interview.totalSlots || 20) - (interview.bookedSlots || 0)}</td>
+                                                <td>
+                                                    <span style={{
+                                                        padding: '0.25rem 0.75rem',
+                                                        borderRadius: '12px',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: '600',
+                                                        background: (interview.bookedSlots || 0) >= (interview.totalSlots || 20) ?
+                                                            'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)',
+                                                        color: (interview.bookedSlots || 0) >= (interview.totalSlots || 20) ?
+                                                            '#ef4444' : '#22c55e'
+                                                    }}>
+                                                        {(interview.bookedSlots || 0) >= (interview.totalSlots || 20) ? 'FULL' : 'OPEN'}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <p style={{ padding: '2rem', textAlign: 'center' }}>No interview drives posted yet.</p>
+                            )}
+                        </div>
+                        <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '8px', margin: '1rem' }}>
+                            <p style={{ margin: 0, color: '#6366f1' }}>
+                                <i className="fas fa-info-circle"></i> <strong>Note:</strong> This shows interview drive slot availability.
+                                Full student registration tracking will be available soon.
+                            </p>
+                        </div>
+                    </section>
+                );
             default:
                 return <div>Select a tab</div>;
         }
@@ -812,6 +871,15 @@ const AdminDashboard = () => {
                                 onClick={() => { setActiveTab('applications'); loadApplications(); }}
                             >
                                 <i className="fas fa-file-alt"></i> Job Applications
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                className={activeTab === 'interview-applications' ? 'active' : ''}
+                                onClick={() => setActiveTab('interview-applications')}
+                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                            >
+                                <i className="fas fa-user-check"></i> Interview Applications
                             </button>
                         </li>
                     </ul>
