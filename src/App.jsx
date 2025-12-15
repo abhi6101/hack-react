@@ -21,6 +21,8 @@ import Videos from './pages/Videos';
 import Contact from './pages/Contact';
 import VerifyAccount from './pages/VerifyAccount';
 import ForgotPassword from './pages/ForgotPassword';
+import './styles/mobile-responsive.css'; // Global mobile responsive styles
+
 
 function Layout({ children }) {
     const location = useLocation();
