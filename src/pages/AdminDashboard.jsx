@@ -252,6 +252,71 @@ const AdminDashboard = () => {
         setFormData(prev => ({ ...prev, [id]: value }));
     };
 
+    const fillSampleData = () => {
+        // Fill job form with sample data
+        setFormData({
+            jobTitle: 'Senior Software Engineer',
+            companyName: 'Google India',
+            jobDescription: 'We are looking for an experienced software engineer to join our team. You will work on cutting-edge technologies and solve complex problems at scale.',
+            applyLink: 'https://careers.google.com/apply/senior-swe',
+            lastDate: '2025-12-31',
+            salary: '1500000'
+        });
+
+        // Fill interview rounds with sample data
+        setInterviewDetails({
+            codingRound: {
+                enabled: true,
+                date: '2025-12-20',
+                time: '10:00 AM',
+                venue: 'Computer Lab 101, Main Building',
+                instructions: 'Solve 3 DSA problems in 90 minutes. Topics: Arrays, Trees, Dynamic Programming'
+            },
+            technicalInterview: {
+                enabled: true,
+                date: '2025-12-22',
+                time: '2:00 PM',
+                venue: 'Virtual - Zoom Link will be shared',
+                topics: 'System Design, React.js, Node.js, Database Design, Microservices'
+            },
+            hrRound: {
+                enabled: true,
+                date: '2025-12-24',
+                time: '11:00 AM',
+                venue: 'HR Office - Room 305',
+                questions: ''
+            },
+            projectTask: {
+                enabled: false,
+                description: '',
+                deadline: '24',
+                requirements: ''
+            }
+        });
+
+        setMessage({ text: 'Sample data filled! Ready to post.', type: 'success' });
+        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+    };
+
+    const clearForm = () => {
+        setFormData({
+            jobTitle: '',
+            companyName: '',
+            jobDescription: '',
+            applyLink: '',
+            lastDate: '',
+            salary: ''
+        });
+        setInterviewDetails({
+            codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
+            technicalInterview: { enabled: false, date: '', time: '', venue: '', topics: '' },
+            hrRound: { enabled: false, date: '', time: '', venue: '', questions: '' },
+            projectTask: { enabled: false, description: '', deadline: '24', requirements: '' }
+        });
+        setMessage({ text: 'Form cleared!', type: 'success' });
+        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage({ text: '', type: '' });
@@ -383,7 +448,17 @@ const AdminDashboard = () => {
                                     setInterviewDetails={setInterviewDetails}
                                 />
 
-                                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Post Job</button>
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                                    <button type="button" className="btn btn-secondary" onClick={fillSampleData}>
+                                        <i className="fas fa-magic"></i> Fill Sample Data
+                                    </button>
+                                    <button type="button" className="btn btn-warning" onClick={clearForm}>
+                                        <i className="fas fa-eraser"></i> Clear Form
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        <i className="fas fa-save"></i> Post Job
+                                    </button>
+                                </div>
                             </form>
                         </section>
 
