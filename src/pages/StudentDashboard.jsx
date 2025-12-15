@@ -288,7 +288,12 @@ const StudentDashboard = () => {
                                         <strong>CGPA:</strong> {profile.cgpa}
                                     </div>
                                     <div className="profile-item">
-                                        <strong>Skills:</strong> {profile.skills || 'Not specified'}
+                                        <strong>Skills:</strong>
+                                        <div className="skills-wrapper">
+                                            {profile.skills ? profile.skills.split(/[\s,]+/).filter(s => s).map((skill, i) => (
+                                                <span key={i} className="skill-tag">{skill}</span>
+                                            )) : <span className="text-muted">Not specified</span>}
+                                        </div>
                                     </div>
                                 </div>
                             ) : (
@@ -330,9 +335,14 @@ const StudentDashboard = () => {
                             <div className="interviews-list">
                                 {interviews.slice(0, 5).map(interview => (
                                     <div key={interview.id} className="interview-item">
-                                        <div className="interview-company">{interview.company}</div>
-                                        <div className="interview-date">{new Date(interview.date).toLocaleDateString()}</div>
-                                        <div className="interview-venue">{interview.venue}</div>
+                                        <div className="interview-icon-box">
+                                            <i className="fas fa-calendar-day"></i>
+                                        </div>
+                                        <div className="interview-info">
+                                            <h4>{interview.company}</h4>
+                                            <p>{new Date(interview.date).toLocaleDateString()} • {interview.venue}</p>
+                                        </div>
+                                        <Link to="/interview" className="btn-icon-small"><i className="fas fa-chevron-right"></i></Link>
                                     </div>
                                 ))}
                             </div>
