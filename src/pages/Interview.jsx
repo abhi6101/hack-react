@@ -269,136 +269,137 @@ const Interview = () => {
         );
     };
 
-    <div className="interview-page">
-        {/* Search and Filter - Top */}
-        <section className="top-filter-section">
-            <div className="search-bar">
-                <i className="fas fa-search"></i>
-                <input
-                    type="text"
-                    placeholder="Search by company or position..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+    return (
+        <div className="interview-page">
+            {/* Search and Filter - Top */}
+            <section className="top-filter-section">
+                <div className="search-bar">
+                    <i className="fas fa-search"></i>
+                    <input
+                        type="text"
+                        placeholder="Search by company or position..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <div className="filter-bar">
+                    <label><i className="fas fa-filter"></i> Location:</label>
+                    <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)}>
+                        {locations.map(loc => (
+                            <option key={loc} value={loc}>
+                                {loc === 'all' ? 'All Locations' : loc}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </section>
+
+            {/* Main Content with Sidebar */}
+            <div className="interview-main-layout">
+                {/* Left Sidebar - Statistics */}
+                <aside className="stats-sidebar">
+                    <h3>Overview</h3>
+                    <div className="stat-item">
+                        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
+                            <i className="fas fa-calendar-check"></i>
+                        </div>
+                        <div className="stat-info">
+                            <span className="stat-value-small">{stats.total}</span>
+                            <span className="stat-label-small">Total Drives</span>
+                        </div>
+                    </div>
+
+                    <div className="stat-item">
+                        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
+                            <i className="fas fa-door-open"></i>
+                        </div>
+                        <div className="stat-info">
+                            <span className="stat-value-small">{stats.available}</span>
+                            <span className="stat-label-small">Slots Available</span>
+                        </div>
+                    </div>
+
+                    <div className="stat-item">
+                        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
+                            <i className="fas fa-paper-plane"></i>
+                        </div>
+                        <div className="stat-info">
+                            <span className="stat-value-small">{stats.applied}</span>
+                            <span className="stat-label-small">Applications Sent</span>
+                        </div>
+                    </div>
+                </aside>
+
+                {/* Right Content - Interview Grid */}
+                <main className="interview-content">
+                    <div className="section-header">
+                        <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
+                        <span className="result-count">{filteredInterviews.length} drives found</span>
+                    </div>
+                    <div className="interview-grid">
+                        {filteredInterviews.length > 0 ? (
+                            filteredInterviews.map(renderCard)
+                        ) : (
+                            <div className="no-results">
+                                <i className="fas fa-search"></i>
+                                <h3>No interviews found</h3>
+                                <p>Try adjusting your search or filter criteria</p>
+                            </div>
+                        )}
+                    </div>
+                </main>
+            </div>
+
+            {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                    <div className="modal-content surface-glow" onClick={e => e.stopPropagation()}>
+                        <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
+                        <h2>Book Interview: {selectedCompany?.company}</h2>
+                        <form onSubmit={handleBookingSubmit} className="booking-form">
+                            <div className="form-group">
+                                <label>Full Name</label>
+                                <input
+                                    type="text"
+                                    name="studentName"
+                                    value={bookingData.studentName}
+                                    onChange={handleBookingInput}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>College Email</label>
+                                <input
+                                    type="email"
+                                    name="studentEmail"
+                                    value={bookingData.studentEmail}
+                                    onChange={handleBookingInput}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Roll Number</label>
+                                <input
+                                    type="text"
+                                    name="studentRoll"
+                                    value={bookingData.studentRoll}
+                                    onChange={handleBookingInput}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary btn-block">Confirm Booking</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {showApplicationModal && selectedInterview && (
+                <ApplicationModal
+                    interview={selectedInterview}
+                    onClose={() => setShowApplicationModal(false)}
+                    onSubmit={handleApplicationSubmit}
                 />
-            </div>
-            <div className="filter-bar">
-                <label><i className="fas fa-filter"></i> Location:</label>
-                <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)}>
-                    {locations.map(loc => (
-                        <option key={loc} value={loc}>
-                            {loc === 'all' ? 'All Locations' : loc}
-                        </option>
-                    ))}
-                </select>
-            </div>
-        </section>
-
-        {/* Main Content with Sidebar */}
-        <div className="interview-main-layout">
-            {/* Left Sidebar - Statistics */}
-            <aside className="stats-sidebar">
-                <h3>Overview</h3>
-                <div className="stat-item">
-                    <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
-                        <i className="fas fa-calendar-check"></i>
-                    </div>
-                    <div className="stat-info">
-                        <span className="stat-value-small">{stats.total}</span>
-                        <span className="stat-label-small">Total Drives</span>
-                    </div>
-                </div>
-
-                <div className="stat-item">
-                    <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
-                        <i className="fas fa-door-open"></i>
-                    </div>
-                    <div className="stat-info">
-                        <span className="stat-value-small">{stats.available}</span>
-                        <span className="stat-label-small">Slots Available</span>
-                    </div>
-                </div>
-
-                <div className="stat-item">
-                    <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
-                        <i className="fas fa-paper-plane"></i>
-                    </div>
-                    <div className="stat-info">
-                        <span className="stat-value-small">{stats.applied}</span>
-                        <span className="stat-label-small">Applications Sent</span>
-                    </div>
-                </div>
-            </aside>
-
-            {/* Right Content - Interview Grid */}
-            <main className="interview-content">
-                <div className="section-header">
-                    <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
-                    <span className="result-count">{filteredInterviews.length} drives found</span>
-                </div>
-                <div className="interview-grid">
-                    {filteredInterviews.length > 0 ? (
-                        filteredInterviews.map(renderCard)
-                    ) : (
-                        <div className="no-results">
-                            <i className="fas fa-search"></i>
-                            <h3>No interviews found</h3>
-                            <p>Try adjusting your search or filter criteria</p>
-                        </div>
-                    )}
-                </div>
-            </main>
+            )}
         </div>
-
-        {showModal && (
-            <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                <div className="modal-content surface-glow" onClick={e => e.stopPropagation()}>
-                    <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
-                    <h2>Book Interview: {selectedCompany?.company}</h2>
-                    <form onSubmit={handleBookingSubmit} className="booking-form">
-                        <div className="form-group">
-                            <label>Full Name</label>
-                            <input
-                                type="text"
-                                name="studentName"
-                                value={bookingData.studentName}
-                                onChange={handleBookingInput}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>College Email</label>
-                            <input
-                                type="email"
-                                name="studentEmail"
-                                value={bookingData.studentEmail}
-                                onChange={handleBookingInput}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Roll Number</label>
-                            <input
-                                type="text"
-                                name="studentRoll"
-                                value={bookingData.studentRoll}
-                                onChange={handleBookingInput}
-                                required
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-primary btn-block">Confirm Booking</button>
-                    </form>
-                </div>
-            </div>
-        )}
-
-        {showApplicationModal && selectedInterview && (
-            <ApplicationModal
-                interview={selectedInterview}
-                onClose={() => setShowApplicationModal(false)}
-                onSubmit={handleApplicationSubmit}
-            />
-        )}
-    </div>
     );
 };
 
