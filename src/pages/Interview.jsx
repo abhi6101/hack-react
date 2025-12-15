@@ -60,6 +60,9 @@ const Interview = () => {
     const [showApplicationModal, setShowApplicationModal] = useState(false);
     const [selectedInterview, setSelectedInterview] = useState(null);
     const [myApplications, setMyApplications] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterLocation, setFilterLocation] = useState('all');
+    const [stats, setStats] = useState({ total: 0, available: 0, applied: 0 });
     const token = localStorage.getItem('authToken');
 
     useEffect(() => {
@@ -96,8 +99,29 @@ const Interview = () => {
         const upcomingList = interviews.filter(i => new Date(i.date) >= currentDate).sort((a, b) => new Date(a.date) - new Date(b.date));
 
         setUpcoming(upcomingList);
-        setFuture(upcomingList.length > 3 ? upcomingList.slice(3) : []); // Just an example logic for "future" vs "upcoming"
-    }, [interviews]);
+        setFuture(upcomingList.length > 3 ? upcomingList.slice(3) : []);
+
+        // Calculate statistics
+        const total = upcomingList.length;
+        const available = upcomingList.filter(i => {
+            const totalSlots = i.totalSlots || 20;
+            const bookedSlots = i.bookedSlots || 0;
+            return (totalSlots - bookedSlots) > 0;
+        }).length;
+        const applied = myApplications.length;
+        setStats({ total, available, applied });
+    }, [interviews, myApplications]);
+
+    // Filter interviews based on search and location
+    const filteredInterviews = upcoming.filter(interview => {
+        const matchesSearch = interview.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            interview.positions?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesLocation = filterLocation === 'all' || interview.location === filterLocation;
+        return matchesSearch && matchesLocation;
+    });
+
+    // Get unique locations for filter
+    const locations = ['all', ...new Set(upcoming.map(i => i.location))];
 
 
     const handleBookClick = (company) => {
@@ -256,12 +280,79 @@ const Interview = () => {
             </header>
 
             <main className="interview-container">
+                {/* Statistics Cards */}
+                <section className="stats-section">
+                    <div className="stats-grid">
+                        <div className="stat-card" style={{ borderTop: '4px solid #4361ee' }}>
+                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
+                                <i className="fas fa-calendar-check"></i>
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-value">{stats.total}</h3>
+                                <p className="stat-label">Total Drives</p>
+                            </div>
+                        </div>
+
+                        <div className="stat-card" style={{ borderTop: '4px solid #06ffa5' }}>
+                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
+                                <i className="fas fa-door-open"></i>
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-value">{stats.available}</h3>
+                                <p className="stat-label">Slots Available</p>
+                            </div>
+                        </div>
+
+                        <div className="stat-card" style={{ borderTop: '4px solid #f72585' }}>
+                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
+                                <i className="fas fa-paper-plane"></i>
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-value">{stats.applied}</h3>
+                                <p className="stat-label">Applications Sent</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Search and Filter */}
+                <section className="filter-section">
+                    <div className="search-bar">
+                        <i className="fas fa-search"></i>
+                        <input
+                            type="text"
+                            placeholder="Search by company or position..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div className="filter-bar">
+                        <label><i className="fas fa-filter"></i> Location:</label>
+                        <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)}>
+                            {locations.map(loc => (
+                                <option key={loc} value={loc}>
+                                    {loc === 'all' ? 'All Locations' : loc}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </section>
+
                 <section className="upcoming-section">
                     <div className="section-header">
                         <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
+                        <span className="result-count">{filteredInterviews.length} drives found</span>
                     </div>
                     <div className="interview-grid">
-                        {upcoming.map(renderCard)}
+                        {filteredInterviews.length > 0 ? (
+                            filteredInterviews.map(renderCard)
+                        ) : (
+                            <div className="no-results">
+                                <i className="fas fa-search"></i>
+                                <h3>No interviews found</h3>
+                                <p>Try adjusting your search or filter criteria</p>
+                            </div>
+                        )}
                     </div>
                 </section>
             </main>
