@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { generateResumeFromHTML } from '../utils/resumePDFGenerator';
 import '../styles/resume.css';
 
 const Resume = () => {
@@ -17,6 +18,7 @@ const Resume = () => {
         skills: '',
         projects: '',
         certifications: '',
+        softSkills: 'Problem-Solving | Team Collaboration | Time Management | Strong Communication',
         declaration: '',
         template: 'classic'
     });
@@ -60,30 +62,15 @@ const Resume = () => {
         setLoading(true);
 
         try {
-            const token = localStorage.getItem("authToken");
-            const response = await fetch(`${API_BASE_URL}/resume/generate-pdf`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(formData)
-            });
+            // Generate PDF using frontend utility
+            generateResumeFromHTML(formData);
+            alert('Resume generated successfully! Use your browser\'s print dialog to save as PDF.');
 
-            const result = await response.json();
-
-            if (response.ok && result.filename) {
-                const downloadUrl = `${API_BASE_URL}/resume/download/${result.filename}`;
-                window.open(downloadUrl, '_blank');
-                alert('Resume generated successfully! Your download will begin.');
-                localStorage.removeItem('resumeFormData');
-                setFormData({ ...formData, declaration: '' }); // Clear declaration or reset appropriately
-            } else {
-                throw new Error(result.error || `Failed to generate resume. Status: ${response.status}`);
-            }
+            // Optionally clear form after generation
+            // localStorage.removeItem('resumeFormData');
         } catch (error) {
             console.error('Resume generation error:', error);
-            alert(`Error: ${error.message}`);
+            alert(`Error generating resume: ${error.message}`);
         } finally {
             setLoading(false);
         }
