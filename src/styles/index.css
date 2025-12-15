@@ -749,10 +749,13 @@ footer .heart {
         z-index: 1001;
         box-shadow: -5px 0 25px rgba(0, 0, 0, 0.7);
         overflow-y: auto;
+        overflow-x: hidden;
+        visibility: hidden;
     }
 
     .nav-links.active {
         right: 0;
+        visibility: visible;
     }
 
     .nav-links a,
