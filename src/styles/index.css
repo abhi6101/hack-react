@@ -1113,11 +1113,6 @@ footer .heart {
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
 }
 
-transition: all 0.3s ease;
-position: relative;
-padding: 0.5rem 0;
-}
-
 .nav-links a::after {
     content: '';
     position: absolute;
