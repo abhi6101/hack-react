@@ -48,6 +48,9 @@ body {
 .admin-container {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 .sidebar {
@@ -434,10 +437,14 @@ td {
 @media (max-width: 768px) {
     .admin-container {
         flex-direction: column;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 
     .sidebar {
         width: 100%;
+        max-width: 100%;
         position: relative;
         height: auto;
         flex-direction: row;
@@ -466,6 +473,9 @@ td {
     .main-content {
         margin-left: 0;
         padding: 1.5rem;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
     }
 
     .main-header h1 {
