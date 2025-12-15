@@ -317,6 +317,46 @@ const AdminDashboard = () => {
         setTimeout(() => setMessage({ text: '', type: '' }), 2000);
     };
 
+    const fillInterviewSampleData = () => {
+        setInterviewForm({
+            company: 'Microsoft India',
+            date: '2025-12-25',
+            time: '10:00 AM',
+            venue: 'Auditorium, Main Campus',
+            positions: 'Software Engineer, Data Analyst, Product Manager',
+            eligibility: 'B.Tech/M.Tech CSE/IT, CGPA > 7.5'
+        });
+        setMessage({ text: 'Sample interview data filled!', type: 'success' });
+        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+    };
+
+    const clearInterviewForm = () => {
+        setInterviewForm({
+            company: '', date: '', time: '', venue: '', positions: '', eligibility: ''
+        });
+        setMessage({ text: 'Interview form cleared!', type: 'success' });
+        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+    };
+
+    const deleteApplication = async (appId) => {
+        if (!window.confirm('Are you sure you want to delete this application?')) return;
+        try {
+            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                loadApplications();
+                setMessage({ text: 'Application deleted successfully!', type: 'success' });
+            } else {
+                throw new Error('Failed to delete application');
+            }
+        } catch (error) {
+            setMessage({ text: 'Failed to delete application', type: 'error' });
+        }
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage({ text: '', type: '' });
@@ -580,8 +620,10 @@ const AdminDashboard = () => {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th>Student</th>
+                                            <th>Student Name</th>
+                                            <th>Email</th>
                                             <th>Company</th>
+                                            <th>Job Title</th>
                                             <th>Applied On</th>
                                             <th>Resume</th>
                                             <th>Status</th>
@@ -591,11 +633,13 @@ const AdminDashboard = () => {
                                     <tbody>
                                         {applications.map(app => (
                                             <tr key={app.id}>
-                                                <td>{app.student.username}</td>
-                                                <td>{app.interviewDrive.company}</td>
+                                                <td>{app.applicantName}</td>
+                                                <td>{app.applicantEmail}</td>
+                                                <td>{app.companyName}</td>
+                                                <td>{app.jobTitle}</td>
                                                 <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
                                                 <td>
-                                                    <a href={app.resumeUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                                                    <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
                                                         <i className="fas fa-file-pdf"></i> View
                                                     </a>
                                                 </td>
@@ -619,17 +663,26 @@ const AdminDashboard = () => {
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <select
-                                                        value={app.status}
-                                                        onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
-                                                        className="form-control"
-                                                        style={{ width: 'auto', padding: '0.5rem' }}
-                                                    >
-                                                        <option value="PENDING">Pending</option>
-                                                        <option value="SHORTLISTED">Shortlist</option>
-                                                        <option value="REJECTED">Reject</option>
-                                                        <option value="SELECTED">Select</option>
-                                                    </select>
+                                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                                        <select
+                                                            value={app.status}
+                                                            onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+                                                            className="form-control"
+                                                            style={{ width: 'auto', padding: '0.5rem' }}
+                                                        >
+                                                            <option value="PENDING">Pending</option>
+                                                            <option value="SHORTLISTED">Shortlist</option>
+                                                            <option value="REJECTED">Reject</option>
+                                                            <option value="SELECTED">Select</option>
+                                                        </select>
+                                                        <button
+                                                            className="btn btn-danger"
+                                                            onClick={() => deleteApplication(app.id)}
+                                                            title="Delete Application"
+                                                        >
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -675,7 +728,17 @@ const AdminDashboard = () => {
                                         <input type="text" className="form-control" required value={interviewForm.eligibility} onChange={e => setInterviewForm({ ...interviewForm, eligibility: e.target.value })} />
                                     </div>
                                 </div>
-                                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Post Interview</button>
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                                    <button type="button" className="btn btn-secondary" onClick={fillInterviewSampleData}>
+                                        <i className="fas fa-magic"></i> Fill Sample Data
+                                    </button>
+                                    <button type="button" className="btn btn-warning" onClick={clearInterviewForm}>
+                                        <i className="fas fa-eraser"></i> Clear Form
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        <i className="fas fa-save"></i> Post Interview
+                                    </button>
+                                </div>
                             </form>
                         </section>
 
