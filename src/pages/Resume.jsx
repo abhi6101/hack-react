@@ -133,6 +133,14 @@ const Resume = () => {
                     </div>
                 </div>
 
+                {/* Soft Skills */}
+                <div className="form-section">
+                    <div className="section-title"><i className="fas fa-users"></i><h2>Soft Skills</h2></div>
+                    <div className="form-group full-width">
+                        <textarea id="softSkills" name="softSkills" placeholder="e.g., Problem-Solving | Team Collaboration | Time Management | Strong Communication" rows="2" value={formData.softSkills} onChange={handleChange}></textarea>
+                    </div>
+                </div>
+
                 {/* Certifications (Optional) */}
                 <div className="form-section">
                     <div className="section-title"><i className="fas fa-certificate"></i><h2>Certifications</h2></div>
