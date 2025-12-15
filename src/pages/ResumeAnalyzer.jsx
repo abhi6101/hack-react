@@ -76,6 +76,7 @@ const ResumeAnalyzer = () => {
                             hidden
                             onChange={handleFileChange}
                         />
+
                         {file && (
                             <button
                                 className="btn btn-primary mt-4"
