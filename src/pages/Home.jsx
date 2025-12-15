@@ -96,40 +96,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Features Section */}
-            <section className="features-section animate-on-scroll">
-                <h2>Everything You Need To Succeed</h2>
-                <div className="features">
-                    <Link to="/jobs" className="features-box-link">
-                        <div className="features-box surface-glow">
-                            <i className="fas fa-briefcase"></i>
-                            <h2>Curated Job Listings</h2>
-                            <p>Find job opportunities from top companies.</p>
-                        </div>
-                    </Link>
-                    <Link to="/resume" className="features-box-link">
-                        <div className="features-box surface-glow">
-                            <i className="fas fa-file-alt"></i>
-                            <h2>Resume Builder</h2>
-                            <p>Create professional, ATS-friendly resumes.</p>
-                        </div>
-                    </Link>
-                    <Link to="/interview" className="features-box-link">
-                        <div className="features-box surface-glow">
-                            <i className="fas fa-comments"></i>
-                            <h2>Interview Prep</h2>
-                            <p>Practice with mock interviews and expert feedback.</p>
-                        </div>
-                    </Link>
-                    <Link to="/quiz" className="features-box-link">
-                        <div className="features-box surface-glow">
-                            <i className="fas fa-brain"></i>
-                            <h2>Quiz Arena</h2>
-                            <p>Test your knowledge with our interactive quizzes.</p>
-                        </div>
-                    </Link>
-                </div>
-            </section>
 
             {/* NEW: Learning Roadmap Section (Learnext Inspired) */}
             <section className="roadmap-section animate-on-scroll">
