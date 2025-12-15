@@ -56,7 +56,7 @@ const AdminDashboard = () => {
     const loadApplications = async () => {
         setLoadingApplications(true);
         try {
-            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/applications/all`, {
+            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch applications');
@@ -72,10 +72,9 @@ const AdminDashboard = () => {
 
     const updateApplicationStatus = async (appId, newStatus) => {
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/applications/${appId}/status`, {
+            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}/status?status=${newStatus}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ status: newStatus })
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
                 loadApplications();
