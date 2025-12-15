@@ -645,11 +645,6 @@ const AdminDashboard = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <i className="fas fa-sign-out-alt"></i> Back to Portal
-                            </button>
-                        </li>
-                        <li>
                             <button
                                 className={activeTab === 'applications' ? 'active' : ''}
                                 onClick={() => { setActiveTab('applications'); loadApplications(); }}
