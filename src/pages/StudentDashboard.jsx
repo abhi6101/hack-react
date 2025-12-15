@@ -136,37 +136,7 @@ const StudentDashboard = () => {
 
     return (
         <div className="dashboard-layout">
-            <aside className="dashboard-sidebar">
-                <div className="sidebar-header">
-                    <h3><i className="fas fa-graduation-cap"></i> Student Panel</h3>
-                </div>
-                <nav className="sidebar-nav">
-                    <Link to="/dashboard" className="nav-item active">
-                        <i className="fas fa-home"></i> <span>Overview</span>
-                    </Link>
-                    <Link to="/profile" className="nav-item">
-                        <i className="fas fa-user-edit"></i> <span>My Profile</span>
-                    </Link>
-                    <Link to="/jobs" className="nav-item">
-                        <i className="fas fa-briefcase"></i> <span>Jobs</span>
-                    </Link>
-                    <Link to="/interview" className="nav-item">
-                        <i className="fas fa-calendar-check"></i> <span>Interviews</span>
-                    </Link>
-                    <Link to="/papers" className="nav-item">
-                        <i className="fas fa-book"></i> <span>Practice Papers</span>
-                    </Link>
-                    <Link to="/quiz" className="nav-item">
-                        <i className="fas fa-brain"></i> <span>Quizzes</span>
-                    </Link>
-                    <Link to="/resume" className="nav-item">
-                        <i className="fas fa-file-alt"></i> <span>Resume</span>
-                    </Link>
-                    <Link to="/contact" className="nav-item">
-                        <i className="fas fa-envelope"></i> <span>Contact Support</span>
-                    </Link>
-                </nav>
-            </aside>
+
 
             <main className="dashboard-main-content">
                 <header className="dashboard-topbar">

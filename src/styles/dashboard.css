@@ -69,23 +69,7 @@ body {
 /* --- Sidebar Navigation --- */
 
 .dashboard-sidebar {
-    width: 280px;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-right: 1px solid var(--glass-border);
-    position: fixed;
-    top: 80px;
-    bottom: 30px;
-    /* Floating rounded look */
-    left: 20px;
-    border-radius: 24px;
-    padding: 2rem 1.5rem;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    transition: width 0.3s ease;
+    display: none;
 }
 
 .sidebar-header {
@@ -99,6 +83,7 @@ body {
     font-weight: 800;
     background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
 }
@@ -160,12 +145,11 @@ body {
 
 .dashboard-main-content {
     flex: 1;
-    margin-left: 320px;
-    /* Sidebar width + gap */
-    padding: 2rem 3rem 4rem 1rem;
+    margin-left: 0;
+    padding: 2rem;
     position: relative;
     z-index: 10;
-    width: calc(100% - 320px);
+    width: 100%;
 }
 
 /* --- Topbar --- */
@@ -540,6 +524,7 @@ body {
         justify-content: center;
     }
 }
+
 /* --- Utility Components (Buttons, Alerts) --- */
 
 .btn {
@@ -556,7 +541,7 @@ body {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary {
@@ -653,7 +638,17 @@ tr:hover td {
     font-weight: 600;
 }
 
-.status-pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-.status-shortlisted { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
-.status-rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.status-pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
 
+.status-shortlisted {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+.status-rejected {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
