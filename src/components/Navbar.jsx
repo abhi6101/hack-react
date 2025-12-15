@@ -39,13 +39,13 @@ const Navbar = () => {
                 <Link to="/jobs" className={isActive('/jobs')}><i className="fas fa-briefcase"></i> Jobs</Link>
                 <Link to="/resume" className={isActive('/resume')}><i className="fas fa-file-alt"></i> Resume Builder</Link>
                 <Link to="/interview" className={isActive('/interview')}><i className="fas fa-comments"></i> Interviews</Link>
+                <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Previous Year</Link>
 
                 {/* Show these only if authenticated OR on mobile */}
                 {(localStorage.getItem('authToken') || isMenuOpen) && (
                     <>
                         <Link to="/quiz" className={isActive('/quiz')}><i className="fas fa-brain"></i> Quiz</Link>
                         <Link to="/gallery" className={isActive('/gallery')}><i className="fas fa-images"></i> Gallery</Link>
-                        <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Previous Year</Link>
                         <Link to="/videos" className={isActive('/videos')}><i className="fas fa-video"></i> Study Videos</Link>
                         <Link to="/courses" className={isActive('/courses')}><i className="fas fa-book"></i> Courses</Link>
                         <Link to="/blog" className={isActive('/blog')}><i className="fas fa-blog"></i> Blog</Link>
