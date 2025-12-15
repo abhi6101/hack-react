@@ -21,6 +21,12 @@ const ResumeAnalyzer = () => {
     const handleAnalyze = async () => {
         if (!file) return;
 
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            setError('Please login to use the AI Analyzer.');
+            return;
+        }
+
         setAnalyzing(true);
         setError('');
 
@@ -28,7 +34,6 @@ const ResumeAnalyzer = () => {
         formData.append('file', file);
 
         try {
-            const token = localStorage.getItem('token');
             const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/resume/analyze', {
                 method: 'POST',
                 headers: {
