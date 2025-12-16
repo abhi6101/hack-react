@@ -313,7 +313,7 @@ body {
 }
 
 .stat-icon.custom-glow i {
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .stat-content {
@@ -322,7 +322,7 @@ body {
 }
 
 .stat-value {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 800;
     color: white;
     margin: 0;
@@ -331,12 +331,14 @@ body {
 }
 
 .stat-label {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.7);
     margin: 0.4rem 0 0;
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    word-wrap: break-word;
+    line-height: 1.3;
 }
 
 /* --- Dashboard Grid (Quick Actions & Progress) --- */
@@ -674,6 +676,7 @@ tr:hover td {
     background: rgba(239, 68, 68, 0.2);
     color: #f87171;
 }
+
 /* --- Enhanced Skills Badges --- */
 .skills-wrapper {
     display: flex;
@@ -689,7 +692,7 @@ tr:hover td {
     border-radius: 20px;
     font-size: 0.75rem;
     color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
 }
 
@@ -757,7 +760,7 @@ tr:hover td {
     justify-content: center;
     border-radius: 50%;
     color: var(--text-secondary);
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     transition: all 0.2s;
     text-decoration: none;
 }
@@ -766,4 +769,3 @@ tr:hover td {
     background: rgba(56, 189, 248, 0.2);
     color: var(--primary-color);
 }
-
