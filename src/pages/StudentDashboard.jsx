@@ -155,8 +155,8 @@ const StudentDashboard = () => {
                 {/* Statistics Cards */}
                 <section className="stats-section">
                     <div className="stats-grid">
-                        <div className="stat-card" style={{ borderTop: '4px solid #4361ee' }}>
-                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
+                        <div className="stat-card card-primary">
+                            <div className="stat-icon custom-glow">
                                 <i className="fas fa-file-alt"></i>
                             </div>
                             <div className="stat-content">
@@ -165,8 +165,8 @@ const StudentDashboard = () => {
                             </div>
                         </div>
 
-                        <div className="stat-card" style={{ borderTop: '4px solid #f72585' }}>
-                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
+                        <div className="stat-card card-pink">
+                            <div className="stat-icon custom-glow">
                                 <i className="fas fa-calendar-check"></i>
                             </div>
                             <div className="stat-content">
@@ -175,8 +175,8 @@ const StudentDashboard = () => {
                             </div>
                         </div>
 
-                        <div className="stat-card" style={{ borderTop: '4px solid #4cc9f0' }}>
-                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #4cc9f0 0%, #0096c7 100%)' }}>
+                        <div className="stat-card card-blue">
+                            <div className="stat-icon custom-glow">
                                 <i className="fas fa-user-check"></i>
                             </div>
                             <div className="stat-content">
@@ -185,8 +185,8 @@ const StudentDashboard = () => {
                             </div>
                         </div>
 
-                        <div className="stat-card" style={{ borderTop: '4px solid #06ffa5' }}>
-                            <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
+                        <div className="stat-card card-green">
+                            <div className="stat-icon custom-glow">
                                 <i className="fas fa-chart-line"></i>
                             </div>
                             <div className="stat-content">

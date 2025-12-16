@@ -223,7 +223,7 @@ body {
     box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
 }
 
-/* --- Statistics Grid (Serial Layout) --- */
+/* --- Statistics Grid (Premium) --- */
 
 .stats-section {
     margin-bottom: 3rem;
@@ -232,90 +232,111 @@ body {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    /* Serial layout */
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
 }
 
 .stat-card {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 1.5rem;
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 1.8rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-.stat-card:hover::before {
-    opacity: 1;
+/* Color Variants with Gradients */
+.card-primary {
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(17, 24, 39, 0.4) 100%);
+    border-top: 1px solid rgba(67, 97, 238, 0.3);
 }
 
-/* Decorative Glow Bar at top of card (Using inline styles borderTop for color) */
-/* But we can enhance it with a pseudo element glow if we want */
+.card-pink {
+    background: linear-gradient(135deg, rgba(247, 37, 133, 0.1) 0%, rgba(17, 24, 39, 0.4) 100%);
+    border-top: 1px solid rgba(247, 37, 133, 0.3);
+}
 
+.card-blue {
+    background: linear-gradient(135deg, rgba(76, 201, 240, 0.1) 0%, rgba(17, 24, 39, 0.4) 100%);
+    border-top: 1px solid rgba(76, 201, 240, 0.3);
+}
+
+.card-green {
+    background: linear-gradient(135deg, rgba(6, 255, 165, 0.1) 0%, rgba(17, 24, 39, 0.4) 100%);
+    border-top: 1px solid rgba(6, 255, 165, 0.3);
+}
+
+/* Icon Styles */
 .stat-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     color: white;
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
-    position: relative;
-    z-index: 1;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-primary .stat-icon {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+}
+
+.card-pink .stat-icon {
+    background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+    box-shadow: 0 8px 20px rgba(247, 37, 133, 0.3);
+}
+
+.card-blue .stat-icon {
+    background: linear-gradient(135deg, #4cc9f0 0%, #0096c7 100%);
+    box-shadow: 0 8px 20px rgba(76, 201, 240, 0.3);
+}
+
+.card-green .stat-icon {
+    background: linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%);
+    box-shadow: 0 8px 20px rgba(6, 255, 165, 0.3);
+}
+
+.stat-icon.custom-glow i {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .stat-content {
     flex: 1;
-    z-index: 1;
-    min-width: 0;
-    /* Ensures text truncation works */
+    z-index: 2;
 }
 
 .stat-value {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 800;
     color: white;
     margin: 0;
     line-height: 1.1;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    letter-spacing: -0.5px;
 }
 
 .stat-label {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    margin: 0.3rem 0 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-transform: none;
-    letter-spacing: 0.3px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0.4rem 0 0;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* --- Dashboard Grid (Quick Actions & Progress) --- */
