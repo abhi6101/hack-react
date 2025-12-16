@@ -18,6 +18,52 @@ const ResumeBuilder = () => {
 
     const [isGenerating, setIsGenerating] = useState(false);
 
+    const initialData = {
+        name: '',
+        email: '',
+        phone: '',
+        linkedin: '',
+        github: '',
+        summary: '',
+        education: [{ institution: '', degree: '', year: '', score: '' }],
+        experience: [{ company: '', role: '', duration: '', description: '' }],
+        projects: [{ title: '', description: '', techStack: '' }],
+        skills: '',
+    };
+
+    const dummyData = {
+        name: 'Alex Johnson',
+        email: 'alex.johnson@example.com',
+        phone: '+1 555-0123-456',
+        linkedin: 'linkedin.com/in/alexj',
+        github: 'github.com/alexcodex',
+        summary: 'Passionate Full Stack Developer with 2 years of experience building scalable web applications. Proficient in React, Node.js, and Cloud technologies. Eager to solve complex problems and deliver high-quality code.',
+        education: [
+            { institution: 'Tech University', degree: 'B.Tech in Computer Science', year: '2023', score: '8.5 CGPA' },
+            { institution: 'City High School', degree: 'Senior Secondary', year: '2019', score: '92%' }
+        ],
+        experience: [
+            { company: 'Innovate Tech', role: 'Frontend Developer', duration: 'June 2023 - Present', description: 'Developed responsive UI components using React and Redux. Improved site performance by 30% through code splitting and lazy loading.' },
+            { company: 'Startup Hub', role: 'Intern', duration: 'Jan 2023 - May 2023', description: 'Assisted in building RESTful APIs using Node.js and Express. Collaborated with the design team to implement pixel-perfect layouts.' }
+        ],
+        projects: [
+            { title: 'E-Commerce Platform', techStack: 'MERN Stack, Redux, Stripe', description: 'Built a full-featured e-commerce site with user authentication, product search, and secure payment processing.' },
+            { title: 'Task Manager App', techStack: 'React, Firebase', description: 'Real-time task management application with drag-and-drop functionality and team collaboration features.' }
+        ],
+        skills: 'JavaScript, React.js, Node.js, Java, Spring Boot, SQL, MongoDB, Git, Docker, AWS',
+    };
+
+    const fillDummyData = () => {
+        setFormData(dummyData);
+    };
+
+    const clearData = () => {
+        if (window.confirm('Are you sure you want to clear all data?')) {
+            setFormData(initialData);
+        }
+    };
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -341,6 +387,16 @@ const ResumeBuilder = () => {
                     <div className="sticky-box">
                         <h3>Actions</h3>
                         <p className="text-muted">Fill out the form and generate your resume instantly.</p>
+
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                            <button className="btn-secondary" onClick={fillDummyData} style={{ flex: 1, padding: '0.5rem', cursor: 'pointer', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '6px' }}>
+                                <i className="fas fa-magic"></i> Demo
+                            </button>
+                            <button className="btn-danger-outline" onClick={clearData} style={{ flex: 1, padding: '0.5rem', cursor: 'pointer', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.5)', color: '#ef4444', borderRadius: '6px' }}>
+                                <i className="fas fa-trash"></i> Clear
+                            </button>
+                        </div>
+
                         <button className="btn-download" onClick={generatePDF} disabled={isGenerating}>
                             {isGenerating ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-file-pdf"></i>}
                             Download PDF Resume
