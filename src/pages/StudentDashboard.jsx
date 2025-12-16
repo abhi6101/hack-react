@@ -176,7 +176,7 @@ const StudentDashboard = () => {
                                     alignItems: 'center',
                                     gap: '0.5rem',
                                     transition: 'transform 0.2s'
-                                    }}
+                                }}
                                 onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
                                 onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
                             >
@@ -193,7 +193,7 @@ const StudentDashboard = () => {
                             background: 'rgba(255,255,255,0.05)',
                             borderRadius: '8px',
                             border: '1px solid rgba(255,255,255,0.1)'
-                            }}>
+                        }}>
                             <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '8px' }}>
                                 <i className="fas fa-user" style={{ fontSize: '1.5rem', color: '#667eea', marginBottom: '0.5rem' }}></i>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Full Name</strong>
@@ -517,21 +517,21 @@ const StudentDashboard = () => {
                     </div>
                 </section>
             </main>
-        </div>
 
-        {/* Profile Update Modal */}
-        <ProfileUpdateModal
-            isOpen={showEditModal}
-            onClose={() => setShowEditModal(false)}
-            onUpdate={() => {
-                setShowEditModal(false);
-                fetchData(); // Refresh data after update
-            }}
-        />
-    </div>
+            {/* Profile Update Modal */}
+            <ProfileUpdateModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                onUpdate={() => {
+                    setShowEditModal(false);
+                    fetchData(); // Refresh data after update
+                }}
+            />
+        </div>
     );
 };
 
 export default StudentDashboard;
+
 
 
