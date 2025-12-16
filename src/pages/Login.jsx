@@ -93,6 +93,20 @@ const Login = () => {
 
             <section className="login-section">
                 <div className="login-card surface-glow">
+                    <Link to="/" style={{
+                        position: 'absolute',
+                        top: '1rem',
+                        left: '1rem',
+                        color: '#667eea',
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontSize: '0.9rem',
+                        fontWeight: '600'
+                    }}>
+                        <i className="fas fa-home"></i> Home
+                    </Link>
                     <h1>Welcome Back</h1>
                     <p className="server-wait-note">
                         ⏳ The server may take 30–60 seconds to start if it was idle. Please wait after clicking Login.

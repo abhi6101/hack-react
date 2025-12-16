@@ -93,6 +93,21 @@ const ForgotPassword = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
+                <Link to="/" style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    left: '1rem',
+                    color: '#667eea',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    zIndex: 10
+                }}>
+                    <i className="fas fa-home"></i> Home
+                </Link>
                 <div className="auth-header">
                     <i className="fas fa-lock" style={{ fontSize: '3rem', color: 'var(--primary)' }}></i>
                     <h2>{step === 1 ? 'Forgot Password?' : 'Reset Password'}</h2>

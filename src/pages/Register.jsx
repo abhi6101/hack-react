@@ -96,6 +96,20 @@ const Register = () => {
     return (
         <main className="register-page-container">
             <section id="register-form-card" className="register-card surface-glow">
+                <Link to="/" style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    left: '1rem',
+                    color: '#667eea',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.9rem',
+                    fontWeight: '600'
+                }}>
+                    <i className="fas fa-home"></i> Home
+                </Link>
                 <h1>Create Your Account</h1>
                 <p className="subtitle">Join our portal to access exclusive job opportunities and resources.</p>
 
