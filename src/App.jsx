@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Navbar from './components/Navbar';
-import UserInfoBar from './components/UserInfoBar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -33,7 +32,6 @@ function Layout({ children }) {
     return (
         <>
             {showNavbar && <Navbar />}
-            {showNavbar && <UserInfoBar />}
             {children}
             {showNavbar && <Footer />}
         </>
