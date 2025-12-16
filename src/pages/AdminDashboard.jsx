@@ -16,7 +16,9 @@ const AdminDashboard = () => {
         jobDescription: '',
         applyLink: '',
         lastDate: '',
-        salary: ''
+        salary: '',
+        eligibleBranches: [],
+        eligibleSemesters: []
     });
 
     const API_BASE_URL = "https://placement-portal-backend-nwaj.onrender.com/api/admin";
@@ -794,6 +796,75 @@ const AdminDashboard = () => {
                                     interviewDetails={interviewDetails}
                                     setInterviewDetails={setInterviewDetails}
                                 />
+
+                                {/* Eligibility Criteria Section */}
+                                <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '12px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
+                                    <h4 style={{ color: '#fbbf24', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <i className="fas fa-filter"></i> Eligibility Criteria
+                                    </h4>
+                                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
+                                        Select which branches and semesters are eligible for this job. Leave empty to allow all students.
+                                    </p>
+
+                                    <div className="form-grid">
+                                        <div className="form-group">
+                                            <label htmlFor="eligibleBranches">
+                                                <i className="fas fa-graduation-cap"></i> Eligible Branches
+                                            </label>
+                                            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                                                {['IMCA', 'MCA', 'BCA'].map(branch => (
+                                                    <label key={branch} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'white' }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            value={branch}
+                                                            checked={formData.eligibleBranches?.includes(branch) || false}
+                                                            onChange={(e) => {
+                                                                const branches = formData.eligibleBranches || [];
+                                                                if (e.target.checked) {
+                                                                    setFormData({ ...formData, eligibleBranches: [...branches, branch] });
+                                                                } else {
+                                                                    setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== branch) });
+                                                                }
+                                                            }}
+                                                            style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                                                        />
+                                                        {branch}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="eligibleSemesters">
+                                                <i className="fas fa-calendar-alt"></i> Eligible Semesters
+                                            </label>
+                                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(sem => (
+                                                    <label key={sem} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', color: 'white', minWidth: '60px' }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            value={sem}
+                                                            checked={formData.eligibleSemesters?.includes(sem) || false}
+                                                            onChange={(e) => {
+                                                                const semesters = formData.eligibleSemesters || [];
+                                                                if (e.target.checked) {
+                                                                    setFormData({ ...formData, eligibleSemesters: [...semesters, sem] });
+                                                                } else {
+                                                                    setFormData({ ...formData, eligibleSemesters: semesters.filter(s => s !== sem) });
+                                                                }
+                                                            }}
+                                                            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                                                        />
+                                                        Sem {sem}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                            <small style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem', marginTop: '0.5rem', display: 'block' }}>
+                                                Note: IMCA (1-10), MCA (1-4), BCA (2,4,6 for Year 1,2,3)
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {/* Email Notification Toggle */}
                                 <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
