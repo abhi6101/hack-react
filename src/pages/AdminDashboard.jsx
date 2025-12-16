@@ -702,12 +702,18 @@ const renderContent = () => {
                                                     <td>{new Date(job.last_date).toLocaleDateString('en-IN')}</td>
                                                     <td>₹{job.salary.toLocaleString()}</td>
                                                     <td className="action-btns">
-                                                        <button className="btn btn-secondary" onClick={() => startEditJob(job)} style={{ marginRight: '0.5rem' }}>
-                                                            <i className="fas fa-edit"></i>
-                                                        </button>
-                                                        <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
-                                                            <i className="fas fa-trash"></i>
-                                                        </button>
+                                                        {(!isCompanyAdmin || job.company_name === myCompanyName) ? (
+                                                            <>
+                                                                <button className="btn btn-secondary" onClick={() => startEditJob(job)} style={{ marginRight: '0.5rem' }}>
+                                                                    <i className="fas fa-edit"></i>
+                                                                </button>
+                                                                <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
+                                                                    <i className="fas fa-trash"></i>
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -966,12 +972,18 @@ const renderContent = () => {
                                             <td>{new Date(interview.date).toLocaleDateString()}</td>
                                             <td>{interview.venue}</td>
                                             <td className="action-btns">
-                                                <button className="btn btn-secondary" onClick={() => startEditInterview(interview)} style={{ marginRight: '0.5rem' }}>
-                                                    <i className="fas fa-edit"></i>
-                                                </button>
-                                                <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
-                                                    <i className="fas fa-trash"></i>
-                                                </button>
+                                                {(!isCompanyAdmin || interview.company === myCompanyName) ? (
+                                                    <>
+                                                        <button className="btn btn-secondary" onClick={() => startEditInterview(interview)} style={{ marginRight: '0.5rem' }}>
+                                                            <i className="fas fa-edit"></i>
+                                                        </button>
+                                                        <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
