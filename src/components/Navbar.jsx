@@ -40,7 +40,7 @@ const Navbar = () => {
             <div className={`nav-links ${isMenuOpen ? 'active' : ''}`} id="navLinks">
                 <Link to="/" className={isActive('/')}><i className="fas fa-home"></i> Home</Link>
                 <Link to="/jobs" className={isActive('/jobs')}><i className="fas fa-briefcase"></i> Jobs</Link>
-                <Link to="/resume" className={isActive('/resume')}><i className="fas fa-file-alt"></i> Resume Builder</Link>
+                <Link to="/resume-builder" className={isActive('/resume-builder')}><i className="fas fa-file-alt"></i> Resume Builder</Link>
 
                 <Link to="/interview" className={isActive('/interview')}><i className="fas fa-comments"></i> Interviews</Link>
                 <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Previous Year</Link>
