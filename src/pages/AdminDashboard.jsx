@@ -297,7 +297,15 @@ const AdminDashboard = () => {
     };
 
     const startEditUser = (user) => {
-        setUserForm({ username: user.username, email: user.email, password: '', role: user.role });
+        // Must preserve verification status!
+        setUserForm({
+            username: user.username,
+            email: user.email,
+            password: '',
+            role: user.role,
+            verified: user.verified, // Include this
+            companyName: user.companyName
+        });
         setEditingUser(user);
     };
 
