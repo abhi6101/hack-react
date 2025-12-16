@@ -288,6 +288,11 @@ position: relative;
     box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
+select.form-control option {
+    background-color: var(--surface-bg);
+    color: var(--text-primary);
+}
+
 textarea.form-control {
     resize: vertical;
     min-height: 100px;
