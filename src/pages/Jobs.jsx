@@ -406,9 +406,25 @@ const Jobs = () => {
                                 ></textarea>
                             </div>
 
-                            <button type="submit" className="btn" disabled={submitting}>
-                                {submitting ? 'Submitting...' : 'Submit Application'}
-                            </button>
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '1.5rem' }}>
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={() => setApplicationData({
+                                        applicantName: 'Demo Student',
+                                        applicantEmail: 'demo.student@example.com',
+                                        applicantPhone: '9876543210',
+                                        applicantRollNo: 'CS-2025-001',
+                                        coverLetter: 'I am excited to apply for this position. I have the required skills and passion for this role.'
+                                    })}
+                                    style={{ flex: 1, background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)' }}
+                                >
+                                    <i className="fas fa-magic"></i> Demo Data
+                                </button>
+                                <button type="submit" className="btn" disabled={submitting} style={{ flex: 2 }}>
+                                    {submitting ? 'Submitting...' : 'Submit Application'}
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
