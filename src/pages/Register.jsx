@@ -8,6 +8,8 @@ const Register = () => {
         username: '',
         email: '',
         role: '',
+        branch: '',
+        semester: '',
         password: '',
         confirmPassword: ''
     });
@@ -18,7 +20,29 @@ const Register = () => {
     const [success, setSuccess] = useState('');
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        // Reset semester when branch changes
+        if (name === 'branch') {
+            setFormData(prev => ({ ...prev, branch: value, semester: '' }));
+        }
+    };
+
+    // Get semester options based on selected branch
+    const getSemesterOptions = () => {
+        if (formData.branch === 'IMCA') {
+            return Array.from({ length: 10 }, (_, i) => ({ value: i + 1, label: `Semester ${i + 1}` }));
+        } else if (formData.branch === 'MCA') {
+            return Array.from({ length: 4 }, (_, i) => ({ value: i + 1, label: `Semester ${i + 1}` }));
+        } else if (formData.branch === 'BCA') {
+            return [
+                { value: 2, label: 'Year 1 (Semester 2)' },
+                { value: 4, label: 'Year 2 (Semester 4)' },
+                { value: 6, label: 'Year 3 (Semester 6)' }
+            ];
+        }
+        return [];
     };
 
     const handleSubmit = async (e) => {
@@ -41,7 +65,9 @@ const Register = () => {
                     username: formData.username,
                     email: formData.email,
                     password: formData.password,
-                    role: formData.role
+                    role: formData.role,
+                    branch: formData.role === 'USER' ? formData.branch : undefined,
+                    semester: formData.role === 'USER' ? parseInt(formData.semester) : undefined
                 }),
             });
 
@@ -117,6 +143,58 @@ const Register = () => {
                             <option value="USER">Student</option>
                         </select>
                     </div>
+
+                    {/* Branch/Semester fields - Only for Students */}
+                    {formData.role === 'USER' && (
+                        <>
+                            <div className="form-group">
+                                <label htmlFor="branch">Branch *</label>
+                                <select
+                                    id="branch"
+                                    name="branch"
+                                    required
+                                    value={formData.branch}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">-- Select Your Branch --</option>
+                                    <option value="IMCA">IMCA (Integrated MCA)</option>
+                                    <option value="MCA">MCA (Master's)</option>
+                                    <option value="BCA">BCA (Bachelor's)</option>
+                                </select>
+                            </div>
+
+                            {formData.branch && (
+                                <div className="form-group">
+                                    <label htmlFor="semester">Semester/Year *</label>
+                                    <select
+                                        id="semester"
+                                        name="semester"
+                                        required
+                                        value={formData.semester}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">-- Select Semester/Year --</option>
+                                        {getSemesterOptions().map(opt => (
+                                            <option key={opt.value} value={opt.value}>
+                                                {opt.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div style={{
+                                        marginTop: '0.75rem',
+                                        padding: '0.75rem',
+                                        background: 'rgba(239, 68, 68, 0.1)',
+                                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                                        borderRadius: '8px',
+                                        fontSize: '0.85rem',
+                                        color: '#fca5a5'
+                                    }}>
+                                        <strong>⚠️ Important:</strong> Fill this carefully! Your branch and semester will be used to match you with eligible job opportunities. This can only be updated at the end of each semester.
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
 
                     <div className="form-group">
                         <label htmlFor="password">Password</label>

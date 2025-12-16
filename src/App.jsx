@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ProfileUpdateModal from './components/ProfileUpdateModal';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -28,14 +29,64 @@ function Layout({ children }) {
     const location = useLocation();
     const hideNavbarRoutes = ['/login', '/register', '/admin'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
+    const [showProfileModal, setShowProfileModal] = useState(false);
+
+    // Check if student needs to update profile
+    useEffect(() => {
+        const checkProfileStatus = async () => {
+            const token = localStorage.getItem('authToken');
+            const userRole = localStorage.getItem('userRole');
+
+            // Only check for students (USER role)
+            if (token && userRole === 'USER') {
+                try {
+                    const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/profile-status', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.needsUpdate) {
+                            setShowProfileModal(true);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking profile status:', error);
+                }
+            }
+        };
+
+        checkProfileStatus();
+    }, [location.pathname]);
+
+    const handleProfileUpdate = () => {
+        setShowProfileModal(false);
+        // Optionally refresh the page or update state
+    };
 
     return (
         <>
             {showNavbar && <Navbar />}
             {children}
             {showNavbar && <Footer />}
+            <ProfileUpdateModal
+                isOpen={showProfileModal}
+                onClose={() => setShowProfileModal(false)}
+                onUpdate={handleProfileUpdate}
+            />
         </>
     );
+}
+
+return (
+    <>
+        {showNavbar && <Navbar />}
+        {children}
+        {showNavbar && <Footer />}
+    </>
+);
 }
 
 function App() {
