@@ -1334,9 +1334,21 @@ const AdminDashboard = () => {
                         <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
                         <p className="subtitle">Welcome, Admin! Manage your portal content from here.</p>
                     </div>
-                    <button onClick={() => navigate('/')} className="btn btn-outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
-                        <i className="fas fa-arrow-left"></i> Back to Portal
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <button onClick={() => navigate('/')} className="btn btn-outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
+                            <i className="fas fa-arrow-left"></i> Back to Portal
+                        </button>
+                        <button
+                            onClick={() => {
+                                localStorage.clear();
+                                navigate('/login');
+                            }}
+                            className="btn btn-outline"
+                            style={{ borderColor: '#ef4444', color: '#ef4444' }}
+                        >
+                            <i className="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
                 </header>
 
                 {renderContent()}

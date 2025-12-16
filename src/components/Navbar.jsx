@@ -85,6 +85,74 @@ const Navbar = () => {
                 )}
             </div>
 
+            {/* User Info Section */}
+            {localStorage.getItem('authToken') && (
+                <div className="user-info-section" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    marginLeft: 'auto',
+                    marginRight: '1rem'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ textAlign: 'right', lineHeight: '1.2' }}>
+                            <div style={{ fontWeight: '600', color: 'white', fontSize: '0.9rem' }}>
+                                {localStorage.getItem('username') || 'User'}
+                            </div>
+                            <span style={{
+                                fontSize: '0.75rem',
+                                padding: '0.2rem 0.6rem',
+                                borderRadius: '12px',
+                                background: localStorage.getItem('userRole') === 'SUPER_ADMIN' ? 'linear-gradient(135deg, #f72585, #b5179e)' :
+                                    localStorage.getItem('userRole') === 'COMPANY_ADMIN' ? 'linear-gradient(135deg, #4361ee, #3a0ca3)' :
+                                        localStorage.getItem('userRole') === 'ADMIN' ? 'linear-gradient(135deg, #06ffa5, #00d9ff)' :
+                                            'linear-gradient(135deg, #4cc9f0, #0096c7)',
+                                color: 'white',
+                                fontWeight: '600',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                display: 'inline-block',
+                                marginTop: '0.25rem'
+                            }}>
+                                {localStorage.getItem('userRole') === 'SUPER_ADMIN' ? 'Super Admin' :
+                                    localStorage.getItem('userRole') === 'COMPANY_ADMIN' ? 'Company Admin' :
+                                        localStorage.getItem('userRole') === 'ADMIN' ? 'Admin' : 'Student'}
+                            </span>
+                        </div>
+                        <button
+                            onClick={() => {
+                                localStorage.clear();
+                                window.location.href = '/login';
+                            }}
+                            style={{
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                borderRadius: '8px',
+                                padding: '0.5rem 1rem',
+                                color: '#ef4444',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem',
+                                fontWeight: '600',
+                                transition: 'all 0.3s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(239, 68, 68, 0.2)';
+                                e.target.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(239, 68, 68, 0.1)';
+                                e.target.style.transform = 'translateY(0)';
+                            }}
+                        >
+                            <i className="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className="hamburger" onClick={toggleMenu}>
                 <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
             </div>
