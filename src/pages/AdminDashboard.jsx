@@ -428,7 +428,7 @@ const AdminDashboard = () => {
         // Fill job form with sample data
         setFormData({
             jobTitle: 'Senior Software Engineer',
-            companyName: 'Google India',
+            companyName: isCompanyAdmin ? myCompanyName : 'Google India',
             jobDescription: 'We are looking for an experienced software engineer to join our team. You will work on cutting-edge technologies and solve complex problems at scale.',
             applyLink: 'https://careers.google.com/apply/senior-swe',
             lastDate: '2025-12-31',
@@ -473,7 +473,7 @@ const AdminDashboard = () => {
     const clearForm = () => {
         setFormData({
             jobTitle: '',
-            companyName: '',
+            companyName: isCompanyAdmin ? myCompanyName : '',
             jobDescription: '',
             applyLink: '',
             lastDate: '',
@@ -491,7 +491,7 @@ const AdminDashboard = () => {
 
     const fillInterviewSampleData = () => {
         setInterviewForm({
-            company: 'Microsoft India',
+            company: isCompanyAdmin ? myCompanyName : 'Microsoft India',
             date: '2025-12-25',
             time: '10:00 AM',
             venue: 'Auditorium, Main Campus',
@@ -504,7 +504,7 @@ const AdminDashboard = () => {
 
     const clearInterviewForm = () => {
         setInterviewForm({
-            company: '', date: '', time: '', venue: '', positions: '', eligibility: ''
+            company: isCompanyAdmin ? myCompanyName : '', date: '', time: '', venue: '', positions: '', eligibility: ''
         });
         setMessage({ text: 'Interview form cleared!', type: 'success' });
         setTimeout(() => setMessage({ text: '', type: '' }), 2000);
