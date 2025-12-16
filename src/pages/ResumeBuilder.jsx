@@ -43,154 +43,195 @@ const ResumeBuilder = () => {
         setIsGenerating(true);
         const doc = new jsPDF();
 
-        // Colors & Fonts
-        const primaryColor = [67, 97, 238]; // Your theme blue
-        const darkColor = [22, 22, 34];
+        // --- Colors & Fonts ---
+        const themeBlue = [67, 97, 238]; // #4361ee
+        const darkText = [33, 37, 41];
+        const lightText = [108, 117, 125];
+        const offWhite = [248, 249, 250];
+
+        // --- Layout Constants ---
+        const margin = 15;
+        const col1Width = 120; // Main content width
+        const col2X = 145; // Sidebar start X
+        const pageWidth = 210;
 
         doc.setFont("helvetica");
 
-        // --- Header ---
-        doc.setFillColor(...darkColor);
-        doc.rect(0, 0, 210, 40, 'F');
+        // --- HEADER SECTION (Full Width) ---
+        // Blue Background for Header
+        doc.setFillColor(...themeBlue);
+        doc.rect(0, 0, pageWidth, 45, 'F');
 
+        // Name
         doc.setTextColor(255, 255, 255);
-        doc.setFontSize(24);
+        doc.setFontSize(28);
         doc.setFont("helvetica", "bold");
-        doc.text(formData.name.toUpperCase(), 105, 15, { align: 'center' });
+        doc.text(formData.name.toUpperCase(), margin, 20);
 
-        doc.setFontSize(10);
+        // Contact Info
+        doc.setFontSize(9);
         doc.setFont("helvetica", "normal");
-        const contactLine = `${formData.email} | ${formData.phone} | ${formData.linkedin} | ${formData.github}`;
-        doc.text(contactLine, 105, 25, { align: 'center' });
+        const contactParts = [
+            formData.email,
+            formData.phone,
+            formData.linkedin && `LinkedIn: ${formData.linkedin.replace(/^https?:\/\//, '')}`,
+            formData.github && `GitHub: ${formData.github.replace(/^https?:\/\//, '')}`
+        ].filter(Boolean).join("  |  ");
+        doc.text(contactParts, margin, 32);
 
-        let yPos = 50;
+        // --- COLUMNS Setup ---
+        let yPos = 60;
 
-        // --- Summary ---
+        // 1. PROFESSIONAL SUMMARY
         if (formData.summary) {
-            doc.setTextColor(...primaryColor);
-            doc.setFontSize(14);
+            doc.setTextColor(...themeBlue);
+            doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
-            doc.text("PROFESSIONAL SUMMARY", 14, yPos);
-            doc.line(14, yPos + 1, 196, yPos + 1); // Underline
+            doc.text("PROFESSIONAL SUMMARY", margin, yPos);
+            doc.line(margin, yPos + 1.5, col1Width + margin, yPos + 1.5);
             yPos += 7;
 
-            doc.setTextColor(0, 0, 0);
+            doc.setTextColor(...darkText);
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
-            const summaryLines = doc.splitTextToSize(formData.summary, 180);
-            doc.text(summaryLines, 14, yPos);
-            yPos += (summaryLines.length * 5) + 5;
+            const summaryLines = doc.splitTextToSize(formData.summary, col1Width);
+            doc.text(summaryLines, margin, yPos);
+            yPos += (summaryLines.length * 5) + 8;
         }
 
-        // --- Education ---
-        if (formData.education.length > 0) {
-            doc.setTextColor(...primaryColor);
-            doc.setFontSize(14);
+        // 2. WORK EXPERIENCE
+        if (formData.experience.length > 0 && (formData.experience[0].company || formData.experience[0].role)) {
+            doc.setTextColor(...themeBlue);
+            doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
-            doc.text("EDUCATION", 14, yPos);
-            doc.line(14, yPos + 1, 196, yPos + 1);
-            yPos += 5;
-
-            const eduData = formData.education.map(edu => [
-                edu.institution,
-                edu.degree,
-                edu.year,
-                edu.score
-            ]);
-
-            autoTable(doc, {
-                startY: yPos,
-                head: [['Institution', 'Degree', 'Year', 'Score/CGPA']],
-                body: eduData,
-                theme: 'grid',
-                headStyles: { fillColor: primaryColor, textColor: 255 },
-                styles: { fontSize: 10, cellPadding: 2 },
-            });
-            yPos = doc.lastAutoTable.finalY + 10;
-        }
-
-        // --- Skills ---
-        if (formData.skills) {
-            doc.setTextColor(...primaryColor);
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text("TECHNICAL SKILLS", 14, yPos);
-            doc.line(14, yPos + 1, 196, yPos + 1);
-            yPos += 7;
-
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            const skillsLines = doc.splitTextToSize(formData.skills, 180);
-            doc.text(skillsLines, 14, yPos);
-            yPos += (skillsLines.length * 5) + 5;
-        }
-
-        // --- Experience ---
-        if (formData.experience.length > 0 && formData.experience[0].company) {
-            doc.setTextColor(...primaryColor);
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text("WORK EXPERIENCE", 14, yPos);
-            doc.line(14, yPos + 1, 196, yPos + 1);
+            doc.text("WORK EXPERIENCE", margin, yPos);
+            doc.line(margin, yPos + 1.5, col1Width + margin, yPos + 1.5);
             yPos += 7;
 
             formData.experience.forEach(exp => {
                 doc.setTextColor(0, 0, 0);
                 doc.setFontSize(11);
                 doc.setFont("helvetica", "bold");
-                doc.text(`${exp.role} at ${exp.company}`, 14, yPos);
+                doc.text(exp.role, margin, yPos);
 
                 doc.setFontSize(10);
-                doc.setFont("helvetica", "italic");
-                doc.text(exp.duration, 196, yPos, { align: 'right' });
-                yPos += 5;
+                doc.setTextColor(...themeBlue);
+                doc.text(exp.company, margin, yPos + 5);
 
+                doc.setTextColor(...lightText);
+                doc.setFontSize(9);
+                doc.setFont("helvetica", "italic");
+                doc.text(exp.duration, margin + col1Width, yPos, { align: 'right' });
+
+                yPos += 10;
+
+                doc.setTextColor(...darkText);
+                doc.setFontSize(10);
                 doc.setFont("helvetica", "normal");
-                const descLines = doc.splitTextToSize(exp.description, 180);
-                doc.text(descLines, 14, yPos);
-                yPos += (descLines.length * 5) + 5;
+                const descLines = doc.splitTextToSize(exp.description || '', col1Width);
+                doc.text(descLines, margin, yPos);
+                yPos += (descLines.length * 5) + 6;
             });
-            yPos += 5;
+            yPos += 3;
         }
 
-        // --- Projects ---
+        // 3. PROJECTS
         if (formData.projects.length > 0 && formData.projects[0].title) {
-            doc.setTextColor(...primaryColor);
-            doc.setFontSize(14);
+            if (yPos > 250) { doc.addPage(); yPos = 20; }
+            doc.setTextColor(...themeBlue);
+            doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
-            doc.text("PROJECTS", 14, yPos);
-            doc.line(14, yPos + 1, 196, yPos + 1);
+            doc.text("PROJECTS", margin, yPos);
+            doc.line(margin, yPos + 1.5, col1Width + margin, yPos + 1.5);
             yPos += 7;
 
             formData.projects.forEach(proj => {
-                // Check page break
-                if (yPos > 270) {
-                    doc.addPage();
-                    yPos = 20;
-                }
-
+                if (yPos > 270) { doc.addPage(); yPos = 20; }
                 doc.setTextColor(0, 0, 0);
                 doc.setFontSize(11);
                 doc.setFont("helvetica", "bold");
-                doc.text(proj.title, 14, yPos);
+                doc.text(proj.title, margin, yPos);
 
                 if (proj.techStack) {
                     doc.setFontSize(9);
+                    doc.setTextColor(...lightText);
                     doc.setFont("helvetica", "italic");
-                    doc.setTextColor(100);
-                    doc.text(`Stack: ${proj.techStack}`, 196, yPos, { align: 'right' });
+                    doc.text(`[ ${proj.techStack} ]`, margin + col1Width, yPos, { align: 'right' });
                 }
                 yPos += 5;
 
-                doc.setTextColor(0, 0, 0);
+                doc.setTextColor(...darkText);
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "normal");
-                const descLines = doc.splitTextToSize(proj.description, 180);
-                doc.text(descLines, 14, yPos);
-                yPos += (descLines.length * 5) + 5;
+                const descLines = doc.splitTextToSize(proj.description || '', col1Width);
+                doc.text(descLines, margin, yPos);
+                yPos += (descLines.length * 5) + 6;
             });
         }
+
+        // --- SIDEBAR (Right Column) ---
+        const sidebarY = 45;
+        const sidebarHeight = 297 - 45;
+        doc.setFillColor(...offWhite);
+        doc.rect(col2X - 5, sidebarY, pageWidth - (col2X - 5), sidebarHeight, 'F');
+
+        let sideY = 60;
+
+        // 4. EDUCATION
+        if (formData.education.length > 0) {
+            doc.setTextColor(...themeBlue);
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            doc.text("EDUCATION", col2X, sideY);
+            doc.line(col2X, sideY + 1.5, pageWidth - margin, sideY + 1.5);
+            sideY += 8;
+
+            formData.education.forEach(edu => {
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "bold");
+                const degreeSplit = doc.splitTextToSize(edu.degree, 50);
+                doc.text(degreeSplit, col2X, sideY);
+                sideY += (degreeSplit.length * 4) + 1;
+
+                doc.setTextColor(...darkText);
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
+                const instSplit = doc.splitTextToSize(edu.institution, 50);
+                doc.text(instSplit, col2X, sideY);
+                sideY += (instSplit.length * 4) + 1;
+
+                doc.setTextColor(...lightText);
+                doc.setFontSize(9);
+                doc.text(`${edu.year} | ${edu.score}`, col2X, sideY);
+                sideY += 8;
+            });
+            sideY += 5;
+        }
+
+        // 5. SKILLS
+        if (formData.skills) {
+            doc.setTextColor(...themeBlue);
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            doc.text("SKILLS", col2X, sideY);
+            doc.line(col2X, sideY + 1.5, pageWidth - margin, sideY + 1.5);
+            sideY += 8;
+
+            doc.setTextColor(...darkText);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const skillsArr = formData.skills.split(',').map(s => s.trim());
+            skillsArr.forEach(skill => {
+                doc.text(`• ${skill}`, col2X, sideY);
+                sideY += 5;
+            });
+        }
+
+        // Footer
+        doc.setFontSize(8);
+        doc.setTextColor(200, 200, 200);
+        doc.text("Generated by Hack-2-Hired Portal", pageWidth / 2, 290, { align: 'center' });
 
         doc.save(`${formData.name.replace(/\s+/g, '_')}_Resume.pdf`);
         setIsGenerating(false);
