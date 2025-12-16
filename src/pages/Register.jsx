@@ -156,10 +156,10 @@ const Register = () => {
                                     value={formData.branch}
                                     onChange={handleChange}
                                 >
-                                    <option value="">-- Select Your Branch --</option>
-                                    <option value="IMCA">IMCA (Integrated MCA)</option>
-                                    <option value="MCA">MCA (Master's)</option>
-                                    <option value="BCA">BCA (Bachelor's)</option>
+                                    <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Your Branch --</option>
+                                    <option value="IMCA" style={{ background: '#1e293b', color: '#fff' }}>IMCA (Integrated MCA)</option>
+                                    <option value="MCA" style={{ background: '#1e293b', color: '#fff' }}>MCA (Master's)</option>
+                                    <option value="BCA" style={{ background: '#1e293b', color: '#fff' }}>BCA (Bachelor's)</option>
                                 </select>
                             </div>
 
@@ -173,9 +173,9 @@ const Register = () => {
                                         value={formData.semester}
                                         onChange={handleChange}
                                     >
-                                        <option value="">-- Select Semester/Year --</option>
+                                        <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Semester/Year --</option>
                                         {getSemesterOptions().map(opt => (
-                                            <option key={opt.value} value={opt.value}>
+                                            <option key={opt.value} value={opt.value} style={{ background: '#1e293b', color: '#fff' }}>
                                                 {opt.label}
                                             </option>
                                         ))}
