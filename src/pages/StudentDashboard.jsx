@@ -53,9 +53,9 @@ const StudentDashboard = () => {
             console.error('Failed to load interviews');
         }
 
-        // Fetch my applications
+        // Fetch my applications (Interview)
         try {
-            const appsRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/applications/my', {
+            const appsRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-applications/my', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (appsRes.ok) {
@@ -421,7 +421,7 @@ const StudentDashboard = () => {
                                     <tbody>
                                         {applications.map(app => (
                                             <tr key={app.id}>
-                                                <td>{app.interviewDrive.company}</td>
+                                                <td>{app.companyName || (app.interviewDrive && app.interviewDrive.company) || 'N/A'}</td>
                                                 <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
                                                 <td>
                                                     <span className={`status-badge status-${app.status.toLowerCase()}`}>

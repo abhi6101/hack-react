@@ -111,6 +111,10 @@ const AdminDashboard = () => {
     const [interviewApplications, setInterviewApplications] = useState([]);
     const [loadingInterviewApps, setLoadingInterviewApps] = useState(false);
 
+    // Gallery State
+    const [galleryItems, setGalleryItems] = useState([]);
+    const [loadingGallery, setLoadingGallery] = useState(false);
+
     const loadInterviewApplications = async () => {
         setLoadingInterviewApps(true);
         try {
@@ -130,9 +134,10 @@ const AdminDashboard = () => {
 
     const updateInterviewAppStatus = async (appId, newStatus) => {
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/interview-applications/${appId}/status?status=${newStatus}`, {
+            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/interview-applications/${appId}/status`, {
                 method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ status: newStatus })
             });
             if (res.ok) {
                 loadInterviewApplications();
@@ -144,11 +149,63 @@ const AdminDashboard = () => {
         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     };
 
+    // Gallery Functions
+    const loadGalleryItems = async () => {
+        setLoadingGallery(true);
+        try {
+            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/gallery`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error('Failed to fetch gallery items');
+            const data = await response.json();
+            setGalleryItems(data);
+        } catch (error) {
+            console.error('Error loading gallery:', error);
+            setMessage({ text: 'Failed to load gallery items.', type: 'error' });
+        } finally {
+            setLoadingGallery(false);
+        }
+    };
+
+    const updateGalleryStatus = async (id, newStatus) => {
+        try {
+            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/gallery/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (res.ok) {
+                loadGalleryItems();
+                setMessage({ text: 'Gallery item updated!', type: 'success' });
+            }
+        } catch (err) {
+            setMessage({ text: 'Failed to update gallery status', type: 'error' });
+        }
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    };
+
+    const deleteGalleryItem = async (id) => {
+        if (!window.confirm('Delete this item?')) return;
+        try {
+            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/gallery/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                setGalleryItems(galleryItems.filter(i => i.id !== id));
+                setMessage({ text: 'Item deleted!', type: 'success' });
+            }
+        } catch (err) {
+            setMessage({ text: 'Failed to delete item', type: 'error' });
+        }
+    };
+
     const updateApplicationStatus = async (appId, newStatus) => {
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}/status?status=${newStatus}`, {
+            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}/status`, {
                 method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ status: newStatus })
             });
             if (res.ok) {
                 loadApplications();
@@ -221,7 +278,10 @@ const AdminDashboard = () => {
             console.error(err);
             setMessage({ text: 'Failed to save interview', type: 'error' });
         }
-        setInterviewForm({ company: '', date: '', time: '', venue: '', positions: '', eligibility: '' });
+        setInterviewForm({
+            company: isCompanyAdmin ? myCompanyName : '',
+            date: '', time: '', venue: '', positions: '', eligibility: ''
+        });
         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     };
 
@@ -745,7 +805,14 @@ const AdminDashboard = () => {
                                         </div>
                                         <div className="form-group">
                                             <label>Role</label>
-                                            <select className="form-control" value={userForm.role} onChange={e => setUserForm({ ...userForm, role: e.target.value })}>
+                                            <select className="form-control" value={userForm.role} onChange={e => {
+                                                const newRole = e.target.value;
+                                                setUserForm(prev => ({
+                                                    ...prev,
+                                                    role: newRole,
+                                                    companyName: newRole === 'COMPANY_ADMIN' ? prev.companyName : ''
+                                                }));
+                                            }}>
                                                 <option value="USER">USER</option>
                                                 <option value="ADMIN">ADMIN</option>
                                                 <option value="SUPER_ADMIN">SUPER ADMIN</option>
@@ -1073,6 +1140,70 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            case 'gallery':
+                return (
+                    <section className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className="fas fa-images"></i> Gallery Management</h3>
+                        </div>
+                        {loadingGallery ? (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading gallery items...</p>
+                        ) : galleryItems.length > 0 ? (
+                            <div className="table-responsive" style={{ padding: '1rem' }}>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Uploaded By</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {galleryItems.map(item => (
+                                            <tr key={item.id}>
+                                                <td>
+                                                    {item.title}
+                                                    {item.description && <div style={{ fontSize: '0.8rem', color: '#888' }}>{item.description.substring(0, 50)}...</div>}
+                                                </td>
+                                                <td>{item.type}</td>
+                                                <td>{item.uploadedBy}</td>
+                                                <td>
+                                                    <span className={`status-badge status-${item.status.toLowerCase()}`}>
+                                                        {item.status}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                        <select
+                                                            value={item.status}
+                                                            onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
+                                                            className="form-control"
+                                                            style={{ width: 'auto', padding: '0.25rem' }}
+                                                        >
+                                                            <option value="PENDING">Pending</option>
+                                                            <option value="ACCEPTED">Accept</option>
+                                                            <option value="REJECTED">Reject</option>
+                                                        </select>
+                                                        <button className="btn btn-danger" onClick={() => deleteGalleryItem(item.id)} style={{ padding: '0.25rem 0.5rem' }}>
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem' }}>
+                                                            <i className="fas fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>No gallery items found.</p>
+                        )}
+                    </section>
+                );
             default:
                 return <div>Select a tab</div>;
         }
@@ -1123,6 +1254,15 @@ const AdminDashboard = () => {
                                 style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
                             >
                                 <i className="fas fa-user-check"></i> Interview Applications
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                className={activeTab === 'gallery' ? 'active' : ''}
+                                onClick={() => { setActiveTab('gallery'); loadGalleryItems(); }}
+                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                            >
+                                <i className="fas fa-images"></i> Gallery Management
                             </button>
                         </li>
                     </ul>

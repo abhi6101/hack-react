@@ -77,7 +77,7 @@ const Navbar = () => {
                     </>
                 )}
 
-                {localStorage.getItem('userRole') === 'ADMIN' && (
+                {['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN'].includes(localStorage.getItem('userRole')) && (
                     <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin Dashboard</Link>
                 )}
                 {localStorage.getItem('authToken') && localStorage.getItem('userRole') === 'USER' && (

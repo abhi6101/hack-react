@@ -1,39 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/gallery.css';
 
-const galleryData = [
-    { id: 1, src: "/images/4E9A7129-copy.jpg", alt: "Students in a modern computer lab", title: "Lab Session", categories: ["lab", "campus"] },
-    { id: 2, src: "/images/20240123_145917-copy.jpg", alt: "IPS Academy School of Computers entrance", title: "Campus Entrance", categories: ["campus"] },
-    { id: 3, src: "/images/DSCF2122-copy.jpg", alt: "Students working on projects in lab", title: "Hands-on Learning", categories: ["lab"] },
-    { id: 4, src: "/images/Group-photo-1-copy-4.jpg", alt: "Campus group photo with faculty", title: "Campus Group Photo", categories: ["campus", "function"] },
-    { id: 5, src: "/images/STUDENT5-1.jpg", alt: "Unique circular computer lab", title: "Circular Lab", categories: ["lab", "campus"] },
-    { id: 6, src: "/images/student-group-photo.jpg", alt: "Large group of students at an annual event", title: "Annual Event", categories: ["function"] },
-    { id: 7, src: "/images/bgcoll.jpg", alt: "Campus fountain lit up at night", title: "Evening Campus", categories: ["campus", "function"] },
-    { id: 8, src: "/images/lab1.jpg", alt: "Teacher assisting student in lab", title: "Focused Lab Session", categories: ["lab"] },
-    { id: 9, src: "/images/wteach.jpg", alt: "Group of female faculty members", title: "Faculty Members", categories: ["function"] },
-    { id: 10, src: "/images/fair.jpg", alt: "Students posing in front of college building", title: "Student Group Photo", categories: ["campus"] },
-    { id: 11, src: "/images/audi.jpg", alt: "Group photo on stage in auditorium", title: "Auditorium Event", categories: ["function", "farewell"] },
-    { id: 12, src: "/images/udit1.jpg", alt: "Four friends smiling on campus", title: "Friends on Campus", categories: ["campus"] },
-    { id: 13, src: "/images/class1.jpg", alt: "Students paying attention in a classroom", title: "Classroom Learning", categories: ["class"] },
-    { id: 14, src: "/images/class2.jpg", alt: "Interactive classroom session with teacher", title: "Interactive Session", categories: ["class"] }
-];
-
 const Gallery = () => {
+    const [galleryItems, setGalleryItems] = useState([]);
     const [activeCategory, setActiveCategory] = useState("all");
     const [selectedImage, setSelectedImage] = useState(null);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [uploadLoading, setUploadLoading] = useState(false);
+    const [message, setMessage] = useState({ text: '', type: '' });
+
+    const [formData, setFormData] = useState({
+        title: '',
+        type: 'campus', // Default category
+        description: '',
+        image: null
+    });
+
+    useEffect(() => {
+        fetchGallery();
+    }, []);
+
+    const fetchGallery = async () => {
+        try {
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/gallery');
+            if (res.ok) {
+                const data = await res.json();
+                setGalleryItems(data);
+            }
+        } catch (err) {
+            console.error("Failed to load gallery", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUploadSubmit = async (e) => {
+        e.preventDefault();
+        setUploadLoading(true);
+        setMessage({ text: '', type: '' });
+
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Please login to upload photos.');
+            setUploadLoading(false);
+            return;
+        }
+
+        const data = new FormData();
+        data.append('title', formData.title);
+        data.append('type', formData.type);
+        data.append('description', formData.description);
+        if (formData.image) {
+            data.append('image', formData.image);
+        }
+
+        try {
+            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/gallery', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: data
+            });
+
+            if (res.ok) {
+                setMessage({ text: 'Photo submitted for moderation! It will appear once approved.', type: 'success' });
+                setFormData({ title: '', type: 'campus', description: '', image: null });
+                setTimeout(() => {
+                    setShowUploadModal(false);
+                    setMessage({ text: '', type: '' });
+                }, 3000);
+            } else {
+                setMessage({ text: 'Failed to upload photo.', type: 'error' });
+            }
+        } catch (err) {
+            setMessage({ text: 'Error uploading photo.', type: 'error' });
+        } finally {
+            setUploadLoading(false);
+        }
+    };
 
     const filteredImages = activeCategory === "all"
-        ? galleryData
-        : galleryData.filter(img => img.categories.includes(activeCategory));
+        ? galleryItems
+        : galleryItems.filter(img => img.type.toLowerCase() === activeCategory.toLowerCase());
 
     return (
         <main>
             <section className="gallery-page">
-                <h1>Moments & Memories</h1>
-                <p className="subtitle">A collection of moments from our campus life, events, and sessions.</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div>
+                        <h1>Moments & Memories</h1>
+                        <p className="subtitle">A collection of moments from our campus life, events, and sessions.</p>
+                    </div>
+                    <button className="btn btn-primary" onClick={() => setShowUploadModal(true)}>
+                        <i className="fas fa-camera"></i> Share Photo
+                    </button>
+                </div>
 
                 <div className="gallery-categories">
-                    {['all', 'function', 'lab', 'farewell', 'campus'].map(cat => (
+                    {['all', 'function', 'lab', 'farewell', 'campus', 'class'].map(cat => (
                         <button
                             key={cat}
                             className={`btn btn-outline ${activeCategory === cat ? 'active' : ''}`}
@@ -44,31 +110,99 @@ const Gallery = () => {
                     ))}
                 </div>
 
-                <div className="photo-grid">
-                    {filteredImages.map(img => (
-                        <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedImage(img)}>
-                            <img src={img.src} alt={img.alt} onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
-                            <div className="photo-info"><h4>{img.title}</h4></div>
-                        </div>
-                    ))}
-                </div>
+                {loading ? (
+                    <p style={{ textAlign: 'center', padding: '2rem' }}>Loading gallery...</p>
+                ) : (
+                    <div className="photo-grid">
+                        {filteredImages.length > 0 ? filteredImages.map(img => (
+                            <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedImage(img)}>
+                                <img src={img.url} alt={img.title} onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
+                                <div className="photo-info">
+                                    <h4>{img.title}</h4>
+                                    {img.uploadedBy && <span style={{ fontSize: '0.8rem', color: '#ccc' }}>by {img.uploadedBy}</span>}
+                                </div>
+                            </div>
+                        )) : (
+                            <p style={{ width: '100%', textAlign: 'center', padding: '2rem' }}>No photos in this category yet.</p>
+                        )}
+                    </div>
+                )}
             </section>
 
-            <section className="gallery-contribution-section">
-                <div className="gallery-contribution surface-glow">
-                    <h3>Share Your Moments</h3>
-                    <p>Have photos from college you'd like to share? Send them our way!</p>
-                    <div className="contact-links">
-                        <a href="https://wa.me/916266017070?text=Hello!%20I%20want%20to%20share%20photos%20for%20the%20college%20gallery." target="_blank" rel="noopener noreferrer" className="btn-contact whatsapp-btn"><i className="fab fa-whatsapp"></i> WhatsApp Us</a>
-                        <a href="mailto:abhijain6101@gmail.com?subject=College%20Gallery%20Photo%20Submission" className="btn-contact email-btn"><i className="fas fa-envelope"></i> Email Photos</a>
+            {/* Upload Modal */}
+            {showUploadModal && (
+                <div className="modal" style={{ display: 'flex' }}>
+                    <div className="modal-content surface-glow" style={{ maxWidth: '500px', width: '90%', padding: '2rem', borderRadius: '15px' }}>
+                        <span className="close-modal" onClick={() => setShowUploadModal(false)} style={{ position: 'absolute', right: '20px', top: '10px', fontSize: '2rem', cursor: 'pointer' }}>&times;</span>
+                        <h2 style={{ marginBottom: '1.5rem' }}>Share Your Photo</h2>
+
+                        {message.text && (
+                            <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '1rem', padding: '10px', borderRadius: '5px', background: message.type === 'success' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)', color: message.type === 'success' ? '#22c55e' : '#ef4444' }}>
+                                {message.text}
+                            </div>
+                        )}
+
+                        <form onSubmit={handleUploadSubmit}>
+                            <div className="form-group" style={{ marginBottom: '1rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Title</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    required
+                                    value={formData.title}
+                                    onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                />
+                            </div>
+                            <div className="form-group" style={{ marginBottom: '1rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Category</label>
+                                <select
+                                    className="form-control"
+                                    value={formData.type}
+                                    onChange={e => setFormData({ ...formData, type: e.target.value })}
+                                >
+                                    <option value="campus">Campus</option>
+                                    <option value="lab">Lab</option>
+                                    <option value="function">Function</option>
+                                    <option value="farewell">Farewell</option>
+                                    <option value="class">Class</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div className="form-group" style={{ marginBottom: '1rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Description</label>
+                                <textarea
+                                    className="form-control"
+                                    rows="3"
+                                    value={formData.description}
+                                    onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                ></textarea>
+                            </div>
+                            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Photo</label>
+                                <input
+                                    type="file"
+                                    className="form-control"
+                                    required
+                                    accept="image/*"
+                                    onChange={e => setFormData({ ...formData, image: e.target.files[0] })}
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary" disabled={uploadLoading} style={{ width: '100%' }}>
+                                {uploadLoading ? 'Uploading...' : 'Submit for Review'}
+                            </button>
+                        </form>
                     </div>
                 </div>
-            </section>
+            )}
 
             {selectedImage && (
                 <div id="imageModal" className="modal" style={{ display: 'flex' }} onClick={() => setSelectedImage(null)}>
-                    <span className="close-modal" onClick={() => setSelectedImage(null)}>×</span>
-                    <img className="modal-content" id="modalImage" src={selectedImage.src} alt={selectedImage.alt} onClick={(e) => e.stopPropagation()} />
+                    <span className="close-modal" onClick={() => setSelectedImage(null)}>&times;</span>
+                    <div style={{ textAlign: 'center' }}>
+                        <img className="modal-content" id="modalImage" src={selectedImage.url} alt={selectedImage.title} onClick={(e) => e.stopPropagation()} />
+                        <h3 style={{ color: 'white', marginTop: '1rem' }}>{selectedImage.title}</h3>
+                        <p style={{ color: '#ccc' }}>{selectedImage.description}</p>
+                    </div>
                 </div>
             )}
         </main>
