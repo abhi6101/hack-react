@@ -6,10 +6,45 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Jobs from './pages/Jobs';
 import ResumeBuilder from './pages/ResumeBuilder';
-// ...
+import Interview from './pages/Interview';
+import Papers from './pages/Papers';
+import Quiz from './pages/Quiz';
+import AdminDashboard from './pages/AdminDashboard';
+import StudentDashboard from './pages/StudentDashboard';
+import StudentProfile from './pages/StudentProfile';
+import Courses from './pages/Courses';
+import CourseDetail from './pages/CourseDetail';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import Gallery from './pages/Gallery';
+import Videos from './pages/Videos';
+import Contact from './pages/Contact';
+import VerifyAccount from './pages/VerifyAccount';
+
+function Layout({ children }) {
+    const location = useLocation();
+    const hideNavbarRoutes = ['/login', '/register', '/admin'];
+    const showNavbar = !hideNavbarRoutes.includes(location.pathname);
+
+    return (
+        <>
+            {showNavbar && <Navbar />}
+            {children}
+            {showNavbar && <Footer />}
+        </>
+    );
+}
+
+function App() {
+    return (
+        <Router>
+            <Layout>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="/jobs" element={<Jobs />} />
                     <Route path="/resume-builder" element={<ResumeBuilder />} />
-
                     <Route path="/interview" element={<Interview />} />
                     <Route path="/papers" element={<Papers />} />
                     <Route path="/quiz" element={<Quiz />} />
@@ -24,9 +59,9 @@ import ResumeBuilder from './pages/ResumeBuilder';
                     <Route path="/videos" element={<Videos />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/verify-account" element={<VerifyAccount />} />
-                </Routes >
-            </Layout >
-        </Router >
+                </Routes>
+            </Layout>
+        </Router>
     );
 }
 
