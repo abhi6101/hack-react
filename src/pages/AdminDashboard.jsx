@@ -724,51 +724,53 @@ const AdminDashboard = () => {
             case 'users':
                 return (
                     <>
-                        <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-user-plus"></i> {editingUser ? 'Edit User' : 'Add New User'}</h3>
-                            </div>
-                            <form onSubmit={handleUserSubmit}>
-                                <div className="form-grid">
-                                    <div className="form-group">
-                                        <label>Username</label>
-                                        <input type="text" className="form-control" required value={userForm.username} onChange={e => setUserForm({ ...userForm, username: e.target.value })} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Email</label>
-                                        <input type="email" className="form-control" required value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Password {editingUser && '(leave blank to keep current)'}</label>
-                                        <input type="password" className="form-control" required={!editingUser} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Role</label>
-                                        <select className="form-control" value={userForm.role} onChange={e => setUserForm({ ...userForm, role: e.target.value })}>
-                                            <option value="USER">USER</option>
-                                            <option value="ADMIN">ADMIN</option>
-                                            <option value="SUPER_ADMIN">SUPER ADMIN</option>
-                                            <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
-                                        </select>
-                                    </div>
-                                    {userForm.role === 'COMPANY_ADMIN' && (
-                                        <div className="form-group">
-                                            <label>Company Name (for Company Admin)</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                required
-                                                value={userForm.companyName || ''}
-                                                onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
-                                                placeholder="e.g. Google, Microsoft"
-                                            />
-                                        </div>
-                                    )}
+                        {!isCompanyAdmin && (
+                            <section className="card surface-glow">
+                                <div className="card-header">
+                                    <h3><i className="fas fa-user-plus"></i> {editingUser ? 'Edit User' : 'Add New User'}</h3>
                                 </div>
-                                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
-                                {editingUser && <button type="button" className="btn btn-secondary" onClick={() => { setEditingUser(null); setUserForm({ username: '', email: '', password: '', role: 'USER' }); }}>Cancel</button>}
-                            </form>
-                        </section>
+                                <form onSubmit={handleUserSubmit}>
+                                    <div className="form-grid">
+                                        <div className="form-group">
+                                            <label>Username</label>
+                                            <input type="text" className="form-control" required value={userForm.username} onChange={e => setUserForm({ ...userForm, username: e.target.value })} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Email</label>
+                                            <input type="email" className="form-control" required value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Password {editingUser && '(leave blank to keep current)'}</label>
+                                            <input type="password" className="form-control" required={!editingUser} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Role</label>
+                                            <select className="form-control" value={userForm.role} onChange={e => setUserForm({ ...userForm, role: e.target.value })}>
+                                                <option value="USER">USER</option>
+                                                <option value="ADMIN">ADMIN</option>
+                                                <option value="SUPER_ADMIN">SUPER ADMIN</option>
+                                                <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
+                                            </select>
+                                        </div>
+                                        {userForm.role === 'COMPANY_ADMIN' && (
+                                            <div className="form-group">
+                                                <label>Company Name (for Company Admin)</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    required
+                                                    value={userForm.companyName || ''}
+                                                    onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
+                                                    placeholder="e.g. Google, Microsoft"
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
+                                    {editingUser && <button type="button" className="btn btn-secondary" onClick={() => { setEditingUser(null); setUserForm({ username: '', email: '', password: '', role: 'USER' }); }}>Cancel</button>}
+                                </form>
+                            </section>
+                        )}
 
                         <section id="users-section" className="card surface-glow">
                             <div className="card-header">
@@ -791,12 +793,18 @@ const AdminDashboard = () => {
                                                         <td>{user.role}</td>
                                                         <td>{user.companyName || '-'}</td>
                                                         <td className="action-btns">
-                                                            <button className="btn btn-secondary" onClick={() => startEditUser(user)}>
-                                                                <i className="fas fa-edit"></i>
-                                                            </button>
-                                                            <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>
-                                                                <i className="fas fa-trash"></i>
-                                                            </button>
+                                                            {!isCompanyAdmin ? (
+                                                                <>
+                                                                    <button className="btn btn-secondary" onClick={() => startEditUser(user)}>
+                                                                        <i className="fas fa-edit"></i>
+                                                                    </button>
+                                                                    <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>
+                                                                        <i className="fas fa-trash"></i>
+                                                                    </button>
+                                                                </>
+                                                            ) : (
+                                                                <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
+                                                            )}
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -1088,7 +1096,7 @@ const AdminDashboard = () => {
                                 <i className="fas fa-briefcase"></i> Manage Jobs
                             </button>
                         </li>
-                        {isSuperAdmin && (
+                        {(isSuperAdmin || isCompanyAdmin) && (
                             <li>
                                 <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
                                     <i className="fas fa-users"></i> Manage Users
