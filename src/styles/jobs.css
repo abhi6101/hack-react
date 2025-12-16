@@ -220,9 +220,14 @@
   }
 }
 
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .job-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-color);
+  background: rgba(22, 22, 34, 0.8);
   border-radius: 16px;
   padding: 2rem;
   display: flex;
@@ -231,15 +236,65 @@
   position: relative;
   overflow: hidden;
   animation: slideInUp 0.6s ease backwards;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+  /* Default border for non-hover state */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.job-card::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  /* The gap becomes the border width */
+  background: #13131f;
+  /* Inner card background */
+  border-radius: 15px;
+  /* Slightly less than parent */
+  z-index: -1;
+}
+
+/* The Spinning Glow (Hidden by default) */
+.job-card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 250%;
+  /* Make it long to cover corners */
+  background: conic-gradient(from 0deg,
+      transparent 0deg,
+      transparent 80deg,
+      var(--primary) 130deg,
+      var(--accent) 180deg,
+      transparent 230deg);
+  transform: translate(-50%, -50%);
+  animation: rotate 4s linear infinite;
+  opacity: 0;
+  z-index: -2;
+  transition: opacity 0.3s ease;
 }
 
 .job-card:hover {
-  transform: translateY(-8px) scale(1.01);
-  border-color: var(--primary);
-  box-shadow: 0 15px 40px -10px rgba(67, 97, 238, 0.2);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(67, 97, 238, 0.05));
-  /* Glow Effect */
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(67, 97, 238, 0.3);
+  border-color: transparent;
+  /* Hide static border to show glow */
+}
+
+.job-card:hover::before {
+  opacity: 1;
+}
+
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .job-header {
@@ -527,4 +582,23 @@
   color: #fff;
   border-color: var(--primary);
   box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* Applied Button Style */
+.btn-applied {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  cursor: not-allowed;
+  opacity: 0.8;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-applied:hover {
+  transform: none;
+  box-shadow: none;
+  background: rgba(16, 185, 129, 0.15);
 }

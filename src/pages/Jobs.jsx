@@ -26,16 +26,20 @@ const Jobs = () => {
     });
     const [resumeFile, setResumeFile] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [appliedJobIds, setAppliedJobIds] = useState(new Set()); // Track applied job IDs
     const navigate = useNavigate();
 
     const API_URL = "https://placement-portal-backend-nwaj.onrender.com/jobs";
     const APPLY_JOB_API_URL = "https://placement-portal-backend-nwaj.onrender.com/api/apply-job";
+    const APPLIED_JOBS_API_URL = "https://placement-portal-backend-nwaj.onrender.com/api/job-applications/my";
 
     useEffect(() => {
         const token = localStorage.getItem("authToken");
         if (!token) {
             alert("You must be logged in to view job opportunities.");
             navigate('/login');
+        } else {
+            fetchAppliedJobs(token);
         }
     }, [navigate]);
 
@@ -46,6 +50,24 @@ const Jobs = () => {
     useEffect(() => {
         filterAndSortJobs();
     }, [allJobs, filters]);
+
+    const fetchAppliedJobs = async (token) => {
+        try {
+            const response = await fetch(APPLIED_JOBS_API_URL, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                // Extract job IDs from the applications
+                const ids = new Set(data.map(app => app.jobId));
+                setAppliedJobIds(ids);
+            }
+        } catch (err) {
+            console.error("Error fetching applied jobs:", err);
+        }
+    };
 
     const fetchJobs = async () => {
         try {
@@ -68,6 +90,7 @@ const Jobs = () => {
     };
 
     const filterAndSortJobs = () => {
+        // ... (existing filter code) ...
         let result = allJobs.filter(job => {
             const matchesSearch = job.title.toLowerCase().includes(filters.search.toLowerCase()) ||
                 job.company_name.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -122,10 +145,13 @@ const Jobs = () => {
     };
 
     const openApplyModal = (job) => {
-        const token = localStorage.getItem("authToken"); // Dummy check for now, logic copied
-        // In a real App we might want to use Context for auth
-        // if (!token) { alert("Please login first"); return; } 
+        if (appliedJobIds.has(job.id)) {
+            alert("You have already applied for this job.");
+            return;
+        }
 
+        const token = localStorage.getItem("authToken");
+        // ... rest of modal logic ...
         // Pre-fill logic (mocked here as we don't have user object easily accessible without context)
         const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
 
@@ -284,9 +310,15 @@ const Jobs = () => {
                                         <button className="btn btn-outline" onClick={() => alert("Details page implementation pending")}>
                                             <i className="fas fa-eye"></i> View Details
                                         </button>
-                                        <button className="btn apply-btn" onClick={() => openApplyModal(job)}>
-                                            <i className="fas fa-paper-plane"></i> Apply Now
-                                        </button>
+                                        {appliedJobIds.has(job.id) ? (
+                                            <button className="btn btn-applied" disabled>
+                                                <i className="fas fa-check"></i> Applied
+                                            </button>
+                                        ) : (
+                                            <button className="btn apply-btn" onClick={() => openApplyModal(job)}>
+                                                <i className="fas fa-paper-plane"></i> Apply Now
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
