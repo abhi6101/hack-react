@@ -1261,6 +1261,99 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            case 'companies':
+                const companyAdmins = users.filter(u => u.role === 'COMPANY_ADMIN');
+
+                const toggleCompanyStatus = async (userId) => {
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/users/${userId}/toggle-status`, {
+                            method: 'PUT',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            setMessage({ text: data.message, type: 'success' });
+                            loadUsers(); // Reload users to get updated status
+                            setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+                        } else {
+                            setMessage({ text: 'Failed to toggle company status', type: 'error' });
+                        }
+                    } catch (error) {
+                        setMessage({ text: 'Error toggling company status', type: 'error' });
+                    }
+                };
+
+                return (
+                    <section className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className="fas fa-building"></i> Company Management</h3>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                                Enable or disable company accounts. Disabled companies cannot post jobs or interviews.
+                            </p>
+                        </div>
+                        {loadingUsers ? (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading companies...</p>
+                        ) : companyAdmins.length > 0 ? (
+                            <div className="table-responsive" style={{ padding: '1rem' }}>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Company Name</th>
+                                            <th>Admin Username</th>
+                                            <th>Email</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {companyAdmins.map(company => (
+                                            <tr key={company.id}>
+                                                <td>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                        <i className="fas fa-building" style={{ color: 'var(--primary)' }}></i>
+                                                        <strong>{company.companyName || 'N/A'}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>{company.username}</td>
+                                                <td>{company.email}</td>
+                                                <td>
+                                                    <span style={{
+                                                        padding: '0.25rem 0.75rem',
+                                                        borderRadius: '12px',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: '600',
+                                                        background: company.enabled ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                                                        color: company.enabled ? '#22c55e' : '#ef4444'
+                                                    }}>
+                                                        {company.enabled ? 'Enabled' : 'Disabled'}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        onClick={() => toggleCompanyStatus(company.id)}
+                                                        className="btn"
+                                                        style={{
+                                                            padding: '0.5rem 1rem',
+                                                            background: company.enabled ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                                            border: `1px solid ${company.enabled ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
+                                                            color: company.enabled ? '#ef4444' : '#22c55e'
+                                                        }}
+                                                    >
+                                                        <i className={`fas fa-${company.enabled ? 'ban' : 'check-circle'}`}></i>
+                                                        {company.enabled ? ' Disable' : ' Enable'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <p style={{ padding: '2rem', textAlign: 'center' }}>No company admins found.</p>
+                        )}
+                    </section>
+                );
             default:
                 return <div>Select a tab</div>;
         }
@@ -1321,6 +1414,17 @@ const AdminDashboard = () => {
                                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
                                 >
                                     <i className="fas fa-images"></i> Gallery Management
+                                </button>
+                            </li>
+                        )}
+                        {isSuperAdmin && (
+                            <li>
+                                <button
+                                    className={activeTab === 'companies' ? 'active' : ''}
+                                    onClick={() => setActiveTab('companies')}
+                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                                >
+                                    <i className="fas fa-building"></i> Company Management
                                 </button>
                             </li>
                         )}
