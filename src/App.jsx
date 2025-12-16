@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -20,6 +21,7 @@ import Gallery from './pages/Gallery';
 import Videos from './pages/Videos';
 import Contact from './pages/Contact';
 import VerifyAccount from './pages/VerifyAccount';
+import keepAliveService from './services/keepAliveService';
 
 function Layout({ children }) {
     const location = useLocation();
@@ -36,6 +38,16 @@ function Layout({ children }) {
 }
 
 function App() {
+    // Start keep-alive service when app loads
+    useEffect(() => {
+        keepAliveService.start();
+
+        // Cleanup on unmount
+        return () => {
+            keepAliveService.stop();
+        };
+    }, []);
+
     return (
         <Router>
             <Layout>
