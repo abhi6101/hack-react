@@ -47,6 +47,8 @@ const AdminDashboard = () => {
         username: '', email: '', password: '', role: 'USER'
     });
     const [editingUser, setEditingUser] = useState(null);
+    const [editingJob, setEditingJob] = useState(null);
+    const [editingInterview, setEditingInterview] = useState(null);
     const [applications, setApplications] = useState([]);
     const [loadingApplications, setLoadingApplications] = useState(false);
     const [interviewDetails, setInterviewDetails] = useState({
@@ -193,33 +195,39 @@ const handleInterviewSubmit = async (e) => {
         date: interviewForm.date,
         time: interviewForm.time,
         venue: interviewForm.venue,
-        positions: interviewForm.positions, // Backend expects string
+        positions: interviewForm.positions,
         eligibility: interviewForm.eligibility,
         totalSlots: 20, bookedSlots: 0
     };
 
+    const endpoint = editingInterview
+        ? `https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin/${editingInterview.id}`
+        : 'https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin';
+    const method = editingInterview ? 'PUT' : 'POST';
+
     try {
-        const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin', {
-            method: 'POST',
+        const res = await fetch(endpoint, {
+            method: method,
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify(newInterview)
         });
 
         if (res.ok) {
             const saved = await res.json();
-            setInterviews([...interviews, saved]);
-            setMessage({ text: 'Interview posted to database!', type: 'success' });
+            if (editingInterview) {
+                setInterviews(interviews.map(i => i.id === saved.id ? saved : i));
+                setMessage({ text: 'Interview updated!', type: 'success' });
+            } else {
+                setInterviews([...interviews, saved]);
+                setMessage({ text: 'Interview posted!', type: 'success' });
+            }
+            setEditingInterview(null);
         } else {
             throw new Error('Backend save failed');
         }
     } catch (err) {
-        // Fallback for demo
         console.error(err);
-        const localInterview = { ...newInterview, id: Date.now(), positions: newInterview.positions.split(',') };
-        const updated = [...interviews, localInterview];
-        setInterviews(updated);
-        localStorage.setItem('interviews', JSON.stringify(updated));
-        setMessage({ text: 'Backend unavailable. Saved locally!', type: 'success' });
+        setMessage({ text: 'Failed to save interview', type: 'error' });
     }
     setInterviewForm({ company: '', date: '', time: '', venue: '', positions: '', eligibility: '' });
     setTimeout(() => setMessage({ text: '', type: '' }), 3000);
@@ -461,19 +469,24 @@ const handleSubmit = async (e) => {
         interview_details: JSON.stringify(interviewDetails)
     };
 
+    const endpoint = editingJob
+        ? `${API_BASE_URL}/jobs/${editingJob.id}`
+        : `${API_BASE_URL}/jobs`;
+    const method = editingJob ? 'PUT' : 'POST';
+
     try {
-        const response = await fetch(`${API_BASE_URL}/jobs`, {
-            method: 'POST',
+        const response = await fetch(endpoint, {
+            method: method,
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify(jobPayload)
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to post job');
+            throw new Error(errorData.message || 'Failed to save job');
         }
 
-        setMessage({ text: 'Job posted successfully!', type: 'success' });
+        setMessage({ text: editingJob ? 'Job updated successfully!' : 'Job posted successfully!', type: 'success' });
         setFormData({ jobTitle: '', companyName: '', jobDescription: '', applyLink: '', lastDate: '', salary: '' });
         setInterviewDetails({
             codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
@@ -481,11 +494,46 @@ const handleSubmit = async (e) => {
             hrRound: { enabled: false, date: '', time: '', venue: '', questions: '' },
             projectTask: { enabled: false, description: '', deadline: '24', requirements: '' }
         });
+        setEditingJob(null);
         loadJobs();
         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     } catch (error) {
         setMessage({ text: error.message, type: 'error' });
     }
+};
+
+const startEditJob = (job) => {
+    setFormData({
+        jobTitle: job.title,
+        companyName: job.company_name,
+        jobDescription: job.description,
+        applyLink: job.apply_link,
+        lastDate: job.last_date, // format YYYY-MM-DD
+        salary: job.salary
+    });
+    // Parse interview details if they exist
+    if (job.interview_details) {
+        try {
+            setInterviewDetails(JSON.parse(job.interview_details));
+        } catch (e) {
+            console.error("Error parsing interview details", e);
+        }
+    }
+    setEditingJob(job);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to form
+};
+
+const startEditInterview = (interview) => {
+    setInterviewForm({
+        company: interview.company,
+        date: interview.date,
+        time: interview.time,
+        venue: interview.venue,
+        positions: interview.positions,
+        eligibility: interview.eligibility
+    });
+    setEditingInterview(interview);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const renderContent = () => {
@@ -565,7 +613,7 @@ const renderContent = () => {
                 <>
                     <section id="jobs-section" className="card surface-glow">
                         <div className="card-header">
-                            <h3><i className="fas fa-plus-circle"></i> Post New Job</h3>
+                            <h3><i className={editingJob ? "fas fa-edit" : "fas fa-plus-circle"}></i> {editingJob ? 'Edit Job' : 'Post New Job'}</h3>
                         </div>
                         {message.text && (
                             <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ display: 'flex' }}>
@@ -617,14 +665,19 @@ const renderContent = () => {
 
                             <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
                                 <button type="button" className="btn btn-secondary" onClick={fillSampleData}>
-                                    <i className="fas fa-magic"></i> Fill Sample Data
+                                    <i className="fas fa-magic"></i> Fill Sample
                                 </button>
-                                <button type="button" className="btn btn-warning" onClick={clearForm}>
-                                    <i className="fas fa-eraser"></i> Clear Form
+                                <button type="button" className="btn btn-warning" onClick={() => { clearForm(); setEditingJob(null); }}>
+                                    <i className="fas fa-eraser"></i> Clear
                                 </button>
                                 <button type="submit" className="btn btn-primary">
-                                    <i className="fas fa-save"></i> Post Job
+                                    <i className="fas fa-save"></i> {editingJob ? 'Update Job' : 'Post Job'}
                                 </button>
+                                {editingJob && (
+                                    <button type="button" className="btn btn-secondary" onClick={() => { setEditingJob(null); clearForm(); }}>
+                                        Cancel
+                                    </button>
+                                )}
                             </div>
                         </form>
                     </section>
@@ -649,6 +702,9 @@ const renderContent = () => {
                                                     <td>{new Date(job.last_date).toLocaleDateString('en-IN')}</td>
                                                     <td>₹{job.salary.toLocaleString()}</td>
                                                     <td className="action-btns">
+                                                        <button className="btn btn-secondary" onClick={() => startEditJob(job)} style={{ marginRight: '0.5rem' }}>
+                                                            <i className="fas fa-edit"></i>
+                                                        </button>
                                                         <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
                                                             <i className="fas fa-trash"></i>
                                                         </button>
@@ -846,7 +902,7 @@ const renderContent = () => {
                 <>
                     <section className="card surface-glow">
                         <div className="card-header">
-                            <h3><i className="fas fa-calendar-plus"></i> Post New Interview</h3>
+                            <h3><i className={editingInterview ? "fas fa-edit" : "fas fa-calendar-plus"}></i> {editingInterview ? 'Edit Interview' : 'Post New Interview'}</h3>
                         </div>
                         <form onSubmit={handleInterviewSubmit}>
                             <div className="form-grid">
@@ -877,14 +933,19 @@ const renderContent = () => {
                             </div>
                             <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
                                 <button type="button" className="btn btn-secondary" onClick={fillInterviewSampleData}>
-                                    <i className="fas fa-magic"></i> Fill Sample Data
+                                    <i className="fas fa-magic"></i> Fill Sample
                                 </button>
-                                <button type="button" className="btn btn-warning" onClick={clearInterviewForm}>
-                                    <i className="fas fa-eraser"></i> Clear Form
+                                <button type="button" className="btn btn-warning" onClick={() => { clearInterviewForm(); setEditingInterview(null); }}>
+                                    <i className="fas fa-eraser"></i> Clear
                                 </button>
                                 <button type="submit" className="btn btn-primary">
-                                    <i className="fas fa-save"></i> Post Interview
+                                    <i className="fas fa-save"></i> {editingInterview ? 'Update Interview' : 'Post Interview'}
                                 </button>
+                                {editingInterview && (
+                                    <button type="button" className="btn btn-secondary" onClick={() => { setEditingInterview(null); clearInterviewForm(); }}>
+                                        Cancel
+                                    </button>
+                                )}
                             </div>
                         </form>
                     </section>
@@ -904,7 +965,10 @@ const renderContent = () => {
                                             <td>{interview.company}</td>
                                             <td>{new Date(interview.date).toLocaleDateString()}</td>
                                             <td>{interview.venue}</td>
-                                            <td>
+                                            <td className="action-btns">
+                                                <button className="btn btn-secondary" onClick={() => startEditInterview(interview)} style={{ marginRight: '0.5rem' }}>
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
                                                 <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
                                                     <i className="fas fa-trash"></i>
                                                 </button>
