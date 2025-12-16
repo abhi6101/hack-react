@@ -97,20 +97,36 @@ const ResumeBuilder = () => {
 
         // --- Layout Constants ---
         const margin = 15;
-        const col1Width = 120; // Main content width
-        const col2X = 145; // Sidebar start X
         const pageWidth = 210;
+        const pageHeight = 297;
+        const col2X = 145; // Sidebar start X
+        const col1Width = 120; // Main content width
+        const col2Width = pageWidth - col2X - margin; // Sidebar width
 
         doc.setFont("helvetica");
 
-        // --- HEADER SECTION (Full Width) ---
-        // Blue Background for Header
-        doc.setFillColor(...themeBlue);
-        doc.rect(0, 0, pageWidth, 45, 'F');
+        // --- Helper: Draw Backgrounds ---
+        const drawBackgrounds = (pageNumber) => {
+            // Header is only on Page 1
+            if (pageNumber === 1) {
+                doc.setFillColor(...themeBlue);
+                doc.rect(0, 0, pageWidth, 45, 'F');
+            }
 
+            // Sidebar Background (Full Height except header on page 1)
+            const sidebarStartY = pageNumber === 1 ? 45 : 0;
+            doc.setFillColor(...offWhite);
+            doc.rect(col2X - 5, sidebarStartY, pageWidth - (col2X - 5), pageHeight - sidebarStartY, 'F');
+        };
+
+        // Initialize Page 1
+        let currentPage = 1;
+        drawBackgrounds(currentPage);
+
+        // --- HEADER CONTENT (Page 1 Only) ---
         // Name
         doc.setTextColor(255, 255, 255);
-        doc.setFontSize(28);
+        doc.setFontSize(24);
         doc.setFont("helvetica", "bold");
         doc.text(formData.name.toUpperCase(), margin, 20);
 
@@ -123,10 +139,24 @@ const ResumeBuilder = () => {
             formData.linkedin && `LinkedIn: ${formData.linkedin.replace(/^https?:\/\//, '')}`,
             formData.github && `GitHub: ${formData.github.replace(/^https?:\/\//, '')}`
         ].filter(Boolean).join("  |  ");
-        doc.text(contactParts, margin, 32);
 
-        // --- COLUMNS Setup ---
+        // Wrap contact info if too long
+        const contactLines = doc.splitTextToSize(contactParts, pageWidth - (margin * 2));
+        doc.text(contactLines, margin, 32);
+
+        // --- MAIN COLUMN CONTENT ---
         let yPos = 60;
+
+        const checkPageBreakFull = (heightNeeded) => {
+            if (yPos + heightNeeded > pageHeight - 20) {
+                doc.addPage();
+                currentPage++;
+                drawBackgrounds(currentPage);
+                yPos = 20;
+                return true;
+            }
+            return false;
+        };
 
         // 1. PROFESSIONAL SUMMARY
         if (formData.summary) {
@@ -147,6 +177,7 @@ const ResumeBuilder = () => {
 
         // 2. WORK EXPERIENCE
         if (formData.experience.length > 0 && (formData.experience[0].company || formData.experience[0].role)) {
+            checkPageBreakFull(20);
             doc.setTextColor(...themeBlue);
             doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
@@ -155,22 +186,37 @@ const ResumeBuilder = () => {
             yPos += 7;
 
             formData.experience.forEach(exp => {
+                checkPageBreakFull(30); // Check before starting an item
+
+                // Role & Duration
                 doc.setTextColor(0, 0, 0);
                 doc.setFontSize(11);
                 doc.setFont("helvetica", "bold");
-                doc.text(exp.role, margin, yPos);
 
-                doc.setFontSize(10);
-                doc.setTextColor(...themeBlue);
-                doc.text(exp.company, margin, yPos + 5);
+                // Calculate width for role to avoid overlap
+                const durationWidth = doc.getTextWidth(exp.duration) + 5;
+                const maxRoleWidth = col1Width - durationWidth;
 
+                // Split role if needed
+                const roleLines = doc.splitTextToSize(exp.role, maxRoleWidth);
+                doc.text(roleLines, margin, yPos);
+
+                // Duration (Right Aligned)
                 doc.setTextColor(...lightText);
                 doc.setFontSize(9);
                 doc.setFont("helvetica", "italic");
                 doc.text(exp.duration, margin + col1Width, yPos, { align: 'right' });
 
-                yPos += 10;
+                yPos += (roleLines.length * 5); // Adjust Y based on role lines
 
+                // Company
+                doc.setFontSize(10);
+                doc.setTextColor(...themeBlue);
+                doc.setFont("helvetica", "bold"); // Company Name Bold
+                doc.text(exp.company, margin, yPos);
+                yPos += 5;
+
+                // Description
                 doc.setTextColor(...darkText);
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "normal");
@@ -183,7 +229,7 @@ const ResumeBuilder = () => {
 
         // 3. PROJECTS
         if (formData.projects.length > 0 && formData.projects[0].title) {
-            if (yPos > 250) { doc.addPage(); yPos = 20; }
+            checkPageBreakFull(20);
             doc.setTextColor(...themeBlue);
             doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
@@ -192,19 +238,27 @@ const ResumeBuilder = () => {
             yPos += 7;
 
             formData.projects.forEach(proj => {
-                if (yPos > 270) { doc.addPage(); yPos = 20; }
+                checkPageBreakFull(30);
+
                 doc.setTextColor(0, 0, 0);
                 doc.setFontSize(11);
                 doc.setFont("helvetica", "bold");
-                doc.text(proj.title, margin, yPos);
 
-                if (proj.techStack) {
+                // Tech Stack width calculation
+                const stackText = proj.techStack ? `[ ${proj.techStack} ]` : '';
+                const stackWidth = doc.getTextWidth(stackText) + 5;
+                const maxTitleWidth = col1Width - stackWidth;
+
+                const titleLines = doc.splitTextToSize(proj.title, maxTitleWidth);
+                doc.text(titleLines, margin, yPos);
+
+                if (stackText) {
                     doc.setFontSize(9);
                     doc.setTextColor(...lightText);
                     doc.setFont("helvetica", "italic");
-                    doc.text(`[ ${proj.techStack} ]`, margin + col1Width, yPos, { align: 'right' });
+                    doc.text(stackText, margin + col1Width, yPos, { align: 'right' });
                 }
-                yPos += 5;
+                yPos += (titleLines.length * 5);
 
                 doc.setTextColor(...darkText);
                 doc.setFontSize(10);
@@ -215,13 +269,30 @@ const ResumeBuilder = () => {
             });
         }
 
-        // --- SIDEBAR (Right Column) ---
-        const sidebarY = 45;
-        const sidebarHeight = 297 - 45;
-        doc.setFillColor(...offWhite);
-        doc.rect(col2X - 5, sidebarY, pageWidth - (col2X - 5), sidebarHeight, 'F');
+        // --- SIDEBAR CONTENT (Independent Y Tracking) ---
+        // We need to switch back to page 1 for the start of sidebar
+        doc.setPage(1);
+        let sideY = 60; // Start Y for sidebar on Page 1
+        let currentSidePage = 1;
 
-        let sideY = 60;
+        const checkSidebarPage = (heightNeeded) => {
+            if (sideY + heightNeeded > pageHeight - 20) {
+                // If we need a new page for sidebar
+                if (currentSidePage < currentPage) {
+                    // Main content already created this page, just switch to it
+                    currentSidePage++;
+                    doc.setPage(currentSidePage);
+                    sideY = 20; // Top of new page
+                } else {
+                    // We need to add a completely new page (Sidebar is longer than main content)
+                    doc.addPage();
+                    currentPage++;
+                    currentSidePage++;
+                    drawBackgrounds(currentPage); // Draw sidebar bg
+                    sideY = 20;
+                }
+            }
+        };
 
         // 4. EDUCATION
         if (formData.education.length > 0) {
@@ -233,17 +304,19 @@ const ResumeBuilder = () => {
             sideY += 8;
 
             formData.education.forEach(edu => {
+                checkSidebarPage(30);
+
                 doc.setTextColor(0, 0, 0);
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "bold");
-                const degreeSplit = doc.splitTextToSize(edu.degree, 50);
+                const degreeSplit = doc.splitTextToSize(edu.degree, col2Width);
                 doc.text(degreeSplit, col2X, sideY);
                 sideY += (degreeSplit.length * 4) + 1;
 
                 doc.setTextColor(...darkText);
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "normal");
-                const instSplit = doc.splitTextToSize(edu.institution, 50);
+                const instSplit = doc.splitTextToSize(edu.institution, col2Width);
                 doc.text(instSplit, col2X, sideY);
                 sideY += (instSplit.length * 4) + 1;
 
@@ -257,6 +330,7 @@ const ResumeBuilder = () => {
 
         // 5. SKILLS
         if (formData.skills) {
+            checkSidebarPage(30);
             doc.setTextColor(...themeBlue);
             doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
@@ -267,17 +341,24 @@ const ResumeBuilder = () => {
             doc.setTextColor(...darkText);
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
-            const skillsArr = formData.skills.split(',').map(s => s.trim());
+
+            // Handle skills as chips or list
+            const skillsArr = formData.skills.split(',').map(s => s.trim()).filter(s => s);
+
+            // Simple text wrapping if a skill is too long is rare, but improved listing
             skillsArr.forEach(skill => {
-                doc.text(`• ${skill}`, col2X, sideY);
-                sideY += 5;
+                checkSidebarPage(6);
+                const skillLines = doc.splitTextToSize(`• ${skill}`, col2Width);
+                doc.text(skillLines, col2X, sideY);
+                sideY += (skillLines.length * 5); // Dynamic height
             });
         }
 
-        // Footer
+        // Footer Metadata (On the last page)
+        doc.setPage(currentPage);
         doc.setFontSize(8);
         doc.setTextColor(200, 200, 200);
-        doc.text("Generated by Hack-2-Hired Portal", pageWidth / 2, 290, { align: 'center' });
+        doc.text("Generated by Hack-2-Hired Portal", pageWidth / 2, pageHeight - 10, { align: 'center' });
 
         doc.save(`${formData.name.replace(/\s+/g, '_')}_Resume.pdf`);
         setIsGenerating(false);
