@@ -519,7 +519,7 @@ const StudentDashboard = () => {
             </main>
         </div>
 
-        {/* Profile Update Modal */ }
+        {/* Profile Update Modal */}
     <ProfileUpdateModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
@@ -528,7 +528,7 @@ const StudentDashboard = () => {
             fetchData(); // Refresh data after update
         }}
     />
-    </div >
+    </div>
     );
 };
 
