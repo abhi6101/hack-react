@@ -71,7 +71,12 @@ const Jobs = () => {
 
     const fetchJobs = async () => {
         try {
-            const response = await fetch(API_URL);
+            const token = localStorage.getItem("authToken");
+            const response = await fetch(API_URL, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (!response.ok) throw new Error('Failed to fetch jobs');
             const data = await response.json();
             if (Array.isArray(data)) {
