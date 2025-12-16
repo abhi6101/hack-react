@@ -546,7 +546,9 @@ const AdminDashboard = () => {
             apply_link: formData.applyLink,
             last_date: formData.lastDate,
             salary: parseInt(formData.salary),
-            interview_details: JSON.stringify(interviewDetails)
+            interview_details: JSON.stringify(interviewDetails),
+            eligibleBranches: formData.eligibleBranches,
+            eligibleSemesters: formData.eligibleSemesters
         };
 
         const endpoint = editingJob
@@ -567,7 +569,10 @@ const AdminDashboard = () => {
             }
 
             setMessage({ text: editingJob ? 'Job updated successfully!' : 'Job posted successfully!', type: 'success' });
-            setFormData({ jobTitle: '', companyName: '', jobDescription: '', applyLink: '', lastDate: '', salary: '' });
+            setFormData({
+                jobTitle: '', companyName: '', jobDescription: '', applyLink: '', lastDate: '', salary: '',
+                eligibleBranches: [], eligibleSemesters: []
+            });
             setInterviewDetails({
                 codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
                 technicalInterview: { enabled: false, date: '', time: '', venue: '', topics: '' },
@@ -589,7 +594,9 @@ const AdminDashboard = () => {
             jobDescription: job.description,
             applyLink: job.apply_link,
             lastDate: job.last_date, // format YYYY-MM-DD
-            salary: job.salary
+            salary: job.salary,
+            eligibleBranches: job.eligibleBranches || [],
+            eligibleSemesters: job.eligibleSemesters || []
         });
         // Parse interview details if they exist
         if (job.interview_details) {
