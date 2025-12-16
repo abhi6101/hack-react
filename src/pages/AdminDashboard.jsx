@@ -19,7 +19,7 @@ const AdminDashboard = () => {
         salary: ''
     });
 
-    const API_BASE_URL = "https://placement-portal-backend-nwaj.onrender.com/admin";
+    const API_BASE_URL = "https://placement-portal-backend-nwaj.onrender.com/api/admin";
     const token = localStorage.getItem('authToken');
     const normalizedRole = localStorage.getItem('userRole'); // ADMIN, SUPER_ADMIN, COMPANY_ADMIN
     // Treat legacy ADMIN as SUPER_ADMIN for now, or just ADMIN
