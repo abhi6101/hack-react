@@ -26,7 +26,8 @@ const Gallery = () => {
             const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/gallery');
             if (res.ok) {
                 const data = await res.json();
-                setGalleryItems(data);
+                // Reverse to show oldest images first, newest at bottom
+                setGalleryItems(data.reverse());
             }
         } catch (err) {
             console.error("Failed to load gallery", err);

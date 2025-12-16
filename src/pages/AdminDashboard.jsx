@@ -115,6 +115,17 @@ const AdminDashboard = () => {
     const [galleryItems, setGalleryItems] = useState([]);
     const [loadingGallery, setLoadingGallery] = useState(false);
 
+    // Email Notification Toggle
+    const [sendEmailNotifications, setSendEmailNotifications] = useState(() => {
+        const saved = localStorage.getItem('sendEmailNotifications');
+        return saved !== null ? JSON.parse(saved) : true; // Default: enabled
+    });
+
+    // Save email toggle preference to localStorage
+    useEffect(() => {
+        localStorage.setItem('sendEmailNotifications', JSON.stringify(sendEmailNotifications));
+    }, [sendEmailNotifications]);
+
     const loadInterviewApplications = async () => {
         setLoadingInterviewApps(true);
         try {
@@ -527,7 +538,7 @@ const AdminDashboard = () => {
 
         const endpoint = editingJob
             ? `${API_BASE_URL}/jobs/${editingJob.id}`
-            : `${API_BASE_URL}/jobs`;
+            : `${API_BASE_URL}/jobs?sendEmails=${sendEmailNotifications}`;
         const method = editingJob ? 'PUT' : 'POST';
 
         try {
@@ -718,6 +729,52 @@ const AdminDashboard = () => {
                                     interviewDetails={interviewDetails}
                                     setInterviewDetails={setInterviewDetails}
                                 />
+
+                                {/* Email Notification Toggle */}
+                                <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <div>
+                                            <label style={{ fontWeight: '600', color: 'white', marginBottom: '0.25rem', display: 'block' }}>
+                                                <i className="fas fa-envelope" style={{ marginRight: '0.5rem' }}></i>
+                                                Email Notifications
+                                            </label>
+                                            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+                                                Send email alerts to all students when a new job is posted
+                                            </p>
+                                        </div>
+                                        <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={sendEmailNotifications}
+                                                onChange={(e) => setSendEmailNotifications(e.target.checked)}
+                                                style={{ opacity: 0, width: 0, height: 0 }}
+                                            />
+                                            <span style={{
+                                                position: 'absolute',
+                                                cursor: 'pointer',
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                bottom: 0,
+                                                backgroundColor: sendEmailNotifications ? '#22c55e' : '#64748b',
+                                                transition: '0.4s',
+                                                borderRadius: '30px'
+                                            }}>
+                                                <span style={{
+                                                    position: 'absolute',
+                                                    content: '""',
+                                                    height: '22px',
+                                                    width: '22px',
+                                                    left: sendEmailNotifications ? '34px' : '4px',
+                                                    bottom: '4px',
+                                                    backgroundColor: 'white',
+                                                    transition: '0.4s',
+                                                    borderRadius: '50%'
+                                                }}></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
 
                                 <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
                                     <button type="button" className="btn btn-secondary" onClick={fillSampleData}>
@@ -1256,15 +1313,17 @@ const AdminDashboard = () => {
                                 <i className="fas fa-user-check"></i> Interview Applications
                             </button>
                         </li>
-                        <li>
-                            <button
-                                className={activeTab === 'gallery' ? 'active' : ''}
-                                onClick={() => { setActiveTab('gallery'); loadGalleryItems(); }}
-                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                            >
-                                <i className="fas fa-images"></i> Gallery Management
-                            </button>
-                        </li>
+                        {!isCompanyAdmin && (
+                            <li>
+                                <button
+                                    className={activeTab === 'gallery' ? 'active' : ''}
+                                    onClick={() => { setActiveTab('gallery'); loadGalleryItems(); }}
+                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                                >
+                                    <i className="fas fa-images"></i> Gallery Management
+                                </button>
+                            </li>
+                        )}
                     </ul>
                 </nav>
             </aside>
