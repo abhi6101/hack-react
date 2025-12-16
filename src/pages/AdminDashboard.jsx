@@ -126,6 +126,17 @@ const AdminDashboard = () => {
         localStorage.setItem('sendEmailNotifications', JSON.stringify(sendEmailNotifications));
     }, [sendEmailNotifications]);
 
+    // Global Email Control (Super Admin only)
+    const [globalEmailsEnabled, setGlobalEmailsEnabled] = useState(() => {
+        const saved = localStorage.getItem('globalEmailsEnabled');
+        return saved !== null ? JSON.parse(saved) : true; // Default: enabled
+    });
+
+    // Save global email toggle preference to localStorage
+    useEffect(() => {
+        localStorage.setItem('globalEmailsEnabled', JSON.stringify(globalEmailsEnabled));
+    }, [globalEmailsEnabled]);
+
     const loadInterviewApplications = async () => {
         setLoadingInterviewApps(true);
         try {
@@ -538,7 +549,7 @@ const AdminDashboard = () => {
 
         const endpoint = editingJob
             ? `${API_BASE_URL}/jobs/${editingJob.id}`
-            : `${API_BASE_URL}/jobs?sendEmails=${sendEmailNotifications}`;
+            : `${API_BASE_URL}/jobs?sendEmails=${globalEmailsEnabled && sendEmailNotifications}`;
         const method = editingJob ? 'PUT' : 'POST';
 
         try {
@@ -651,6 +662,60 @@ const AdminDashboard = () => {
                                         ))}
                                     </div>
                                 )}
+                            </div>
+                        )}
+
+                        {/* Global Email Control - Super Admin Only */}
+                        {isSuperAdmin && (
+                            <div style={{ marginBottom: '2.5rem', padding: '1.5rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div>
+                                        <h3 style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <i className="fas fa-globe"></i>
+                                            Global Email Notifications
+                                        </h3>
+                                        <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+                                            Master control for ALL email notifications. When disabled, no emails will be sent regardless of individual settings.
+                                        </p>
+                                        {!globalEmailsEnabled && (
+                                            <p style={{ fontSize: '0.85rem', color: '#ef4444', marginTop: '0.5rem', fontWeight: '600' }}>
+                                                ⚠️ Emails are currently DISABLED globally
+                                            </p>
+                                        )}
+                                    </div>
+                                    <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '70px', height: '35px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={globalEmailsEnabled}
+                                            onChange={(e) => setGlobalEmailsEnabled(e.target.checked)}
+                                            style={{ opacity: 0, width: 0, height: 0 }}
+                                        />
+                                        <span style={{
+                                            position: 'absolute',
+                                            cursor: 'pointer',
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            backgroundColor: globalEmailsEnabled ? '#22c55e' : '#ef4444',
+                                            transition: '0.4s',
+                                            borderRadius: '35px',
+                                            boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                                        }}>
+                                            <span style={{
+                                                position: 'absolute',
+                                                content: '""',
+                                                height: '27px',
+                                                width: '27px',
+                                                left: globalEmailsEnabled ? '39px' : '4px',
+                                                bottom: '4px',
+                                                backgroundColor: 'white',
+                                                transition: '0.4s',
+                                                borderRadius: '50%'
+                                            }}></span>
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                         )}
 

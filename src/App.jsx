@@ -23,6 +23,7 @@ import Videos from './pages/Videos';
 import Contact from './pages/Contact';
 import VerifyAccount from './pages/VerifyAccount';
 import keepAliveService from './services/keepAliveService';
+import './styles/animations.css'; // Import animations
 
 function Layout({ children }) {
     const location = useLocation();
