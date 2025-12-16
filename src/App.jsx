@@ -6,6 +6,7 @@ import ProfileUpdateModal from './components/ProfileUpdateModal';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import Jobs from './pages/Jobs';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Interview from './pages/Interview';
@@ -98,6 +99,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/verify-account" element={<VerifyAccount />} />
                     <Route path="/jobs" element={<Jobs />} />
                     <Route path="/resume-builder" element={<ResumeBuilder />} />
                     <Route path="/interview" element={<Interview />} />
