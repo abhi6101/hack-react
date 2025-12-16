@@ -4,6 +4,7 @@ import '../styles/dashboard.css';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
     const [interviews, setInterviews] = useState([]);
     const [applications, setApplications] = useState([]);
@@ -28,6 +29,19 @@ const StudentDashboard = () => {
 
     const fetchData = async () => {
         const token = localStorage.getItem('authToken');
+
+        // Fetch user info
+        try {
+            const userRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (userRes.ok) {
+                const userData = await userRes.json();
+                setUser(userData);
+            }
+        } catch (err) {
+            console.error('Failed to load user data');
+        }
 
         // Fetch profile
         try {
@@ -140,14 +154,24 @@ const StudentDashboard = () => {
 
             <main className="dashboard-main-content">
                 <header className="dashboard-topbar">
-                    <h2>Dashboard Overview</h2>
-                    <div className="user-profile-header">
-                        <div className="user-info">
-                            <span className="user-greeting">{getGreeting()}</span>
-                            <span className="user-name">{profile?.fullName || 'Student'}</span>
+                    <div className="dashboard-header">
+                        <div className="welcome-section">
+                            <h1 className="welcome-title">
+                                Welcome back, {user?.username || 'Student'}! 👋
+                            </h1>
+                            <p className="welcome-subtitle">Here's your placement journey overview</p>
+                            {user && (
+                                <div style={{ marginTop: '1rem', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)' }}>
+                                    <div><strong>Email:</strong> {user.email}</div>
+                                    {user.branch && <div><strong>Branch:</strong> {user.branch}</div>}
+                                    {user.semester && <div><strong>Semester:</strong> {user.semester}</div>}
+                                </div>
+                            )}
                         </div>
-                        <div className="avatar-circle">
-                            {profile?.fullName ? profile.fullName.charAt(0).toUpperCase() : 'S'}
+                        <div className="profile-section">
+                            <div className="profile-avatar custom-glow">
+                                {user?.username ? user.username.charAt(1).toUpperCase() : 'S'}
+                            </div>
                         </div>
                     </div>
                 </header>
