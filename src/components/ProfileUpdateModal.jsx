@@ -2,11 +2,39 @@ import React, { useState, useEffect } from 'react';
 
 const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
     const [formData, setFormData] = useState({
+        name: '',
+        phone: '',
         branch: '',
         semester: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (isOpen) {
+            // Fetch current user data when modal opens
+            const fetchUserData = async () => {
+                const token = localStorage.getItem('authToken');
+                try {
+                    const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/me', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setFormData({
+                            name: userData.name || '',
+                            phone: userData.phone || '',
+                            branch: userData.branch || '',
+                            semester: userData.semester || ''
+                        });
+                    }
+                } catch (err) {
+                    console.error('Failed to fetch user data');
+                }
+            };
+            fetchUserData();
+        }
+    }, [isOpen]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -47,6 +75,8 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
+                    name: formData.name,
+                    phone: formData.phone,
                     branch: formData.branch,
                     semester: parseInt(formData.semester)
                 })
@@ -88,14 +118,16 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                 borderRadius: '16px',
                 maxWidth: '500px',
                 width: '90%',
+                maxHeight: '90vh',
+                overflowY: 'auto',
                 boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
                 border: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
                 <h2 style={{ marginBottom: '1rem', color: '#fff' }}>
-                    📚 Update Your Profile
+                    📚 Complete Your Profile
                 </h2>
                 <p style={{ marginBottom: '1.5rem', color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.9rem' }}>
-                    Please update your branch and semester information to see relevant job opportunities.
+                    Please fill in your details to access all features and see relevant job opportunities.
                 </p>
 
                 {error && (
@@ -112,6 +144,57 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                 )}
 
                 <form onSubmit={handleSubmit}>
+                    {/* Name Field */}
+                    <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fff', fontSize: '0.9rem' }}>
+                            Full Name *
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            required
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Enter your full name"
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                color: '#fff',
+                                fontSize: '1rem'
+                            }}
+                        />
+                    </div>
+
+                    {/* Phone Field */}
+                    <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fff', fontSize: '0.9rem' }}>
+                            Phone Number *
+                        </label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            required
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="Enter your phone number"
+                            pattern="[0-9]{10}"
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                color: '#fff',
+                                fontSize: '1rem'
+                            }}
+                        />
+                        <small style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>10 digits only</small>
+                    </div>
+
+                    {/* Branch Field */}
                     <div style={{ marginBottom: '1rem' }}>
                         <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fff', fontSize: '0.9rem' }}>
                             Branch *
@@ -138,6 +221,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                         </select>
                     </div>
 
+                    {/* Semester Field */}
                     {formData.branch && (
                         <div style={{ marginBottom: '1rem' }}>
                             <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fff', fontSize: '0.9rem' }}>
@@ -177,13 +261,13 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                         fontSize: '0.85rem',
                         color: '#fca5a5'
                     }}>
-                        <strong>⚠️ Important:</strong> This information will be used to match you with eligible job opportunities. Update carefully!
+                        <strong>⚠️ Important:</strong> This information will be used to match you with eligible job opportunities. Fill carefully!
                     </div>
 
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                         <button
                             type="submit"
-                            disabled={loading || !formData.branch || !formData.semester}
+                            disabled={loading || !formData.name || !formData.phone || !formData.branch || !formData.semester}
                             style={{
                                 flex: 1,
                                 padding: '0.75rem',
