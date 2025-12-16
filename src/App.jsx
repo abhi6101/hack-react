@@ -80,15 +80,6 @@ function Layout({ children }) {
     );
 }
 
-return (
-    <>
-        {showNavbar && <Navbar />}
-        {children}
-        {showNavbar && <Footer />}
-    </>
-);
-}
-
 function App() {
     // Start keep-alive service when app loads
     useEffect(() => {
