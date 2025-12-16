@@ -48,12 +48,26 @@ const Login = () => {
                     localStorage.removeItem('savedUsername');
                 }
 
-                // Backend returns "roles": ["ROLE_ADMIN"]
+                // Backend returns "roles": ["ROLE_ADMIN", "ROLE_SUPER_ADMIN", etc.]
                 const roles = data.roles || [];
-                const isAdmin = roles.includes('ROLE_ADMIN');
+                const isSuperAdmin = roles.includes('ROLE_SUPER_ADMIN');
+                const isCompanyAdmin = roles.includes('ROLE_COMPANY_ADMIN');
+                const isLegacyAdmin = roles.includes('ROLE_ADMIN');
+
+                const isAdmin = isSuperAdmin || isCompanyAdmin || isLegacyAdmin;
+
+                if (data.companyName) {
+                    localStorage.setItem('companyName', data.companyName);
+                } else {
+                    localStorage.removeItem('companyName');
+                }
 
                 if (isAdmin) {
-                    localStorage.setItem('userRole', 'ADMIN');
+                    let role = 'ADMIN'; // Default
+                    if (isSuperAdmin) role = 'SUPER_ADMIN';
+                    if (isCompanyAdmin) role = 'COMPANY_ADMIN';
+
+                    localStorage.setItem('userRole', role);
                     localStorage.setItem('isAdmin', 'true');
                     navigate('/admin');
                 } else {

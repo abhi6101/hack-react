@@ -21,7 +21,22 @@ const AdminDashboard = () => {
 
     const API_BASE_URL = "https://placement-portal-backend-nwaj.onrender.com/admin";
     const token = localStorage.getItem('authToken');
-    const role = localStorage.getItem('userRole');
+    const normalizedRole = localStorage.getItem('userRole'); // ADMIN, SUPER_ADMIN, COMPANY_ADMIN
+    // Treat legacy ADMIN as SUPER_ADMIN for now, or just ADMIN
+    const role = normalizedRole || 'USER';
+    const myCompanyName = localStorage.getItem('companyName');
+
+    // Derived states
+    const isCompanyAdmin = role === 'COMPANY_ADMIN';
+    const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'ADMIN';
+
+    // Auto-fill company name if Company Admin
+    useEffect(() => {
+        if (isCompanyAdmin && myCompanyName) {
+            setFormData(prev => ({ ...prev, companyName: myCompanyName }));
+            setInterviewForm(prev => ({ ...prev, company: myCompanyName }));
+        }
+    }, [isCompanyAdmin, myCompanyName]);
 
     const [activeTab, setActiveTab] = useState('dashboard');
     const [interviews, setInterviews] = useState([]);
@@ -199,14 +214,15 @@ const AdminDashboard = () => {
     };
 
     useEffect(() => {
-        if (!token || role !== 'ADMIN') {
+        const allowedRoles = ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN'];
+        if (!token || !allowedRoles.includes(role)) {
             alert('Access Denied. Admins only.');
             navigate('/login');
             return;
         }
         loadJobs();
-        loadUsers();
-    }, [navigate, token, role]);
+        if (isSuperAdmin) loadUsers(); // Only Super Admins load users
+    }, [navigate, token, role, isSuperAdmin]);
 
     const loadJobs = async () => {
         setLoadingJobs(true);
@@ -499,7 +515,16 @@ const AdminDashboard = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="companyName">Company Name</label>
-                                        <input type="text" id="companyName" className="form-control" required value={formData.companyName} onChange={handleInputChange} />
+                                        <input
+                                            type="text"
+                                            id="companyName"
+                                            className="form-control"
+                                            required
+                                            value={formData.companyName}
+                                            onChange={handleInputChange}
+                                            readOnly={isCompanyAdmin}
+                                            style={isCompanyAdmin ? { backgroundColor: 'rgba(255,255,255,0.1)', cursor: 'not-allowed' } : {}}
+                                        />
                                     </div>
                                     <div className="form-group full-width">
                                         <label htmlFor="jobDescription">Job Description</label>
@@ -599,8 +624,23 @@ const AdminDashboard = () => {
                                         <select className="form-control" value={userForm.role} onChange={e => setUserForm({ ...userForm, role: e.target.value })}>
                                             <option value="USER">USER</option>
                                             <option value="ADMIN">ADMIN</option>
+                                            <option value="SUPER_ADMIN">SUPER ADMIN</option>
+                                            <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
                                         </select>
                                     </div>
+                                    {userForm.role === 'COMPANY_ADMIN' && (
+                                        <div className="form-group">
+                                            <label>Company Name (for Company Admin)</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                required
+                                                value={userForm.companyName || ''}
+                                                onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
+                                                placeholder="e.g. Google, Microsoft"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                                 <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
                                 {editingUser && <button type="button" className="btn btn-secondary" onClick={() => { setEditingUser(null); setUserForm({ username: '', email: '', password: '', role: 'USER' }); }}>Cancel</button>}
@@ -617,7 +657,7 @@ const AdminDashboard = () => {
                                     {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
                                         <table id="usersTable">
                                             <thead>
-                                                <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr>
+                                                <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Company</th><th>Actions</th></tr>
                                             </thead>
                                             <tbody id="userList">
                                                 {users.map(user => (
@@ -626,6 +666,7 @@ const AdminDashboard = () => {
                                                         <td>{user.username}</td>
                                                         <td>{user.email}</td>
                                                         <td>{user.role}</td>
+                                                        <td>{user.companyName || '-'}</td>
                                                         <td className="action-btns">
                                                             <button className="btn btn-secondary" onClick={() => startEditUser(user)}>
                                                                 <i className="fas fa-edit"></i>
@@ -910,11 +951,13 @@ const AdminDashboard = () => {
                                 <i className="fas fa-briefcase"></i> Manage Jobs
                             </button>
                         </li>
-                        <li>
-                            <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
-                                <i className="fas fa-users"></i> Manage Users
-                            </button>
-                        </li>
+                        {isSuperAdmin && (
+                            <li>
+                                <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
+                                    <i className="fas fa-users"></i> Manage Users
+                                </button>
+                            </li>
+                        )}
                         <li>
                             <button onClick={() => setActiveTab('interviews')} className={activeTab === 'interviews' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <i className="fas fa-calendar-alt"></i> Manage Interviews
