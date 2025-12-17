@@ -77,6 +77,11 @@ const Jobs = () => {
                     'Authorization': `Bearer ${token}`
                 }
             });
+            if (response.status === 401) {
+                localStorage.removeItem("authToken");
+                window.location.href = '/login';
+                return;
+            }
             if (!response.ok) throw new Error('Failed to fetch jobs');
             const data = await response.json();
             if (Array.isArray(data)) {
