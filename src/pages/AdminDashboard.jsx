@@ -810,69 +810,116 @@ const AdminDashboard = () => {
                                         <i className="fas fa-filter"></i> Eligibility Criteria
                                     </h4>
                                     <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
-                                        Select which branches and semesters are eligible for this job. Leave empty to allow all students.
+                                        Enable specific branches and their corresponding semesters/years.
                                     </p>
-
-                                    <div className="form-grid">
-                                        <div className="form-group">
-                                            <label htmlFor="eligibleBranches">
-                                                <i className="fas fa-graduation-cap"></i> Eligible Branches
+                                    
+                                    <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
+                                        {/* IMCA Selection */}
+                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                <input type="checkbox" 
+                                                    checked={formData.eligibleBranches?.includes('IMCA')}
+                                                    onChange={(e) => {
+                                                        const branches = formData.eligibleBranches || [];
+                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'IMCA'] });
+                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'IMCA') });
+                                                    }}
+                                                />
+                                                IMCA (Integrated MCA)
                                             </label>
-                                            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-                                                {['IMCA', 'MCA', 'BCA'].map(branch => (
-                                                    <label key={branch} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'white' }}>
-                                                        <input
-                                                            type="checkbox"
-                                                            value={branch}
-                                                            checked={formData.eligibleBranches?.includes(branch) || false}
-                                                            onChange={(e) => {
-                                                                const branches = formData.eligibleBranches || [];
-                                                                if (e.target.checked) {
-                                                                    setFormData({ ...formData, eligibleBranches: [...branches, branch] });
-                                                                } else {
-                                                                    setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== branch) });
-                                                                }
-                                                            }}
-                                                            style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-                                                        />
-                                                        {branch}
-                                                    </label>
-                                                ))}
-                                            </div>
+                                            {formData.eligibleBranches?.includes('IMCA') && (
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
+                                                    {[1,2,3,4,5,6,7,8,9,10].map(sem => (
+                                                        <label key={`imca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                            <input type="checkbox"
+                                                                checked={formData.eligibleSemesters?.includes(sem)}
+                                                                onChange={(e) => {
+                                                                    const sems = formData.eligibleSemesters || [];
+                                                                    if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
+                                                                    else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
+                                                                }}
+                                                            />
+                                                            Sem {sem}
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
-
-                                        <div className="form-group">
-                                            <label htmlFor="eligibleSemesters">
-                                                <i className="fas fa-calendar-alt"></i> Eligible Semesters
+                                
+                                        {/* MCA Selection */}
+                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a78bfa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                <input type="checkbox" 
+                                                    checked={formData.eligibleBranches?.includes('MCA')}
+                                                    onChange={(e) => {
+                                                        const branches = formData.eligibleBranches || [];
+                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'MCA'] });
+                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'MCA') });
+                                                    }}
+                                                />
+                                                MCA (2 Years)
                                             </label>
-                                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(sem => (
-                                                    <label key={sem} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', color: 'white', minWidth: '60px' }}>
-                                                        <input
-                                                            type="checkbox"
-                                                            value={sem}
-                                                            checked={formData.eligibleSemesters?.includes(sem) || false}
-                                                            onChange={(e) => {
-                                                                const semesters = formData.eligibleSemesters || [];
-                                                                if (e.target.checked) {
-                                                                    setFormData({ ...formData, eligibleSemesters: [...semesters, sem] });
-                                                                } else {
-                                                                    setFormData({ ...formData, eligibleSemesters: semesters.filter(s => s !== sem) });
-                                                                }
-                                                            }}
-                                                            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
-                                                        />
-                                                        Sem {sem}
-                                                    </label>
-                                                ))}
-                                            </div>
-                                            <small style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem', marginTop: '0.5rem', display: 'block' }}>
-                                                Note: IMCA (1-10), MCA (1-4), BCA (2,4,6 for Year 1,2,3)
-                                            </small>
+                                            {formData.eligibleBranches?.includes('MCA') && (
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
+                                                    {[1,2,3,4].map(sem => (
+                                                        <label key={`mca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                            <input type="checkbox"
+                                                                checked={formData.eligibleSemesters?.includes(sem)}
+                                                                onChange={(e) => {
+                                                                    const sems = formData.eligibleSemesters || [];
+                                                                    if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
+                                                                    else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
+                                                                }}
+                                                            />
+                                                            Sem {sem}
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                
+                                        {/* BCA Selection */}
+                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                <input type="checkbox" 
+                                                    checked={formData.eligibleBranches?.includes('BCA')}
+                                                    onChange={(e) => {
+                                                        const branches = formData.eligibleBranches || [];
+                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'BCA'] });
+                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'BCA') });
+                                                    }}
+                                                />
+                                                BCA (3 Years)
+                                            </label>
+                                            {formData.eligibleBranches?.includes('BCA') && (
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginLeft: '1.5rem' }}>
+                                                    {[
+                                                        { label: '1st Year (Sem 1-2)', sems: [1, 2] },
+                                                        { label: '2nd Year (Sem 3-4)', sems: [3, 4] },
+                                                        { label: '3rd Year (Sem 5-6)', sems: [5, 6] }
+                                                    ].map(year => (
+                                                        <label key={year.label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                            <input type="checkbox"
+                                                                checked={year.sems.every(s => formData.eligibleSemesters?.includes(s))}
+                                                                onChange={(e) => {
+                                                                    let sems = formData.eligibleSemesters || [];
+                                                                    if (e.target.checked) {
+                                                                        const toAdd = year.sems.filter(s => !sems.includes(s));
+                                                                        setFormData({ ...formData, eligibleSemesters: [...sems, ...toAdd] });
+                                                                    } else {
+                                                                        setFormData({ ...formData, eligibleSemesters: sems.filter(s => !year.sems.includes(s)) });
+                                                                    }
+                                                                }}
+                                                            />
+                                                            {year.label}
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-
+                                
                                 {/* Email Notification Toggle */}
                                 <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
