@@ -36,7 +36,13 @@ const Login = () => {
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.setItem('authToken', data.token); // Store JWT token
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token); // Store JWT token
+                } else {
+                    setError('Login succeeded but no token received. Please contact support.');
+                    setLoading(false);
+                    return;
+                }
                 if (data.username) localStorage.setItem('username', data.username);
 
                 // Handle Remember Me

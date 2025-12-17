@@ -102,8 +102,31 @@ const StudentDashboard = () => {
     useEffect(() => {
         if (!loading) {
             calculateStats();
+            checkAutoModalTrigger();
         }
     }, [applications, interviews, profile, loading]);
+
+    const checkAutoModalTrigger = () => {
+        if (profile) {
+            // Check 1: Incomplete Profile (First login or missing details)
+            const isIncomplete = !profile.branch || !profile.semester || !profile.phone || !profile.enrollmentNumber;
+
+            // Check 2: Semester Update Date (Jan 1, 2026)
+            const isUpdateDue = new Date() >= new Date('2026-01-01');
+            const hasPromptedUpdate = sessionStorage.getItem('semesterUpdatePrompted');
+
+            if (isIncomplete) {
+                setShowEditModal(true);
+            } else if (isUpdateDue && !hasPromptedUpdate) {
+                alert("It's time to update your semester information for the new academic year.");
+                setShowEditModal(true);
+                sessionStorage.setItem('semesterUpdatePrompted', 'true');
+            }
+        } else if (!loading && user) {
+            // No profile found at all -> First login
+            setShowEditModal(true);
+        }
+    };
 
     const calculateStats = () => {
         const totalApps = applications.length;

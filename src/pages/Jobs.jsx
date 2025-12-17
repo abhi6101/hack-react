@@ -53,9 +53,10 @@ const Jobs = () => {
 
     const fetchAppliedJobs = async (token) => {
         try {
+            const cleanToken = token ? token.replace('Bearer ', '') : '';
             const response = await fetch(APPLIED_JOBS_API_URL, {
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${cleanToken}`
                 }
             });
             if (response.ok) {
@@ -72,12 +73,17 @@ const Jobs = () => {
     const fetchJobs = async () => {
         try {
             const token = localStorage.getItem("authToken");
+            const cleanToken = token ? token.replace('Bearer ', '') : '';
+            if (!cleanToken) throw new Error("No token found");
+
             const response = await fetch(API_URL, {
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${cleanToken}`
                 }
             });
             if (response.status === 401) {
+                console.warn("Unauthorized access (401). Token might be invalid or expired.");
+                alert("Your session has expired or is invalid. Please log in again.");
                 localStorage.removeItem("authToken");
                 window.location.href = '/login';
                 return;
