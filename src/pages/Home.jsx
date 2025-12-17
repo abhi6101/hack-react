@@ -49,12 +49,19 @@ const Home = () => {
         // Check for logged in user using individual keys set by Login.jsx
         const storedUsername = localStorage.getItem('username');
         const storedRole = localStorage.getItem('userRole');
+        const token = localStorage.getItem('authToken');
 
-        if (storedUsername) {
+        if (storedUsername && token) {
             setUser({
                 username: storedUsername,
                 role: storedRole || 'User'
             });
+        } else {
+            // Inconsistent state: Username but no token -> Clear it
+            if (storedUsername) {
+                localStorage.removeItem('username');
+                localStorage.removeItem('userRole');
+            }
         }
     }, []);
 
