@@ -3,6 +3,42 @@ import { useNavigate } from 'react-router-dom';
 import InterviewRoundsForm from '../components/InterviewRoundsForm';
 import '../styles/admin.css';
 
+// Reusable Toggle Component
+const ToggleSwitch = ({ checked, onChange, disabled }) => (
+    <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px', opacity: disabled ? 0.6 : 1 }}>
+        <input
+            type="checkbox"
+            checked={checked}
+            onChange={onChange}
+            disabled={disabled}
+            style={{ opacity: 0, width: 0, height: 0 }}
+        />
+        <span style={{
+            position: 'absolute',
+            cursor: disabled ? 'not-allowed' : 'pointer',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: checked ? '#22c55e' : '#ef4444',
+            transition: '0.4s',
+            borderRadius: '35px',
+        }}>
+            <span style={{
+                position: 'absolute',
+                content: '""',
+                height: '24px',
+                width: '24px',
+                left: checked ? '32px' : '4px',
+                bottom: '3px',
+                backgroundColor: 'white',
+                transition: '0.4s',
+                borderRadius: '50%'
+            }}></span>
+        </span>
+    </label>
+);
+
 const AdminDashboard = () => {
     const navigate = useNavigate();
     const [jobs, setJobs] = useState([]);
@@ -128,16 +164,66 @@ const AdminDashboard = () => {
         localStorage.setItem('sendEmailNotifications', JSON.stringify(sendEmailNotifications));
     }, [sendEmailNotifications]);
 
-    // Global Email Control (Super Admin only)
-    const [globalEmailsEnabled, setGlobalEmailsEnabled] = useState(() => {
-        const saved = localStorage.getItem('globalEmailsEnabled');
-        return saved !== null ? JSON.parse(saved) : true; // Default: enabled
+    // Global Email Settings State (Backend Synced)
+    const [emailSettings, setEmailSettings] = useState({
+        masterEmailEnabled: false,
+        newJobEmailEnabled: false,
+        statusUpdateEmailEnabled: false,
+        accountEmailEnabled: false
     });
+    const [loadingSettings, setLoadingSettings] = useState(false);
 
-    // Save global email toggle preference to localStorage
+    // Fetch Email Settings from Backend
+    const fetchEmailSettings = async () => {
+        if (!isSuperAdmin) return;
+        setLoadingSettings(true);
+        try {
+            const res = await fetch(`${API_BASE_URL}/settings`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setEmailSettings(data);
+            }
+        } catch (err) {
+            console.error("Failed to load email settings", err);
+        } finally {
+            setLoadingSettings(false);
+        }
+    };
+
+    // Update Email Setting
+    const toggleEmailSetting = async (key, currentValue) => {
+        const newSettings = { ...emailSettings, [key]: !currentValue };
+        // Optimistic update
+        setEmailSettings(newSettings);
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/settings`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(newSettings)
+            });
+            if (!res.ok) {
+                // Revert on failure
+                setEmailSettings(emailSettings);
+                setMessage({ text: 'Failed to update setting', type: 'error' });
+            } else {
+                // Update with actual response to be safe
+                const saved = await res.json();
+                setEmailSettings(saved);
+            }
+        } catch (err) {
+            setEmailSettings(emailSettings);
+            setMessage({ text: 'Error updating setting', type: 'error' });
+        }
+    };
+
     useEffect(() => {
-        localStorage.setItem('globalEmailsEnabled', JSON.stringify(globalEmailsEnabled));
-    }, [globalEmailsEnabled]);
+        if (isSuperAdmin) {
+            fetchEmailSettings();
+        }
+    }, [isSuperAdmin]);
 
     const loadInterviewApplications = async () => {
         setLoadingInterviewApps(true);
@@ -675,55 +761,82 @@ const AdminDashboard = () => {
                         )}
 
                         {/* Global Email Control - Super Admin Only */}
+                        {/* Global Email Control - Super Admin Only */}
                         {isSuperAdmin && (
                             <div style={{ marginBottom: '2.5rem', padding: '1.5rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <div>
-                                        <h3 style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                            <i className="fas fa-globe"></i>
-                                            Global Email Notifications
-                                        </h3>
-                                        <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-                                            Master control for ALL email notifications. When disabled, no emails will be sent regardless of individual settings.
-                                        </p>
-                                        {!globalEmailsEnabled && (
-                                            <p style={{ fontSize: '0.85rem', color: '#ef4444', marginTop: '0.5rem', fontWeight: '600' }}>
-                                                ⚠️ Emails are currently DISABLED globally
-                                            </p>
-                                        )}
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <h3 style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <i className="fas fa-mail-bulk"></i>
+                                        Email Notification Center
+                                    </h3>
+                                    <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+                                        Manage all system-generated emails. Changes are saved to the server immediately.
+                                    </p>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+
+                                    {/* Master Switch */}
+                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.masterEmailEnabled ? '#22c55e' : '#ef4444'}` }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>🚨 Master Switch</h4>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
+                                                    {emailSettings.masterEmailEnabled ? 'System emails are ACTIVE' : 'ALL emails are BLOCKED'}
+                                                </p>
+                                            </div>
+                                            <ToggleSwitch
+                                                checked={emailSettings.masterEmailEnabled}
+                                                onChange={() => toggleEmailSetting('masterEmailEnabled', emailSettings.masterEmailEnabled)}
+                                            />
+                                        </div>
                                     </div>
-                                    <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '70px', height: '35px' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={globalEmailsEnabled}
-                                            onChange={(e) => setGlobalEmailsEnabled(e.target.checked)}
-                                            style={{ opacity: 0, width: 0, height: 0 }}
-                                        />
-                                        <span style={{
-                                            position: 'absolute',
-                                            cursor: 'pointer',
-                                            top: 0,
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0,
-                                            backgroundColor: globalEmailsEnabled ? '#22c55e' : '#ef4444',
-                                            transition: '0.4s',
-                                            borderRadius: '35px',
-                                            boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
-                                        }}>
-                                            <span style={{
-                                                position: 'absolute',
-                                                content: '""',
-                                                height: '27px',
-                                                width: '27px',
-                                                left: globalEmailsEnabled ? '39px' : '4px',
-                                                bottom: '4px',
-                                                backgroundColor: 'white',
-                                                transition: '0.4s',
-                                                borderRadius: '50%'
-                                            }}></span>
-                                        </span>
-                                    </label>
+
+                                    {/* New Job Alerts */}
+                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>📢 New Job Alerts</h4>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Emails to students when jobs are posted</p>
+                                            </div>
+                                            <ToggleSwitch
+                                                checked={emailSettings.newJobEmailEnabled}
+                                                onChange={() => toggleEmailSetting('newJobEmailEnabled', emailSettings.newJobEmailEnabled)}
+                                                disabled={!emailSettings.masterEmailEnabled}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Status Updates */}
+                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>📝 Status Updates</h4>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Shortlisted, Selected, Rejected emails</p>
+                                            </div>
+                                            <ToggleSwitch
+                                                checked={emailSettings.statusUpdateEmailEnabled}
+                                                onChange={() => toggleEmailSetting('statusUpdateEmailEnabled', emailSettings.statusUpdateEmailEnabled)}
+                                                disabled={!emailSettings.masterEmailEnabled}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Account Emails */}
+                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>👤 Account Emails</h4>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Welcome, Password Reset, Verification</p>
+                                            </div>
+                                            <ToggleSwitch
+                                                checked={emailSettings.accountEmailEnabled}
+                                                onChange={() => toggleEmailSetting('accountEmailEnabled', emailSettings.accountEmailEnabled)}
+                                                disabled={!emailSettings.masterEmailEnabled}
+                                            />
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         )}
@@ -812,12 +925,12 @@ const AdminDashboard = () => {
                                     <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
                                         Enable specific branches and their corresponding semesters/years.
                                     </p>
-                                    
+
                                     <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
                                         {/* IMCA Selection */}
                                         <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
                                             <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox" 
+                                                <input type="checkbox"
                                                     checked={formData.eligibleBranches?.includes('IMCA')}
                                                     onChange={(e) => {
                                                         const branches = formData.eligibleBranches || [];
@@ -829,7 +942,7 @@ const AdminDashboard = () => {
                                             </label>
                                             {formData.eligibleBranches?.includes('IMCA') && (
                                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
-                                                    {[1,2,3,4,5,6,7,8,9,10].map(sem => (
+                                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(sem => (
                                                         <label key={`imca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
                                                             <input type="checkbox"
                                                                 checked={formData.eligibleSemesters?.includes(sem)}
@@ -845,11 +958,11 @@ const AdminDashboard = () => {
                                                 </div>
                                             )}
                                         </div>
-                                
+
                                         {/* MCA Selection */}
                                         <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
                                             <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a78bfa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox" 
+                                                <input type="checkbox"
                                                     checked={formData.eligibleBranches?.includes('MCA')}
                                                     onChange={(e) => {
                                                         const branches = formData.eligibleBranches || [];
@@ -861,7 +974,7 @@ const AdminDashboard = () => {
                                             </label>
                                             {formData.eligibleBranches?.includes('MCA') && (
                                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
-                                                    {[1,2,3,4].map(sem => (
+                                                    {[1, 2, 3, 4].map(sem => (
                                                         <label key={`mca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
                                                             <input type="checkbox"
                                                                 checked={formData.eligibleSemesters?.includes(sem)}
@@ -877,11 +990,11 @@ const AdminDashboard = () => {
                                                 </div>
                                             )}
                                         </div>
-                                
+
                                         {/* BCA Selection */}
                                         <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
                                             <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox" 
+                                                <input type="checkbox"
                                                     checked={formData.eligibleBranches?.includes('BCA')}
                                                     onChange={(e) => {
                                                         const branches = formData.eligibleBranches || [];
@@ -919,7 +1032,7 @@ const AdminDashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 {/* Email Notification Toggle */}
                                 <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
