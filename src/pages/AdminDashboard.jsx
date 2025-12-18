@@ -464,6 +464,9 @@ const AdminDashboard = () => {
         if (activeTab === 'students') {
             fetchStudentActivity();
         }
+        if (activeTab === 'profile-details' && isSuperAdmin) {
+            fetchAllProfiles();
+        }
     }, [navigate, token, role, isSuperAdmin, activeTab]);
 
     const loadJobs = async () => {
@@ -748,6 +751,54 @@ const AdminDashboard = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+
+    const renderProfileDetails = () => (
+        <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h2>All Student Profiles</h2>
+                <button className="btn-secondary" onClick={fetchAllProfiles}>
+                    <i className="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            {loadingProfiles ? <div className="loading-indicator">Loading profiles...</div> : (
+                <div className="table-container">
+                    <table className="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Enrollment</th>
+                                <th>Phone</th>
+                                <th>Branch/Sem</th>
+                                <th>CGPA</th>
+                                <th>Review</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {allProfiles.length === 0 ? (
+                                <tr><td colSpan="6" style={{ textAlign: 'center' }}>No detailed profiles found.</td></tr>
+                            ) : (
+                                allProfiles.map(profile => (
+                                    <tr key={profile.id}>
+                                        <td style={{ fontWeight: '500' }}>{profile.fullName}</td>
+                                        <td>{profile.enrollmentNumber}</td>
+                                        <td>{profile.phoneNumber}</td>
+                                        <td>{profile.branch} - Sem {profile.semester}</td>
+                                        <td>{profile.cgpa || 'N/A'}</td>
+                                        <td>
+                                            <button className="btn-small btn-primary" onClick={() => alert('View full details feature coming soon via modal!')}>
+                                                <i className="fas fa-eye"></i> View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
+    );
 
     const renderStudentMonitor = () => (
         <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
@@ -1355,6 +1406,10 @@ const AdminDashboard = () => {
                         </section>
                     </>
                 );
+            case 'students':
+                return renderStudentMonitor();
+            case 'profile-details':
+                return renderProfileDetails();
             case 'applications':
                 return (
                     <section className="card surface-glow">
@@ -1807,6 +1862,17 @@ const AdminDashboard = () => {
                                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
                                 >
                                     <i className="fas fa-user-graduate"></i> Student Monitor
+                                </button>
+                            </li>
+                        )}
+                        {(isSuperAdmin || role === 'ADMIN') && (
+                            <li>
+                                <button
+                                    onClick={() => setActiveTab('profile-details')}
+                                    className={activeTab === 'profile-details' ? 'active' : ''}
+                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                                >
+                                    <i className="fas fa-id-card"></i> Student Details
                                 </button>
                             </li>
                         )}
