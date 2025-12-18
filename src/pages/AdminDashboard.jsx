@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import InterviewRoundsForm from '../components/InterviewRoundsForm';
 import API_BASE_URL from '../config';
 import '../styles/admin.css';
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
 
 // Simple Toggle Switch Component
 const ToggleSwitch = ({ checked, onChange, disabled }) => (
@@ -836,6 +837,58 @@ const AdminDashboard = () => {
         </div>
     );
 
+    const renderAnalytics = () => {
+        const data = [
+            { name: 'Students', value: users.filter(u => !u.role || u.role === 'USER' || u.role === 'STUDENT').length, color: '#3b82f6' },
+            { name: 'Admins', value: users.filter(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN').length, color: '#ef4444' },
+            { name: 'Companies', value: users.filter(u => u.role === 'COMPANY_ADMIN').length, color: '#10b981' }
+        ].filter(d => d.value > 0);
+
+        return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
+                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '16px' }}>
+                    <h3 style={{ marginBottom: '1rem', textAlign: 'center' }}>User Distribution</h3>
+                    <div style={{ height: '300px', width: '100%' }}>
+                        <ResponsiveContainer>
+                            <PieChart>
+                                <Pie
+                                    data={data}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={60}
+                                    outerRadius={100}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    {data.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }} />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '16px' }}>
+                    <h3 style={{ marginBottom: '1rem', textAlign: 'center' }}>Recent Jobs (Salary in LPA)</h3>
+                    <div style={{ height: '300px', width: '100%' }}>
+                        <ResponsiveContainer>
+                            <BarChart data={jobs.slice(0, 8).map(j => ({ name: j.company_name ? j.company_name.substring(0, 10) : 'Unknown', salary: j.salary ? (j.salary / 100000) : 0 }))}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                                <XAxis dataKey="name" stroke="#94a3b8" />
+                                <YAxis stroke="#94a3b8" />
+                                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }} />
+                                <Bar dataKey="salary" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Salary (LPA)" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     const renderStudentMonitor = () => (
         <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
@@ -935,6 +988,9 @@ const AdminDashboard = () => {
                                 <p style={{ fontSize: '1.2rem', color: '#28a745' }}>Active</p>
                             </div>
                         </div>
+
+                        {/* New Visual Analytics Section */}
+                        {renderAnalytics()}
 
                         {isSuperAdmin && (
                             <div className="company-stats-section" style={{ marginBottom: '2.5rem' }}>
