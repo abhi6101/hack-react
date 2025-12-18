@@ -27,7 +27,38 @@ const ToggleSwitch = ({ checked, onChange, disabled }) => (
     </label>
 );
 
+
+
 const AdminDashboard = () => {
+    // CSV Export Helper
+    const downloadCSV = (data, filename) => {
+        if (!data || data.length === 0) {
+            alert("No data to export");
+            return;
+        }
+
+        // dynamic headers based on first object keys
+        const headers = Object.keys(data[0]);
+        const csvContent = [
+            headers.join(','),
+            ...data.map(row => headers.map(fieldName => {
+                let value = row[fieldName];
+                if (value === null || value === undefined) value = '';
+                value = value.toString().replace(/"/g, '""'); // Escape quotes
+                return `"${value}"`;
+            }).join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const navigate = useNavigate();
     const [jobs, setJobs] = useState([]);
     const [users, setUsers] = useState([]);
@@ -756,9 +787,14 @@ const AdminDashboard = () => {
         <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h2>All Student Profiles</h2>
-                <button className="btn-secondary" onClick={fetchAllProfiles}>
-                    <i className="fas fa-sync-alt"></i> Refresh
-                </button>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                    <button className="btn-secondary" onClick={() => downloadCSV(allProfiles, 'student_profiles.csv')}>
+                        <i className="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button className="btn-secondary" onClick={fetchAllProfiles}>
+                        <i className="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
             </div>
 
             {loadingProfiles ? <div className="loading-indicator">Loading profiles...</div> : (
@@ -804,9 +840,14 @@ const AdminDashboard = () => {
         <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h2>Student Monitor</h2>
-                <button className="btn-secondary" onClick={fetchStudentActivity}>
-                    <i className="fas fa-sync-alt"></i> Refresh
-                </button>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                    <button className="btn-secondary" onClick={() => downloadCSV(studentActivity, 'student_activity.csv')}>
+                        <i className="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button className="btn-secondary" onClick={fetchStudentActivity}>
+                        <i className="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
             </div>
 
             {loadingActivity ? <div className="loading-indicator">Loading activity...</div> : (
@@ -1413,8 +1454,11 @@ const AdminDashboard = () => {
             case 'applications':
                 return (
                     <section className="card surface-glow">
-                        <div className="card-header">
+                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
+                            <button className="btn-secondary" onClick={() => downloadCSV(applications, 'job_applications.csv')}>
+                                <i className="fas fa-file-csv"></i> Export
+                            </button>
                         </div>
                         {loadingApplications ? (
                             <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
