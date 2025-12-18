@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import API_BASE_URL from '../config';
 
 const ResumeBuilder = () => {
     const [formData, setFormData] = useState({
@@ -14,6 +12,7 @@ const ResumeBuilder = () => {
         experience: [{ company: '', role: '', duration: '', description: '' }],
         projects: [{ title: '', description: '', techStack: '' }],
         skills: '', // Comma separated
+        template: 'sde', // Default to SDE format
     });
 
     const [isGenerating, setIsGenerating] = useState(false);
@@ -29,6 +28,7 @@ const ResumeBuilder = () => {
         experience: [{ company: '', role: '', duration: '', description: '' }],
         projects: [{ title: '', description: '', techStack: '' }],
         skills: '',
+        template: 'sde',
     };
 
     const dummyData = {
@@ -51,6 +51,7 @@ const ResumeBuilder = () => {
             { title: 'Task Manager App', techStack: 'React, Firebase', description: 'Real-time task management application with drag-and-drop functionality and team collaboration features.' }
         ],
         skills: 'JavaScript, React.js, Node.js, Java, Spring Boot, SQL, MongoDB, Git, Docker, AWS',
+        template: 'sde',
     };
 
     const fillDummyData = () => {
@@ -85,283 +86,116 @@ const ResumeBuilder = () => {
         setFormData({ ...formData, [section]: updatedSection });
     };
 
-    const generatePDF = () => {
+    const generatePDF = async () => {
         setIsGenerating(true);
-        const doc = new jsPDF();
+        const token = localStorage.getItem('authToken');
 
-        // --- Colors & Fonts ---
-        const themeBlue = [67, 97, 238]; // #4361ee
-        const darkText = [33, 37, 41];
-        const lightText = [108, 117, 125];
-        const offWhite = [248, 249, 250];
+        try {
+            // Transform data to match backend expectation if needed
+            // Currently backend expects fields that match directly, but 'education' etc are strings in ResumeData model?
+            // WAIT - ResumeData in backend expects STRING for 'education', 'experience' etc (HTML content).
+            // I need to format the arrays into HTML Strings before sending!
 
-        // --- Layout Constants ---
-        const margin = 15;
-        const pageWidth = 210;
-        const pageHeight = 297;
-        const col2X = 145; // Sidebar start X
-        const col1Width = 120; // Main content width
-        const col2Width = pageWidth - col2X - margin; // Sidebar width
+            const formatEducation = (eduList) => {
+                if (!eduList || eduList.length === 0) return "";
+                let html = "<div class='education-list'>";
+                eduList.forEach(e => {
+                    html += `<div class='edu-item'>
+                        <div class='degree-row'>
+                            <span>${e.degree}</span>
+                            <span>${e.year} | ${e.score}</span>
+                        </div>
+                        <div class='uni-row'>${e.institution}</div>
+                    </div>`;
+                });
+                html += "</div>";
+                return html;
+            };
 
-        doc.setFont("helvetica");
+            const formatExperience = (expList) => {
+                if (!expList || expList.length === 0) return "";
+                let html = "<ul>";
+                expList.forEach(e => {
+                    html += `<li>
+                        <div class='item-title'>${e.role}</div>
+                        <div class='item-subtitle'>${e.company} | ${e.duration}</div>
+                        <div class='item-desc'>${e.description}</div>
+                    </li>`;
+                });
+                html += "</ul>";
+                return html;
+            };
 
-        // --- Helper: Draw Backgrounds ---
-        const drawBackgrounds = (pageNumber) => {
-            // Header is only on Page 1
-            if (pageNumber === 1) {
-                doc.setFillColor(...themeBlue);
-                doc.rect(0, 0, pageWidth, 45, 'F');
+            const formatProjects = (projList) => {
+                if (!projList || projList.length === 0) return "";
+                let html = "<ul>";
+                projList.forEach(p => {
+                    html += `<li>
+                        <span class='project-title'>${p.title}</span> 
+                        ${p.techStack ? `<i>[${p.techStack}]</i>` : ''}
+                        <div>${p.description}</div>
+                    </li>`;
+                });
+                html += "</ul>";
+                return html;
+            };
+
+            const formatSkills = (skillStr) => {
+                if (!skillStr) return "";
+                // If SDE format, users often want categories. 
+                // For now, we wrap it in a simple list or paragraph.
+                return `<p>${skillStr}</p>`;
+            };
+
+            const payload = {
+                ...formData,
+                education: formatEducation(formData.education),
+                experience: formatExperience(formData.experience),
+                projects: formatProjects(formData.projects),
+                skills: formatSkills(formData.skills),
+                declaration: "I hereby declare that the information furnished above is true to the best of my knowledge."
+                // template handles CSS
+            };
+
+            const res = await fetch(`${API_BASE_URL}/resume/generate-pdf`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || 'Failed to generate PDF');
             }
 
-            // Sidebar Background (Full Height except header on page 1)
-            const sidebarStartY = pageNumber === 1 ? 45 : 0;
-            doc.setFillColor(...offWhite);
-            doc.rect(col2X - 5, sidebarStartY, pageWidth - (col2X - 5), pageHeight - sidebarStartY, 'F');
-        };
+            const data = await res.json();
 
-        // Initialize Page 1
-        let currentPage = 1;
-        drawBackgrounds(currentPage);
-
-        // --- HEADER CONTENT (Page 1 Only) ---
-        // Name
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(24);
-        doc.setFont("helvetica", "bold");
-        doc.text(formData.name.toUpperCase(), margin, 20);
-
-        // Contact Info
-        doc.setFontSize(9);
-        doc.setFont("helvetica", "normal");
-        const contactParts = [
-            formData.email,
-            formData.phone,
-            formData.linkedin && `LinkedIn: ${formData.linkedin.replace(/^https?:\/\//, '')}`,
-            formData.github && `GitHub: ${formData.github.replace(/^https?:\/\//, '')}`
-        ].filter(Boolean).join("  |  ");
-
-        // Wrap contact info if too long
-        const contactLines = doc.splitTextToSize(contactParts, pageWidth - (margin * 2));
-        doc.text(contactLines, margin, 32);
-
-        // --- MAIN COLUMN CONTENT ---
-        let yPos = 60;
-
-        const checkPageBreakFull = (heightNeeded) => {
-            if (yPos + heightNeeded > pageHeight - 20) {
-                doc.addPage();
-                currentPage++;
-                drawBackgrounds(currentPage);
-                yPos = 20;
-                return true;
-            }
-            return false;
-        };
-
-        // 1. PROFESSIONAL SUMMARY
-        if (formData.summary) {
-            doc.setTextColor(...themeBlue);
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.text("PROFESSIONAL SUMMARY", margin, yPos);
-            doc.line(margin, yPos + 1.5, col1Width + margin, yPos + 1.5);
-            yPos += 7;
-
-            doc.setTextColor(...darkText);
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            const summaryLines = doc.splitTextToSize(formData.summary, col1Width);
-            doc.text(summaryLines, margin, yPos);
-            yPos += (summaryLines.length * 5) + 8;
-        }
-
-        // 2. WORK EXPERIENCE
-        if (formData.experience.length > 0 && (formData.experience[0].company || formData.experience[0].role)) {
-            checkPageBreakFull(20);
-            doc.setTextColor(...themeBlue);
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.text("WORK EXPERIENCE", margin, yPos);
-            doc.line(margin, yPos + 1.5, col1Width + margin, yPos + 1.5);
-            yPos += 7;
-
-            formData.experience.forEach(exp => {
-                checkPageBreakFull(30); // Check before starting an item
-
-                // Role & Duration
-                doc.setTextColor(0, 0, 0);
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "bold");
-
-                // Calculate width for role to avoid overlap
-                const durationWidth = doc.getTextWidth(exp.duration) + 5;
-                const maxRoleWidth = col1Width - durationWidth;
-
-                // Split role if needed
-                const roleLines = doc.splitTextToSize(exp.role, maxRoleWidth);
-                doc.text(roleLines, margin, yPos);
-
-                // Duration (Right Aligned)
-                doc.setTextColor(...lightText);
-                doc.setFontSize(9);
-                doc.setFont("helvetica", "italic");
-                doc.text(exp.duration, margin + col1Width, yPos, { align: 'right' });
-
-                yPos += (roleLines.length * 5); // Adjust Y based on role lines
-
-                // Company
-                doc.setFontSize(10);
-                doc.setTextColor(...themeBlue);
-                doc.setFont("helvetica", "bold"); // Company Name Bold
-                doc.text(exp.company, margin, yPos);
-                yPos += 5;
-
-                // Description
-                doc.setTextColor(...darkText);
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "normal");
-                const descLines = doc.splitTextToSize(exp.description || '', col1Width);
-                doc.text(descLines, margin, yPos);
-                yPos += (descLines.length * 5) + 6;
+            // Download the file
+            const downloadRes = await fetch(`${API_BASE_URL}/resume/download/${data.filename}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
-            yPos += 3;
+
+            if (!downloadRes.ok) throw new Error("Failed to download file");
+
+            const blob = await downloadRes.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = data.filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+        } catch (err) {
+            console.error(err);
+            alert("Error: " + err.message);
+        } finally {
+            setIsGenerating(false);
         }
-
-        // 3. PROJECTS
-        if (formData.projects.length > 0 && formData.projects[0].title) {
-            checkPageBreakFull(20);
-            doc.setTextColor(...themeBlue);
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.text("PROJECTS", margin, yPos);
-            doc.line(margin, yPos + 1.5, col1Width + margin, yPos + 1.5);
-            yPos += 7;
-
-            formData.projects.forEach(proj => {
-                checkPageBreakFull(30);
-
-                doc.setTextColor(0, 0, 0);
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "bold");
-
-                // Tech Stack width calculation
-                const stackText = proj.techStack ? `[ ${proj.techStack} ]` : '';
-                const stackWidth = doc.getTextWidth(stackText) + 5;
-                const maxTitleWidth = col1Width - stackWidth;
-
-                const titleLines = doc.splitTextToSize(proj.title, maxTitleWidth);
-                doc.text(titleLines, margin, yPos);
-
-                if (stackText) {
-                    doc.setFontSize(9);
-                    doc.setTextColor(...lightText);
-                    doc.setFont("helvetica", "italic");
-                    doc.text(stackText, margin + col1Width, yPos, { align: 'right' });
-                }
-                yPos += (titleLines.length * 5);
-
-                doc.setTextColor(...darkText);
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "normal");
-                const descLines = doc.splitTextToSize(proj.description || '', col1Width);
-                doc.text(descLines, margin, yPos);
-                yPos += (descLines.length * 5) + 6;
-            });
-        }
-
-        // --- SIDEBAR CONTENT (Independent Y Tracking) ---
-        // We need to switch back to page 1 for the start of sidebar
-        doc.setPage(1);
-        let sideY = 60; // Start Y for sidebar on Page 1
-        let currentSidePage = 1;
-
-        const checkSidebarPage = (heightNeeded) => {
-            if (sideY + heightNeeded > pageHeight - 20) {
-                // If we need a new page for sidebar
-                if (currentSidePage < currentPage) {
-                    // Main content already created this page, just switch to it
-                    currentSidePage++;
-                    doc.setPage(currentSidePage);
-                    sideY = 20; // Top of new page
-                } else {
-                    // We need to add a completely new page (Sidebar is longer than main content)
-                    doc.addPage();
-                    currentPage++;
-                    currentSidePage++;
-                    drawBackgrounds(currentPage); // Draw sidebar bg
-                    sideY = 20;
-                }
-            }
-        };
-
-        // 4. EDUCATION
-        if (formData.education.length > 0) {
-            doc.setTextColor(...themeBlue);
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.text("EDUCATION", col2X, sideY);
-            doc.line(col2X, sideY + 1.5, pageWidth - margin, sideY + 1.5);
-            sideY += 8;
-
-            formData.education.forEach(edu => {
-                checkSidebarPage(30);
-
-                doc.setTextColor(0, 0, 0);
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "bold");
-                const degreeSplit = doc.splitTextToSize(edu.degree, col2Width);
-                doc.text(degreeSplit, col2X, sideY);
-                sideY += (degreeSplit.length * 4) + 1;
-
-                doc.setTextColor(...darkText);
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "normal");
-                const instSplit = doc.splitTextToSize(edu.institution, col2Width);
-                doc.text(instSplit, col2X, sideY);
-                sideY += (instSplit.length * 4) + 1;
-
-                doc.setTextColor(...lightText);
-                doc.setFontSize(9);
-                doc.text(`${edu.year} | ${edu.score}`, col2X, sideY);
-                sideY += 8;
-            });
-            sideY += 5;
-        }
-
-        // 5. SKILLS
-        if (formData.skills) {
-            checkSidebarPage(30);
-            doc.setTextColor(...themeBlue);
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.text("SKILLS", col2X, sideY);
-            doc.line(col2X, sideY + 1.5, pageWidth - margin, sideY + 1.5);
-            sideY += 8;
-
-            doc.setTextColor(...darkText);
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-
-            // Handle skills as chips or list
-            const skillsArr = formData.skills.split(',').map(s => s.trim()).filter(s => s);
-
-            // Simple text wrapping if a skill is too long is rare, but improved listing
-            skillsArr.forEach(skill => {
-                checkSidebarPage(6);
-                const skillLines = doc.splitTextToSize(`• ${skill}`, col2Width);
-                doc.text(skillLines, col2X, sideY);
-                sideY += (skillLines.length * 5); // Dynamic height
-            });
-        }
-
-        // Footer Metadata (On the last page)
-        doc.setPage(currentPage);
-        doc.setFontSize(8);
-        doc.setTextColor(200, 200, 200);
-        doc.text("Generated by Hack-2-Hired Portal", pageWidth / 2, pageHeight - 10, { align: 'center' });
-
-        doc.save(`${formData.name.replace(/\s+/g, '_')}_Resume.pdf`);
-        setIsGenerating(false);
     };
 
     return (
@@ -467,7 +301,24 @@ const ResumeBuilder = () => {
                 <div className="resume-actions-sidebar">
                     <div className="sticky-box">
                         <h3>Actions</h3>
-                        <p className="text-muted">Fill out the form and generate your resume instantly.</p>
+                        <h3>Actions</h3>
+                        <p className="text-muted">Choose your template and generate instantly.</p>
+
+                        <div className="form-group" style={{ marginBottom: '1rem' }}>
+                            <label className="form-label">Select Template</label>
+                            <select
+                                className="form-input"
+                                name="template"
+                                value={formData.template}
+                                onChange={handleChange}
+                                style={{ background: 'rgba(255,255,255,0.1)' }}
+                            >
+                                <option value="sde" style={{ color: 'black' }}>SDE Format (IIT Standard)</option>
+                                <option value="professional" style={{ color: 'black' }}>Professional (Simple)</option>
+                                <option value="creative" style={{ color: 'black' }}>Creative</option>
+                                <option value="modern" style={{ color: 'black' }}>Modern</option>
+                            </select>
+                        </div>
 
                         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
                             <button className="btn-secondary" onClick={fillDummyData} style={{ flex: 1, padding: '0.5rem', cursor: 'pointer', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '6px' }}>
