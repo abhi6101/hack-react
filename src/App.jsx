@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import API_BASE_URL from './config';
 import Navbar from './components/Navbar';
@@ -15,6 +15,7 @@ import Papers from './pages/Papers';
 import Quiz from './pages/Quiz';
 import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
+import Onboarding from './pages/Onboarding';
 import ResumeAnalysis from './pages/ResumeAnalysis';
 import StudentProfile from './pages/StudentProfile';
 import Courses from './pages/Courses';
@@ -30,7 +31,8 @@ import './styles/animations.css'; // Import animations
 
 function Layout({ children }) {
     const location = useLocation();
-    const hideNavbarRoutes = ['/login', '/register', '/admin'];
+    const navigate = useNavigate(); // Add hook
+    const hideNavbarRoutes = ['/login', '/register', '/admin', '/onboarding'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -52,7 +54,10 @@ function Layout({ children }) {
                     if (response.ok) {
                         const data = await response.json();
                         if (data.needsUpdate) {
-                            setShowProfileModal(true);
+                            // IRON DOME GUARD: Force redirect to Onboarding
+                            if (location.pathname !== '/onboarding' && location.pathname !== '/resume-builder') {
+                                navigate('/onboarding');
+                            }
                         }
                     }
                 } catch (error) {
@@ -62,7 +67,7 @@ function Layout({ children }) {
         };
 
         checkProfileStatus();
-    }, [location.pathname]);
+    }, [location.pathname, navigate]);
 
     const handleProfileUpdate = () => {
         setShowProfileModal(false);
@@ -103,6 +108,7 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/verify-account" element={<VerifyAccount />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
                     <Route path="/jobs" element={<Jobs />} />
                     <Route path="/resume" element={<ResumeAnalysis />} />
                     <Route path="/resume-builder" element={<ResumeBuilder />} />
