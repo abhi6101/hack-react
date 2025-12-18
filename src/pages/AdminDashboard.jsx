@@ -1,43 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InterviewRoundsForm from '../components/InterviewRoundsForm';
+import API_BASE_URL from '../config';
 import '../styles/admin.css';
-
-// Reusable Toggle Component
-const ToggleSwitch = ({ checked, onChange, disabled }) => (
-    <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px', opacity: disabled ? 0.6 : 1 }}>
-        <input
-            type="checkbox"
-            checked={checked}
-            onChange={onChange}
-            disabled={disabled}
-            style={{ opacity: 0, width: 0, height: 0 }}
-        />
-        <span style={{
-            position: 'absolute',
-            cursor: disabled ? 'not-allowed' : 'pointer',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: checked ? '#22c55e' : '#ef4444',
-            transition: '0.4s',
-            borderRadius: '35px',
-        }}>
-            <span style={{
-                position: 'absolute',
-                content: '""',
-                height: '24px',
-                width: '24px',
-                left: checked ? '32px' : '4px',
-                bottom: '3px',
-                backgroundColor: 'white',
-                transition: '0.4s',
-                borderRadius: '50%'
-            }}></span>
-        </span>
-    </label>
-);
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -57,7 +22,7 @@ const AdminDashboard = () => {
         eligibleSemesters: []
     });
 
-    const API_BASE_URL = "https://placement-portal-backend-nwaj.onrender.com/api/admin";
+    const ADMIN_API_URL = `${API_BASE_URL}/admin`;
     const token = localStorage.getItem('authToken');
     const normalizedRole = localStorage.getItem('userRole'); // ADMIN, SUPER_ADMIN, COMPANY_ADMIN
     // Treat legacy ADMIN as SUPER_ADMIN for now, or just ADMIN
@@ -105,7 +70,7 @@ const AdminDashboard = () => {
     const fetchCompanyStats = async () => {
         setLoadingStats(true);
         try {
-            const res = await fetch(`${API_BASE_URL}/stats/companies`, {
+            const res = await fetch(`${ADMIN_API_URL}/stats/companies`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -119,8 +84,13 @@ const AdminDashboard = () => {
         }
     };
     const fetchInterviews = () => {
-        fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives')
-            .then(res => res.json())
+        fetch(`${API_BASE_URL}/interview-drives`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Unauthorized");
+                return res.json();
+            })
             .then(data => setInterviews(Array.isArray(data) ? data : []))
             .catch(() => {
                 // Fallback
@@ -132,7 +102,7 @@ const AdminDashboard = () => {
     const loadApplications = async () => {
         setLoadingApplications(true);
         try {
-            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications`, {
+            const response = await fetch(`${ADMIN_API_URL}/job-applications`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch applications');
@@ -178,7 +148,7 @@ const AdminDashboard = () => {
         if (!isSuperAdmin) return;
         setLoadingSettings(true);
         try {
-            const res = await fetch(`${API_BASE_URL}/settings`, {
+            const res = await fetch(`${ADMIN_API_URL}/settings`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -199,7 +169,7 @@ const AdminDashboard = () => {
         setEmailSettings(newSettings);
 
         try {
-            const res = await fetch(`${API_BASE_URL}/settings`, {
+            const res = await fetch(`${ADMIN_API_URL}/settings`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(newSettings)
@@ -228,7 +198,7 @@ const AdminDashboard = () => {
     const loadInterviewApplications = async () => {
         setLoadingInterviewApps(true);
         try {
-            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/interview-applications`, {
+            const response = await fetch(`${ADMIN_API_URL}/interview-applications`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch interview applications');
@@ -244,7 +214,7 @@ const AdminDashboard = () => {
 
     const updateInterviewAppStatus = async (appId, newStatus) => {
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/interview-applications/${appId}/status`, {
+            const res = await fetch(`${ADMIN_API_URL}/interview-applications/${appId}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ status: newStatus })
@@ -263,7 +233,7 @@ const AdminDashboard = () => {
     const loadGalleryItems = async () => {
         setLoadingGallery(true);
         try {
-            const response = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/gallery`, {
+            const response = await fetch(`${ADMIN_API_URL}/gallery`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch gallery items');
@@ -279,7 +249,7 @@ const AdminDashboard = () => {
 
     const updateGalleryStatus = async (id, newStatus) => {
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/gallery/${id}/status`, {
+            const res = await fetch(`${ADMIN_API_URL}/gallery/${id}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ status: newStatus })
@@ -297,7 +267,7 @@ const AdminDashboard = () => {
     const deleteGalleryItem = async (id) => {
         if (!window.confirm('Delete this item?')) return;
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/gallery/${id}`, {
+            const res = await fetch(`${ADMIN_API_URL}/gallery/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -312,7 +282,7 @@ const AdminDashboard = () => {
 
     const updateApplicationStatus = async (appId, newStatus) => {
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}/status`, {
+            const res = await fetch(`${ADMIN_API_URL}/job-applications/${appId}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ status: newStatus })
@@ -331,7 +301,7 @@ const AdminDashboard = () => {
         if (!window.confirm('Are you sure you want to delete this application?')) return;
 
         try {
-            const res = await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/admin/job-applications/${appId}`, {
+            const res = await fetch(`${ADMIN_API_URL}/job-applications/${appId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -360,8 +330,8 @@ const AdminDashboard = () => {
         };
 
         const endpoint = editingInterview
-            ? `https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin/${editingInterview.id}`
-            : 'https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin';
+            ? `${API_BASE_URL}/interview-drives/admin/${editingInterview.id}`
+            : `${API_BASE_URL}/interview-drives/admin`;
         const method = editingInterview ? 'PUT' : 'POST';
 
         try {
@@ -399,7 +369,7 @@ const AdminDashboard = () => {
         if (!window.confirm('Delete this interview?')) return;
 
         try {
-            await fetch(`https://placement-portal-backend-nwaj.onrender.com/api/interview-drives/admin/${id}`, {
+            await fetch(`${API_BASE_URL}/interview-drives/admin/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -430,7 +400,7 @@ const AdminDashboard = () => {
     const loadJobs = async () => {
         setLoadingJobs(true);
         try {
-            const response = await fetch(`${API_BASE_URL}/jobs`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const response = await fetch(`${ADMIN_API_URL}/jobs`, { headers: { 'Authorization': `Bearer ${token}` } });
             if (!response.ok) throw new Error('Failed to fetch jobs');
             const data = await response.json();
             setJobs(data);
@@ -445,7 +415,7 @@ const AdminDashboard = () => {
     const loadUsers = async () => {
         setLoadingUsers(true);
         try {
-            const response = await fetch(`${API_BASE_URL}/users`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const response = await fetch(`${ADMIN_API_URL}/users`, { headers: { 'Authorization': `Bearer ${token}` } });
             if (!response.ok) throw new Error('Failed to fetch users');
             const data = await response.json();
             setUsers(data);
@@ -460,8 +430,8 @@ const AdminDashboard = () => {
     const handleUserSubmit = async (e) => {
         e.preventDefault();
         const endpoint = editingUser
-            ? `${API_BASE_URL}/users/${editingUser.id}`
-            : `${API_BASE_URL}/users`;
+            ? `${ADMIN_API_URL}/users/${editingUser.id}`
+            : `${ADMIN_API_URL}/users`;
         const method = editingUser ? 'PUT' : 'POST';
 
         try {
@@ -489,7 +459,7 @@ const AdminDashboard = () => {
     const deleteUser = async (userId) => {
         if (!window.confirm('Delete this user?')) return;
         try {
-            await fetch(`${API_BASE_URL}/users/${userId}`, {
+            await fetch(`${ADMIN_API_URL}/users/${userId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -516,7 +486,7 @@ const AdminDashboard = () => {
         if (!window.confirm('Are you sure you want to delete this job?')) return;
 
         try {
-            const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
+            const response = await fetch(`${ADMIN_API_URL}/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -638,8 +608,8 @@ const AdminDashboard = () => {
         };
 
         const endpoint = editingJob
-            ? `${API_BASE_URL}/jobs/${editingJob.id}`
-            : `${API_BASE_URL}/jobs?sendEmails=${emailSettings.masterEmailEnabled && emailSettings.newJobEmailEnabled && sendEmailNotifications}`;
+            ? `${ADMIN_API_URL}/jobs/${editingJob.id}`
+            : `${ADMIN_API_URL}/jobs?sendEmails=${emailSettings.masterEmailEnabled && emailSettings.newJobEmailEnabled && sendEmailNotifications}`;
         const method = editingJob ? 'PUT' : 'POST';
 
         try {
