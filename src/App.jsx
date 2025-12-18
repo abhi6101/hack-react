@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import API_BASE_URL from './config';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProfileUpdateModal from './components/ProfileUpdateModal';
@@ -14,6 +15,7 @@ import Papers from './pages/Papers';
 import Quiz from './pages/Quiz';
 import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
+import ResumeAnalysis from './pages/ResumeAnalysis';
 import StudentProfile from './pages/StudentProfile';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
@@ -41,7 +43,7 @@ function Layout({ children }) {
             // Only check for students (USER role)
             if (token && userRole === 'USER') {
                 try {
-                    const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/profile-status', {
+                    const response = await fetch(`${API_BASE_URL}/auth/profile-status`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -102,6 +104,7 @@ function App() {
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/verify-account" element={<VerifyAccount />} />
                     <Route path="/jobs" element={<Jobs />} />
+                    <Route path="/resume" element={<ResumeAnalysis />} />
                     <Route path="/resume-builder" element={<ResumeBuilder />} />
                     <Route path="/interview" element={<Interview />} />
                     <Route path="/papers" element={<Papers />} />

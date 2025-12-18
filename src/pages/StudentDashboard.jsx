@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ProfileUpdateModal from '../components/ProfileUpdateModal';
+import API_BASE_URL from '../config';
 import '../styles/dashboard.css';
 
 const StudentDashboard = () => {
@@ -34,7 +35,7 @@ const StudentDashboard = () => {
 
         // Fetch user info
         try {
-            const userRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/me', {
+            const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (userRes.ok) {
@@ -47,7 +48,7 @@ const StudentDashboard = () => {
 
         // Fetch profile
         try {
-            const profileRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/student-profile', {
+            const profileRes = await fetch(`${API_BASE_URL}/student-profile`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (profileRes.ok) {
@@ -60,7 +61,7 @@ const StudentDashboard = () => {
 
         // Fetch interviews
         try {
-            const interviewRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives');
+            const interviewRes = await fetch(`${API_BASE_URL}/interview-drives`);
             if (interviewRes.ok) {
                 const interviewData = await interviewRes.json();
                 setInterviews(interviewData);
@@ -71,7 +72,7 @@ const StudentDashboard = () => {
 
         // Fetch my applications (Interview)
         try {
-            const appsRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-applications/my', {
+            const appsRes = await fetch(`${API_BASE_URL}/interview-applications/my`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (appsRes.ok) {
@@ -84,7 +85,7 @@ const StudentDashboard = () => {
 
         // Fetch job applications
         try {
-            const jobAppsRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/job-applications/my', {
+            const jobAppsRes = await fetch(`${API_BASE_URL}/job-applications/my`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (jobAppsRes.ok) {
