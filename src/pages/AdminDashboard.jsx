@@ -65,6 +65,10 @@ const AdminDashboard = () => {
     const [companyStats, setCompanyStats] = useState([]);
     const [loadingStats, setLoadingStats] = useState(false);
 
+    // Student Monitor State
+    const [studentActivity, setStudentActivity] = useState([]);
+    const [loadingActivity, setLoadingActivity] = useState(false);
+
 
 
     const fetchCompanyStats = async () => {
@@ -81,6 +85,45 @@ const AdminDashboard = () => {
             console.error("Failed to load stats", err);
         } finally {
             setLoadingStats(false);
+        }
+    };
+
+    const fetchStudentActivity = async () => {
+        setLoadingActivity(true);
+        try {
+            const res = await fetch(`${ADMIN_API_URL}/stats/students`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setStudentActivity(data);
+            }
+        } catch (err) {
+            console.error("Failed to load student activity", err);
+        } finally {
+            setLoadingActivity(false);
+        }
+    };
+
+    // View Resume (Super Admin Only)
+    const viewStudentResume = async (userId, studentName) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/resume/admin/view/${userId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error("Resume not found or access denied");
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${studentName}_Resume.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (err) {
+            alert(err.message);
         }
     };
     const fetchInterviews = () => {
@@ -395,169 +438,243 @@ const AdminDashboard = () => {
             loadUsers(); // Only Super Admins load users
             fetchCompanyStats();
         }
-    }, [navigate, token, role, isSuperAdmin]);
+    }
+        if (activeTab === 'students') {
+        fetchStudentActivity();
+    }
+}, [navigate, token, role, isSuperAdmin, activeTab]);
 
-    const loadJobs = async () => {
-        setLoadingJobs(true);
-        try {
-            const response = await fetch(`${ADMIN_API_URL}/jobs`, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (!response.ok) throw new Error('Failed to fetch jobs');
-            const data = await response.json();
-            setJobs(data);
-        } catch (error) {
-            console.error('Error loading jobs:', error);
-            setMessage({ text: 'Failed to load jobs.', type: 'error' });
-        } finally {
-            setLoadingJobs(false);
-        }
-    };
+const loadJobs = async () => {
+    setLoadingJobs(true);
+    try {
+        const response = await fetch(`${ADMIN_API_URL}/jobs`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!response.ok) throw new Error('Failed to fetch jobs');
+        const data = await response.json();
+        setJobs(data);
+    } catch (error) {
+        console.error('Error loading jobs:', error);
+        setMessage({ text: 'Failed to load jobs.', type: 'error' });
+    } finally {
+        setLoadingJobs(false);
+    }
+};
 
-    const loadUsers = async () => {
-        setLoadingUsers(true);
-        try {
-            const response = await fetch(`${ADMIN_API_URL}/users`, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (!response.ok) throw new Error('Failed to fetch users');
-            const data = await response.json();
-            setUsers(data);
-        } catch (error) {
-            console.error('Error loading users:', error);
-            setMessage({ text: 'Failed to load users.', type: 'error' });
-        } finally {
-            setLoadingUsers(false);
-        }
-    };
+const loadUsers = async () => {
+    setLoadingUsers(true);
+    try {
+        const response = await fetch(`${ADMIN_API_URL}/users`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!response.ok) throw new Error('Failed to fetch users');
+        const data = await response.json();
+        setUsers(data);
+    } catch (error) {
+        console.error('Error loading users:', error);
+        setMessage({ text: 'Failed to load users.', type: 'error' });
+    } finally {
+        setLoadingUsers(false);
+    }
+};
 
-    const handleUserSubmit = async (e) => {
-        e.preventDefault();
-        const endpoint = editingUser
-            ? `${ADMIN_API_URL}/users/${editingUser.id}`
-            : `${ADMIN_API_URL}/users`;
-        const method = editingUser ? 'PUT' : 'POST';
+const handleUserSubmit = async (e) => {
+    e.preventDefault();
+    const endpoint = editingUser
+        ? `${ADMIN_API_URL}/users/${editingUser.id}`
+        : `${ADMIN_API_URL}/users`;
+    const method = editingUser ? 'PUT' : 'POST';
 
-        try {
-            const res = await fetch(endpoint, {
-                method,
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(userForm)
-            });
+    try {
+        const res = await fetch(endpoint, {
+            method,
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(userForm)
+        });
 
-            if (res.ok) {
-                setMessage({ text: editingUser ? 'User updated!' : 'User created!', type: 'success' });
-                loadUsers();
-                setUserForm({ username: '', email: '', password: '', role: 'USER' });
-                setEditingUser(null);
-            } else {
-                const error = await res.text();
-                setMessage({ text: error, type: 'error' });
-            }
-        } catch (err) {
-            setMessage({ text: 'Failed to save user', type: 'error' });
-        }
-        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
-    };
-
-    const deleteUser = async (userId) => {
-        if (!window.confirm('Delete this user?')) return;
-        try {
-            await fetch(`${ADMIN_API_URL}/users/${userId}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+        if (res.ok) {
+            setMessage({ text: editingUser ? 'User updated!' : 'User created!', type: 'success' });
             loadUsers();
-        } catch (err) {
-            alert('Failed to delete user');
+            setUserForm({ username: '', email: '', password: '', role: 'USER' });
+            setEditingUser(null);
+        } else {
+            const error = await res.text();
+            setMessage({ text: error, type: 'error' });
         }
-    };
+    } catch (err) {
+        setMessage({ text: 'Failed to save user', type: 'error' });
+    }
+    setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+};
 
-    const startEditUser = (user) => {
-        // Must preserve verification status!
-        setUserForm({
-            username: user.username,
-            email: user.email,
-            password: '',
-            role: user.role,
-            verified: user.verified, // Include this
-            companyName: user.companyName
+const deleteUser = async (userId) => {
+    if (!window.confirm('Delete this user?')) return;
+    try {
+        await fetch(`${ADMIN_API_URL}/users/${userId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-        setEditingUser(user);
-    };
+        loadUsers();
+    } catch (err) {
+        alert('Failed to delete user');
+    }
+};
 
-    const deleteJob = async (jobId) => {
-        if (!window.confirm('Are you sure you want to delete this job?')) return;
+const startEditUser = (user) => {
+    // Must preserve verification status!
+    setUserForm({
+        username: user.username,
+        email: user.email,
+        password: '',
+        role: user.role,
+        verified: user.verified, // Include this
+        companyName: user.companyName
+    });
+    setEditingUser(user);
+};
 
-        try {
-            const response = await fetch(`${ADMIN_API_URL}/jobs/${jobId}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+const deleteJob = async (jobId) => {
+    if (!window.confirm('Are you sure you want to delete this job?')) return;
 
-            if (!response.ok) throw new Error('Failed to delete job. Please try again.');
+    try {
+        const response = await fetch(`${ADMIN_API_URL}/jobs/${jobId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-            loadJobs();
-        } catch (error) {
-            alert(error.message);
+        if (!response.ok) throw new Error('Failed to delete job. Please try again.');
+
+        loadJobs();
+    } catch (error) {
+        alert(error.message);
+    }
+};
+
+const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+};
+
+const fillSampleData = () => {
+    // Fill job form with sample data
+    setFormData({
+        jobTitle: 'Senior Software Engineer',
+        companyName: isCompanyAdmin ? myCompanyName : 'Google India',
+        jobDescription: 'We are looking for an experienced software engineer to join our team. You will work on cutting-edge technologies and solve complex problems at scale.',
+        applyLink: 'https://careers.google.com/apply/senior-swe',
+        lastDate: '2025-12-31',
+        salary: '1500000'
+    });
+
+    // Fill interview rounds with sample data
+    setInterviewDetails({
+        codingRound: {
+            enabled: true,
+            date: '2025-12-20',
+            time: '10:00 AM',
+            venue: 'Computer Lab 101, Main Building',
+            instructions: 'Solve 3 DSA problems in 90 minutes. Topics: Arrays, Trees, Dynamic Programming'
+        },
+        technicalInterview: {
+            enabled: true,
+            date: '2025-12-22',
+            time: '2:00 PM',
+            venue: 'Virtual - Zoom Link will be shared',
+            topics: 'System Design, React.js, Node.js, Database Design, Microservices'
+        },
+        hrRound: {
+            enabled: true,
+            date: '2025-12-24',
+            time: '11:00 AM',
+            venue: 'HR Office - Room 305',
+            questions: ''
+        },
+        projectTask: {
+            enabled: false,
+            description: '',
+            deadline: '24',
+            requirements: ''
         }
+    });
+
+    setMessage({ text: 'Sample data filled! Ready to post.', type: 'success' });
+    setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+};
+
+const clearForm = () => {
+    setFormData({
+        jobTitle: '',
+        companyName: isCompanyAdmin ? myCompanyName : '',
+        jobDescription: '',
+        applyLink: '',
+        lastDate: '',
+        salary: ''
+    });
+    setInterviewDetails({
+        codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
+        technicalInterview: { enabled: false, date: '', time: '', venue: '', topics: '' },
+        hrRound: { enabled: false, date: '', time: '', venue: '', questions: '' },
+        projectTask: { enabled: false, description: '', deadline: '24', requirements: '' }
+    });
+    setMessage({ text: 'Form cleared!', type: 'success' });
+    setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+};
+
+const fillInterviewSampleData = () => {
+    setInterviewForm({
+        company: isCompanyAdmin ? myCompanyName : 'Microsoft India',
+        date: '2025-12-25',
+        time: '10:00 AM',
+        venue: 'Auditorium, Main Campus',
+        positions: 'Software Engineer, Data Analyst, Product Manager',
+        eligibility: 'B.Tech/M.Tech CSE/IT, CGPA > 7.5'
+    });
+    setMessage({ text: 'Sample interview data filled!', type: 'success' });
+    setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+};
+
+const clearInterviewForm = () => {
+    setInterviewForm({
+        company: isCompanyAdmin ? myCompanyName : '', date: '', time: '', venue: '', positions: '', eligibility: ''
+    });
+    setMessage({ text: 'Interview form cleared!', type: 'success' });
+    setTimeout(() => setMessage({ text: '', type: '' }), 2000);
+};
+
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage({ text: '', type: '' });
+
+    const jobPayload = {
+        title: formData.jobTitle,
+        description: formData.jobDescription,
+        company_name: formData.companyName,
+        apply_link: formData.applyLink,
+        last_date: formData.lastDate,
+        salary: parseInt(formData.salary),
+        interview_details: JSON.stringify(interviewDetails),
+        eligibleBranches: formData.eligibleBranches,
+        eligibleSemesters: formData.eligibleSemesters
     };
 
-    const handleInputChange = (e) => {
-        const { id, value } = e.target;
-        setFormData(prev => ({ ...prev, [id]: value }));
-    };
+    const endpoint = editingJob
+        ? `${ADMIN_API_URL}/jobs/${editingJob.id}`
+        : `${ADMIN_API_URL}/jobs?sendEmails=${emailSettings.masterEmailEnabled && emailSettings.newJobEmailEnabled && sendEmailNotifications}`;
+    const method = editingJob ? 'PUT' : 'POST';
 
-    const fillSampleData = () => {
-        // Fill job form with sample data
-        setFormData({
-            jobTitle: 'Senior Software Engineer',
-            companyName: isCompanyAdmin ? myCompanyName : 'Google India',
-            jobDescription: 'We are looking for an experienced software engineer to join our team. You will work on cutting-edge technologies and solve complex problems at scale.',
-            applyLink: 'https://careers.google.com/apply/senior-swe',
-            lastDate: '2025-12-31',
-            salary: '1500000'
+    try {
+        const response = await fetch(endpoint, {
+            method: method,
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(jobPayload)
         });
 
-        // Fill interview rounds with sample data
-        setInterviewDetails({
-            codingRound: {
-                enabled: true,
-                date: '2025-12-20',
-                time: '10:00 AM',
-                venue: 'Computer Lab 101, Main Building',
-                instructions: 'Solve 3 DSA problems in 90 minutes. Topics: Arrays, Trees, Dynamic Programming'
-            },
-            technicalInterview: {
-                enabled: true,
-                date: '2025-12-22',
-                time: '2:00 PM',
-                venue: 'Virtual - Zoom Link will be shared',
-                topics: 'System Design, React.js, Node.js, Database Design, Microservices'
-            },
-            hrRound: {
-                enabled: true,
-                date: '2025-12-24',
-                time: '11:00 AM',
-                venue: 'HR Office - Room 305',
-                questions: ''
-            },
-            projectTask: {
-                enabled: false,
-                description: '',
-                deadline: '24',
-                requirements: ''
-            }
-        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to save job');
+        }
 
-        setMessage({ text: 'Sample data filled! Ready to post.', type: 'success' });
-        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
-    };
-
-    const clearForm = () => {
+        setMessage({ text: editingJob ? 'Job updated successfully!' : 'Job posted successfully!', type: 'success' });
         setFormData({
-            jobTitle: '',
-            companyName: isCompanyAdmin ? myCompanyName : '',
-            jobDescription: '',
-            applyLink: '',
-            lastDate: '',
-            salary: ''
+            jobTitle: '', companyName: '', jobDescription: '', applyLink: '', lastDate: '', salary: '',
+            eligibleBranches: [], eligibleSemesters: []
         });
         setInterviewDetails({
             codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
@@ -565,892 +682,721 @@ const AdminDashboard = () => {
             hrRound: { enabled: false, date: '', time: '', venue: '', questions: '' },
             projectTask: { enabled: false, description: '', deadline: '24', requirements: '' }
         });
-        setMessage({ text: 'Form cleared!', type: 'success' });
-        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
-    };
+        setEditingJob(null);
+        loadJobs();
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    } catch (error) {
+        setMessage({ text: error.message, type: 'error' });
+    }
+};
 
-    const fillInterviewSampleData = () => {
-        setInterviewForm({
-            company: isCompanyAdmin ? myCompanyName : 'Microsoft India',
-            date: '2025-12-25',
-            time: '10:00 AM',
-            venue: 'Auditorium, Main Campus',
-            positions: 'Software Engineer, Data Analyst, Product Manager',
-            eligibility: 'B.Tech/M.Tech CSE/IT, CGPA > 7.5'
-        });
-        setMessage({ text: 'Sample interview data filled!', type: 'success' });
-        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
-    };
-
-    const clearInterviewForm = () => {
-        setInterviewForm({
-            company: isCompanyAdmin ? myCompanyName : '', date: '', time: '', venue: '', positions: '', eligibility: ''
-        });
-        setMessage({ text: 'Interview form cleared!', type: 'success' });
-        setTimeout(() => setMessage({ text: '', type: '' }), 2000);
-    };
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessage({ text: '', type: '' });
-
-        const jobPayload = {
-            title: formData.jobTitle,
-            description: formData.jobDescription,
-            company_name: formData.companyName,
-            apply_link: formData.applyLink,
-            last_date: formData.lastDate,
-            salary: parseInt(formData.salary),
-            interview_details: JSON.stringify(interviewDetails),
-            eligibleBranches: formData.eligibleBranches,
-            eligibleSemesters: formData.eligibleSemesters
-        };
-
-        const endpoint = editingJob
-            ? `${ADMIN_API_URL}/jobs/${editingJob.id}`
-            : `${ADMIN_API_URL}/jobs?sendEmails=${emailSettings.masterEmailEnabled && emailSettings.newJobEmailEnabled && sendEmailNotifications}`;
-        const method = editingJob ? 'PUT' : 'POST';
-
+const startEditJob = (job) => {
+    setFormData({
+        jobTitle: job.title,
+        companyName: job.company_name,
+        jobDescription: job.description,
+        applyLink: job.apply_link,
+        lastDate: job.last_date, // format YYYY-MM-DD
+        salary: job.salary,
+        eligibleBranches: job.eligibleBranches || [],
+        eligibleSemesters: job.eligibleSemesters || []
+    });
+    // Parse interview details if they exist
+    if (job.interview_details) {
         try {
-            const response = await fetch(endpoint, {
-                method: method,
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(jobPayload)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to save job');
-            }
-
-            setMessage({ text: editingJob ? 'Job updated successfully!' : 'Job posted successfully!', type: 'success' });
-            setFormData({
-                jobTitle: '', companyName: '', jobDescription: '', applyLink: '', lastDate: '', salary: '',
-                eligibleBranches: [], eligibleSemesters: []
-            });
-            setInterviewDetails({
-                codingRound: { enabled: false, date: '', time: '', venue: '', instructions: '' },
-                technicalInterview: { enabled: false, date: '', time: '', venue: '', topics: '' },
-                hrRound: { enabled: false, date: '', time: '', venue: '', questions: '' },
-                projectTask: { enabled: false, description: '', deadline: '24', requirements: '' }
-            });
-            setEditingJob(null);
-            loadJobs();
-            setTimeout(() => setMessage({ text: '', type: '' }), 3000);
-        } catch (error) {
-            setMessage({ text: error.message, type: 'error' });
+            setInterviewDetails(JSON.parse(job.interview_details));
+        } catch (e) {
+            console.error("Error parsing interview details", e);
         }
-    };
+    }
+    setEditingJob(job);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to form
+};
 
-    const startEditJob = (job) => {
-        setFormData({
-            jobTitle: job.title,
-            companyName: job.company_name,
-            jobDescription: job.description,
-            applyLink: job.apply_link,
-            lastDate: job.last_date, // format YYYY-MM-DD
-            salary: job.salary,
-            eligibleBranches: job.eligibleBranches || [],
-            eligibleSemesters: job.eligibleSemesters || []
-        });
-        // Parse interview details if they exist
-        if (job.interview_details) {
-            try {
-                setInterviewDetails(JSON.parse(job.interview_details));
-            } catch (e) {
-                console.error("Error parsing interview details", e);
-            }
-        }
-        setEditingJob(job);
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to form
-    };
+const startEditInterview = (interview) => {
+    setInterviewForm({
+        company: interview.company,
+        date: interview.date,
+        time: interview.time,
+        venue: interview.venue,
+        positions: interview.positions,
+        eligibility: interview.eligibility
+    });
+    setEditingInterview(interview);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-    const startEditInterview = (interview) => {
-        setInterviewForm({
-            company: interview.company,
-            date: interview.date,
-            time: interview.time,
-            venue: interview.venue,
-            positions: interview.positions,
-            eligibility: interview.eligibility
-        });
-        setEditingInterview(interview);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
 
-    const renderContent = () => {
-        switch (activeTab) {
-            case 'dashboard':
-                return (
-                    <div className="dashboard-overview">
-                        <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
-                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
-                                <i className="fas fa-briefcase" style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
-                                <h3>Total Jobs</h3>
-                                <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{jobs.length}</p>
-                            </div>
-                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
-                                <i className="fas fa-users" style={{ fontSize: '2.5rem', color: 'var(--accent)', marginBottom: '1rem' }}></i>
-                                <h3>Total Users</h3>
-                                <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{users.length}</p>
-                            </div>
-                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
-                                <i className="fas fa-user-shield" style={{ fontSize: '2.5rem', color: '#28a745', marginBottom: '1rem' }}></i>
-                                <h3>Admin Status</h3>
-                                <p style={{ fontSize: '1.2rem', color: '#28a745' }}>Active</p>
-                            </div>
+const renderStudentMonitor = () => (
+    <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h2>Student Monitor</h2>
+            <button className="btn-secondary" onClick={fetchStudentActivity}>
+                <i className="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+
+        {loadingActivity ? <div className="loading-indicator">Loading activity...</div> : (
+            <div className="table-container">
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Branch</th>
+                            <th>Profile Status</th>
+                            <th>Resume Status</th>
+                            <th>Last Active</th>
+                            {isSuperAdmin && <th>Action</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {studentActivity.length === 0 ? (
+                            <tr><td colSpan="7" style={{ textAlign: 'center' }}>No students found.</td></tr>
+                        ) : (
+                            studentActivity.map(student => (
+                                <tr key={student.id}>
+                                    <td style={{ fontWeight: '500' }}>{student.name}</td>
+                                    <td style={{ color: 'var(--text-secondary)' }}>{student.email}</td>
+                                    <td>{student.branch}</td>
+                                    <td>
+                                        {student.profileComplete ?
+                                            <span className="badge badge-success"><i className="fas fa-check-circle"></i> Complete</span> :
+                                            <span className="badge badge-warning"><i className="fas fa-exclamation-circle"></i> Pending</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        {student.hasResume ?
+                                            <span className="badge badge-success"><i className="fas fa-file-pdf"></i> Uploaded</span> :
+                                            <span className="badge badge-danger"><i className="fas fa-times"></i> Missing</span>
+                                        }
+                                    </td>
+                                    <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                        {student.lastLoginDate ? new Date(student.lastLoginDate).toLocaleString() : 'Never'}
+                                    </td>
+                                    {isSuperAdmin && (
+                                        <td>
+                                            {student.hasResume && (
+                                                <button
+                                                    className="action-btn view-btn"
+                                                    onClick={() => viewStudentResume(student.id, student.name)}
+                                                    title="Download Resume"
+                                                >
+                                                    <i className="fas fa-download"></i>
+                                                </button>
+                                            )}
+                                        </td>
+                                    )}
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        )}
+    </div>
+);
+
+const renderContent = () => {
+    switch (activeTab) {
+        case 'students':
+            return renderStudentMonitor();
+        case 'dashboard':
+            return (
+                <div className="dashboard-overview">
+                    <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                        <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
+                            <i className="fas fa-briefcase" style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                            <h3>Total Jobs</h3>
+                            <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{jobs.length}</p>
                         </div>
-
-                        {isSuperAdmin && (
-                            <div className="company-stats-section" style={{ marginBottom: '2.5rem' }}>
-                                <h2 style={{ marginBottom: '1.5rem' }}>Company Performance</h2>
-                                {loadingStats ? (
-                                    <div className="loading-indicator">Loading company statistics...</div>
-                                ) : (
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                                        {companyStats.length === 0 ? <p>No company data available.</p> : companyStats.map((stat, index) => (
-                                            <div key={index} className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)' }}>
-                                                <h4 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--primary)' }}>
-                                                    <i className="fas fa-building" style={{ marginRight: '8px' }}></i>
-                                                    {stat.companyName}
-                                                </h4>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                                    <span style={{ color: 'var(--text-secondary)' }}>Jobs Posted:</span>
-                                                    <span style={{ fontWeight: 'bold' }}>{stat.jobCount}</span>
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                    <span style={{ color: 'var(--text-secondary)' }}>Interviews:</span>
-                                                    <span style={{ fontWeight: 'bold' }}>{stat.interviewCount}</span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Global Email Control - Super Admin Only */}
-                        {/* Global Email Control - Super Admin Only */}
-                        {isSuperAdmin && (
-                            <div style={{ marginBottom: '2.5rem', padding: '1.5rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <h3 style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <i className="fas fa-mail-bulk"></i>
-                                        Email Notification Center
-                                    </h3>
-                                    <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-                                        Manage all system-generated emails. Changes are saved to the server immediately.
-                                    </p>
-                                </div>
-
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-
-                                    {/* Master Switch */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.masterEmailEnabled ? '#22c55e' : '#ef4444'}` }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>🚨 Master Switch</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
-                                                    {emailSettings.masterEmailEnabled ? 'System emails are ACTIVE' : 'ALL emails are BLOCKED'}
-                                                </p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.masterEmailEnabled}
-                                                onChange={() => toggleEmailSetting('masterEmailEnabled', emailSettings.masterEmailEnabled)}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* New Job Alerts */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>📢 New Job Alerts</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Emails to students when jobs are posted</p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.newJobEmailEnabled}
-                                                onChange={() => toggleEmailSetting('newJobEmailEnabled', emailSettings.newJobEmailEnabled)}
-                                                disabled={!emailSettings.masterEmailEnabled}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Status Updates */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>📝 Status Updates</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Shortlisted, Selected, Rejected emails</p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.statusUpdateEmailEnabled}
-                                                onChange={() => toggleEmailSetting('statusUpdateEmailEnabled', emailSettings.statusUpdateEmailEnabled)}
-                                                disabled={!emailSettings.masterEmailEnabled}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Account Emails */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>👤 Account Emails</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Welcome, Password Reset, Verification</p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.accountEmailEnabled}
-                                                onChange={() => toggleEmailSetting('accountEmailEnabled', emailSettings.accountEmailEnabled)}
-                                                disabled={!emailSettings.masterEmailEnabled}
-                                            />
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="recent-activity">
-                            <h2>Recent Jobs</h2>
-                            <div className="table-responsive surface-glow" style={{ marginTop: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr><th>Title</th><th>Company</th><th>Date</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        {jobs.slice(0, 5).map(job => (
-                                            <tr key={job.id}>
-                                                <td>{job.title}</td>
-                                                <td>{job.company_name}</td>
-                                                <td>{new Date(job.last_date).toLocaleDateString()}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
+                            <i className="fas fa-users" style={{ fontSize: '2.5rem', color: 'var(--accent)', marginBottom: '1rem' }}></i>
+                            <h3>Total Users</h3>
+                            <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{users.length}</p>
+                        </div>
+                        <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
+                            <i className="fas fa-user-shield" style={{ fontSize: '2.5rem', color: '#28a745', marginBottom: '1rem' }}></i>
+                            <h3>Admin Status</h3>
+                            <p style={{ fontSize: '1.2rem', color: '#28a745' }}>Active</p>
                         </div>
                     </div>
-                );
-            case 'jobs':
-                return (
-                    <>
-                        <section id="jobs-section" className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className={editingJob ? "fas fa-edit" : "fas fa-plus-circle"}></i> {editingJob ? 'Edit Job' : 'Post New Job'}</h3>
-                            </div>
-                            {message.text && (
-                                <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ display: 'flex' }}>
-                                    {message.text}
+
+                    {isSuperAdmin && (
+                        <div className="company-stats-section" style={{ marginBottom: '2.5rem' }}>
+                            <h2 style={{ marginBottom: '1.5rem' }}>Company Performance</h2>
+                            {loadingStats ? (
+                                <div className="loading-indicator">Loading company statistics...</div>
+                            ) : (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                                    {companyStats.length === 0 ? <p>No company data available.</p> : companyStats.map((stat, index) => (
+                                        <div key={index} className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)' }}>
+                                            <h4 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--primary)' }}>
+                                                <i className="fas fa-building" style={{ marginRight: '8px' }}></i>
+                                                {stat.companyName}
+                                            </h4>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                                <span style={{ color: 'var(--text-secondary)' }}>Jobs Posted:</span>
+                                                <span style={{ fontWeight: 'bold' }}>{stat.jobCount}</span>
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <span style={{ color: 'var(--text-secondary)' }}>Interviews:</span>
+                                                <span style={{ fontWeight: 'bold' }}>{stat.interviewCount}</span>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
-                            <form id="jobForm" onSubmit={handleSubmit}>
-                                <div className="form-grid">
-                                    <div className="form-group">
-                                        <label htmlFor="jobTitle">Job Title</label>
-                                        <input type="text" id="jobTitle" className="form-control" required value={formData.jobTitle} onChange={handleInputChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="companyName">Company Name</label>
-                                        <input
-                                            type="text"
-                                            id="companyName"
-                                            className="form-control"
-                                            required
-                                            value={formData.companyName}
-                                            onChange={handleInputChange}
-                                            readOnly={isCompanyAdmin}
-                                            style={isCompanyAdmin ? { backgroundColor: 'rgba(255,255,255,0.1)', cursor: 'not-allowed' } : {}}
-                                        />
-                                    </div>
-                                    <div className="form-group full-width">
-                                        <label htmlFor="jobDescription">Job Description</label>
-                                        <textarea id="jobDescription" className="form-control" rows="4" required value={formData.jobDescription} onChange={handleInputChange}></textarea>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="applyLink">Apply Link</label>
-                                        <input type="url" id="applyLink" className="form-control" required value={formData.applyLink} onChange={handleInputChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="lastDate">Last Date to Apply</label>
-                                        <input type="date" id="lastDate" className="form-control" required value={formData.lastDate} onChange={handleInputChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="salary">Salary (₹ per annum)</label>
-                                        <input type="number" id="salary" className="form-control" min="0" required value={formData.salary} onChange={handleInputChange} />
-                                    </div>
-                                </div>
+                        </div>
+                    )}
 
-                                {/* Interview Rounds Section */}
-                                <InterviewRoundsForm
-                                    interviewDetails={interviewDetails}
-                                    setInterviewDetails={setInterviewDetails}
-                                />
+                    {/* Global Email Control - Super Admin Only */}
+                    {/* Global Email Control - Super Admin Only */}
+                    {isSuperAdmin && (
+                        <div style={{ marginBottom: '2.5rem', padding: '1.5rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <h3 style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <i className="fas fa-mail-bulk"></i>
+                                    Email Notification Center
+                                </h3>
+                                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+                                    Manage all system-generated emails. Changes are saved to the server immediately.
+                                </p>
+                            </div>
 
-                                {/* Eligibility Criteria Section */}
-                                <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '12px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
-                                    <h4 style={{ color: '#fbbf24', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <i className="fas fa-filter"></i> Eligibility Criteria
-                                    </h4>
-                                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
-                                        Enable specific branches and their corresponding semesters/years.
-                                    </p>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
 
-                                    <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
-                                        {/* IMCA Selection */}
-                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox"
-                                                    checked={formData.eligibleBranches?.includes('IMCA')}
-                                                    onChange={(e) => {
-                                                        const branches = formData.eligibleBranches || [];
-                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'IMCA'] });
-                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'IMCA') });
-                                                    }}
-                                                />
-                                                IMCA (Integrated MCA)
-                                            </label>
-                                            {formData.eligibleBranches?.includes('IMCA') && (
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
-                                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(sem => (
-                                                        <label key={`imca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
-                                                            <input type="checkbox"
-                                                                checked={formData.eligibleSemesters?.includes(sem)}
-                                                                onChange={(e) => {
-                                                                    const sems = formData.eligibleSemesters || [];
-                                                                    if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
-                                                                    else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
-                                                                }}
-                                                            />
-                                                            Sem {sem}
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* MCA Selection */}
-                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a78bfa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox"
-                                                    checked={formData.eligibleBranches?.includes('MCA')}
-                                                    onChange={(e) => {
-                                                        const branches = formData.eligibleBranches || [];
-                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'MCA'] });
-                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'MCA') });
-                                                    }}
-                                                />
-                                                MCA (2 Years)
-                                            </label>
-                                            {formData.eligibleBranches?.includes('MCA') && (
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
-                                                    {[1, 2, 3, 4].map(sem => (
-                                                        <label key={`mca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
-                                                            <input type="checkbox"
-                                                                checked={formData.eligibleSemesters?.includes(sem)}
-                                                                onChange={(e) => {
-                                                                    const sems = formData.eligibleSemesters || [];
-                                                                    if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
-                                                                    else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
-                                                                }}
-                                                            />
-                                                            Sem {sem}
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* BCA Selection */}
-                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox"
-                                                    checked={formData.eligibleBranches?.includes('BCA')}
-                                                    onChange={(e) => {
-                                                        const branches = formData.eligibleBranches || [];
-                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'BCA'] });
-                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'BCA') });
-                                                    }}
-                                                />
-                                                BCA (3 Years)
-                                            </label>
-                                            {formData.eligibleBranches?.includes('BCA') && (
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginLeft: '1.5rem' }}>
-                                                    {[
-                                                        { label: '1st Year (Sem 1-2)', sems: [1, 2] },
-                                                        { label: '2nd Year (Sem 3-4)', sems: [3, 4] },
-                                                        { label: '3rd Year (Sem 5-6)', sems: [5, 6] }
-                                                    ].map(year => (
-                                                        <label key={year.label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
-                                                            <input type="checkbox"
-                                                                checked={year.sems.every(s => formData.eligibleSemesters?.includes(s))}
-                                                                onChange={(e) => {
-                                                                    let sems = formData.eligibleSemesters || [];
-                                                                    if (e.target.checked) {
-                                                                        const toAdd = year.sems.filter(s => !sems.includes(s));
-                                                                        setFormData({ ...formData, eligibleSemesters: [...sems, ...toAdd] });
-                                                                    } else {
-                                                                        setFormData({ ...formData, eligibleSemesters: sems.filter(s => !year.sems.includes(s)) });
-                                                                    }
-                                                                }}
-                                                            />
-                                                            {year.label}
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Email Notification Toggle */}
-                                <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                {/* Master Switch */}
+                                <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.masterEmailEnabled ? '#22c55e' : '#ef4444'}` }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
-                                            <label style={{ fontWeight: '600', color: 'white', marginBottom: '0.25rem', display: 'block' }}>
-                                                <i className="fas fa-envelope" style={{ marginRight: '0.5rem' }}></i>
-                                                Email Notifications
-                                            </label>
-                                            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-                                                Send email alerts to all students when a new job is posted
+                                            <h4 style={{ margin: 0 }}>🚨 Master Switch</h4>
+                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
+                                                {emailSettings.masterEmailEnabled ? 'System emails are ACTIVE' : 'ALL emails are BLOCKED'}
                                             </p>
                                         </div>
-                                        <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px' }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={sendEmailNotifications}
-                                                onChange={(e) => setSendEmailNotifications(e.target.checked)}
-                                                style={{ opacity: 0, width: 0, height: 0 }}
-                                            />
-                                            <span style={{
-                                                position: 'absolute',
-                                                cursor: 'pointer',
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                backgroundColor: sendEmailNotifications ? '#22c55e' : '#64748b',
-                                                transition: '0.4s',
-                                                borderRadius: '30px'
-                                            }}>
-                                                <span style={{
-                                                    position: 'absolute',
-                                                    content: '""',
-                                                    height: '22px',
-                                                    width: '22px',
-                                                    left: sendEmailNotifications ? '34px' : '4px',
-                                                    bottom: '4px',
-                                                    backgroundColor: 'white',
-                                                    transition: '0.4s',
-                                                    borderRadius: '50%'
-                                                }}></span>
-                                            </span>
-                                        </label>
+                                        <ToggleSwitch
+                                            checked={emailSettings.masterEmailEnabled}
+                                            onChange={() => toggleEmailSetting('masterEmailEnabled', emailSettings.masterEmailEnabled)}
+                                        />
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
-                                    <button type="button" className="btn btn-secondary" onClick={fillSampleData}>
-                                        <i className="fas fa-magic"></i> Fill Sample
-                                    </button>
-                                    <button type="button" className="btn btn-warning" onClick={() => { clearForm(); setEditingJob(null); }}>
-                                        <i className="fas fa-eraser"></i> Clear
-                                    </button>
-                                    <button type="submit" className="btn btn-primary">
-                                        <i className="fas fa-save"></i> {editingJob ? 'Update Job' : 'Post Job'}
-                                    </button>
-                                    {editingJob && (
-                                        <button type="button" className="btn btn-secondary" onClick={() => { setEditingJob(null); clearForm(); }}>
-                                            Cancel
-                                        </button>
-                                    )}
+                                {/* New Job Alerts */}
+                                <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div>
+                                            <h4 style={{ margin: 0 }}>📢 New Job Alerts</h4>
+                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Emails to students when jobs are posted</p>
+                                        </div>
+                                        <ToggleSwitch
+                                            checked={emailSettings.newJobEmailEnabled}
+                                            onChange={() => toggleEmailSetting('newJobEmailEnabled', emailSettings.newJobEmailEnabled)}
+                                            disabled={!emailSettings.masterEmailEnabled}
+                                        />
+                                    </div>
                                 </div>
-                            </form>
-                        </section>
 
-                        <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
+                                {/* Status Updates */}
+                                <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div>
+                                            <h4 style={{ margin: 0 }}>📝 Status Updates</h4>
+                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Shortlisted, Selected, Rejected emails</p>
+                                        </div>
+                                        <ToggleSwitch
+                                            checked={emailSettings.statusUpdateEmailEnabled}
+                                            onChange={() => toggleEmailSetting('statusUpdateEmailEnabled', emailSettings.statusUpdateEmailEnabled)}
+                                            disabled={!emailSettings.masterEmailEnabled}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Account Emails */}
+                                <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div>
+                                            <h4 style={{ margin: 0 }}>👤 Account Emails</h4>
+                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Welcome, Password Reset, Verification</p>
+                                        </div>
+                                        <ToggleSwitch
+                                            checked={emailSettings.accountEmailEnabled}
+                                            onChange={() => toggleEmailSetting('accountEmailEnabled', emailSettings.accountEmailEnabled)}
+                                            disabled={!emailSettings.masterEmailEnabled}
+                                        />
+                                    </div>
+                                </div>
+
                             </div>
-                            {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
-                            {!loadingJobs && (
-                                <div className="table-responsive">
-                                    {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
-                                        <table id="jobsTable">
-                                            <thead>
-                                                <tr><th>Title</th><th>Company</th><th>Last Date</th><th>Salary</th><th>Actions</th></tr>
-                                            </thead>
-                                            <tbody id="jobsList">
-                                                {jobs.map(job => (
-                                                    <tr key={job.id}>
-                                                        <td>{job.title}</td>
-                                                        <td>{job.company_name}</td>
-                                                        <td>{new Date(job.last_date).toLocaleDateString('en-IN')}</td>
-                                                        <td>₹{job.salary.toLocaleString()}</td>
-                                                        <td className="action-btns">
-                                                            {(!isCompanyAdmin || job.company_name === myCompanyName) ? (
-                                                                <>
-                                                                    <button className="btn btn-secondary" onClick={() => startEditJob(job)} style={{ marginRight: '0.5rem' }}>
-                                                                        <i className="fas fa-edit"></i>
-                                                                    </button>
-                                                                    <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
-                                                                        <i className="fas fa-trash"></i>
-                                                                    </button>
-                                                                </>
-                                                            ) : (
-                                                                <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
-                                                            )}
-                                                        </td>
-                                                    </tr>
+                        </div>
+                    )}
+
+                    <div className="recent-activity">
+                        <h2>Recent Jobs</h2>
+                        <div className="table-responsive surface-glow" style={{ marginTop: '1rem' }}>
+                            <table className="table">
+                                <thead>
+                                    <tr><th>Title</th><th>Company</th><th>Date</th></tr>
+                                </thead>
+                                <tbody>
+                                    {jobs.slice(0, 5).map(job => (
+                                        <tr key={job.id}>
+                                            <td>{job.title}</td>
+                                            <td>{job.company_name}</td>
+                                            <td>{new Date(job.last_date).toLocaleDateString()}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+        case 'jobs':
+            return (
+                <>
+                    <section id="jobs-section" className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className={editingJob ? "fas fa-edit" : "fas fa-plus-circle"}></i> {editingJob ? 'Edit Job' : 'Post New Job'}</h3>
+                        </div>
+                        {message.text && (
+                            <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ display: 'flex' }}>
+                                {message.text}
+                            </div>
+                        )}
+                        <form id="jobForm" onSubmit={handleSubmit}>
+                            <div className="form-grid">
+                                <div className="form-group">
+                                    <label htmlFor="jobTitle">Job Title</label>
+                                    <input type="text" id="jobTitle" className="form-control" required value={formData.jobTitle} onChange={handleInputChange} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="companyName">Company Name</label>
+                                    <input
+                                        type="text"
+                                        id="companyName"
+                                        className="form-control"
+                                        required
+                                        value={formData.companyName}
+                                        onChange={handleInputChange}
+                                        readOnly={isCompanyAdmin}
+                                        style={isCompanyAdmin ? { backgroundColor: 'rgba(255,255,255,0.1)', cursor: 'not-allowed' } : {}}
+                                    />
+                                </div>
+                                <div className="form-group full-width">
+                                    <label htmlFor="jobDescription">Job Description</label>
+                                    <textarea id="jobDescription" className="form-control" rows="4" required value={formData.jobDescription} onChange={handleInputChange}></textarea>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="applyLink">Apply Link</label>
+                                    <input type="url" id="applyLink" className="form-control" required value={formData.applyLink} onChange={handleInputChange} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="lastDate">Last Date to Apply</label>
+                                    <input type="date" id="lastDate" className="form-control" required value={formData.lastDate} onChange={handleInputChange} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="salary">Salary (₹ per annum)</label>
+                                    <input type="number" id="salary" className="form-control" min="0" required value={formData.salary} onChange={handleInputChange} />
+                                </div>
+                            </div>
+
+                            {/* Interview Rounds Section */}
+                            <InterviewRoundsForm
+                                interviewDetails={interviewDetails}
+                                setInterviewDetails={setInterviewDetails}
+                            />
+
+                            {/* Eligibility Criteria Section */}
+                            <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '12px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
+                                <h4 style={{ color: '#fbbf24', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <i className="fas fa-filter"></i> Eligibility Criteria
+                                </h4>
+                                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
+                                    Enable specific branches and their corresponding semesters/years.
+                                </p>
+
+                                <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
+                                    {/* IMCA Selection */}
+                                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                            <input type="checkbox"
+                                                checked={formData.eligibleBranches?.includes('IMCA')}
+                                                onChange={(e) => {
+                                                    const branches = formData.eligibleBranches || [];
+                                                    if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'IMCA'] });
+                                                    else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'IMCA') });
+                                                }}
+                                            />
+                                            IMCA (Integrated MCA)
+                                        </label>
+                                        {formData.eligibleBranches?.includes('IMCA') && (
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
+                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(sem => (
+                                                    <label key={`imca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                        <input type="checkbox"
+                                                            checked={formData.eligibleSemesters?.includes(sem)}
+                                                            onChange={(e) => {
+                                                                const sems = formData.eligibleSemesters || [];
+                                                                if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
+                                                                else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
+                                                            }}
+                                                        />
+                                                        Sem {sem}
+                                                    </label>
                                                 ))}
-                                            </tbody>
-                                        </table>
-                                    )}
-                                </div>
-                            )}
-                        </section>
-                    </>
-                );
-            case 'users':
-                return (
-                    <>
-                        {!isCompanyAdmin && (
-                            <section className="card surface-glow">
-                                <div className="card-header">
-                                    <h3><i className="fas fa-user-plus"></i> {editingUser ? 'Edit User' : 'Add New User'}</h3>
-                                </div>
-                                <form onSubmit={handleUserSubmit}>
-                                    <div className="form-grid">
-                                        <div className="form-group">
-                                            <label>Username</label>
-                                            <input type="text" className="form-control" required value={userForm.username} onChange={e => setUserForm({ ...userForm, username: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Email</label>
-                                            <input type="email" className="form-control" required value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Password {editingUser && '(leave blank to keep current)'}</label>
-                                            <input type="password" className="form-control" required={!editingUser} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Role</label>
-                                            <select className="form-control" value={userForm.role} onChange={e => {
-                                                const newRole = e.target.value;
-                                                setUserForm(prev => ({
-                                                    ...prev,
-                                                    role: newRole,
-                                                    companyName: newRole === 'COMPANY_ADMIN' ? prev.companyName : ''
-                                                }));
-                                            }}>
-                                                <option value="USER">USER</option>
-                                                <option value="ADMIN">ADMIN</option>
-                                                <option value="SUPER_ADMIN">SUPER ADMIN</option>
-                                                <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
-                                            </select>
-                                        </div>
-                                        {userForm.role === 'COMPANY_ADMIN' && (
-                                            <div className="form-group">
-                                                <label>Company Name (for Company Admin)</label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    required
-                                                    value={userForm.companyName || ''}
-                                                    onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
-                                                    placeholder="e.g. Google, Microsoft"
-                                                />
                                             </div>
                                         )}
                                     </div>
-                                    <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
-                                    {editingUser && <button type="button" className="btn btn-secondary" onClick={() => { setEditingUser(null); setUserForm({ username: '', email: '', password: '', role: 'USER' }); }}>Cancel</button>}
-                                </form>
-                            </section>
-                        )}
 
-                        <section id="users-section" className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-users"></i> Registered Users</h3>
-                            </div>
-                            {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
-                            {!loadingUsers && (
-                                <div className="table-responsive">
-                                    {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
-                                        <table id="usersTable">
-                                            <thead>
-                                                <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Company</th><th>Actions</th></tr>
-                                            </thead>
-                                            <tbody id="userList">
-                                                {users.map(user => (
-                                                    <tr key={user.id}>
-                                                        <td>{user.id}</td>
-                                                        <td>{user.username}</td>
-                                                        <td>{user.email}</td>
-                                                        <td>{user.role}</td>
-                                                        <td>{user.companyName || '-'}</td>
-                                                        <td className="action-btns">
-                                                            {!isCompanyAdmin ? (
-                                                                <>
-                                                                    <button className="btn btn-secondary" onClick={() => startEditUser(user)}>
-                                                                        <i className="fas fa-edit"></i>
-                                                                    </button>
-                                                                    <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>
-                                                                        <i className="fas fa-trash"></i>
-                                                                    </button>
-                                                                </>
-                                                            ) : (
-                                                                <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
-                                                            )}
-                                                        </td>
-                                                    </tr>
+                                    {/* MCA Selection */}
+                                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a78bfa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                            <input type="checkbox"
+                                                checked={formData.eligibleBranches?.includes('MCA')}
+                                                onChange={(e) => {
+                                                    const branches = formData.eligibleBranches || [];
+                                                    if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'MCA'] });
+                                                    else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'MCA') });
+                                                }}
+                                            />
+                                            MCA (2 Years)
+                                        </label>
+                                        {formData.eligibleBranches?.includes('MCA') && (
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
+                                                {[1, 2, 3, 4].map(sem => (
+                                                    <label key={`mca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                        <input type="checkbox"
+                                                            checked={formData.eligibleSemesters?.includes(sem)}
+                                                            onChange={(e) => {
+                                                                const sems = formData.eligibleSemesters || [];
+                                                                if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
+                                                                else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
+                                                            }}
+                                                        />
+                                                        Sem {sem}
+                                                    </label>
                                                 ))}
-                                            </tbody>
-                                        </table>
-                                    )}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* BCA Selection */}
+                                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                            <input type="checkbox"
+                                                checked={formData.eligibleBranches?.includes('BCA')}
+                                                onChange={(e) => {
+                                                    const branches = formData.eligibleBranches || [];
+                                                    if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'BCA'] });
+                                                    else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'BCA') });
+                                                }}
+                                            />
+                                            BCA (3 Years)
+                                        </label>
+                                        {formData.eligibleBranches?.includes('BCA') && (
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginLeft: '1.5rem' }}>
+                                                {[
+                                                    { label: '1st Year (Sem 1-2)', sems: [1, 2] },
+                                                    { label: '2nd Year (Sem 3-4)', sems: [3, 4] },
+                                                    { label: '3rd Year (Sem 5-6)', sems: [5, 6] }
+                                                ].map(year => (
+                                                    <label key={year.label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                        <input type="checkbox"
+                                                            checked={year.sems.every(s => formData.eligibleSemesters?.includes(s))}
+                                                            onChange={(e) => {
+                                                                let sems = formData.eligibleSemesters || [];
+                                                                if (e.target.checked) {
+                                                                    const toAdd = year.sems.filter(s => !sems.includes(s));
+                                                                    setFormData({ ...formData, eligibleSemesters: [...sems, ...toAdd] });
+                                                                } else {
+                                                                    setFormData({ ...formData, eligibleSemesters: sems.filter(s => !year.sems.includes(s)) });
+                                                                }
+                                                            }}
+                                                        />
+                                                        {year.label}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            )}
-                        </section>
-                    </>
-                );
-            case 'applications':
-                return (
+                            </div>
+
+                            {/* Email Notification Toggle */}
+                            <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div>
+                                        <label style={{ fontWeight: '600', color: 'white', marginBottom: '0.25rem', display: 'block' }}>
+                                            <i className="fas fa-envelope" style={{ marginRight: '0.5rem' }}></i>
+                                            Email Notifications
+                                        </label>
+                                        <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+                                            Send email alerts to all students when a new job is posted
+                                        </p>
+                                    </div>
+                                    <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={sendEmailNotifications}
+                                            onChange={(e) => setSendEmailNotifications(e.target.checked)}
+                                            style={{ opacity: 0, width: 0, height: 0 }}
+                                        />
+                                        <span style={{
+                                            position: 'absolute',
+                                            cursor: 'pointer',
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            backgroundColor: sendEmailNotifications ? '#22c55e' : '#64748b',
+                                            transition: '0.4s',
+                                            borderRadius: '30px'
+                                        }}>
+                                            <span style={{
+                                                position: 'absolute',
+                                                content: '""',
+                                                height: '22px',
+                                                width: '22px',
+                                                left: sendEmailNotifications ? '34px' : '4px',
+                                                bottom: '4px',
+                                                backgroundColor: 'white',
+                                                transition: '0.4s',
+                                                borderRadius: '50%'
+                                            }}></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                                <button type="button" className="btn btn-secondary" onClick={fillSampleData}>
+                                    <i className="fas fa-magic"></i> Fill Sample
+                                </button>
+                                <button type="button" className="btn btn-warning" onClick={() => { clearForm(); setEditingJob(null); }}>
+                                    <i className="fas fa-eraser"></i> Clear
+                                </button>
+                                <button type="submit" className="btn btn-primary">
+                                    <i className="fas fa-save"></i> {editingJob ? 'Update Job' : 'Post Job'}
+                                </button>
+                                {editingJob && (
+                                    <button type="button" className="btn btn-secondary" onClick={() => { setEditingJob(null); clearForm(); }}>
+                                        Cancel
+                                    </button>
+                                )}
+                            </div>
+                        </form>
+                    </section>
+
                     <section className="card surface-glow">
                         <div className="card-header">
-                            <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
+                            <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
                         </div>
-                        {loadingApplications ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
-                        ) : applications.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Student Name</th>
-                                            <th>Email</th>
-                                            <th>Company</th>
-                                            <th>Job Title</th>
-                                            <th>Applied On</th>
-                                            <th>Resume</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {applications.map(app => (
-                                            <tr key={app.id}>
-                                                <td>{app.applicantName}</td>
-                                                <td>{app.applicantEmail}</td>
-                                                <td>{app.companyName}</td>
-                                                <td>{app.jobTitle}</td>
-                                                <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
-                                                <td>
-                                                    {app.resumePath ? (
-                                                        <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
-                                                            <i className="fas fa-file-pdf"></i> View
-                                                        </a>
-                                                    ) : (
-                                                        <span style={{ color: '#888' }}>No resume</span>
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    <span style={{
-                                                        padding: '0.25rem 0.75rem',
-                                                        borderRadius: '12px',
-                                                        fontSize: '0.85rem',
-                                                        fontWeight: '600',
-                                                        textTransform: 'uppercase',
-                                                        background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
-                                                            app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
-                                                                app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
-                                                                    'rgba(99, 102, 241, 0.2)',
-                                                        color: app.status === 'PENDING' ? '#fbbf24' :
-                                                            app.status === 'SHORTLISTED' ? '#22c55e' :
-                                                                app.status === 'REJECTED' ? '#ef4444' :
-                                                                    'var(--primary)'
-                                                    }}>
-                                                        {app.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                                        <select
-                                                            value={app.status}
-                                                            onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
-                                                            className="form-control"
-                                                            style={{ width: 'auto', padding: '0.5rem' }}
-                                                        >
-                                                            <option value="PENDING">Pending</option>
-                                                            <option value="SHORTLISTED">Shortlist</option>
-                                                            <option value="REJECTED">Reject</option>
-                                                            <option value="SELECTED">Select</option>
-                                                        </select>
-                                                        <button
-                                                            className="btn btn-danger"
-                                                            onClick={() => deleteApplication(app.id)}
-                                                            title="Delete Application"
-                                                        >
-                                                            <i className="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                        {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
+                        {!loadingJobs && (
+                            <div className="table-responsive">
+                                {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
+                                    <table id="jobsTable">
+                                        <thead>
+                                            <tr><th>Title</th><th>Company</th><th>Last Date</th><th>Salary</th><th>Actions</th></tr>
+                                        </thead>
+                                        <tbody id="jobsList">
+                                            {jobs.map(job => (
+                                                <tr key={job.id}>
+                                                    <td>{job.title}</td>
+                                                    <td>{job.company_name}</td>
+                                                    <td>{new Date(job.last_date).toLocaleDateString('en-IN')}</td>
+                                                    <td>₹{job.salary.toLocaleString()}</td>
+                                                    <td className="action-btns">
+                                                        {(!isCompanyAdmin || job.company_name === myCompanyName) ? (
+                                                            <>
+                                                                <button className="btn btn-secondary" onClick={() => startEditJob(job)} style={{ marginRight: '0.5rem' }}>
+                                                                    <i className="fas fa-edit"></i>
+                                                                </button>
+                                                                <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
+                                                                    <i className="fas fa-trash"></i>
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
                             </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No applications yet.</p>
                         )}
                     </section>
-                );
-            case 'interviews':
-                return (
-                    <>
+                </>
+            );
+        case 'users':
+            return (
+                <>
+                    {!isCompanyAdmin && (
                         <section className="card surface-glow">
                             <div className="card-header">
-                                <h3><i className={editingInterview ? "fas fa-edit" : "fas fa-calendar-plus"}></i> {editingInterview ? 'Edit Interview' : 'Post New Interview'}</h3>
+                                <h3><i className="fas fa-user-plus"></i> {editingUser ? 'Edit User' : 'Add New User'}</h3>
                             </div>
-                            <form onSubmit={handleInterviewSubmit}>
+                            <form onSubmit={handleUserSubmit}>
                                 <div className="form-grid">
                                     <div className="form-group">
-                                        <label>Company Name</label>
-                                        <input type="text" className="form-control" required value={interviewForm.company} onChange={e => setInterviewForm({ ...interviewForm, company: e.target.value })} />
+                                        <label>Username</label>
+                                        <input type="text" className="form-control" required value={userForm.username} onChange={e => setUserForm({ ...userForm, username: e.target.value })} />
                                     </div>
                                     <div className="form-group">
-                                        <label>Date</label>
-                                        <input type="date" className="form-control" required value={interviewForm.date} onChange={e => setInterviewForm({ ...interviewForm, date: e.target.value })} />
+                                        <label>Email</label>
+                                        <input type="email" className="form-control" required value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} />
                                     </div>
                                     <div className="form-group">
-                                        <label>Time (e.g., 10:00 AM - 2:00 PM)</label>
-                                        <input type="text" className="form-control" required value={interviewForm.time} onChange={e => setInterviewForm({ ...interviewForm, time: e.target.value })} />
+                                        <label>Password {editingUser && '(leave blank to keep current)'}</label>
+                                        <input type="password" className="form-control" required={!editingUser} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} />
                                     </div>
                                     <div className="form-group">
-                                        <label>Venue / Mode</label>
-                                        <input type="text" className="form-control" required value={interviewForm.venue} onChange={e => setInterviewForm({ ...interviewForm, venue: e.target.value })} />
+                                        <label>Role</label>
+                                        <select className="form-control" value={userForm.role} onChange={e => {
+                                            const newRole = e.target.value;
+                                            setUserForm(prev => ({
+                                                ...prev,
+                                                role: newRole,
+                                                companyName: newRole === 'COMPANY_ADMIN' ? prev.companyName : ''
+                                            }));
+                                        }}>
+                                            <option value="USER">USER</option>
+                                            <option value="ADMIN">ADMIN</option>
+                                            <option value="SUPER_ADMIN">SUPER ADMIN</option>
+                                            <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
+                                        </select>
                                     </div>
-                                    <div className="form-group full-width">
-                                        <label>Positions (comma separated)</label>
-                                        <input type="text" className="form-control" required value={interviewForm.positions} onChange={e => setInterviewForm({ ...interviewForm, positions: e.target.value })} />
-                                    </div>
-                                    <div className="form-group full-width">
-                                        <label>Eligibility (e.g., CGPA &gt; 7.0)</label>
-                                        <input type="text" className="form-control" required value={interviewForm.eligibility} onChange={e => setInterviewForm({ ...interviewForm, eligibility: e.target.value })} />
-                                    </div>
-                                </div>
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
-                                    <button type="button" className="btn btn-secondary" onClick={fillInterviewSampleData}>
-                                        <i className="fas fa-magic"></i> Fill Sample
-                                    </button>
-                                    <button type="button" className="btn btn-warning" onClick={() => { clearInterviewForm(); setEditingInterview(null); }}>
-                                        <i className="fas fa-eraser"></i> Clear
-                                    </button>
-                                    <button type="submit" className="btn btn-primary">
-                                        <i className="fas fa-save"></i> {editingInterview ? 'Update Interview' : 'Post Interview'}
-                                    </button>
-                                    {editingInterview && (
-                                        <button type="button" className="btn btn-secondary" onClick={() => { setEditingInterview(null); clearInterviewForm(); }}>
-                                            Cancel
-                                        </button>
+                                    {userForm.role === 'COMPANY_ADMIN' && (
+                                        <div className="form-group">
+                                            <label>Company Name (for Company Admin)</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                required
+                                                value={userForm.companyName || ''}
+                                                onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
+                                                placeholder="e.g. Google, Microsoft"
+                                            />
+                                        </div>
                                     )}
                                 </div>
+                                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
+                                {editingUser && <button type="button" className="btn btn-secondary" onClick={() => { setEditingUser(null); setUserForm({ username: '', email: '', password: '', role: 'USER' }); }}>Cancel</button>}
                             </form>
                         </section>
+                    )}
 
-                        <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-calendar-check"></i> Scheduled Interviews</h3>
-                            </div>
-                            <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr><th>Company</th><th>Date</th><th>Venue</th><th>Actions</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        {interviews.map(interview => (
-                                            <tr key={interview.id}>
-                                                <td>{interview.company}</td>
-                                                <td>{new Date(interview.date).toLocaleDateString()}</td>
-                                                <td>{interview.venue}</td>
-                                                <td className="action-btns">
-                                                    {(!isCompanyAdmin || interview.company === myCompanyName) ? (
-                                                        <>
-                                                            <button className="btn btn-secondary" onClick={() => startEditInterview(interview)} style={{ marginRight: '0.5rem' }}>
-                                                                <i className="fas fa-edit"></i>
-                                                            </button>
-                                                            <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
-                                                                <i className="fas fa-trash"></i>
-                                                            </button>
-                                                        </>
-                                                    ) : (
-                                                        <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </>
-                );
-            case 'interview-applications':
-                return (
-                    <section className="card surface-glow">
+                    <section id="users-section" className="card surface-glow">
                         <div className="card-header">
-                            <h3><i className="fas fa-user-check"></i> Interview Drive Applications</h3>
+                            <h3><i className="fas fa-users"></i> Registered Users</h3>
                         </div>
-                        {loadingInterviewApps ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
-                        ) : interviewApplications.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Applicant Name</th>
-                                            <th>Company</th>
-                                            <th>Date</th>
-                                            <th>Resume</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {interviewApplications.map(app => (
-                                            <tr key={app.id}>
-                                                <td>
-                                                    {app.applicantName}
-                                                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{app.applicantEmail}</div>
-                                                </td>
-                                                <td>{app.companyName}</td>
-                                                <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
-                                                <td>
+                        {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
+                        {!loadingUsers && (
+                            <div className="table-responsive">
+                                {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
+                                    <table id="usersTable">
+                                        <thead>
+                                            <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Company</th><th>Actions</th></tr>
+                                        </thead>
+                                        <tbody id="userList">
+                                            {users.map(user => (
+                                                <tr key={user.id}>
+                                                    <td>{user.id}</td>
+                                                    <td>{user.username}</td>
+                                                    <td>{user.email}</td>
+                                                    <td>{user.role}</td>
+                                                    <td>{user.companyName || '-'}</td>
+                                                    <td className="action-btns">
+                                                        {!isCompanyAdmin ? (
+                                                            <>
+                                                                <button className="btn btn-secondary" onClick={() => startEditUser(user)}>
+                                                                    <i className="fas fa-edit"></i>
+                                                                </button>
+                                                                <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>
+                                                                    <i className="fas fa-trash"></i>
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
+                        )}
+                    </section>
+                </>
+            );
+        case 'applications':
+            return (
+                <section className="card surface-glow">
+                    <div className="card-header">
+                        <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
+                    </div>
+                    {loadingApplications ? (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
+                    ) : applications.length > 0 ? (
+                        <div className="table-responsive" style={{ padding: '1rem' }}>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Email</th>
+                                        <th>Company</th>
+                                        <th>Job Title</th>
+                                        <th>Applied On</th>
+                                        <th>Resume</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {applications.map(app => (
+                                        <tr key={app.id}>
+                                            <td>{app.applicantName}</td>
+                                            <td>{app.applicantEmail}</td>
+                                            <td>{app.companyName}</td>
+                                            <td>{app.jobTitle}</td>
+                                            <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
+                                            <td>
+                                                {app.resumePath ? (
                                                     <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
-                                                        <i className="fas fa-file-pdf"></i> View Resume
+                                                        <i className="fas fa-file-pdf"></i> View
                                                     </a>
-                                                </td>
-                                                <td>
-                                                    <span style={{
-                                                        padding: '0.25rem 0.75rem',
-                                                        borderRadius: '12px',
-                                                        fontSize: '0.85rem',
-                                                        fontWeight: '600',
-                                                        background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
-                                                            app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
-                                                                app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
-                                                                    'rgba(99, 102, 241, 0.2)',
-                                                        color: app.status === 'PENDING' ? '#fbbf24' :
-                                                            app.status === 'SHORTLISTED' ? '#22c55e' :
-                                                                app.status === 'REJECTED' ? '#ef4444' :
-                                                                    'var(--primary)'
-                                                    }}>
-                                                        {app.status}
-                                                    </span>
-                                                </td>
-                                                <td>
+                                                ) : (
+                                                    <span style={{ color: '#888' }}>No resume</span>
+                                                )}
+                                            </td>
+                                            <td>
+                                                <span style={{
+                                                    padding: '0.25rem 0.75rem',
+                                                    borderRadius: '12px',
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: '600',
+                                                    textTransform: 'uppercase',
+                                                    background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
+                                                        app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
+                                                            app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
+                                                                'rgba(99, 102, 241, 0.2)',
+                                                    color: app.status === 'PENDING' ? '#fbbf24' :
+                                                        app.status === 'SHORTLISTED' ? '#22c55e' :
+                                                            app.status === 'REJECTED' ? '#ef4444' :
+                                                                'var(--primary)'
+                                                }}>
+                                                    {app.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                                                     <select
                                                         value={app.status}
-                                                        onChange={(e) => updateInterviewAppStatus(app.id, e.target.value)}
+                                                        onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
                                                         className="form-control"
                                                         style={{ width: 'auto', padding: '0.5rem' }}
                                                     >
@@ -1459,279 +1405,464 @@ const AdminDashboard = () => {
                                                         <option value="REJECTED">Reject</option>
                                                         <option value="SELECTED">Select</option>
                                                     </select>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No interview applications received yet.</p>
-                        )}
-                    </section>
-                );
-            case 'gallery':
-                return (
+                                                    <button
+                                                        className="btn btn-danger"
+                                                        onClick={() => deleteApplication(app.id)}
+                                                        title="Delete Application"
+                                                    >
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>No applications yet.</p>
+                    )}
+                </section>
+            );
+        case 'interviews':
+            return (
+                <>
                     <section className="card surface-glow">
                         <div className="card-header">
-                            <h3><i className="fas fa-images"></i> Gallery Management</h3>
+                            <h3><i className={editingInterview ? "fas fa-edit" : "fas fa-calendar-plus"}></i> {editingInterview ? 'Edit Interview' : 'Post New Interview'}</h3>
                         </div>
-                        {loadingGallery ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading gallery items...</p>
-                        ) : galleryItems.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Type</th>
-                                            <th>Uploaded By</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {galleryItems.map(item => (
-                                            <tr key={item.id}>
-                                                <td>
-                                                    {item.title}
-                                                    {item.description && <div style={{ fontSize: '0.8rem', color: '#888' }}>{item.description.substring(0, 50)}...</div>}
-                                                </td>
-                                                <td>{item.type}</td>
-                                                <td>{item.uploadedBy}</td>
-                                                <td>
-                                                    <span className={`status-badge status-${item.status.toLowerCase()}`}>
-                                                        {item.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                        <select
-                                                            value={item.status}
-                                                            onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
-                                                            className="form-control"
-                                                            style={{ width: 'auto', padding: '0.25rem' }}
-                                                        >
-                                                            <option value="PENDING">Pending</option>
-                                                            <option value="ACCEPTED">Accept</option>
-                                                            <option value="REJECTED">Reject</option>
-                                                        </select>
-                                                        <button className="btn btn-danger" onClick={() => deleteGalleryItem(item.id)} style={{ padding: '0.25rem 0.5rem' }}>
+                        <form onSubmit={handleInterviewSubmit}>
+                            <div className="form-grid">
+                                <div className="form-group">
+                                    <label>Company Name</label>
+                                    <input type="text" className="form-control" required value={interviewForm.company} onChange={e => setInterviewForm({ ...interviewForm, company: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Date</label>
+                                    <input type="date" className="form-control" required value={interviewForm.date} onChange={e => setInterviewForm({ ...interviewForm, date: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Time (e.g., 10:00 AM - 2:00 PM)</label>
+                                    <input type="text" className="form-control" required value={interviewForm.time} onChange={e => setInterviewForm({ ...interviewForm, time: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Venue / Mode</label>
+                                    <input type="text" className="form-control" required value={interviewForm.venue} onChange={e => setInterviewForm({ ...interviewForm, venue: e.target.value })} />
+                                </div>
+                                <div className="form-group full-width">
+                                    <label>Positions (comma separated)</label>
+                                    <input type="text" className="form-control" required value={interviewForm.positions} onChange={e => setInterviewForm({ ...interviewForm, positions: e.target.value })} />
+                                </div>
+                                <div className="form-group full-width">
+                                    <label>Eligibility (e.g., CGPA &gt; 7.0)</label>
+                                    <input type="text" className="form-control" required value={interviewForm.eligibility} onChange={e => setInterviewForm({ ...interviewForm, eligibility: e.target.value })} />
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                                <button type="button" className="btn btn-secondary" onClick={fillInterviewSampleData}>
+                                    <i className="fas fa-magic"></i> Fill Sample
+                                </button>
+                                <button type="button" className="btn btn-warning" onClick={() => { clearInterviewForm(); setEditingInterview(null); }}>
+                                    <i className="fas fa-eraser"></i> Clear
+                                </button>
+                                <button type="submit" className="btn btn-primary">
+                                    <i className="fas fa-save"></i> {editingInterview ? 'Update Interview' : 'Post Interview'}
+                                </button>
+                                {editingInterview && (
+                                    <button type="button" className="btn btn-secondary" onClick={() => { setEditingInterview(null); clearInterviewForm(); }}>
+                                        Cancel
+                                    </button>
+                                )}
+                            </div>
+                        </form>
+                    </section>
+
+                    <section className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className="fas fa-calendar-check"></i> Scheduled Interviews</h3>
+                        </div>
+                        <div className="table-responsive">
+                            <table className="table">
+                                <thead>
+                                    <tr><th>Company</th><th>Date</th><th>Venue</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody>
+                                    {interviews.map(interview => (
+                                        <tr key={interview.id}>
+                                            <td>{interview.company}</td>
+                                            <td>{new Date(interview.date).toLocaleDateString()}</td>
+                                            <td>{interview.venue}</td>
+                                            <td className="action-btns">
+                                                {(!isCompanyAdmin || interview.company === myCompanyName) ? (
+                                                    <>
+                                                        <button className="btn btn-secondary" onClick={() => startEditInterview(interview)} style={{ marginRight: '0.5rem' }}>
+                                                            <i className="fas fa-edit"></i>
+                                                        </button>
+                                                        <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
                                                             <i className="fas fa-trash"></i>
                                                         </button>
-                                                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem' }}>
-                                                            <i className="fas fa-eye"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No gallery items found.</p>
-                        )}
-                    </section>
-                );
-            case 'companies':
-                const companyAdmins = users.filter(u => u.role === 'COMPANY_ADMIN');
-
-                const toggleCompanyStatus = async (userId) => {
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/users/${userId}/toggle-status`, {
-                            method: 'PUT',
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            setMessage({ text: data.message, type: 'success' });
-                            loadUsers(); // Reload users to get updated status
-                            setTimeout(() => setMessage({ text: '', type: '' }), 3000);
-                        } else {
-                            setMessage({ text: 'Failed to toggle company status', type: 'error' });
-                        }
-                    } catch (error) {
-                        setMessage({ text: 'Error toggling company status', type: 'error' });
-                    }
-                };
-
-                return (
-                    <section className="card surface-glow">
-                        <div className="card-header">
-                            <h3><i className="fas fa-building"></i> Company Management</h3>
-                            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                                Enable or disable company accounts. Disabled companies cannot post jobs or interviews.
-                            </p>
-                        </div>
-                        {loadingUsers ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading companies...</p>
-                        ) : companyAdmins.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Company Name</th>
-                                            <th>Admin Username</th>
-                                            <th>Email</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
+                                                    </>
+                                                ) : (
+                                                    <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
+                                                )}
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {companyAdmins.map(company => (
-                                            <tr key={company.id}>
-                                                <td>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                                        <i className="fas fa-building" style={{ color: 'var(--primary)' }}></i>
-                                                        <strong>{company.companyName || 'N/A'}</strong>
-                                                    </div>
-                                                </td>
-                                                <td>{company.username}</td>
-                                                <td>{company.email}</td>
-                                                <td>
-                                                    <span style={{
-                                                        padding: '0.25rem 0.75rem',
-                                                        borderRadius: '12px',
-                                                        fontSize: '0.85rem',
-                                                        fontWeight: '600',
-                                                        background: company.enabled ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                                                        color: company.enabled ? '#22c55e' : '#ef4444'
-                                                    }}>
-                                                        {company.enabled ? 'Enabled' : 'Disabled'}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        onClick={() => toggleCompanyStatus(company.id)}
-                                                        className="btn"
-                                                        style={{
-                                                            padding: '0.5rem 1rem',
-                                                            background: company.enabled ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                                                            border: `1px solid ${company.enabled ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
-                                                            color: company.enabled ? '#ef4444' : '#22c55e'
-                                                        }}
-                                                    >
-                                                        <i className={`fas fa-${company.enabled ? 'ban' : 'check-circle'}`}></i>
-                                                        {company.enabled ? ' Disable' : ' Enable'}
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No company admins found.</p>
-                        )}
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </section>
-                );
-            default:
-                return <div>Select a tab</div>;
-        }
-    };
+                </>
+            );
+        case 'interview-applications':
+            return (
+                <section className="card surface-glow">
+                    <div className="card-header">
+                        <h3><i className="fas fa-user-check"></i> Interview Drive Applications</h3>
+                    </div>
+                    {loadingInterviewApps ? (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
+                    ) : interviewApplications.length > 0 ? (
+                        <div className="table-responsive" style={{ padding: '1rem' }}>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Applicant Name</th>
+                                        <th>Company</th>
+                                        <th>Date</th>
+                                        <th>Resume</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {interviewApplications.map(app => (
+                                        <tr key={app.id}>
+                                            <td>
+                                                {app.applicantName}
+                                                <div style={{ fontSize: '0.8rem', color: '#888' }}>{app.applicantEmail}</div>
+                                            </td>
+                                            <td>{app.companyName}</td>
+                                            <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
+                                            <td>
+                                                <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                                                    <i className="fas fa-file-pdf"></i> View Resume
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span style={{
+                                                    padding: '0.25rem 0.75rem',
+                                                    borderRadius: '12px',
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: '600',
+                                                    background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
+                                                        app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
+                                                            app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
+                                                                'rgba(99, 102, 241, 0.2)',
+                                                    color: app.status === 'PENDING' ? '#fbbf24' :
+                                                        app.status === 'SHORTLISTED' ? '#22c55e' :
+                                                            app.status === 'REJECTED' ? '#ef4444' :
+                                                                'var(--primary)'
+                                                }}>
+                                                    {app.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <select
+                                                    value={app.status}
+                                                    onChange={(e) => updateInterviewAppStatus(app.id, e.target.value)}
+                                                    className="form-control"
+                                                    style={{ width: 'auto', padding: '0.5rem' }}
+                                                >
+                                                    <option value="PENDING">Pending</option>
+                                                    <option value="SHORTLISTED">Shortlist</option>
+                                                    <option value="REJECTED">Reject</option>
+                                                    <option value="SELECTED">Select</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>No interview applications received yet.</p>
+                    )}
+                </section>
+            );
+        case 'gallery':
+            return (
+                <section className="card surface-glow">
+                    <div className="card-header">
+                        <h3><i className="fas fa-images"></i> Gallery Management</h3>
+                    </div>
+                    {loadingGallery ? (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>Loading gallery items...</p>
+                    ) : galleryItems.length > 0 ? (
+                        <div className="table-responsive" style={{ padding: '1rem' }}>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Uploaded By</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {galleryItems.map(item => (
+                                        <tr key={item.id}>
+                                            <td>
+                                                {item.title}
+                                                {item.description && <div style={{ fontSize: '0.8rem', color: '#888' }}>{item.description.substring(0, 50)}...</div>}
+                                            </td>
+                                            <td>{item.type}</td>
+                                            <td>{item.uploadedBy}</td>
+                                            <td>
+                                                <span className={`status-badge status-${item.status.toLowerCase()}`}>
+                                                    {item.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                    <select
+                                                        value={item.status}
+                                                        onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
+                                                        className="form-control"
+                                                        style={{ width: 'auto', padding: '0.25rem' }}
+                                                    >
+                                                        <option value="PENDING">Pending</option>
+                                                        <option value="ACCEPTED">Accept</option>
+                                                        <option value="REJECTED">Reject</option>
+                                                    </select>
+                                                    <button className="btn btn-danger" onClick={() => deleteGalleryItem(item.id)} style={{ padding: '0.25rem 0.5rem' }}>
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
+                                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem' }}>
+                                                        <i className="fas fa-eye"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>No gallery items found.</p>
+                    )}
+                </section>
+            );
+        case 'companies':
+            const companyAdmins = users.filter(u => u.role === 'COMPANY_ADMIN');
 
-    return (
-        <div className="admin-container">
-            <aside className="sidebar">
-                <div className="sidebar-header">
-                    <h2><i className="fas fa-user-shield"></i> Admin Panel</h2>
-                </div>
-                <nav className="sidebar-menu">
-                    <ul>
+            const toggleCompanyStatus = async (userId) => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/${userId}/toggle-status`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        setMessage({ text: data.message, type: 'success' });
+                        loadUsers(); // Reload users to get updated status
+                        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+                    } else {
+                        setMessage({ text: 'Failed to toggle company status', type: 'error' });
+                    }
+                } catch (error) {
+                    setMessage({ text: 'Error toggling company status', type: 'error' });
+                }
+            };
+
+            return (
+                <section className="card surface-glow">
+                    <div className="card-header">
+                        <h3><i className="fas fa-building"></i> Company Management</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                            Enable or disable company accounts. Disabled companies cannot post jobs or interviews.
+                        </p>
+                    </div>
+                    {loadingUsers ? (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>Loading companies...</p>
+                    ) : companyAdmins.length > 0 ? (
+                        <div className="table-responsive" style={{ padding: '1rem' }}>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Company Name</th>
+                                        <th>Admin Username</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {companyAdmins.map(company => (
+                                        <tr key={company.id}>
+                                            <td>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                    <i className="fas fa-building" style={{ color: 'var(--primary)' }}></i>
+                                                    <strong>{company.companyName || 'N/A'}</strong>
+                                                </div>
+                                            </td>
+                                            <td>{company.username}</td>
+                                            <td>{company.email}</td>
+                                            <td>
+                                                <span style={{
+                                                    padding: '0.25rem 0.75rem',
+                                                    borderRadius: '12px',
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: '600',
+                                                    background: company.enabled ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                                                    color: company.enabled ? '#22c55e' : '#ef4444'
+                                                }}>
+                                                    {company.enabled ? 'Enabled' : 'Disabled'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    onClick={() => toggleCompanyStatus(company.id)}
+                                                    className="btn"
+                                                    style={{
+                                                        padding: '0.5rem 1rem',
+                                                        background: company.enabled ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                                        border: `1px solid ${company.enabled ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
+                                                        color: company.enabled ? '#ef4444' : '#22c55e'
+                                                    }}
+                                                >
+                                                    <i className={`fas fa-${company.enabled ? 'ban' : 'check-circle'}`}></i>
+                                                    {company.enabled ? ' Disable' : ' Enable'}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p style={{ padding: '2rem', textAlign: 'center' }}>No company admins found.</p>
+                    )}
+                </section>
+            );
+        default:
+            return <div>Select a tab</div>;
+    }
+};
+
+return (
+    <div className="admin-container">
+        <aside className="sidebar">
+            <div className="sidebar-header">
+                <h2><i className="fas fa-user-shield"></i> Admin Panel</h2>
+            </div>
+            <nav className="sidebar-menu">
+                <ul>
+                    <li>
+                        <button onClick={() => setActiveTab('dashboard')} className={activeTab === 'dashboard' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
+                            <i className="fas fa-tachometer-alt"></i> Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button onClick={() => setActiveTab('jobs')} className={activeTab === 'jobs' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
+                            <i className="fas fa-briefcase"></i> Manage Jobs
+                        </button>
+                    </li>
+                    {(isSuperAdmin || isCompanyAdmin) && (
                         <li>
-                            <button onClick={() => setActiveTab('dashboard')} className={activeTab === 'dashboard' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
-                                <i className="fas fa-tachometer-alt"></i> Dashboard
+                            <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
+                                <i className="fas fa-users"></i> Manage Users
                             </button>
                         </li>
-                        <li>
-                            <button onClick={() => setActiveTab('jobs')} className={activeTab === 'jobs' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
-                                <i className="fas fa-briefcase"></i> Manage Jobs
-                            </button>
-                        </li>
-                        {(isSuperAdmin || isCompanyAdmin) && (
-                            <li>
-                                <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
-                                    <i className="fas fa-users"></i> Manage Users
-                                </button>
-                            </li>
-                        )}
-                        <li>
-                            <button onClick={() => setActiveTab('interviews')} className={activeTab === 'interviews' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <i className="fas fa-calendar-alt"></i> Manage Interviews
-                            </button>
-                        </li>
+                    )}
+                    {(isSuperAdmin || role === 'ADMIN') && (
                         <li>
                             <button
-                                className={activeTab === 'applications' ? 'active' : ''}
-                                onClick={() => { setActiveTab('applications'); loadApplications(); }}
-                            >
-                                <i className="fas fa-file-alt"></i> Job Applications
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                className={activeTab === 'interview-applications' ? 'active' : ''}
-                                onClick={() => { setActiveTab('interview-applications'); loadInterviewApplications(); }}
+                                onClick={() => setActiveTab('students')}
+                                className={activeTab === 'students' ? 'active' : ''}
                                 style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
                             >
-                                <i className="fas fa-user-check"></i> Interview Applications
+                                <i className="fas fa-user-graduate"></i> Student Monitor
                             </button>
                         </li>
-                        {!isCompanyAdmin && (
-                            <li>
-                                <button
-                                    className={activeTab === 'gallery' ? 'active' : ''}
-                                    onClick={() => { setActiveTab('gallery'); loadGalleryItems(); }}
-                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                >
-                                    <i className="fas fa-images"></i> Gallery Management
-                                </button>
-                            </li>
-                        )}
-                        {isSuperAdmin && (
-                            <li>
-                                <button
-                                    className={activeTab === 'companies' ? 'active' : ''}
-                                    onClick={() => setActiveTab('companies')}
-                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                >
-                                    <i className="fas fa-building"></i> Company Management
-                                </button>
-                            </li>
-                        )}
-                    </ul>
-                </nav>
-            </aside>
-
-            <main className="main-content">
-                <header className="main-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                        <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
-                        <p className="subtitle">Welcome, Admin! Manage your portal content from here.</p>
-                    </div>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <button onClick={() => navigate('/')} className="btn btn-outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
-                            <i className="fas fa-arrow-left"></i> Back to Portal
+                    )}
+                    <li>
+                        <button onClick={() => setActiveTab('interviews')} className={activeTab === 'interviews' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <i className="fas fa-calendar-alt"></i> Manage Interviews
                         </button>
+                    </li>
+                    <li>
                         <button
-                            onClick={() => {
-                                localStorage.clear();
-                                navigate('/login');
-                            }}
-                            className="btn btn-outline"
-                            style={{ borderColor: '#ef4444', color: '#ef4444' }}
+                            className={activeTab === 'applications' ? 'active' : ''}
+                            onClick={() => { setActiveTab('applications'); loadApplications(); }}
                         >
-                            <i className="fas fa-sign-out-alt"></i> Logout
+                            <i className="fas fa-file-alt"></i> Job Applications
                         </button>
-                    </div>
-                </header>
+                    </li>
+                    <li>
+                        <button
+                            className={activeTab === 'interview-applications' ? 'active' : ''}
+                            onClick={() => { setActiveTab('interview-applications'); loadInterviewApplications(); }}
+                            style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                        >
+                            <i className="fas fa-user-check"></i> Interview Applications
+                        </button>
+                    </li>
+                    {!isCompanyAdmin && (
+                        <li>
+                            <button
+                                className={activeTab === 'gallery' ? 'active' : ''}
+                                onClick={() => { setActiveTab('gallery'); loadGalleryItems(); }}
+                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                            >
+                                <i className="fas fa-images"></i> Gallery Management
+                            </button>
+                        </li>
+                    )}
+                    {isSuperAdmin && (
+                        <li>
+                            <button
+                                className={activeTab === 'companies' ? 'active' : ''}
+                                onClick={() => setActiveTab('companies')}
+                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                            >
+                                <i className="fas fa-building"></i> Company Management
+                            </button>
+                        </li>
+                    )}
+                </ul>
+            </nav>
+        </aside>
 
-                {renderContent()}
-            </main>
-        </div>
-    );
+        <main className="main-content">
+            <header className="main-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
+                    <p className="subtitle">Welcome, Admin! Manage your portal content from here.</p>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                    <button onClick={() => navigate('/')} className="btn btn-outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
+                        <i className="fas fa-arrow-left"></i> Back to Portal
+                    </button>
+                    <button
+                        onClick={() => {
+                            localStorage.clear();
+                            navigate('/login');
+                        }}
+                        className="btn btn-outline"
+                        style={{ borderColor: '#ef4444', color: '#ef4444' }}
+                    >
+                        <i className="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            {renderContent()}
+        </main>
+    </div>
+);
 };
 
 export default AdminDashboard;
