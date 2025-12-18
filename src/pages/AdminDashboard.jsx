@@ -639,7 +639,7 @@ const AdminDashboard = () => {
 
         const endpoint = editingJob
             ? `${API_BASE_URL}/jobs/${editingJob.id}`
-            : `${API_BASE_URL}/jobs?sendEmails=${globalEmailsEnabled && sendEmailNotifications}`;
+            : `${API_BASE_URL}/jobs?sendEmails=${emailSettings.masterEmailEnabled && emailSettings.newJobEmailEnabled}`;
         const method = editingJob ? 'PUT' : 'POST';
 
         try {
