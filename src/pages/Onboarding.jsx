@@ -93,6 +93,42 @@ const Onboarding = () => {
         }
     };
 
+    const handleScanID = async () => {
+        if (!formData.idCardFile) {
+            alert("Please upload ID card first");
+            return;
+        }
+        setLoading(true);
+        const scanData = new FormData();
+        scanData.append('file', formData.idCardFile);
+
+        try {
+            const res = await fetch(`http://localhost:5001/scan-id`, { method: 'POST', body: scanData });
+            const data = await res.json();
+            if (res.ok) {
+                setFormData(prev => ({
+                    ...prev,
+                    fullName: data.fullName || prev.fullName,
+                    enrollmentNumber: data.enrollmentNumber || prev.enrollmentNumber,
+                    branch: data.branch || prev.branch,
+                    batch: data.batch || prev.batch
+                }));
+                if (data.batch) {
+                    const startY = data.batch.split('-')[0];
+                    if (startY) setFormData(prev => ({ ...prev, startYear: startY }));
+                }
+                alert("Auto-filled details from ID Card!");
+            } else {
+                alert("Scan failed: " + data.error);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Scan service unavailable or Tesseract not installed. Please fill manually.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -185,6 +221,32 @@ const Onboarding = () => {
                             <h3 style={{ color: '#fff', marginBottom: '1.5rem' }}><i className="fas fa-user"></i> Personal Details</h3>
 
                             <div className="form-group">
+                                <label style={{ display: 'block', marginBottom: '0.5rem', color: '#818cf8', fontWeight: 'bold' }}>
+                                    <i className="fas fa-magic"></i> Auto-Fill from ID Card (Recommended)
+                                </label>
+                                <div style={{
+                                    background: 'rgba(99,102,241,0.1)', border: '1px dashed #6366f1', padding: '1rem', borderRadius: '8px',
+                                    display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem'
+                                }}>
+                                    <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => document.getElementById('step1-id-card').click()}>
+                                        <input type="file" id="step1-id-card" accept="image/*" onChange={(e) => handleFileChange(e, 'idCardFile')} style={{ display: 'none' }} />
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                            <i className="fas fa-id-card" style={{ fontSize: '1.5rem', color: '#6366f1' }}></i>
+                                            <div>
+                                                <div style={{ fontSize: '0.9rem', color: '#fff' }}>{formData.idCardFile ? formData.idCardFile.name : 'Click to Upload ID Card'}</div>
+                                                {!formData.idCardFile && <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>Supports JPG/PNG</div>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {formData.idCardFile && (
+                                        <button type="button" onClick={handleScanID} className="btn-small" style={{ background: '#6366f1', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px' }}>
+                                            {loading ? <i className="fas fa-spinner fa-spin"></i> : 'Scan & Fill'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="form-group">
                                 <label>Full Name *</label>
                                 <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required className="form-control" />
                             </div>
@@ -272,30 +334,7 @@ const Onboarding = () => {
                         <div className="form-step fade-in">
                             <h3 style={{ color: '#fff', marginBottom: '1.5rem' }}><i className="fas fa-file-upload"></i> Document Upload</h3>
 
-                            {/* ID Card Upload */}
-                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>College ID Card *</label>
-                            <div style={{
-                                background: 'rgba(255,255,255,0.05)',
-                                border: '2px dashed rgba(255,255,255,0.2)',
-                                padding: '1.5rem',
-                                borderRadius: '12px',
-                                textAlign: 'center',
-                                marginBottom: '2rem',
-                                cursor: 'pointer'
-                            }} onClick={() => document.getElementById('id-card-file').click()}>
-                                <input type="file" id="id-card-file" accept="image/*,.pdf" onChange={(e) => handleFileChange(e, 'idCardFile')} style={{ display: 'none' }} />
-                                {formData.idCardFile ? (
-                                    <div>
-                                        <i className="fas fa-check-circle" style={{ fontSize: '2rem', color: '#22c55e', marginBottom: '0.5rem' }}></i>
-                                        <p>{formData.idCardFile.name}</p>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <i className="fas fa-id-card" style={{ fontSize: '2rem', color: '#6366f1', marginBottom: '0.5rem' }}></i>
-                                        <p>Upload ID Card</p>
-                                    </div>
-                                )}
-                            </div>
+
 
                             {/* Resume Upload */}
                             <label style={{ display: 'block', marginBottom: '0.5rem' }}>Resume (PDF)</label>
