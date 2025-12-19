@@ -10,6 +10,8 @@ const Register = () => {
         role: '',
         branch: '',
         semester: '',
+        startYear: new Date().getFullYear().toString(),
+        batch: '',
         password: '',
         confirmPassword: ''
     });
@@ -41,6 +43,21 @@ const Register = () => {
             setFormData(prev => ({ ...prev, branch: value, semester: '' }));
         }
     };
+
+    // Auto-calculate Batch
+    React.useEffect(() => {
+        if (formData.branch && formData.startYear) {
+            const dept = departments.find(d => d.code === formData.branch);
+            if (dept) {
+                const durationYears = Math.ceil((dept.maxSemesters || 8) / 2);
+                const endYear = parseInt(formData.startYear) + durationYears;
+                const batchStr = `${formData.startYear}-${endYear}`;
+                if (formData.batch !== batchStr) {
+                    setFormData(prev => ({ ...prev, batch: batchStr }));
+                }
+            }
+        }
+    }, [formData.branch, formData.startYear, departments]);
 
     // Get semester options based on selected branch
     const getSemesterOptions = () => {
@@ -192,22 +209,52 @@ const Register = () => {
                             </div>
 
                             {formData.branch && (
-                                <div className="form-group">
-                                    <label htmlFor="semester">Semester/Year *</label>
-                                    <select
-                                        id="semester"
-                                        name="semester"
-                                        required
-                                        value={formData.semester}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Semester/Year --</option>
-                                        {getSemesterOptions().map(opt => (
-                                            <option key={opt.value} value={opt.value} style={{ background: '#1e293b', color: '#fff' }}>
-                                                {opt.label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="semester">Semester/Year *</label>
+                                        <select
+                                            id="semester"
+                                            name="semester"
+                                            required
+                                            value={formData.semester}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Semester/Year --</option>
+                                            {getSemesterOptions().map(opt => (
+                                                <option key={opt.value} value={opt.value} style={{ background: '#1e293b', color: '#fff' }}>
+                                                    {opt.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="form-row" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                                        <div className="form-group" style={{ flex: 1 }}>
+                                            <label htmlFor="startYear">Admission Year *</label>
+                                            <select
+                                                id="startYear"
+                                                name="startYear"
+                                                required
+                                                value={formData.startYear}
+                                                onChange={handleChange}
+                                                style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%' }}
+                                            >
+                                                {Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i + 1).map(y => (
+                                                    <option key={y} value={y} style={{ background: '#1e293b' }}>{y}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="form-group" style={{ flex: 1 }}>
+                                            <label>Batch Session</label>
+                                            <input
+                                                type="text"
+                                                readOnly
+                                                value={formData.batch}
+                                                style={{ background: 'rgba(255,255,255,0.05)', cursor: 'not-allowed', color: '#4ade80', fontWeight: 'bold' }}
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div style={{
                                         marginTop: '0.75rem',
                                         padding: '0.75rem',
@@ -219,7 +266,7 @@ const Register = () => {
                                     }}>
                                         <strong>⚠️ Important:</strong> Fill this carefully! Your branch and semester will be used to match you with eligible job opportunities. This can only be updated at the end of each semester.
                                     </div>
-                                </div>
+                                </>
                             )}
                         </>
                     )}

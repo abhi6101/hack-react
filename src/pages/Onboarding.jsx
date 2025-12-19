@@ -18,9 +18,36 @@ const Onboarding = () => {
         enrollmentNumber: '',
         branch: '',
         semester: '',
+        startYear: new Date().getFullYear().toString(),
+        batch: '',
         skills: '',
         resumeFile: null
     });
+
+    const [departments, setDepartments] = useState([]);
+
+    // Load Departments
+    useEffect(() => {
+        fetch(`${API_BASE_URL}/public/departments`)
+            .then(res => res.json())
+            .then(data => setDepartments(data))
+            .catch(err => console.error("Failed to load depts", err));
+    }, []);
+
+    // Auto-calculate Batch
+    useEffect(() => {
+        if (formData.branch && formData.startYear) {
+            const dept = departments.find(d => d.code === formData.branch);
+            if (dept) {
+                const durationYears = Math.ceil((dept.maxSemesters || 8) / 2);
+                const endYear = parseInt(formData.startYear) + durationYears;
+                const batchStr = `${formData.startYear}-${endYear}`;
+                if (formData.batch !== batchStr) {
+                    setFormData(prev => ({ ...prev, batch: batchStr }));
+                }
+            }
+        }
+    }, [formData.branch, formData.startYear, departments]);
 
     useEffect(() => {
         // Fetch basic user info to pre-fill
@@ -43,7 +70,8 @@ const Onboarding = () => {
                         fullName: data.name || '',
                         phoneNumber: data.phone || '',
                         branch: data.branch || '',
-                        semester: data.semester || ''
+                        semester: data.semester || '',
+                        batch: data.batch || ''
                     }));
                 }
             } catch (err) {
@@ -78,6 +106,7 @@ const Onboarding = () => {
                 enrollmentNumber: formData.enrollmentNumber,
                 branch: formData.branch,
                 semester: formData.semester,
+                batch: formData.batch,
                 skills: formData.skills,
                 linkedinProfile: formData.linkedinProfile,
                 githubProfile: formData.githubProfile
@@ -182,15 +211,37 @@ const Onboarding = () => {
 
                             <div className="form-group">
                                 <label>Branch *</label>
-                                <input type="text" name="branch" value={formData.branch} onChange={handleChange} required className="form-control" />
+                                <select name="branch" value={formData.branch} onChange={handleChange} required className="form-control" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+                                    <option value="">Select Branch</option>
+                                    {departments.map(d => (
+                                        <option key={d.code} value={d.code} style={{ background: '#1e293b' }}>{d.name}</option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="form-group">
                                 <label>Semester *</label>
-                                <select name="semester" value={formData.semester} onChange={handleChange} required className="form-control">
+                                <select name="semester" value={formData.semester} onChange={handleChange} required className="form-control" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
                                     <option value="">Select Semester</option>
-                                    {[1, 2, 3, 4, 5, 6, 7, 8].map(s => <option key={s} value={s}>{s}</option>)}
+                                    {Array.from({ length: (departments.find(d => d.code === formData.branch)?.maxSemesters || 8) }, (_, i) => i + 1).map(s => (
+                                        <option key={s} value={s} style={{ background: '#1e293b' }}>Semester {s}</option>
+                                    ))}
                                 </select>
+                            </div>
+
+                            <div className="form-row" style={{ display: 'flex', gap: '1rem' }}>
+                                <div className="form-group" style={{ flex: 1 }}>
+                                    <label>Admission Year *</label>
+                                    <select name="startYear" value={formData.startYear} onChange={handleChange} required className="form-control" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+                                        {Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i + 1).map(y => (
+                                            <option key={y} value={y} style={{ background: '#1e293b' }}>{y}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group" style={{ flex: 1 }}>
+                                    <label>Batch</label>
+                                    <input type="text" value={formData.batch} readOnly className="form-control" style={{ cursor: 'not-allowed', color: '#4ade80' }} />
+                                </div>
                             </div>
 
                             <div className="form-group">
