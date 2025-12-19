@@ -85,6 +85,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
             const result = await response.json();
 
             if (response.ok) {
+                alert("Profile Updated Successfully!");
                 onUpdate();
                 onClose();
             } else {
