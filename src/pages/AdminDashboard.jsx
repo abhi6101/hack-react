@@ -260,6 +260,47 @@ const AdminDashboard = () => {
         }
     };
 
+    // Department Management State
+    const [departments, setDepartments] = useState([]);
+    const [loadingDepts, setLoadingDepts] = useState(false);
+    const [deptForm, setDeptForm] = useState({ name: '', code: '', hodName: '', contactEmail: '' });
+
+    const loadDepartments = async () => {
+        setLoadingDepts(true);
+        try {
+            const res = await fetch(`${API_BASE_URL}/admin/departments`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) setDepartments(await res.json());
+        } catch (e) { console.error(e); }
+        finally { setLoadingDepts(false); }
+    };
+
+    const handleDeptSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch(`${API_BASE_URL}/admin/departments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(deptForm)
+            });
+            if (res.ok) {
+                setMessage({ text: 'Department Added!', type: 'success' });
+                loadDepartments();
+                setDeptForm({ name: '', code: '', hodName: '', contactEmail: '' });
+            } else {
+                const err = await res.text();
+                setMessage({ text: err, type: 'error' });
+            }
+        } catch (e) { setMessage({ text: 'Failed to add dept', type: 'error' }); }
+    };
+
+    const deleteDept = async (id) => {
+        if (!window.confirm('Delete Dept?')) return;
+        await fetch(`${API_BASE_URL}/admin/departments/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+        loadDepartments();
+    };
+
     // Update Email Setting
     const toggleEmailSetting = async (key, currentValue) => {
         const newSettings = { ...emailSettings, [key]: !currentValue };
@@ -481,7 +522,7 @@ const AdminDashboard = () => {
     };
 
     useEffect(() => {
-        const allowedRoles = ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN'];
+        const allowedRoles = ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'];
         if (!token || !allowedRoles.includes(role)) {
             alert('Access Denied. Admins only.');
             navigate('/login');
@@ -492,6 +533,7 @@ const AdminDashboard = () => {
         if (isSuperAdmin) {
             loadUsers(); // Only Super Admins load users
             fetchCompanyStats();
+            loadDepartments();
         }
         if (activeTab === 'students') {
             fetchStudentActivity();
@@ -1430,15 +1472,33 @@ const AdminDashboard = () => {
                                                 setUserForm(prev => ({
                                                     ...prev,
                                                     role: newRole,
-                                                    companyName: newRole === 'COMPANY_ADMIN' ? prev.companyName : ''
+                                                    companyName: newRole === 'COMPANY_ADMIN' ? prev.companyName : '',
+                                                    branch: newRole === 'DEPT_ADMIN' ? (departments.length > 0 ? departments[0].code : '') : ''
                                                 }));
                                             }}>
                                                 <option value="USER">USER</option>
                                                 <option value="ADMIN">ADMIN</option>
                                                 <option value="SUPER_ADMIN">SUPER ADMIN</option>
                                                 <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
+                                                <option value="DEPT_ADMIN">DEPT ADMIN</option>
                                             </select>
                                         </div>
+                                        {userForm.role === 'DEPT_ADMIN' && (
+                                            <div className="form-group">
+                                                <label>Department (Branch)</label>
+                                                <select
+                                                    className="form-control"
+                                                    required
+                                                    value={userForm.branch || ''}
+                                                    onChange={e => setUserForm({ ...userForm, branch: e.target.value })}
+                                                >
+                                                    <option value="">Select Department</option>
+                                                    {departments.map(d => (
+                                                        <option key={d.id} value={d.code}>{d.name} ({d.code})</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
                                         {userForm.role === 'COMPANY_ADMIN' && (
                                             <div className="form-group">
                                                 <label>Company Name (for Company Admin)</label>
@@ -1478,7 +1538,7 @@ const AdminDashboard = () => {
                                                         <td>{user.username}</td>
                                                         <td>{user.email}</td>
                                                         <td>{user.role}</td>
-                                                        <td>{user.companyName || '-'}</td>
+                                                        <td>{user.companyName || user.branch || '-'}</td>
                                                         <td className="action-btns">
                                                             {!isCompanyAdmin ? (
                                                                 <>
@@ -1924,6 +1984,51 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            case 'departments':
+                return (
+                    <section className="card surface-glow">
+                        <div className="card-header">
+                            <h3><i className="fas fa-university"></i> Manage Departments</h3>
+                        </div>
+                        <div className="form-grid" style={{ marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
+                            <form onSubmit={handleDeptSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%' }}>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label>Dept Name</label>
+                                    <input type="text" className="form-control" placeholder="e.g. Master of Computer Applications" required value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} />
+                                </div>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label>Dept Code (Unique)</label>
+                                    <input type="text" className="form-control" placeholder="e.g. MCA" required value={deptForm.code} onChange={e => setDeptForm({ ...deptForm, code: e.target.value.toUpperCase() })} />
+                                </div>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label>HOD Name</label>
+                                    <input type="text" className="form-control" placeholder="HOD Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} />
+                                </div>
+                                <button type="submit" className="btn btn-primary" style={{ height: '42px' }}><i className="fas fa-plus"></i> Add Dept</button>
+                            </form>
+                        </div>
+
+                        {loadingDepts ? <div className="loading-indicator">Loading Departments...</div> : (
+                            <div className="table-responsive">
+                                <table className="table">
+                                    <thead><tr><th>Code</th><th>Name</th><th>HOD</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        {departments.length === 0 ? <tr><td colSpan="4" style={{ textAlign: 'center' }}>No departments found.</td></tr> : departments.map(d => (
+                                            <tr key={d.id}>
+                                                <td><span className="badge badge-primary">{d.code}</span></td>
+                                                <td>{d.name}</td>
+                                                <td>{d.hodName || '-'}</td>
+                                                <td>
+                                                    <button className="btn btn-danger btn-sm" onClick={() => deleteDept(d.id)}><i className="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </section>
+                );
             default:
                 return <div>Select a tab</div>;
         }
@@ -2010,15 +2115,26 @@ const AdminDashboard = () => {
                             </li>
                         )}
                         {isSuperAdmin && (
-                            <li>
-                                <button
-                                    className={activeTab === 'companies' ? 'active' : ''}
-                                    onClick={() => setActiveTab('companies')}
-                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                >
-                                    <i className="fas fa-building"></i> Company Management
-                                </button>
-                            </li>
+                            <>
+                                <li>
+                                    <button
+                                        className={activeTab === 'departments' ? 'active' : ''}
+                                        onClick={() => setActiveTab('departments')}
+                                        style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                                    >
+                                        <i className="fas fa-university"></i> Departments
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className={activeTab === 'companies' ? 'active' : ''}
+                                        onClick={() => setActiveTab('companies')}
+                                        style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                                    >
+                                        <i className="fas fa-building"></i> Company Management
+                                    </button>
+                                </li>
+                            </>
                         )}
                     </ul>
                 </nav>

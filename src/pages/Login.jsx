@@ -58,9 +58,10 @@ const Login = () => {
                 const roles = data.roles || [];
                 const isSuperAdmin = roles.includes('ROLE_SUPER_ADMIN');
                 const isCompanyAdmin = roles.includes('ROLE_COMPANY_ADMIN');
+                const isDeptAdmin = roles.includes('ROLE_DEPT_ADMIN');
                 const isLegacyAdmin = roles.includes('ROLE_ADMIN');
 
-                const isAdmin = isSuperAdmin || isCompanyAdmin || isLegacyAdmin;
+                const isAdmin = isSuperAdmin || isCompanyAdmin || isLegacyAdmin || isDeptAdmin;
 
                 if (data.companyName) {
                     localStorage.setItem('companyName', data.companyName);
@@ -72,6 +73,7 @@ const Login = () => {
                     let role = 'ADMIN'; // Default
                     if (isSuperAdmin) role = 'SUPER_ADMIN';
                     if (isCompanyAdmin) role = 'COMPANY_ADMIN';
+                    if (isDeptAdmin) role = 'DEPT_ADMIN';
 
                     localStorage.setItem('userRole', role);
                     localStorage.setItem('isAdmin', 'true');
