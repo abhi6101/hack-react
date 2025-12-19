@@ -17,7 +17,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
             const fetchUserData = async () => {
                 const token = localStorage.getItem('authToken');
                 try {
-                    const response = await fetch('/auth/me', {
+                    const response = await fetch(`${API_BASE_URL}/auth/me`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (response.ok) {
@@ -69,7 +69,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
 
         try {
             const token = localStorage.getItem('authToken');
-            const response = await fetch('/auth/update-profile', {
+            const response = await fetch(`${API_BASE_URL}/auth/update-profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,6 +89,8 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                 alert("Profile Updated Successfully!");
                 onUpdate();
                 onClose();
+                // Reload the page to refresh the Iron Dome guard check
+                window.location.reload();
             } else {
                 setError(result.message || 'Failed to update profile');
             }

@@ -126,6 +126,10 @@ const AdminDashboard = () => {
     const [studentActivity, setStudentActivity] = useState([]);
     const [loadingActivity, setLoadingActivity] = useState(false);
 
+    // Profile Details State
+    const [allProfiles, setAllProfiles] = useState([]);
+    const [loadingProfiles, setLoadingProfiles] = useState(false);
+
 
 
     const fetchCompanyStats = async () => {
@@ -159,6 +163,23 @@ const AdminDashboard = () => {
             console.error("Failed to load student activity", err);
         } finally {
             setLoadingActivity(false);
+        }
+    };
+
+    const fetchAllProfiles = async () => {
+        setLoadingProfiles(true);
+        try {
+            const res = await fetch(`${API_BASE_URL}/student-profile/admin/all`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setAllProfiles(data);
+            }
+        } catch (err) {
+            console.error("Failed to load profiles", err);
+        } finally {
+            setLoadingProfiles(false);
         }
     };
 
@@ -599,7 +620,7 @@ const AdminDashboard = () => {
         if (activeTab === 'students') {
             fetchStudentActivity();
         }
-        if (activeTab === 'profile-details' && isSuperAdmin) {
+        if (activeTab === 'profile-details' && (isSuperAdmin || role === 'DEPT_ADMIN' || role === 'ADMIN')) {
             fetchAllProfiles();
         }
     }, [navigate, token, role, isSuperAdmin, activeTab]);
@@ -676,14 +697,21 @@ const AdminDashboard = () => {
     const deleteUser = async (userId) => {
         if (!window.confirm('Delete this user?')) return;
         try {
-            await fetch(`${ADMIN_API_URL}/users/${userId}`, {
+            const res = await fetch(`${ADMIN_API_URL}/users/${userId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            loadUsers();
+            if (res.ok) {
+                setMessage({ text: 'User deleted successfully', type: 'success' });
+                loadUsers();
+            } else {
+                const errText = await res.text();
+                setMessage({ text: `Failed: ${errText || 'Dependency error'}`, type: 'error' });
+            }
         } catch (err) {
-            alert('Failed to delete user');
+            setMessage({ text: 'Error deleting user', type: 'error' });
         }
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     };
 
     const startEditUser = (user) => {
@@ -2108,7 +2136,7 @@ const AdminDashboard = () => {
                                 </button>
                             </li>
                         )}
-                        {(isSuperAdmin || role === 'ADMIN') && (
+                        {(isSuperAdmin || role === 'ADMIN' || role === 'DEPT_ADMIN') && (
                             <li>
                                 <button
                                     onClick={() => setActiveTab('profile-details')}

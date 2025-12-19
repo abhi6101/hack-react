@@ -146,8 +146,31 @@ const Onboarding = () => {
 
         const token = localStorage.getItem('authToken');
 
-        // 1. Update Profile Data
+        // STEP 1: Update User's Basic Info (name, phone, branch, semester) - This satisfies Iron Dome
         try {
+            const authUpdatePayload = {
+                name: formData.fullName,
+                phone: formData.phoneNumber,
+                branch: formData.branch,
+                semester: parseInt(formData.semester),
+                batch: formData.batch
+            };
+
+            const authRes = await fetch(`${API_BASE_URL}/auth/update-profile`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(authUpdatePayload)
+            });
+
+            if (!authRes.ok) {
+                const errData = await authRes.json();
+                throw new Error(errData.message || "Failed to update profile");
+            }
+
+            // STEP 2: Create Student Profile with additional details
             const profilePayload = {
                 fullName: formData.fullName,
                 phoneNumber: formData.phoneNumber,
@@ -169,36 +192,29 @@ const Onboarding = () => {
                 body: JSON.stringify(profilePayload)
             });
 
-            if (!res.ok) throw new Error("Failed to save profile");
+            if (!res.ok) throw new Error("Failed to save student profile");
 
-            // 2. Upload ID Card if present
-            // 2. Upload ID Card
+            // STEP 3: Upload ID Card if present
             if (formData.idCardFile) {
                 const fd = new FormData(); fd.append('file', formData.idCardFile);
                 await fetch(`${API_BASE_URL}/student-profile/upload-id-card`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
             }
 
-            // 3. Upload Aadhar
+            // STEP 4: Upload Aadhar
             if (formData.aadharFile) {
                 const fd = new FormData(); fd.append('file', formData.aadharFile);
                 await fetch(`${API_BASE_URL}/student-profile/upload-aadhar`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
             }
 
-            // 4. Upload Admit Card
+            // STEP 5: Upload Admit Card
             if (formData.admitCardFile) {
                 const fd = new FormData(); fd.append('file', formData.admitCardFile);
                 await fetch(`${API_BASE_URL}/student-profile/upload-admit-card`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
             }
 
-            // 3. Upload Resume if present
-            // Note: Since ResumeController has issues, we skip it or implement similar logic later. 
-            // For now, we will verify the profile save and assume resume logic comes later or we skip it if no endpoint exists yet.
-            // *Wait*, we need a Resume Upload endpoint. 
-            // If the user selected a file, we should upload it.
-            // Let's assume we use the Resume Controller to generate/upload or just skip for this MVP step if backend isn't ready.
-
             alert("Onboarding Complete! Welcome to the portal.");
-            navigate('/dashboard');
+            // Reload to clear Iron Dome guard
+            window.location.href = '/dashboard';
 
         } catch (err) {
             alert(err.message);

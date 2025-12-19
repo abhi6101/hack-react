@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../config';
 
 const ResumeBuilder = () => {
@@ -300,7 +301,6 @@ const ResumeBuilder = () => {
                 {/* Preview/Action Side (Sticky) */}
                 <div className="resume-actions-sidebar">
                     <div className="sticky-box">
-                        <h3>Actions</h3>
                         <h3>Actions</h3>
                         <p className="text-muted">Choose your template and generate instantly.</p>
 
