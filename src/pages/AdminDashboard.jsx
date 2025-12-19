@@ -107,7 +107,8 @@ const AdminDashboard = () => {
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
     const [editingInterview, setEditingInterview] = useState(null);
-    const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null); // For ID Card Modal
+    const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
+    const [verificationTab, setVerificationTab] = useState('idCard'); // idCard, aadhar, admit // For ID Card Modal
     const [applications, setApplications] = useState([]);
     const [loadingApplications, setLoadingApplications] = useState(false);
     const [interviewDetails, setInterviewDetails] = useState({
@@ -2242,18 +2243,29 @@ const AdminDashboard = () => {
 
                                 {/* Right: ID Card */}
                                 <div style={{ flex: 1.2, padding: '2rem', background: '#0f172a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <h3 style={{ color: '#94a3b8', marginBottom: '1rem', width: '100%', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>ID Card Image</h3>
+                                    <h3 style={{ color: '#94a3b8', marginBottom: '1rem', width: '100%', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
+                                        Verification Document: {verificationTab === 'idCard' ? 'College ID' : verificationTab === 'aadhar' ? 'Aadhar Card' : 'Admit Card'}
+                                    </h3>
+
+                                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.05)', padding: '0.25rem', borderRadius: '8px' }}>
+                                        <button onClick={() => setVerificationTab('idCard')} style={{ background: verificationTab === 'idCard' ? '#6366f1' : 'transparent', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}>ID Card</button>
+                                        <button onClick={() => setVerificationTab('aadhar')} style={{ background: verificationTab === 'aadhar' ? '#34d399' : 'transparent', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}>Aadhar</button>
+                                        <button onClick={() => setVerificationTab('admit')} style={{ background: verificationTab === 'admit' ? '#fbbf24' : 'transparent', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}>Admit Card</button>
+                                    </div>
+
                                     <div style={{
                                         flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         border: '2px dashed #334155', borderRadius: '12px', background: '#020617', padding: '1rem'
                                     }}>
                                         <img
-                                            src={`${API_BASE_URL}/student-profile/id-card/${selectedProfileForVerification.id}`}
-                                            alt="ID Card"
+                                            src={`${API_BASE_URL}/student-profile/${verificationTab === 'idCard' ? 'id-card' : verificationTab === 'aadhar' ? 'aadhar' : 'admit-card'}/${selectedProfileForVerification.id}`}
+                                            alt="Document"
                                             style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '4px' }}
-                                            onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; e.target.parentNode.innerHTML += '<span style="color:#64748b">No ID Card Available</span>'; }}
+                                            onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; e.target.parentNode.innerHTML += `<span style="color:#64748b; text-align:center">No ${verificationTab} Uploaded</span>`; }}
                                         />
                                     </div>
+                                    {verificationTab === 'aadhar' && <div style={{ marginTop: '0.5rem', color: '#34d399', fontSize: '0.8rem' }}>Verify Name Matches Profile</div>}
+                                    {verificationTab === 'admit' && <div style={{ marginTop: '0.5rem', color: '#fbbf24', fontSize: '0.8rem' }}>Verify Enrollment & College</div>}
                                 </div>
                             </div>
 

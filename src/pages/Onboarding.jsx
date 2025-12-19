@@ -22,7 +22,14 @@ const Onboarding = () => {
         batch: '',
         skills: '',
         resumeFile: null,
-        idCardFile: null
+        startYear: new Date().getFullYear().toString(),
+        batch: '',
+        skills: '',
+        resumeFile: null,
+        idCardFile: null,
+        aadharFile: null,
+        admitCardFile: null,
+        collegeName: 'IPS Academy' // Default
     });
 
     const [departments, setDepartments] = useState([]);
@@ -161,14 +168,22 @@ const Onboarding = () => {
             if (!res.ok) throw new Error("Failed to save profile");
 
             // 2. Upload ID Card if present
+            // 2. Upload ID Card
             if (formData.idCardFile) {
-                const idCardData = new FormData();
-                idCardData.append('file', formData.idCardFile);
-                await fetch(`${API_BASE_URL}/student-profile/upload-id-card`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: idCardData
-                });
+                const fd = new FormData(); fd.append('file', formData.idCardFile);
+                await fetch(`${API_BASE_URL}/student-profile/upload-id-card`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
+            }
+
+            // 3. Upload Aadhar
+            if (formData.aadharFile) {
+                const fd = new FormData(); fd.append('file', formData.aadharFile);
+                await fetch(`${API_BASE_URL}/student-profile/upload-aadhar`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
+            }
+
+            // 4. Upload Admit Card
+            if (formData.admitCardFile) {
+                const fd = new FormData(); fd.append('file', formData.admitCardFile);
+                await fetch(`${API_BASE_URL}/student-profile/upload-admit-card`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
             }
 
             // 3. Upload Resume if present
@@ -221,49 +236,57 @@ const Onboarding = () => {
                             <h3 style={{ color: '#fff', marginBottom: '1.5rem' }}><i className="fas fa-user"></i> Personal Details</h3>
 
                             <div className="form-group">
-                                <label style={{ display: 'block', marginBottom: '0.5rem', color: '#818cf8', fontWeight: 'bold' }}>
-                                    <i className="fas fa-magic"></i> Auto-Fill from ID Card (Recommended)
-                                </label>
-                                <div style={{
-                                    background: 'rgba(99,102,241,0.1)', border: '1px dashed #6366f1', padding: '1rem', borderRadius: '8px',
-                                    display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem'
-                                }}>
-                                    <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => document.getElementById('step1-id-card').click()}>
-                                        <input type="file" id="step1-id-card" accept="image/*" onChange={(e) => handleFileChange(e, 'idCardFile')} style={{ display: 'none' }} />
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                            <i className="fas fa-id-card" style={{ fontSize: '1.5rem', color: '#6366f1' }}></i>
-                                            <div>
-                                                <div style={{ fontSize: '0.9rem', color: '#fff' }}>{formData.idCardFile ? formData.idCardFile.name : 'Click to Upload ID Card'}</div>
-                                                {!formData.idCardFile && <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>Supports JPG/PNG</div>}
-                                            </div>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Select Your College *</label>
+                                <select name="collegeName" value={formData.collegeName} onChange={handleChange} className="form-control" style={{ background: '#1e293b', color: '#fff' }}>
+                                    <option value="IPS Academy">IPS Academy (Strict Verification)</option>
+                                    <option value="Other">Other Institute</option>
+                                </select>
+                            </div>
+
+                            {/* Verification Section */}
+                            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                <h4 style={{ color: '#aaa', marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '1px' }}>Identity Verification Documents</h4>
+
+                                {/* ID Card */}
+                                <div className="form-group">
+                                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#818cf8' }}>
+                                        <i className="fas fa-id-card"></i> College ID Card (Primary) *
+                                    </label>
+                                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer', border: '1px dashed #6366f1' }} onClick={() => document.getElementById('step1-id-card').click()}>
+                                            <input type="file" id="step1-id-card" accept="image/*" onChange={(e) => handleFileChange(e, 'idCardFile')} style={{ display: 'none' }} />
+                                            <span style={{ fontSize: '0.9rem', color: '#fff' }}>{formData.idCardFile ? formData.idCardFile.name : 'Upload ID Card'}</span>
+                                        </div>
+                                        {formData.idCardFile && <button type="button" onClick={handleScanID} className="btn-small" style={{ background: '#6366f1', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px' }}>Scan</button>}
+                                    </div>
+                                </div>
+
+                                {/* Aadhar Card */}
+                                {(formData.collegeName === 'IPS Academy' || formData.aadharFile) && (
+                                    <div className="form-group fade-in">
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#34d399' }}>
+                                            <i className="fas fa-fingerprint"></i> Aadhar Card (Name Verify) {formData.collegeName === 'IPS Academy' && '*'}
+                                        </label>
+                                        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer', border: '1px dashed #34d399' }} onClick={() => document.getElementById('step1-aadhar').click()}>
+                                            <input type="file" id="step1-aadhar" accept="image/*" onChange={(e) => handleFileChange(e, 'aadharFile')} style={{ display: 'none' }} />
+                                            <span style={{ fontSize: '0.9rem', color: '#fff' }}>{formData.aadharFile ? formData.aadharFile.name : 'Upload Aadhar Card'}</span>
                                         </div>
                                     </div>
-                                    {formData.idCardFile && (
-                                        <button type="button" onClick={handleScanID} className="btn-small" style={{ background: '#6366f1', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px' }}>
-                                            {loading ? <i className="fas fa-spinner fa-spin"></i> : 'Scan & Fill'}
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
+                                )}
 
-                            <div className="form-group">
-                                <label>Full Name *</label>
-                                <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required className="form-control" />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Phone Number *</label>
-                                <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required className="form-control" />
-                            </div>
-
-                            <div className="form-group">
-                                <label>LinkedIn URL <span className="optional-tag">(Optional)</span></label>
-                                <input type="url" name="linkedinProfile" value={formData.linkedinProfile} onChange={handleChange} className="form-control" placeholder="https://linkedin.com/in/..." />
-                            </div>
-
-                            <div className="form-group">
-                                <label>GitHub / Portfolio <span className="optional-tag">(Optional)</span></label>
-                                <input type="url" name="githubProfile" value={formData.githubProfile} onChange={handleChange} className="form-control" placeholder="https://github.com/..." />
+                                {/* Admit Card */}
+                                {(formData.collegeName === 'IPS Academy' || formData.admitCardFile) && (
+                                    <div className="form-group fade-in">
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fbbf24' }}>
+                                            <i className="fas fa-file-alt"></i> Admit Card (Exam Verify) {formData.collegeName === 'IPS Academy' && '*'}
+                                        </label>
+                                        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer', border: '1px dashed #fbbf24' }} onClick={() => document.getElementById('step1-admit').click()}>
+                                            <input type="file" id="step1-admit" accept="image/*" onChange={(e) => handleFileChange(e, 'admitCardFile')} style={{ display: 'none' }} />
+                                            <span style={{ fontSize: '0.9rem', color: '#fff' }}>{formData.admitCardFile ? formData.admitCardFile.name : 'Upload Admit Card'}</span>
+                                        </div>
+                                        <div style={{ fontSize: '0.75rem', color: '#aaa', marginTop: '0.25rem' }}>Verifies Roll No matches College ID.</div>
+                                    </div>
+                                )}
                             </div>
 
                             <button type="button" onClick={nextStep} className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
