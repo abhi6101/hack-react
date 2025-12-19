@@ -288,6 +288,7 @@ const AdminDashboard = () => {
     const [loadingDepts, setLoadingDepts] = useState(false);
     const [deptForm, setDeptForm] = useState({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 });
     const [deptMode, setDeptMode] = useState('single'); // 'single' | 'bulk'
+    const [editingDept, setEditingDept] = useState(null); // For editing departments
     const [bulkForm, setBulkForm] = useState({ category: '', degree: '', maxSemesters: 8, branches: '' });
 
     const loadDepartments = async () => {
@@ -301,23 +302,41 @@ const AdminDashboard = () => {
         finally { setLoadingDepts(false); }
     };
 
+    const startEditDept = (dept) => {
+        setEditingDept(dept);
+        setDeptForm({
+            name: dept.name,
+            code: dept.code,
+            hodName: dept.hodName || '',
+            contactEmail: dept.contactEmail || '',
+            maxSemesters: dept.maxSemesters || 8
+        });
+        setDeptMode('single');
+    };
+
     const handleDeptSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`${API_BASE_URL}/admin/departments`, {
-                method: 'POST',
+            const url = editingDept
+                ? `${API_BASE_URL}/admin/departments/${editingDept.id}`
+                : `${API_BASE_URL}/admin/departments`;
+            const method = editingDept ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(deptForm)
             });
             if (res.ok) {
-                setMessage({ text: 'Department Added!', type: 'success' });
+                setMessage({ text: editingDept ? 'Department Updated!' : 'Department Added!', type: 'success' });
                 loadDepartments();
                 setDeptForm({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 });
+                setEditingDept(null);
             } else {
                 const err = await res.text();
                 setMessage({ text: err, type: 'error' });
             }
-        } catch (e) { setMessage({ text: 'Failed to add dept', type: 'error' }); }
+        } catch (e) { setMessage({ text: editingDept ? 'Failed to update dept' : 'Failed to add dept', type: 'error' }); }
     };
 
 
@@ -2048,7 +2067,14 @@ const AdminDashboard = () => {
                                         <label>Semesters</label>
                                         <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} />
                                     </div>
-                                    <button type="submit" className="btn btn-primary" style={{ height: '42px' }}><i className="fas fa-plus"></i> Add Dept</button>
+                                    <button type="submit" className="btn btn-primary" style={{ height: '42px' }}>
+                                        <i className={`fas fa-${editingDept ? 'save' : 'plus'}`}></i> {editingDept ? 'Update Dept' : 'Add Dept'}
+                                    </button>
+                                    {editingDept && (
+                                        <button type="button" className="btn btn-secondary" style={{ height: '42px' }} onClick={() => { setEditingDept(null); setDeptForm({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 }); }}>
+                                            <i className="fas fa-times"></i> Cancel
+                                        </button>
+                                    )}
                                 </form>
                             ) : (
                                 <form onSubmit={handleBulkSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%', marginTop: '1rem' }}>
@@ -2085,7 +2111,8 @@ const AdminDashboard = () => {
                                                 <td>{d.name}</td>
                                                 <td>{d.hodName || '-'}</td>
                                                 <td>
-                                                    <button className="btn btn-danger btn-sm" onClick={() => deleteDept(d.id)}><i className="fas fa-trash"></i></button>
+                                                    <button className="btn btn-primary btn-sm" onClick={() => startEditDept(d)} style={{ marginRight: '0.5rem' }}><i className="fas fa-edit"></i> Edit</button>
+                                                    <button className="btn btn-danger btn-sm" onClick={() => deleteDept(d.id)}><i className="fas fa-trash"></i> Delete</button>
                                                 </td>
                                             </tr>
                                         ))}
