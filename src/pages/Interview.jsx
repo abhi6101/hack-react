@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationModal from '../components/ApplicationModal';
+import API_BASE_URL from '../config';
 import '../styles/interview.css';
 
 const mockInterviewData = [
@@ -68,7 +69,7 @@ const Interview = () => {
     useEffect(() => {
         const fetchInterviews = async () => {
             try {
-                const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-drives');
+                const response = await fetch('/interview-drives');
                 if (response.ok) {
                     const data = await response.json();
                     setInterviews(data);
@@ -166,7 +167,7 @@ const Interview = () => {
             formData.append('applicantPhone', applicationData.applicantPhone);
             formData.append('resume', applicationData.resume);
 
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-applications/apply', {
+            const res = await fetch('/interview-applications/apply', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }, // No Content-Type for FormData
                 body: formData
@@ -189,7 +190,7 @@ const Interview = () => {
         if (!token) return;
 
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/interview-applications/my', {
+            const res = await fetch('/interview-applications/my', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

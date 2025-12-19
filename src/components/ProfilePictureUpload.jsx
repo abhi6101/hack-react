@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getDefaultAvatar } from '../utils/avatar';
+import API_BASE_URL from '../config';
 import '../styles/profile-picture.css';
 
 const ProfilePictureUpload = ({ currentPicture, username, onUploadSuccess }) => {
@@ -47,7 +48,7 @@ const ProfilePictureUpload = ({ currentPicture, username, onUploadSuccess }) => 
 
         try {
             const token = localStorage.getItem('authToken');
-            const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/profile/picture', {
+            const response = await fetch('/profile/picture', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -85,7 +86,7 @@ const ProfilePictureUpload = ({ currentPicture, username, onUploadSuccess }) => 
 
         try {
             const token = localStorage.getItem('authToken');
-            const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/profile/picture', {
+            const response = await fetch('/profile/picture', {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -1,7 +1,9 @@
 // Server Keep-Alive Service
 // This service pings the backend every 10 minutes to prevent Render free tier spin-down
 
-const API_BASE_URL = 'https://placement-portal-backend-nwaj.onrender.com';
+import API_BASE_URL_RAW from '../config';
+
+const API_BASE_URL = API_BASE_URL_RAW.replace('/api', '');
 const PING_INTERVAL = 10 * 60 * 1000; // 10 minutes in milliseconds
 
 class KeepAliveService {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/gallery.css';
+import API_BASE_URL from '../config';
 
 const Gallery = () => {
     const [galleryItems, setGalleryItems] = useState([]);
@@ -23,7 +24,7 @@ const Gallery = () => {
 
     const fetchGallery = async () => {
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/gallery');
+            const res = await fetch('/gallery');
             if (res.ok) {
                 const data = await res.json();
                 // Reverse to show oldest images first, newest at bottom
@@ -57,7 +58,7 @@ const Gallery = () => {
         }
 
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/gallery', {
+            const res = await fetch('/gallery', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

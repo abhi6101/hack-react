@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../config';
 
 const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
     const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
             const fetchUserData = async () => {
                 const token = localStorage.getItem('authToken');
                 try {
-                    const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/me', {
+                    const response = await fetch('/auth/me', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (response.ok) {
@@ -68,7 +69,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
 
         try {
             const token = localStorage.getItem('authToken');
-            const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/update-profile', {
+            const response = await fetch('/auth/update-profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

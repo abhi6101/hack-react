@@ -1,7 +1,7 @@
 // Email Service for SendGrid Integration
 // This is a frontend utility that calls backend email endpoints
 
-const API_BASE_URL = 'https://placement-portal-backend-nwaj.onrender.com';
+import API_BASE_URL from '../config';
 
 /**
  * Send acceptance email to student when application is shortlisted
@@ -24,7 +24,7 @@ export const sendAcceptanceEmail = async (applicationData) => {
     };
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/emails/send`, {
+        const response = await fetch(`${API_BASE_URL}/emails/send`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export const sendRejectionEmail = async (applicationData) => {
     };
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/emails/send`, {
+        const response = await fetch(`${API_BASE_URL}/emails/send`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

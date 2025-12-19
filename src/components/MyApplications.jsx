@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/index.css';
+import API_BASE_URL from '../config';
 
 const MyApplications = () => {
     const [jobApplications, setJobApplications] = useState([]);
@@ -14,7 +15,7 @@ const MyApplications = () => {
     const fetchApplications = async () => {
         try {
             // Fetch job applications
-            const jobRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/student/my-applications', {
+            const jobRes = await fetch('/student/my-applications', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (jobRes.ok) {
@@ -23,7 +24,7 @@ const MyApplications = () => {
             }
 
             // Fetch interview applications
-            const interviewRes = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/student/my-interview-applications', {
+            const interviewRes = await fetch('/student/my-interview-applications', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (interviewRes.ok) {
