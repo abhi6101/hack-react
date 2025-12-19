@@ -110,6 +110,9 @@ const Onboarding = () => {
         scanData.append('file', formData.idCardFile);
 
         try {
+            // OCR scanning is disabled in production as it requires a local python service
+            alert("Auto-fill from ID Card is currently only available for local developers.");
+            /*
             const res = await fetch(`http://localhost:5001/scan-id`, { method: 'POST', body: scanData });
             const data = await res.json();
             if (res.ok) {
@@ -128,6 +131,7 @@ const Onboarding = () => {
             } else {
                 alert("Scan failed: " + data.error);
             }
+            */
         } catch (e) {
             console.error(e);
             alert("Scan service unavailable or Tesseract not installed. Please fill manually.");
