@@ -1609,7 +1609,7 @@ const AdminDashboard = () => {
                                                 <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
                                                 <td>
                                                     {app.resumePath ? (
-                                                        <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                                                        <a href={`${API_BASE_URL.replace('/api', '')}/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
                                                             <i className="fas fa-file-pdf"></i> View
                                                         </a>
                                                     ) : (
@@ -1788,7 +1788,7 @@ const AdminDashboard = () => {
                                                 <td>{app.companyName}</td>
                                                 <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
                                                 <td>
-                                                    <a href={`https://placement-portal-backend-nwaj.onrender.com/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                                                    <a href={`${API_BASE_URL.replace('/api', '')}/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
                                                         <i className="fas fa-file-pdf"></i> View Resume
                                                     </a>
                                                 </td>

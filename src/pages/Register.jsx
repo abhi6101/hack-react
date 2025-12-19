@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/register.css';
@@ -25,7 +26,7 @@ const Register = () => {
     React.useEffect(() => {
         const fetchDepts = async () => {
             try {
-                const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/public/departments');
+                const res = await fetch(`${API_BASE_URL}/public/departments`);
                 if (res.ok) setDepartments(await res.json());
             } catch (e) {
                 console.error("Failed to load departments", e);
@@ -81,7 +82,7 @@ const Register = () => {
         }
 
         try {
-            const response = await fetch("https://placement-portal-backend-nwaj.onrender.com/api/auth/register", {
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfilePictureUpload from '../components/ProfilePictureUpload';
@@ -30,7 +31,7 @@ const StudentProfile = () => {
     const fetchUser = async () => {
         const token = localStorage.getItem('authToken');
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/user/current', {
+            const res = await fetch(`${API_BASE_URL}/user/current`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -45,7 +46,7 @@ const StudentProfile = () => {
     const fetchProfile = async () => {
         const token = localStorage.getItem('authToken');
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/student-profile', {
+            const res = await fetch(`${API_BASE_URL}/student-profile`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -68,7 +69,7 @@ const StudentProfile = () => {
         const token = localStorage.getItem('authToken');
 
         try {
-            const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/student-profile', {
+            const res = await fetch(`${API_BASE_URL}/student-profile`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(profile)

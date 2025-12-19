@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/jobs.css';
@@ -29,9 +30,9 @@ const Jobs = () => {
     const [appliedJobIds, setAppliedJobIds] = useState(new Set()); // Track applied job IDs
     const navigate = useNavigate();
 
-    const API_URL = "https://placement-portal-backend-nwaj.onrender.com/jobs";
-    const APPLY_JOB_API_URL = "https://placement-portal-backend-nwaj.onrender.com/api/apply-job";
-    const APPLIED_JOBS_API_URL = "https://placement-portal-backend-nwaj.onrender.com/api/job-applications/my";
+    const API_URL = `${API_BASE_URL.replace('/api', '')}/jobs`;
+    const APPLY_JOB_API_URL = `${API_BASE_URL}/apply-job`;
+    const APPLIED_JOBS_API_URL = `${API_BASE_URL}/job-applications/my`;
 
     useEffect(() => {
         const token = localStorage.getItem("authToken");

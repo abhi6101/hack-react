@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import '../styles/verify-account.css';
@@ -35,7 +36,7 @@ const VerifyAccount = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch("https://placement-portal-backend-nwaj.onrender.com/api/auth/verify-code", {
+            const response = await fetch(`${API_BASE_URL}/auth/verify-code`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ identifier, code: verificationCode })

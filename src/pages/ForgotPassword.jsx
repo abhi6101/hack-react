@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/auth.css';
@@ -25,7 +26,7 @@ const ForgotPassword = () => {
         setMessage('');
 
         try {
-            const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/forgot-password', {
+            const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
@@ -69,7 +70,7 @@ const ForgotPassword = () => {
         setMessage('');
 
         try {
-            const response = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/auth/reset-password', {
+            const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, otp, newPassword })
