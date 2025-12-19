@@ -1,7 +1,5 @@
-// Smart Config
-// If VITE_API_BASE_URL is set (in deployment), use it.
-// Otherwise, default to Localhost for development.
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+// Production Config
+// This is the public URL of your Railway Backend.
+const API_BASE_URL = "https://placement-portal-backend-production.up.railway.app/api";
 
 export default API_BASE_URL;
