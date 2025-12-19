@@ -263,7 +263,7 @@ const AdminDashboard = () => {
     // Department Management State
     const [departments, setDepartments] = useState([]);
     const [loadingDepts, setLoadingDepts] = useState(false);
-    const [deptForm, setDeptForm] = useState({ name: '', code: '', hodName: '', contactEmail: '' });
+    const [deptForm, setDeptForm] = useState({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 });
 
     const loadDepartments = async () => {
         setLoadingDepts(true);
@@ -287,7 +287,7 @@ const AdminDashboard = () => {
             if (res.ok) {
                 setMessage({ text: 'Department Added!', type: 'success' });
                 loadDepartments();
-                setDeptForm({ name: '', code: '', hodName: '', contactEmail: '' });
+                setDeptForm({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 });
             } else {
                 const err = await res.text();
                 setMessage({ text: err, type: 'error' });
@@ -533,6 +533,8 @@ const AdminDashboard = () => {
         if (isSuperAdmin) {
             loadUsers(); // Only Super Admins load users
             fetchCompanyStats();
+        }
+        if (isSuperAdmin || activeTab === 'jobs' || activeTab === 'departments') {
             loadDepartments();
         }
         if (activeTab === 'students') {
@@ -542,6 +544,16 @@ const AdminDashboard = () => {
             fetchAllProfiles();
         }
     }, [navigate, token, role, isSuperAdmin, activeTab]);
+
+    // Pre-fill Branch for DEPT_ADMIN
+    useEffect(() => {
+        if (role === 'DEPT_ADMIN' && activeTab === 'jobs' && (!formData.eligibleBranches || formData.eligibleBranches.length === 0)) {
+            const myBranch = localStorage.getItem('adminBranch');
+            if (myBranch) {
+                setFormData(prev => ({ ...prev, eligibleBranches: [myBranch] }));
+            }
+        }
+    }, [role, activeTab]); // Removed formData dependency to avoid potential loops/stale closures, run once when tab opens
 
     const loadJobs = async () => {
         setLoadingJobs(true);
@@ -1229,109 +1241,38 @@ const AdminDashboard = () => {
                                     </p>
 
                                     <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
-                                        {/* IMCA Selection */}
-                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox"
-                                                    checked={formData.eligibleBranches?.includes('IMCA')}
-                                                    onChange={(e) => {
-                                                        const branches = formData.eligibleBranches || [];
-                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'IMCA'] });
-                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'IMCA') });
-                                                    }}
-                                                />
-                                                IMCA (Integrated MCA)
-                                            </label>
-                                            {formData.eligibleBranches?.includes('IMCA') && (
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
-                                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(sem => (
-                                                        <label key={`imca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
-                                                            <input type="checkbox"
-                                                                checked={formData.eligibleSemesters?.includes(sem)}
-                                                                onChange={(e) => {
-                                                                    const sems = formData.eligibleSemesters || [];
-                                                                    if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
-                                                                    else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
-                                                                }}
-                                                            />
-                                                            Sem {sem}
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* MCA Selection */}
-                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a78bfa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox"
-                                                    checked={formData.eligibleBranches?.includes('MCA')}
-                                                    onChange={(e) => {
-                                                        const branches = formData.eligibleBranches || [];
-                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'MCA'] });
-                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'MCA') });
-                                                    }}
-                                                />
-                                                MCA (2 Years)
-                                            </label>
-                                            {formData.eligibleBranches?.includes('MCA') && (
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
-                                                    {[1, 2, 3, 4].map(sem => (
-                                                        <label key={`mca-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
-                                                            <input type="checkbox"
-                                                                checked={formData.eligibleSemesters?.includes(sem)}
-                                                                onChange={(e) => {
-                                                                    const sems = formData.eligibleSemesters || [];
-                                                                    if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
-                                                                    else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
-                                                                }}
-                                                            />
-                                                            Sem {sem}
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* BCA Selection */}
-                                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                <input type="checkbox"
-                                                    checked={formData.eligibleBranches?.includes('BCA')}
-                                                    onChange={(e) => {
-                                                        const branches = formData.eligibleBranches || [];
-                                                        if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, 'BCA'] });
-                                                        else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== 'BCA') });
-                                                    }}
-                                                />
-                                                BCA (3 Years)
-                                            </label>
-                                            {formData.eligibleBranches?.includes('BCA') && (
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginLeft: '1.5rem' }}>
-                                                    {[
-                                                        { label: '1st Year (Sem 1-2)', sems: [1, 2] },
-                                                        { label: '2nd Year (Sem 3-4)', sems: [3, 4] },
-                                                        { label: '3rd Year (Sem 5-6)', sems: [5, 6] }
-                                                    ].map(year => (
-                                                        <label key={year.label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
-                                                            <input type="checkbox"
-                                                                checked={year.sems.every(s => formData.eligibleSemesters?.includes(s))}
-                                                                onChange={(e) => {
-                                                                    let sems = formData.eligibleSemesters || [];
-                                                                    if (e.target.checked) {
-                                                                        const toAdd = year.sems.filter(s => !sems.includes(s));
-                                                                        setFormData({ ...formData, eligibleSemesters: [...sems, ...toAdd] });
-                                                                    } else {
-                                                                        setFormData({ ...formData, eligibleSemesters: sems.filter(s => !year.sems.includes(s)) });
-                                                                    }
-                                                                }}
-                                                            />
-                                                            {year.label}
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
+                                        {departments.length > 0 ? departments.map(dept => (
+                                            <div key={dept.code} style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                    <input type="checkbox"
+                                                        checked={formData.eligibleBranches?.includes(dept.code)}
+                                                        onChange={(e) => {
+                                                            const branches = formData.eligibleBranches || [];
+                                                            if (e.target.checked) setFormData({ ...formData, eligibleBranches: [...branches, dept.code] });
+                                                            else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== dept.code) });
+                                                        }}
+                                                    />
+                                                    {dept.name} ({dept.code})
+                                                </label>
+                                                {formData.eligibleBranches?.includes(dept.code) && (
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
+                                                        {Array.from({ length: dept.maxSemesters || 8 }, (_, i) => i + 1).map(sem => (
+                                                            <label key={`${dept.code}-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                                <input type="checkbox"
+                                                                    checked={formData.eligibleSemesters?.includes(sem)}
+                                                                    onChange={(e) => {
+                                                                        const sems = formData.eligibleSemesters || [];
+                                                                        if (e.target.checked) setFormData({ ...formData, eligibleSemesters: [...sems, sem] });
+                                                                        else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
+                                                                    }}
+                                                                />
+                                                                Sem {sem}
+                                                            </label>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )) : <p>Loading Departments or None Found...</p>}
                                     </div>
                                 </div>
 
@@ -2003,6 +1944,10 @@ const AdminDashboard = () => {
                                 <div className="form-group" style={{ margin: 0 }}>
                                     <label>HOD Name</label>
                                     <input type="text" className="form-control" placeholder="HOD Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} />
+                                </div>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label>Semesters</label>
+                                    <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} />
                                 </div>
                                 <button type="submit" className="btn btn-primary" style={{ height: '42px' }}><i className="fas fa-plus"></i> Add Dept</button>
                             </form>

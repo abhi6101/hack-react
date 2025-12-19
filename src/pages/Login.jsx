@@ -69,6 +69,12 @@ const Login = () => {
                     localStorage.removeItem('companyName');
                 }
 
+                if (data.branch) {
+                    localStorage.setItem('adminBranch', data.branch);
+                } else {
+                    localStorage.removeItem('adminBranch');
+                }
+
                 if (isAdmin) {
                     let role = 'ADMIN'; // Default
                     if (isSuperAdmin) role = 'SUPER_ADMIN';

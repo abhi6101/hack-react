@@ -18,6 +18,19 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [departments, setDepartments] = useState([]);
+
+    React.useEffect(() => {
+        const fetchDepts = async () => {
+            try {
+                const res = await fetch('https://placement-portal-backend-nwaj.onrender.com/api/public/departments');
+                if (res.ok) setDepartments(await res.json());
+            } catch (e) {
+                console.error("Failed to load departments", e);
+            }
+        };
+        fetchDepts();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,18 +44,11 @@ const Register = () => {
 
     // Get semester options based on selected branch
     const getSemesterOptions = () => {
-        if (formData.branch === 'IMCA') {
-            return Array.from({ length: 10 }, (_, i) => ({ value: i + 1, label: `Semester ${i + 1}` }));
-        } else if (formData.branch === 'MCA') {
-            return Array.from({ length: 4 }, (_, i) => ({ value: i + 1, label: `Semester ${i + 1}` }));
-        } else if (formData.branch === 'BCA') {
-            return [
-                { value: 2, label: 'Year 1 (Semester 2)' },
-                { value: 4, label: 'Year 2 (Semester 4)' },
-                { value: 6, label: 'Year 3 (Semester 6)' }
-            ];
-        }
-        return [];
+        const branchCode = formData.branch;
+        const dept = departments.find(d => d.code === branchCode);
+        const maxSem = (dept && dept.maxSemesters) ? dept.maxSemesters : 8;
+
+        return Array.from({ length: maxSem }, (_, i) => ({ value: i + 1, label: `Semester ${i + 1}` }));
     };
 
     const handleSubmit = async (e) => {
@@ -171,9 +177,17 @@ const Register = () => {
                                     onChange={handleChange}
                                 >
                                     <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Your Branch --</option>
-                                    <option value="IMCA" style={{ background: '#1e293b', color: '#fff' }}>IMCA (Integrated MCA)</option>
-                                    <option value="MCA" style={{ background: '#1e293b', color: '#fff' }}>MCA (Master's)</option>
-                                    <option value="BCA" style={{ background: '#1e293b', color: '#fff' }}>BCA (Bachelor's)</option>
+                                    {departments.length > 0 ? departments.map(d => (
+                                        <option key={d.code} value={d.code} style={{ background: '#1e293b', color: '#fff' }}>
+                                            {d.name} ({d.code})
+                                        </option>
+                                    )) : (
+                                        <>
+                                            <option value="IMCA" style={{ background: '#1e293b', color: '#fff' }}>IMCA (Integrated MCA)</option>
+                                            <option value="MCA" style={{ background: '#1e293b', color: '#fff' }}>MCA (Master's)</option>
+                                            <option value="BCA" style={{ background: '#1e293b', color: '#fff' }}>BCA (Bachelor's)</option>
+                                        </>
+                                    )}
                                 </select>
                             </div>
 
