@@ -264,6 +264,8 @@ const AdminDashboard = () => {
     const [departments, setDepartments] = useState([]);
     const [loadingDepts, setLoadingDepts] = useState(false);
     const [deptForm, setDeptForm] = useState({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 });
+    const [deptMode, setDeptMode] = useState('single'); // 'single' | 'bulk'
+    const [bulkForm, setBulkForm] = useState({ category: '', degree: '', maxSemesters: 8, branches: '' });
 
     const loadDepartments = async () => {
         setLoadingDepts(true);
@@ -293,6 +295,43 @@ const AdminDashboard = () => {
                 setMessage({ text: err, type: 'error' });
             }
         } catch (e) { setMessage({ text: 'Failed to add dept', type: 'error' }); }
+    };
+
+
+    const handleBulkSubmit = async (e) => {
+        e.preventDefault();
+        const branches = bulkForm.branches.split(',').map(b => b.trim()).filter(b => b);
+        if (branches.length === 0) {
+            setMessage({ text: 'Please enter at least one branch', type: 'error' });
+            return;
+        }
+
+        const deptsToCreate = branches.map(b => ({
+            name: `${bulkForm.degree} in ${b}`,
+            code: `${bulkForm.degree.toUpperCase().replace(/[^A-Z0-9]/g, '')}_${b.toUpperCase().replace(/[^A-Z0-9]/g, '_')}`,
+            category: bulkForm.category,
+            degree: bulkForm.degree,
+            maxSemesters: bulkForm.maxSemesters,
+            hodName: 'TBD',
+            contactEmail: 'admin@college.edu'
+        }));
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/admin/departments/bulk`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(deptsToCreate)
+            });
+            if (res.ok) {
+                const msg = await res.text();
+                setMessage({ text: msg, type: 'success' });
+                loadDepartments();
+                setBulkForm({ category: '', degree: '', maxSemesters: 8, branches: '' });
+                setDeptMode('single');
+            } else {
+                setMessage({ text: 'Creation failed', type: 'error' });
+            }
+        } catch (e) { console.error(e); setMessage({ text: 'Bulk creation error', type: 'error' }); }
     };
 
     const deleteDept = async (id) => {
@@ -1932,25 +1971,53 @@ const AdminDashboard = () => {
                             <h3><i className="fas fa-university"></i> Manage Departments</h3>
                         </div>
                         <div className="form-grid" style={{ marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                            <form onSubmit={handleDeptSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%' }}>
-                                <div className="form-group" style={{ margin: 0 }}>
-                                    <label>Dept Name</label>
-                                    <input type="text" className="form-control" placeholder="e.g. Master of Computer Applications" required value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} />
-                                </div>
-                                <div className="form-group" style={{ margin: 0 }}>
-                                    <label>Dept Code (Unique)</label>
-                                    <input type="text" className="form-control" placeholder="e.g. MCA" required value={deptForm.code} onChange={e => setDeptForm({ ...deptForm, code: e.target.value.toUpperCase() })} />
-                                </div>
-                                <div className="form-group" style={{ margin: 0 }}>
-                                    <label>HOD Name</label>
-                                    <input type="text" className="form-control" placeholder="HOD Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} />
-                                </div>
-                                <div className="form-group" style={{ margin: 0 }}>
-                                    <label>Semesters</label>
-                                    <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} />
-                                </div>
-                                <button type="submit" className="btn btn-primary" style={{ height: '42px' }}><i className="fas fa-plus"></i> Add Dept</button>
-                            </form>
+                            <div style={{ display: 'flex', gap: '1rem', mb: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
+                                <button type="button" onClick={() => setDeptMode('single')} className={`btn ${deptMode === 'single' ? 'btn-primary' : 'btn-secondary'}`}>Single Dept</button>
+                                <button type="button" onClick={() => setDeptMode('bulk')} className={`btn ${deptMode === 'bulk' ? 'btn-primary' : 'btn-secondary'}`}>Bulk Program (e.g. B.Tech)</button>
+                            </div>
+
+                            {deptMode === 'single' ? (
+                                <form onSubmit={handleDeptSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%', marginTop: '1rem' }}>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label>Dept Name</label>
+                                        <input type="text" className="form-control" placeholder="e.g. Master of Computer Applications" required value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label>Dept Code (Unique)</label>
+                                        <input type="text" className="form-control" placeholder="e.g. MCA" required value={deptForm.code} onChange={e => setDeptForm({ ...deptForm, code: e.target.value.toUpperCase() })} />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label>HOD Name</label>
+                                        <input type="text" className="form-control" placeholder="HOD Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label>Semesters</label>
+                                        <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary" style={{ height: '42px' }}><i className="fas fa-plus"></i> Add Dept</button>
+                                </form>
+                            ) : (
+                                <form onSubmit={handleBulkSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%', marginTop: '1rem' }}>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label>Category</label>
+                                        <input type="text" className="form-control" placeholder="e.g. Engineering" required value={bulkForm.category} onChange={e => setBulkForm({ ...bulkForm, category: e.target.value })} />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label>Degree</label>
+                                        <input type="text" className="form-control" placeholder="e.g. B.Tech" required value={bulkForm.degree} onChange={e => setBulkForm({ ...bulkForm, degree: e.target.value })} />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label>Duration (Semesters)</label>
+                                        <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={bulkForm.maxSemesters} onChange={e => setBulkForm({ ...bulkForm, maxSemesters: parseInt(e.target.value) })} />
+                                    </div>
+                                    <div className="form-group full-width" style={{ margin: 0, gridColumn: '1 / -1' }}>
+                                        <label>Branches (Comma Separated)</label>
+                                        <textarea className="form-control" rows="2" placeholder="e.g. CSE Core, AIML, Civil, Electrical, Mechanical, Cyber Security" required value={bulkForm.branches} onChange={e => setBulkForm({ ...bulkForm, branches: e.target.value })}></textarea>
+                                        <small style={{ color: 'rgba(255,255,255,0.5)' }}>Used to generate: "B.Tech in CSE Core" (Code: BTECH_CSE_CORE)</small>
+                                    </div>
+                                    <button type="submit" className="btn btn-success" style={{ height: '42px', gridColumn: '1 / -1' }}><i className="fas fa-layer-group"></i> Create Program & Branches</button>
+                                </form>
+                            )}
                         </div>
 
                         {loadingDepts ? <div className="loading-indicator">Loading Departments...</div> : (
