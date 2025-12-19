@@ -107,6 +107,7 @@ const AdminDashboard = () => {
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
     const [editingInterview, setEditingInterview] = useState(null);
+    const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null); // For ID Card Modal
     const [applications, setApplications] = useState([]);
     const [loadingApplications, setLoadingApplications] = useState(false);
     const [interviewDetails, setInterviewDetails] = useState({
@@ -332,6 +333,24 @@ const AdminDashboard = () => {
                 setMessage({ text: 'Creation failed', type: 'error' });
             }
         } catch (e) { console.error(e); setMessage({ text: 'Bulk creation error', type: 'error' }); }
+    };
+
+
+
+    const approveStudent = async (id, status) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/student-profile/${id}/status?status=${status}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                setMessage({ text: `Student ${status}`, type: 'success' });
+                fetchAllProfiles(); // Refresh list
+                setSelectedProfileForVerification(null);
+            } else {
+                setMessage({ text: 'Action failed', type: 'error' });
+            }
+        } catch (e) { console.error(e); }
     };
 
     const deleteDept = async (id) => {
@@ -898,10 +917,10 @@ const AdminDashboard = () => {
                             <tr>
                                 <th>Name</th>
                                 <th>Enrollment</th>
-                                <th>Phone</th>
                                 <th>Branch/Sem</th>
-                                <th>CGPA</th>
-                                <th>Review</th>
+                                <th>Batch</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -912,12 +931,18 @@ const AdminDashboard = () => {
                                     <tr key={profile.id}>
                                         <td style={{ fontWeight: '500' }}>{profile.fullName}</td>
                                         <td>{profile.enrollmentNumber}</td>
-                                        <td>{profile.phoneNumber}</td>
                                         <td>{profile.branch} - Sem {profile.semester}</td>
-                                        <td>{profile.cgpa || 'N/A'}</td>
+                                        <td>{profile.batch || 'N/A'}</td>
                                         <td>
-                                            <button className="btn-small btn-primary" onClick={() => alert('View full details feature coming soon via modal!')}>
-                                                <i className="fas fa-eye"></i> View
+                                            {profile.approvalStatus === 'APPROVED' ? (
+                                                <span className="badge badge-success" style={{ background: '#22c55e', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem' }}>Verified</span>
+                                            ) : (
+                                                <span className="badge badge-warning" style={{ background: '#eab308', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', color: '#000' }}>Pending</span>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <button className="btn-small btn-primary" onClick={() => setSelectedProfileForVerification(profile)}>
+                                                <i className="fas fa-id-card"></i> Verify
                                             </button>
                                         </td>
                                     </tr>
@@ -2176,6 +2201,73 @@ const AdminDashboard = () => {
                 </header>
 
                 {renderContent()}
+
+                {/* Verification Modal */}
+                {selectedProfileForVerification && (
+                    <div style={{
+                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                        background: 'rgba(0,0,0,0.85)', zIndex: 9999,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        backdropFilter: 'blur(5px)'
+                    }}>
+                        <div className="surface-glow" style={{
+                            width: '1000px', maxWidth: '95%',
+                            height: '80vh', overflow: 'hidden',
+                            padding: '0', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)',
+                            display: 'flex', flexDirection: 'column'
+                        }}>
+                            <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a' }}>
+                                <h2 style={{ margin: 0, fontSize: '1.5rem' }}>Verify Student Identity</h2>
+                                <button onClick={() => setSelectedProfileForVerification(null)} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '2rem', cursor: 'pointer' }}>&times;</button>
+                            </div>
+
+                            <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+                                {/* Left: Data */}
+                                <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', borderRight: '1px solid rgba(255,255,255,0.1)', background: '#1e293b' }}>
+                                    <h3 style={{ color: '#94a3b8', marginBottom: '1.5rem', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>Submitted Details</h3>
+
+                                    <div style={{ display: 'grid', gap: '1.5rem' }}>
+                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Full Name</label> <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{selectedProfileForVerification.fullName}</div></div>
+                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Enrollment Number</label> <div style={{ fontSize: '1.2rem', color: '#60a5fa', fontFamily: 'monospace' }}>{selectedProfileForVerification.enrollmentNumber}</div></div>
+
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                            <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Course/Branch</label> <div style={{ fontWeight: '500' }}>{selectedProfileForVerification.branch}</div></div>
+                                            <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Current Semester</label> <div style={{ fontWeight: '500' }}>{selectedProfileForVerification.semester}</div></div>
+                                        </div>
+
+                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Batch Session</label> <div style={{ fontWeight: '500', color: '#34d399' }}>{selectedProfileForVerification.batch}</div></div>
+                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Phone</label> <div style={{ fontWeight: '500' }}>{selectedProfileForVerification.phoneNumber}</div></div>
+                                    </div>
+                                </div>
+
+                                {/* Right: ID Card */}
+                                <div style={{ flex: 1.2, padding: '2rem', background: '#0f172a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <h3 style={{ color: '#94a3b8', marginBottom: '1rem', width: '100%', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>ID Card Image</h3>
+                                    <div style={{
+                                        flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        border: '2px dashed #334155', borderRadius: '12px', background: '#020617', padding: '1rem'
+                                    }}>
+                                        <img
+                                            src={`${API_BASE_URL}/student-profile/id-card/${selectedProfileForVerification.id}`}
+                                            alt="ID Card"
+                                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '4px' }}
+                                            onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; e.target.parentNode.innerHTML += '<span style="color:#64748b">No ID Card Available</span>'; }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ padding: '1.5rem', background: '#1e293b', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                                <button className="btn-secondary" onClick={() => approveStudent(selectedProfileForVerification.id, 'REJECTED')} style={{ background: '#ef444415', color: '#ef4444', border: '1px solid #ef4444' }}>
+                                    <i className="fas fa-times"></i> Reject
+                                </button>
+                                <button className="btn-primary" onClick={() => approveStudent(selectedProfileForVerification.id, 'APPROVED')} style={{ background: '#22c55e', color: '#fff', border: 'none', padding: '0.75rem 2rem' }}>
+                                    <i className="fas fa-check-circle"></i> Verify & Approve Student
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     );

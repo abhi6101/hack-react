@@ -21,7 +21,8 @@ const Onboarding = () => {
         startYear: new Date().getFullYear().toString(),
         batch: '',
         skills: '',
-        resumeFile: null
+        resumeFile: null,
+        idCardFile: null
     });
 
     const [departments, setDepartments] = useState([]);
@@ -86,9 +87,9 @@ const Onboarding = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleFileChange = (e) => {
+    const handleFileChange = (e, type) => {
         if (e.target.files && e.target.files[0]) {
-            setFormData(prev => ({ ...prev, resumeFile: e.target.files[0] }));
+            setFormData(prev => ({ ...prev, [type]: e.target.files[0] }));
         }
     };
 
@@ -123,9 +124,19 @@ const Onboarding = () => {
 
             if (!res.ok) throw new Error("Failed to save profile");
 
-            // 2. Upload Resume if present
-            // Note: Currently we don't have a direct "Upload Resume to Profile" endpoint in one go. 
-            // We usually treat resume upload separately or need a Multipart endpoint. 
+            // 2. Upload ID Card if present
+            if (formData.idCardFile) {
+                const idCardData = new FormData();
+                idCardData.append('file', formData.idCardFile);
+                await fetch(`${API_BASE_URL}/student-profile/upload-id-card`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: idCardData
+                });
+            }
+
+            // 3. Upload Resume if present
+            // Note: Since ResumeController has issues, we skip it or implement similar logic later. 
             // For now, we will verify the profile save and assume resume logic comes later or we skip it if no endpoint exists yet.
             // *Wait*, we need a Resume Upload endpoint. 
             // If the user selected a file, we should upload it.
@@ -259,28 +270,54 @@ const Onboarding = () => {
                     {/* Step 3: Resume */}
                     {step === 3 && (
                         <div className="form-step fade-in">
-                            <h3 style={{ color: '#fff', marginBottom: '1.5rem' }}><i className="fas fa-file-pdf"></i> Resume Upload</h3>
+                            <h3 style={{ color: '#fff', marginBottom: '1.5rem' }}><i className="fas fa-file-upload"></i> Document Upload</h3>
 
+                            {/* ID Card Upload */}
+                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>College ID Card *</label>
                             <div style={{
                                 background: 'rgba(255,255,255,0.05)',
                                 border: '2px dashed rgba(255,255,255,0.2)',
-                                padding: '2rem',
+                                padding: '1.5rem',
+                                borderRadius: '12px',
+                                textAlign: 'center',
+                                marginBottom: '2rem',
+                                cursor: 'pointer'
+                            }} onClick={() => document.getElementById('id-card-file').click()}>
+                                <input type="file" id="id-card-file" accept="image/*,.pdf" onChange={(e) => handleFileChange(e, 'idCardFile')} style={{ display: 'none' }} />
+                                {formData.idCardFile ? (
+                                    <div>
+                                        <i className="fas fa-check-circle" style={{ fontSize: '2rem', color: '#22c55e', marginBottom: '0.5rem' }}></i>
+                                        <p>{formData.idCardFile.name}</p>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <i className="fas fa-id-card" style={{ fontSize: '2rem', color: '#6366f1', marginBottom: '0.5rem' }}></i>
+                                        <p>Upload ID Card</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Resume Upload */}
+                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Resume (PDF)</label>
+                            <div style={{
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '2px dashed rgba(255,255,255,0.2)',
+                                padding: '1.5rem',
                                 borderRadius: '12px',
                                 textAlign: 'center',
                                 marginBottom: '2rem',
                                 cursor: 'pointer'
                             }} onClick={() => document.getElementById('resume-file').click()}>
-                                <input type="file" id="resume-file" accept=".pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+                                <input type="file" id="resume-file" accept=".pdf" onChange={(e) => handleFileChange(e, 'resumeFile')} style={{ display: 'none' }} />
                                 {formData.resumeFile ? (
                                     <div>
-                                        <i className="fas fa-check-circle" style={{ fontSize: '3rem', color: '#22c55e', marginBottom: '1rem' }}></i>
+                                        <i className="fas fa-check-circle" style={{ fontSize: '2rem', color: '#22c55e', marginBottom: '0.5rem' }}></i>
                                         <p>{formData.resumeFile.name}</p>
                                     </div>
                                 ) : (
                                     <div>
-                                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: '#6366f1', marginBottom: '1rem' }}></i>
-                                        <p>Click to upload your Resume (PDF)</p>
-                                        <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>Max size: 5MB</p>
+                                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '2rem', color: '#6366f1', marginBottom: '0.5rem' }}></i>
+                                        <p>Upload Resume</p>
                                     </div>
                                 )}
                             </div>
