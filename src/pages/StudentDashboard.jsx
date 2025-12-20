@@ -108,9 +108,15 @@ const StudentDashboard = () => {
     }, [applications, interviews, profile, loading]);
 
     const checkAutoModalTrigger = () => {
-        if (profile) {
-            // Check 1: Incomplete Profile (First login or missing details)
-            const isIncomplete = !profile.branch || !profile.semester || !profile.phone || !profile.enrollmentNumber;
+        // Check if vital information is missing in the USER object (which we just updated to include computerCode/batch)
+        if (user) {
+            const isIncomplete = !user.branch ||
+                !user.semester ||
+                !user.phone ||
+                !user.computerCode ||
+                !user.batch ||
+                user.computerCode === 'null' || // Handle potential string "null"
+                user.computerCode.trim() === '';
 
             // Check 2: Semester Update Date (Jan 1, 2026)
             const isUpdateDue = new Date() >= new Date('2026-01-01');
@@ -123,9 +129,6 @@ const StudentDashboard = () => {
                 setShowEditModal(true);
                 sessionStorage.setItem('semesterUpdatePrompted', 'true');
             }
-        } else if (!loading && user) {
-            // No profile found at all -> First login
-            setShowEditModal(true);
         }
     };
 

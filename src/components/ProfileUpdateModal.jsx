@@ -6,7 +6,9 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
         name: '',
         phone: '',
         branch: '',
-        semester: ''
+        semester: '',
+        batch: '',
+        computerCode: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -26,7 +28,9 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                             name: userData.name || '',
                             phone: userData.phone || '',
                             branch: userData.branch || '',
-                            semester: userData.semester || ''
+                            semester: userData.semester || '',
+                            batch: userData.batch || '',
+                            computerCode: userData.computerCode || ''
                         });
                     }
                 } catch (err) {
@@ -39,7 +43,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData(prev => ({ ...prev, [name]: value }));
 
         // Reset semester when branch changes
         if (name === 'branch') {
@@ -79,7 +83,9 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                     name: formData.name,
                     phone: formData.phone,
                     branch: formData.branch,
-                    semester: parseInt(formData.semester)
+                    semester: parseInt(formData.semester),
+                    batch: formData.batch,
+                    computerCode: formData.computerCode
                 })
             });
 
@@ -198,6 +204,63 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                         <small style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>10 digits only</small>
                     </div>
 
+                    {/* Computer Code Field */}
+                    <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fff', fontSize: '0.9rem' }}>
+                            Computer Code (Student ID) *
+                        </label>
+                        <input
+                            type="text"
+                            name="computerCode"
+                            required
+                            value={formData.computerCode}
+                            onChange={handleChange}
+                            placeholder="e.g. 59500"
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                color: '#fff',
+                                fontSize: '1rem'
+                            }}
+                        />
+                        <small style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>Unique ID provided by college</small>
+                    </div>
+
+                    {/* Batch Field */}
+                    <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fff', fontSize: '0.9rem' }}>
+                            Batch (Passout Year) *
+                        </label>
+                        <select
+                            name="batch"
+                            required
+                            value={formData.batch}
+                            onChange={handleChange}
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                color: '#fff',
+                                fontSize: '1rem'
+                            }}
+                            className="dark-select"
+                        >
+                            <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Batch --</option>
+                            <option value="2024" style={{ background: '#1e293b', color: '#fff' }}>2024</option>
+                            <option value="2025" style={{ background: '#1e293b', color: '#fff' }}>2025</option>
+                            <option value="2026" style={{ background: '#1e293b', color: '#fff' }}>2026</option>
+                            <option value="2027" style={{ background: '#1e293b', color: '#fff' }}>2027</option>
+                            <option value="2028" style={{ background: '#1e293b', color: '#fff' }}>2028</option>
+                            <option value="2029" style={{ background: '#1e293b', color: '#fff' }}>2029</option>
+                            <option value="2030" style={{ background: '#1e293b', color: '#fff' }}>2030</option>
+                        </select>
+                    </div>
+
                     {/* Branch Field */}
                     <div style={{ marginBottom: '1rem' }}>
                         <label style={{ display: 'block', marginBottom: '0.5rem', color: '#fff', fontSize: '0.9rem' }}>
@@ -273,7 +336,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                         <button
                             type="submit"
-                            disabled={loading || !formData.name || !formData.phone || !formData.branch || !formData.semester}
+                            disabled={loading || !formData.name || !formData.phone || !formData.branch || !formData.semester || !formData.computerCode || !formData.batch}
                             style={{
                                 flex: 1,
                                 padding: '0.75rem',
