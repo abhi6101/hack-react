@@ -650,12 +650,23 @@ const Register = () => {
                         detectedDocType = "Driving License";
                     } else if (lowerText.includes("voter") || lowerText.includes("electioncommission") || lowerText.includes("epic")) {
                         detectedDocType = "Voter ID";
+                    } else if (!text.match(/IPS\s*Academy/i) && !text.includes("Indore")) {
+                        // Check for other generic Identity Cards / Documents
+                        const genericIdKeywords = ["university", "college", "school", "identity", "employee", "institute", "address", "card"];
+                        if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 40) {
+                            detectedDocType = "External Identity Card";
+                        }
                     }
 
                     if (detectedDocType) {
-                        setScanStatus(`⚠️ ${detectedDocType.toUpperCase()} DETECTED`);
+                        setScanStatus(`⚠️ ${detectedDocType.toUpperCase()}`);
                         window.speechSynthesis.cancel();
-                        const msg = new SpeechSynthesisUtterance(`Security Alert. You are showing a ${detectedDocType}. This is not allowed. Please show your Physical IPS Academy ID Card.`);
+
+                        const alertText = detectedDocType === "External Identity Card"
+                            ? "Security Alert. This is an external Identity Card. Only IPS Academy IDs are permitted. Please show the correct card."
+                            : `Security Alert. You are showing a ${detectedDocType}. This is not allowed. Please show your Physical IPS Academy ID Card.`;
+
+                        const msg = new SpeechSynthesisUtterance(alertText);
                         msg.rate = 1.0;
                         msg.pitch = 1.0;
                         window.speechSynthesis.speak(msg);
