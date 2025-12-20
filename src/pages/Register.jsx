@@ -727,9 +727,9 @@ const Register = () => {
                                 <small style={{ color: '#34d399' }}>Verified from ID Card</small>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="username">Username</label>
-                                <input type="text" id="username" name="username" required placeholder="e.g., @yourusername" value={formData.username} onChange={handleChange} />
-                                <small>Must start with '@', be lowercase, and have no spaces.</small>
+                                <label htmlFor="username">Username <i className="fas fa-lock text-green-400" title="Auto-generated from verified name"></i></label>
+                                <input type="text" id="username" name="username" required placeholder="e.g., @yourusername" value={formData.username} readOnly={!!scannedData} className={scannedData ? "locked-field" : ""} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} onChange={handleChange} />
+                                <small style={{ color: scannedData ? '#34d399' : '#aaa' }}>{scannedData ? 'Auto-generated from verified name. Login with your Computer Code.' : 'Must start with \'@\', be lowercase, and have no spaces.'}</small>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="email">Email Address</label>
