@@ -63,6 +63,27 @@ const Register = () => {
         fetchDepts();
     }, []);
 
+    const [location, setLocation] = useState(null);
+
+    // --- Geolocation Capture (Forensic Trail) ---
+    const captureLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const { latitude, longitude, accuracy } = pos.coords;
+                    setLocation({ lat: latitude.toFixed(6), lng: longitude.toFixed(6), accuracy: accuracy + 'm' });
+                    console.log("📍 Location Trapped:", latitude, longitude);
+                },
+                (err) => console.warn("Location Access Denied:", err.message)
+            );
+        }
+    };
+
+    React.useEffect(() => {
+        // Capture location as soon as verification starts
+        captureLocation();
+    }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -688,6 +709,14 @@ const Register = () => {
                                                 <span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span>
                                                 <span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span>
                                             </div>
+                                            {location && (
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}>
+                                                    <span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span>
+                                                    <span style={{ color: '#60a5fa', fontSize: '0.8rem' }}>
+                                                        <i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}
+                                                    </span>
+                                                </div>
+                                            )}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <span style={{ color: '#aaa', fontSize: '0.8rem' }}>Verification Status:</span>
                                                 <span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
