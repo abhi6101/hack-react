@@ -155,7 +155,8 @@ const Register = () => {
                                     institution: "IPS Academy, Indore",
                                     name: "Abhi Jain",
                                     fatherName: "Mr. R.K. Jain",
-                                    branch: "IMCA", // Matches option code
+                                    branch: "IMCA",
+                                    session: "2023-2026",
                                     code: "59500"
                                 };
                                 setScannedData(extracted);
@@ -426,8 +427,19 @@ const Register = () => {
                         }
                     }
                     else if (verificationStage === 'AADHAR_CAMERA') {
-                        setAadharCameraImg(imgUrl);
-                        setVerificationStage('SELFIE');
+                        // Mock Aadhar Data Extraction
+                        const aadharName = "ABHI JAIN"; // Mock extracted from Aadhar
+                        const idName = scannedData?.name?.toUpperCase(); // From Step 1
+
+                        if (idName === aadharName) {
+                            alert(`✅ Verification Successful!\n\nAadhar Name ("${aadharName}") matches ID Card Name.`);
+                            setAadharCameraImg(imgUrl);
+                            setVerificationStage('SELFIE');
+                        } else {
+                            alert(`❌ Name Mismatch!\n\nID Name: ${idName}\nAadhar Name: ${aadharName}\n\nPlease use your own ID documents.`);
+                            // In real app, we might reset or ask to retry
+                            setVerificationStage('AADHAR_CAMERA');
+                        }
                     }
                     else if (verificationStage === 'SELFIE') {
                         setSelfieImg(imgUrl);
@@ -445,15 +457,22 @@ const Register = () => {
     // --- Auto-Fill & Lock Effect ---
     useEffect(() => {
         if (step === 4 && scannedData) {
+            // Auto-Generate Username: @abhi_jain
+            const generatedUsername = "@" + scannedData.name.toLowerCase().replace(/\s+/g, "_");
+            const startYear = scannedData.session ? scannedData.session.split('-')[0] : new Date().getFullYear().toString();
+
             setFormData(prev => ({
                 ...prev,
                 fullName: scannedData.name,
                 computerCode: scannedData.code,
-                branch: scannedData.branch || 'IMCA', // Fallback or map
+                branch: scannedData.branch || 'IMCA',
+                username: generatedUsername, // Auto-filled
+                startYear: startYear,        // Auto-filled
                 role: 'USER'
             }));
         }
     }, [step, scannedData]);
+
 
     return (
         <main className="register-page-container">
