@@ -92,6 +92,10 @@ body {
 .sidebar-menu {
     flex-grow: 1;
     padding: 2rem 1rem;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    overflow-x: hidden;
+    /* Hide horizontal overflow */
 }
 
 .sidebar-menu ul {
@@ -144,14 +148,6 @@ body {
     font-size: 1.1rem;
     width: 24px;
     text-align: center;
-}
-
-text-decoration: none;
-border-radius: 8px;
-margin-bottom: 0.5rem;
-font-weight: 500;
-transition: all 0.3s ease;
-position: relative;
 }
 
 .sidebar-menu a:hover {
