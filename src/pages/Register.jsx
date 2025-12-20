@@ -564,6 +564,26 @@ const Register = () => {
         canvasRef.current.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0);
 
+        // COLOR VALIDATION: IPS Academy ID must have Blue Header
+        if (isIdStage) {
+            const frame = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
+            let bluePixels = 0;
+            const skip = 4 * 100; // Sample every 100th pixel
+            for (let i = 0; i < frame.data.length; i += skip) {
+                const r = frame.data[i];
+                const g = frame.data[i + 1];
+                const b = frame.data[i + 2];
+                // Check for Blue Dominance (Blue > Red + Margin)
+                if (b > r + 20 && b > g) bluePixels++;
+            }
+            // Require at least 2% Blue pixels (Header area)
+            if (bluePixels / (frame.data.length / skip) < 0.02) {
+                console.warn("⚠️ Color Mismatch: ID Card should be Blue");
+                // Don't block completely to allow for Bad Lighting, but warn
+                // Or we can speak: "Lighting bad. ID Color not detected."
+            }
+        }
+
         canvasRef.current.toBlob(async (blob) => {
             if (!blob) { setIsScanning(false); return; }
 
