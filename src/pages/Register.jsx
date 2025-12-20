@@ -79,7 +79,7 @@ const Register = () => {
 
     // --- Steps Renderers ---
 
-    // Step 1: Upload Document (Primary: ID Card, Secondary: Fee Receipt)
+    // Step 1: Upload Document (Primary: ID Card, Secondary: Fee Receipt [Fallback])
     const renderStep1 = () => (
         <div className="animate-fade-in">
             <Link to="/" style={{
@@ -98,10 +98,12 @@ const Register = () => {
             </Link>
 
             <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-                Upload College ID Card
+                {verifyMethod === 'id_card' ? 'Upload College ID Card' : 'Upload Fee Receipt + Aadhar'}
             </h2>
             <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#aaa', marginBottom: '2rem' }}>
-                Please upload a clear photo of your ID Card to verify your identity.
+                {verifyMethod === 'id_card'
+                    ? "Please upload a clear photo of your ID Card to verify your identity."
+                    : "Since ID details were incorrect, please upload Fee Receipt & Aadhar for manual verification."}
             </p>
 
             <div
@@ -110,12 +112,13 @@ const Register = () => {
                     borderRadius: '12px',
                     padding: '3rem',
                     textAlign: 'center',
-                    background: 'rgba(255,255,255,0.02)',
+                    background: verifyMethod === 'id_card' ? 'rgba(255,255,255,0.02)' : 'rgba(239, 68, 68, 0.05)',
+                    borderColor: verifyMethod === 'id_card' ? 'rgba(255,255,255,0.2)' : 'rgba(239, 68, 68, 0.3)',
                     marginBottom: '2rem'
                 }}
             >
-                <i className="fas fa-id-card" style={{ fontSize: '3rem', color: '#667eea', marginBottom: '1rem' }}></i>
-                <p>Click to browse or drag file here</p>
+                <i className={`fas ${verifyMethod === 'id_card' ? 'fa-id-card' : 'fa-file-invoice'}`} style={{ fontSize: '3rem', color: verifyMethod === 'id_card' ? '#667eea' : '#d1d5db', marginBottom: '1rem' }}></i>
+                <p>Click to browse or drag {verifyMethod === 'id_card' ? 'ID Card' : 'Documents'} here</p>
                 <input
                     type="file"
                     accept="image/*,.pdf"
@@ -130,9 +133,6 @@ const Register = () => {
                     <p style={{ marginTop: '1rem', color: '#667eea' }}>AI is analyzing your document...</p>
                 </div>
             )}
-
-            {/* Method Switcher */}
-
         </div>
     );
 
@@ -165,10 +165,16 @@ const Register = () => {
             <div style={{ display: 'flex', gap: '1rem' }}>
                 <button
                     className="btn"
-                    style={{ flex: 1, background: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.3)' }}
-                    onClick={() => alert("Redirecting to Manual Verification Flow (Face/Aadhar)...")}
+                    style={{ flex: 1, background: 'rgba(239, 68, 68, 0.1)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                    onClick={() => {
+                        if (window.confirm("If OCR details are wrong, you must upload Fee Receipt + Aadhar for Manual Verification. Proceed?")) {
+                            setVerifyMethod('fee_receipt');
+                            setScannedData(null);
+                            setStep(1);
+                        }
+                    }}
                 >
-                    No, Edit
+                    No, Details are Wrong
                 </button>
                 <button
                     className="btn btn-primary"
