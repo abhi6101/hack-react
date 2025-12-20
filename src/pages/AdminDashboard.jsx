@@ -84,6 +84,14 @@ const AdminDashboard = () => {
     const role = normalizedRole || 'USER';
     const myCompanyName = localStorage.getItem('companyName');
 
+    // Helper function to handle 401 errors
+    const handleUnauthorized = () => {
+        console.error('🚫 Authentication failed - Token invalid or expired');
+        alert('Your session has expired. Please log in again.');
+        localStorage.clear();
+        navigate('/login');
+    };
+
     // Derived states
     const isCompanyAdmin = role === 'COMPANY_ADMIN';
     const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'ADMIN';
@@ -99,10 +107,24 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [interviews, setInterviews] = useState([]);
     const [interviewForm, setInterviewForm] = useState({
-        company: '', date: '', time: '', venue: '', positions: '', eligibility: ''
+        company: '',
+        date: '',
+        time: '',
+        venue: '',
+        positions: '',
+        eligibility: '',
+        eligibleBranches: [],      // For branch filtering
+        eligibleSemesters: [],     // For semester filtering
+        eligibleBatches: []        // For batch/passout year filtering
     });
     const [userForm, setUserForm] = useState({
-        username: '', email: '', password: '', role: 'USER'
+        username: '',
+        email: '',
+        password: '',
+        role: 'USER',
+        adminBranch: '',           // For DEPT_ADMIN
+        allowedDepartments: [],    // For COMPANY_ADMIN
+        companyName: ''            // For COMPANY_ADMIN
     });
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
@@ -691,17 +713,44 @@ const AdminDashboard = () => {
             : `${ADMIN_API_URL}/users`;
         const method = editingUser ? 'PUT' : 'POST';
 
+        // Prepare payload
+        const payload = {
+            username: userForm.username,
+            email: userForm.email,
+            password: userForm.password,
+            role: userForm.role
+        };
+
+        // Add role-specific fields
+        if (userForm.role === 'DEPT_ADMIN' && userForm.adminBranch) {
+            payload.adminBranch = userForm.adminBranch;
+        }
+
+        if (userForm.role === 'COMPANY_ADMIN') {
+            payload.companyName = userForm.companyName;
+            // Convert array to comma-separated string
+            payload.allowedDepartments = userForm.allowedDepartments.join(',');
+        }
+
         try {
             const res = await fetch(endpoint, {
                 method,
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(userForm)
+                body: JSON.stringify(payload)
             });
 
             if (res.ok) {
                 setMessage({ text: editingUser ? 'User updated!' : 'User created!', type: 'success' });
                 loadUsers();
-                setUserForm({ username: '', email: '', password: '', role: 'USER' });
+                setUserForm({
+                    username: '',
+                    email: '',
+                    password: '',
+                    role: 'USER',
+                    adminBranch: '',
+                    allowedDepartments: [],
+                    companyName: ''
+                });
                 setEditingUser(null);
             } else {
                 const error = await res.text();
@@ -859,6 +908,25 @@ const AdminDashboard = () => {
         e.preventDefault();
         setMessage({ text: '', type: '' });
 
+        console.log('🚀 Job Posting Started...');
+        console.log('📝 Form Data:', formData);
+
+        // Validation
+        if (!formData.jobTitle || !formData.companyName || !formData.jobDescription || !formData.applyLink || !formData.lastDate || !formData.salary) {
+            const missingFields = [];
+            if (!formData.jobTitle) missingFields.push('Job Title');
+            if (!formData.companyName) missingFields.push('Company Name');
+            if (!formData.jobDescription) missingFields.push('Job Description');
+            if (!formData.applyLink) missingFields.push('Apply Link');
+            if (!formData.lastDate) missingFields.push('Last Date');
+            if (!formData.salary) missingFields.push('Salary');
+
+            const errorMsg = `Missing required fields: ${missingFields.join(', ')}`;
+            console.error('❌ Validation Error:', errorMsg);
+            setMessage({ text: errorMsg, type: 'error' });
+            return;
+        }
+
         const jobPayload = {
             title: formData.jobTitle,
             description: formData.jobDescription,
@@ -867,30 +935,57 @@ const AdminDashboard = () => {
             last_date: formData.lastDate,
             salary: parseInt(formData.salary),
             interview_details: JSON.stringify(interviewDetails),
-            eligibleBranches: formData.eligibleBranches,
-            eligibleSemesters: formData.eligibleSemesters
+            eligibleBranches: formData.eligibleBranches || [],
+            eligibleSemesters: formData.eligibleSemesters || []
         };
+
+        console.log('📦 Job Payload:', jobPayload);
 
         const endpoint = editingJob
             ? `${ADMIN_API_URL}/jobs/${editingJob.id}`
             : `${ADMIN_API_URL}/jobs?sendEmails=${emailSettings.masterEmailEnabled && emailSettings.newJobEmailEnabled && sendEmailNotifications}`;
         const method = editingJob ? 'PUT' : 'POST';
 
+        console.log('🌐 API Endpoint:', endpoint);
+        console.log('📨 HTTP Method:', method);
+        console.log('🔑 Token:', token ? 'Present' : 'Missing');
+
         try {
+            console.log('⏳ Sending request to backend...');
             const response = await fetch(endpoint, {
                 method: method,
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(jobPayload)
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to save job');
+            console.log('📡 Response Status:', response.status, response.statusText);
+
+            // Handle 401 Unauthorized
+            if (response.status === 401) {
+                handleUnauthorized();
+                return;
             }
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to save job';
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorData.error || JSON.stringify(errorData);
+                    console.error('❌ Backend Error Response:', errorData);
+                } catch (parseError) {
+                    const errorText = await response.text();
+                    errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+                    console.error('❌ Backend Error Text:', errorText);
+                }
+                throw new Error(errorMessage);
+            }
+
+            const savedJob = await response.json();
+            console.log('✅ Job saved successfully:', savedJob);
 
             setMessage({ text: editingJob ? 'Job updated successfully!' : 'Job posted successfully!', type: 'success' });
             setFormData({
-                jobTitle: '', companyName: '', jobDescription: '', applyLink: '', lastDate: '', salary: '',
+                jobTitle: '', companyName: isCompanyAdmin ? myCompanyName : '', jobDescription: '', applyLink: '', lastDate: '', salary: '',
                 eligibleBranches: [], eligibleSemesters: []
             });
             setInterviewDetails({
@@ -903,7 +998,9 @@ const AdminDashboard = () => {
             loadJobs();
             setTimeout(() => setMessage({ text: '', type: '' }), 3000);
         } catch (error) {
+            console.error('❌ Job Posting Error:', error);
             setMessage({ text: error.message, type: 'error' });
+            setTimeout(() => setMessage({ text: '', type: '' }), 5000);
         }
     };
 
@@ -1538,36 +1635,89 @@ const AdminDashboard = () => {
                                         </div>
                                         {userForm.role === 'DEPT_ADMIN' && (
                                             <div className="form-group">
-                                                <label>Department (Branch)</label>
+                                                <label>Admin Branch (Department to Manage) *</label>
                                                 <select
                                                     className="form-control"
                                                     required
-                                                    value={userForm.branch || ''}
-                                                    onChange={e => setUserForm({ ...userForm, branch: e.target.value })}
+                                                    value={userForm.adminBranch || ''}
+                                                    onChange={e => setUserForm({ ...userForm, adminBranch: e.target.value })}
                                                 >
-                                                    <option value="">Select Department</option>
+                                                    <option value="">Select Branch to Manage</option>
                                                     {departments.map(d => (
                                                         <option key={d.id} value={d.code}>{d.name} ({d.code})</option>
                                                     ))}
                                                 </select>
+                                                <small className="form-text text-muted">
+                                                    This admin will manage only this branch
+                                                </small>
                                             </div>
                                         )}
                                         {userForm.role === 'COMPANY_ADMIN' && (
-                                            <div className="form-group">
-                                                <label>Company Name (for Company Admin)</label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    required
-                                                    value={userForm.companyName || ''}
-                                                    onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
-                                                    placeholder="e.g. Google, Microsoft"
-                                                />
-                                            </div>
+                                            <>
+                                                <div className="form-group">
+                                                    <label>Company Name *</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        required
+                                                        value={userForm.companyName || ''}
+                                                        onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
+                                                        placeholder="e.g. Google, Microsoft"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <label>Allowed Departments *</label>
+                                                    <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '4px', backgroundColor: '#f8f9fa' }}>
+                                                        {departments.length > 0 ? departments.map(dept => (
+                                                            <div key={dept.id} className="form-check">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="form-check-input"
+                                                                    id={`dept-${dept.code}`}
+                                                                    checked={userForm.allowedDepartments.includes(dept.code)}
+                                                                    onChange={e => {
+                                                                        if (e.target.checked) {
+                                                                            setUserForm({
+                                                                                ...userForm,
+                                                                                allowedDepartments: [...userForm.allowedDepartments, dept.code]
+                                                                            });
+                                                                        } else {
+                                                                            setUserForm({
+                                                                                ...userForm,
+                                                                                allowedDepartments: userForm.allowedDepartments.filter(d => d !== dept.code)
+                                                                            });
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <label className="form-check-label" htmlFor={`dept-${dept.code}`}>
+                                                                    {dept.name} ({dept.code})
+                                                                </label>
+                                                            </div>
+                                                        )) : (
+                                                            <p className="text-muted">No departments available. Please create departments first.</p>
+                                                        )}
+                                                    </div>
+                                                    <small className="form-text text-muted">
+                                                        Company can post jobs for selected departments only
+                                                    </small>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                     <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
-                                    {editingUser && <button type="button" className="btn btn-secondary" onClick={() => { setEditingUser(null); setUserForm({ username: '', email: '', password: '', role: 'USER' }); }}>Cancel</button>}
+                                    {editingUser && <button type="button" className="btn btn-secondary" onClick={() => {
+                                        setEditingUser(null);
+                                        setUserForm({
+                                            username: '',
+                                            email: '',
+                                            password: '',
+                                            role: 'USER',
+                                            adminBranch: '',
+                                            allowedDepartments: [],
+                                            companyName: ''
+                                        });
+                                    }}>Cancel</button>}
                                 </form>
                             </section>
                         )}
