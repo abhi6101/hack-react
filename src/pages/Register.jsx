@@ -137,12 +137,31 @@ const Register = () => {
                             <div className="animate-fade-out" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: '#fff', zIndex: 10, opacity: 0.8 }}></div>
                         )}
 
+                        {/* Document Label Overlay */}
+                        <div style={{ position: 'absolute', top: '20px', left: '0', width: '100%', textAlign: 'center', pointerEvents: 'none', zIndex: 10 }}>
+                            <span style={{
+                                background: 'rgba(0, 0, 0, 0.8)',
+                                padding: '8px 20px',
+                                borderRadius: '30px',
+                                color: '#fff',
+                                fontWeight: '800',
+                                fontSize: '1.2rem',
+                                letterSpacing: '1px',
+                                border: '2px solid rgba(255, 255, 255, 0.2)',
+                                textTransform: 'uppercase',
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
+                            }}>
+                                {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" : (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR CARD" : "FACE VERIFICATION")}
+                            </span>
+                        </div>
+
                         {/* Scan Progress Overlay */}
                         {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
-                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', color: '#4ade80', fontSize: '0.8rem', border: '1px solid #4ade80', zIndex: 5 }}>
+                            <div style={{ position: 'absolute', top: '70px', right: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', color: '#4ade80', fontSize: '0.8rem', border: '1px solid #4ade80', zIndex: 5 }}>
                                 <i className="fas fa-satellite-dish animate-pulse"></i> Deep Scan: {scanBuffer.length}/5
                             </div>
                         )}
+
 
                         <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black' }}>
                             {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
