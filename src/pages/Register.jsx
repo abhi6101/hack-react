@@ -594,8 +594,8 @@ const Register = () => {
                 setVerificationStage('AADHAR_VERIFY_DATA');
             } else {
                 setScanBuffer([]);
-                setScanStatus("❌ Name Mismatch - Try Again");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance(`Name on Aadhar ${bestMatch.name} does not match your College ID name.`));
+                setScanStatus("❌ Please upload your own identity");
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Security Alert. This Aadhar does not match your College ID. Please upload your own identity."));
                 setErrorFlash(true);
                 setTimeout(() => {
                     setErrorFlash(false);
