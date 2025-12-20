@@ -151,15 +151,26 @@ const Register = () => {
                             </span>
                         </div>
 
+                        {/* Unified AI Status Monitor */}
                         {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
-                            <div style={{ position: 'absolute', top: '70px', right: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', color: '#4ade80', fontSize: '0.8rem', border: '1px solid #4ade80', zIndex: 5 }}>
-                                <i className="fas fa-satellite-dish animate-pulse"></i> Scan: {scanBuffer.length}/4
+                            <div style={{
+                                position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)',
+                                background: 'rgba(0,0,0,0.85)', padding: '8px 18px', borderRadius: '30px',
+                                display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20,
+                                border: `1px solid ${scanStatus.includes('⚠️') ? '#ef4444' : (scanStatus.includes('Reading') ? '#00d4ff' : '#4ade80')}`,
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', width: 'max-content'
+                            }}>
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80', animation: 'pulse 1.5s infinite' }}></div>
+                                <span style={{
+                                    color: '#fff', fontSize: '0.85rem', fontWeight: '600', letterSpacing: '0.5px',
+                                    display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap'
+                                }}>
+                                    <i className={`fas ${scanStatus.includes('Reading') ? 'fa-brain animate-pulse' : (scanStatus.includes('⚠️') ? 'fa-exclamation-triangle' : 'fa-check-circle')}`}
+                                        style={{ color: scanStatus.includes('Reading') ? '#00d4ff' : (scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80') }}></i>
+                                    {scanStatus} {scanBuffer.length > 0 && scanBuffer.length < TARGET_SCANS && `(${scanBuffer.length + 1}/${TARGET_SCANS})`}
+                                </span>
                             </div>
                         )}
-
-                        <div style={{ position: 'absolute', top: '70px', left: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', color: scanStatus === "Reading..." ? "#00d4ff" : "#fff", fontSize: '0.8rem', border: '1px solid rgba(255,255,255,0.2)', zIndex: 5 }}>
-                            <i className={`fas ${scanStatus === "Reading..." ? "fa-brain animate-pulse" : "fa-eye"}`}></i> {scanStatus}
-                        </div>
 
                         <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black' }}>
                             {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
