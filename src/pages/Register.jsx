@@ -573,6 +573,14 @@ const Register = () => {
                 let extracted = {};
 
                 if (isIdStage) {
+                    // NEGATIVE CHECK: Ensure user isn't showing Aadhar Card
+                    if (text.toLowerCase().includes("aadhar") || text.toLowerCase().includes("uidai") || text.toLowerCase().includes("govt") || text.toLowerCase().includes("india")) {
+                        console.warn("⚠️ Wrong Document Detected: Aadhar presented as ID");
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document. Please show College ID."));
+                        setIsScanning(false);
+                        return;
+                    }
+
                     const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name'];
                     const keywordMatch = keywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
                     const codeMatch = text.match(/\d{5,6}/);
