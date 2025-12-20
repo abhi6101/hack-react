@@ -98,12 +98,10 @@ const Register = () => {
             </Link>
 
             <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-                {verifyMethod === 'id_card' ? 'Upload College ID Card' : 'Upload Fee Receipt'}
+                Upload College ID Card
             </h2>
             <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#aaa', marginBottom: '2rem' }}>
-                {verifyMethod === 'id_card'
-                    ? "Please upload a clear photo of your ID Card to verify identity."
-                    : "Upload your latest Semester Fee Receipt + Aadhar."}
+                Please upload a clear photo of your ID Card to verify your identity.
             </p>
 
             <div
@@ -116,7 +114,7 @@ const Register = () => {
                     marginBottom: '2rem'
                 }}
             >
-                <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: '#667eea', marginBottom: '1rem' }}></i>
+                <i className="fas fa-id-card" style={{ fontSize: '3rem', color: '#667eea', marginBottom: '1rem' }}></i>
                 <p>Click to browse or drag file here</p>
                 <input
                     type="file"
@@ -134,17 +132,7 @@ const Register = () => {
             )}
 
             {/* Method Switcher */}
-            <div style={{ textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
-                <p style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '0.5rem' }}>
-                    {verifyMethod === 'id_card' ? "Don't have your ID Card?" : "Have your ID Card?"}
-                </p>
-                <button
-                    onClick={() => setVerifyMethod(prev => prev === 'id_card' ? 'fee_receipt' : 'id_card')}
-                    style={{ background: 'none', border: 'none', color: '#667eea', textDecoration: 'underline', cursor: 'pointer', fontSize: '0.95rem' }}
-                >
-                    {verifyMethod === 'id_card' ? "Use Fee Receipt instead" : "Use College ID Card instead"}
-                </button>
-            </div>
+
         </div>
     );
 
