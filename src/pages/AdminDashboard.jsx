@@ -124,7 +124,9 @@ const AdminDashboard = () => {
         role: 'USER',
         adminBranch: '',           // For DEPT_ADMIN
         allowedDepartments: [],    // For COMPANY_ADMIN
-        companyName: ''            // For COMPANY_ADMIN
+        companyName: '',           // For COMPANY_ADMIN
+        computerCode: '',          // Unique student ID (e.g., 59500)
+        batch: ''                  // Passout year (e.g., 2027)
     });
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
@@ -1615,6 +1617,42 @@ const AdminDashboard = () => {
                                             <label>Password {editingUser && '(leave blank to keep current)'}</label>
                                             <input type="password" className="form-control" required={!editingUser} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} />
                                         </div>
+                                        {userForm.role === 'USER' && (
+                                            <>
+                                                <div className="form-group">
+                                                    <label>Computer Code (Student ID)</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        value={userForm.computerCode}
+                                                        onChange={e => setUserForm({ ...userForm, computerCode: e.target.value })}
+                                                        placeholder="e.g., 59500"
+                                                    />
+                                                    <small className="form-text text-muted">
+                                                        Unique student identifier from ID card
+                                                    </small>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Batch (Passout Year)</label>
+                                                    <select
+                                                        className="form-control"
+                                                        value={userForm.batch}
+                                                        onChange={e => setUserForm({ ...userForm, batch: e.target.value })}
+                                                    >
+                                                        <option value="">Select Batch</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                        <option value="2028">2028</option>
+                                                        <option value="2029">2029</option>
+                                                        <option value="2030">2030</option>
+                                                    </select>
+                                                    <small className="form-text text-muted">
+                                                        Expected graduation/passout year
+                                                    </small>
+                                                </div>
+                                            </>
+                                        )}
                                         <div className="form-group">
                                             <label>Role</label>
                                             <select className="form-control" value={userForm.role} onChange={e => {
@@ -1715,7 +1753,9 @@ const AdminDashboard = () => {
                                             role: 'USER',
                                             adminBranch: '',
                                             allowedDepartments: [],
-                                            companyName: ''
+                                            companyName: '',
+                                            computerCode: '',
+                                            batch: ''
                                         });
                                     }}>Cancel</button>}
                                 </form>
