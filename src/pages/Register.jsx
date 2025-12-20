@@ -638,15 +638,24 @@ const Register = () => {
 
                 if (isIdStage) {
                     // NEGATIVE CHECK
-                    // NEGATIVE CHECK: Targeted Aadhar/Document rejection
+                    // NEGATIVE CHECK: Identify specific wrong documents
                     const lowerText = text.toLowerCase().replace(/\s+/g, '');
-                    const otherDocKeywords = ["aadhar", "uidai", "incometax", "permanentaccount", "drivinglicense", "voter", "governmentofindia", "enrollmentno", "electioncommission", "yob", "dob", "yearofbirth", "birth", "uniqueidentification"];
-                    const isOtherDoc = otherDocKeywords.some(kw => lowerText.includes(kw));
+                    let detectedDocType = null;
 
-                    if (isOtherDoc) {
-                        setScanStatus("⚠️ WRONG DOCUMENT");
+                    if (lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("dob") || lowerText.includes("enrollment")) {
+                        detectedDocType = "Aadhar Card";
+                    } else if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
+                        detectedDocType = "PAN Card";
+                    } else if (lowerText.includes("drivinglicense") || lowerText.includes("license")) {
+                        detectedDocType = "Driving License";
+                    } else if (lowerText.includes("voter") || lowerText.includes("electioncommission") || lowerText.includes("epic")) {
+                        detectedDocType = "Voter ID";
+                    }
+
+                    if (detectedDocType) {
+                        setScanStatus(`⚠️ ${detectedDocType.toUpperCase()} DETECTED`);
                         window.speechSynthesis.cancel();
-                        const msg = new SpeechSynthesisUtterance("Security Alert. This is an Aadhar Card. Please show your Physical IPS Academy ID Card to proceed.");
+                        const msg = new SpeechSynthesisUtterance(`Security Alert. You are showing a ${detectedDocType}. This is not allowed. Please show your Physical IPS Academy ID Card.`);
                         msg.rate = 1.0;
                         msg.pitch = 1.0;
                         window.speechSynthesis.speak(msg);
