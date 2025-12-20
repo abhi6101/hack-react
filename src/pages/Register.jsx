@@ -502,6 +502,15 @@ const Register = () => {
                         {success && <div className="alert alert-success" style={{ display: 'block' }}>{success}</div>}
 
                         <form id="registrationForm" onSubmit={handleSubmit}>
+                            {selfieImg && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+                                    <img src={selfieImg} alt="Your Selfie" style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #4ade80' }} />
+                                    <div>
+                                        <p style={{ margin: 0, fontWeight: 'bold' }}>Identity Verified</p>
+                                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#aaa' }}>Photo captured from live camera</p>
+                                    </div>
+                                </div>
+                            )}
                             <div className="form-group">
                                 <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>
                                 <input
