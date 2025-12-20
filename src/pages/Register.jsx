@@ -650,7 +650,6 @@ const Register = () => {
                         setScanBuffer([]); // Clear previous progress
                         setIsScanning(false);
 
-                        alert("⚠️ SECURITY ALERT\n\nYou are scanning an invalid document.\n\nFor Step 1, you MUST scan your IPS ACADEMY ID CARD.");
                         return;
                     }
 
