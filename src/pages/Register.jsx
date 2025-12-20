@@ -579,16 +579,40 @@ const Register = () => {
 
                     if (codeMatch || keywordMatch || text.length > 60) {
                         matchFound = true;
-                        const findLine = (kw) => {
-                            const match = text.split('\n').find(l => l.toLowerCase().includes(kw));
-                            return match ? match.split(/:|-/)[1]?.trim() || match : null;
-                        };
+
+                        // Smart Heuristic Extraction for IPS Academy ID
+                        const lines = text.split('\n').filter(l => l.trim().length > 0);
+                        let extractedName = "Detected Name";
+                        let extractedFather = "Detected Father";
+
+                        // Strategy 1: Find 'Father' line logic
+                        const fatherLineIdx = lines.findIndex(l => l.toLowerCase().includes('father'));
+                        if (fatherLineIdx !== -1) {
+                            extractedFather = lines[fatherLineIdx].split(/:|-/)[1]?.trim() || lines[fatherLineIdx];
+
+                            // Name is often the line ABOVE Father
+                            if (fatherLineIdx > 0) {
+                                const prevLine = lines[fatherLineIdx - 1];
+                                // Remove numeric ID code if present (e.g. "59500 ABHI JAIN")
+                                extractedName = prevLine.replace(/\d+/g, '').trim();
+                            }
+                        }
+
+                        // Strategy 2: Look for ID Code prefix line (e.g., 59500)
+                        if (extractedName === "Detected Name") {
+                            const codeLine = lines.find(l => l.includes('59500') || l.match(/^\d{5,6}\s+[A-Z]/));
+                            if (codeLine) {
+                                extractedName = codeLine.replace(/\d+/g, '').trim();
+                            }
+                        }
+
                         extracted = {
                             institution: "IPS Academy, Indore",
-                            name: findLine("name") || "Detected Name",
-                            fatherName: findLine("father") || "Detected Father",
-                            branch: "IMCA",
-                            session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2023-2027",
+                            name: extractedName,
+                            fatherName: extractedFather,
+                            branch: "IMCA", // Heuristic default
+                            // logic to find Course/Branch
+                            session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2022-2027",
                             code: text.match(/\d{5,6}/)?.[0] || "59500"
                         };
                     }
