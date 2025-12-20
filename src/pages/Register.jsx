@@ -563,14 +563,28 @@ const Register = () => {
         const bestMatch = buffer.find(b => b.name === bestName) || buffer[buffer.length - 1];
 
         const cleanOCRName = (name) => {
-            if (!name || name === "Detected Name") return name;
-            // Remove common OCR noise like trailing punctuation or random single chars
-            return name.replace(/[^A-Za-z ]+$/g, '').trim();
+            if (!name || name === "Detected Name" || name === "Detected Father") return name;
+
+            // 1. Remove prefixes (Father, Mr, Shri, etc.)
+            let cleaned = name.replace(/^(Father|Father's|Mr|Mrs|Ms|Shri|Smt|Late|Dr|Name|Course|Session|Institution)\s*[:|-]?\s*/i, '').trim();
+
+            // 2. Remove trailing punctuation/junk
+            cleaned = cleaned.replace(/[^A-Za-z ]+$/g, '').trim();
+
+            // 3. Remove trailing OCR noise (single chars like 'c Y', 'v', etc.)
+            // Matches a space followed by 1-2 random letters/numbers at the very end
+            cleaned = cleaned.replace(/\s+[A-Za-z0-9]$|\s+[A-Za-z0-9]\s+[A-Za-z0-9]$/i, '').trim();
+
+            return cleaned;
         };
 
         if (type === 'ID') {
             window.speechSynthesis.speak(new SpeechSynthesisUtterance("ID Card Verified."));
-            const cleanedMatch = { ...bestMatch, name: cleanOCRName(bestMatch.name) };
+            const cleanedMatch = {
+                ...bestMatch,
+                name: cleanOCRName(bestMatch.name),
+                fatherName: cleanOCRName(bestMatch.fatherName)
+            };
             setScannedData(cleanedMatch);
             setIdCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]); stopCamera();
