@@ -258,12 +258,21 @@ const Register = () => {
                             <img src={content.image} alt="Scanned Doc" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #444' }} />
                             <div style={{ fontSize: '0.9rem', width: '100%' }}>
                                 <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa' }}>Name:</strong> {content.data?.name}</p>
-                                {content.data?.fatherName && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa' }}>Father:</strong> {content.data?.fatherName}</p>}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.5rem' }}>
-                                    <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></div>
-                                    <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Branch:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></div>
-                                    <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></div>
-                                </div>
+                                {verificationStage === 'ID_VERIFY_DATA' ? (
+                                    <>
+                                        {content.data?.fatherName && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa' }}>Father:</strong> {content.data?.fatherName}</p>}
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.5rem' }}>
+                                            <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></div>
+                                            <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Branch:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></div>
+                                            <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div style={{ marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.5rem' }}>
+                                        <p style={{ margin: '0' }}><strong style={{ color: '#aaa' }}>Aadhar No:</strong> <span style={{ color: '#4ade80' }}>{content.data?.aadharNumber}</span></p>
+                                        <p style={{ fontSize: '0.75rem', color: '#4ade80', marginTop: '4px' }}><i className="fas fa-check-circle"></i> Identity Match Confirmed</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <button className="btn btn-primary" style={{ width: '100%', marginBottom: '0.8rem' }} onClick={content.btnAction}>
