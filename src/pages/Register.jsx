@@ -612,6 +612,14 @@ const Register = () => {
                 }
 
                 if (matchFound) {
+                    // QUALITY CHECK: Don't buffer if we only have defaults
+                    if (extracted.name === "Detected Name" && !extracted.code?.match(/\d{5,}/)) {
+                        console.warn("⚠️ Scan skipped: Low confidence extraction");
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Adjust angle."));
+                        setIsScanning(false);
+                        return;
+                    }
+
                     setFlash(true); setTimeout(() => setFlash(false), 150); // TRIGGER FLASH
                     const currentScanCount = scanBuffer.length + 1;
                     console.log(`✅ ${isIdStage ? 'ID' : 'Aadhar'} Scan Pass ${currentScanCount}/${TARGET_SCANS} Successful`);
