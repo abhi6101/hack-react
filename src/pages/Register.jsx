@@ -651,10 +651,15 @@ const Register = () => {
                     } else if (lowerText.includes("voter") || lowerText.includes("electioncommission") || lowerText.includes("epic")) {
                         detectedDocType = "Voter ID";
                     } else if (!text.match(/IPS\s*Academy/i) && !text.includes("Indore")) {
-                        // Check for other generic Identity Cards / Documents
+                        // Check for other generic Identity Cards
                         const genericIdKeywords = ["university", "college", "school", "identity", "employee", "institute", "address", "card"];
+                        // Check for random objects (Example: Biscuit packets, Snack wrappers)
+                        const randomObjectKeywords = ["biscuit", "snack", "ingredients", "mrp", "weight", "flavor", "chocolate", "cookie", "nutrition", "expiry"];
+
                         if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 40) {
                             detectedDocType = "External Identity Card";
+                        } else if (randomObjectKeywords.some(kw => lowerText.includes(kw)) || (text.length > 60 && !lowerText.includes("card") && !lowerText.includes("ips"))) {
+                            detectedDocType = "Invalid Item (Object Detected)";
                         }
                     }
 
@@ -664,7 +669,9 @@ const Register = () => {
 
                         const alertText = detectedDocType === "External Identity Card"
                             ? "Security Alert. This is an external Identity Card. Only IPS Academy IDs are permitted. Please show the correct card."
-                            : `Security Alert. You are showing a ${detectedDocType}. This is not allowed. Please show your Physical IPS Academy ID Card.`;
+                            : detectedDocType === "Invalid Item (Object Detected)"
+                                ? "Security Alert. You are showing a commercial item or packet. This is not a valid identity document. Please show your IPS Academy ID Card."
+                                : `Security Alert. You are showing a ${detectedDocType}. This is not allowed. Please show your Physical IPS Academy ID Card.`;
 
                         const msg = new SpeechSynthesisUtterance(alertText);
                         msg.rate = 1.0;
