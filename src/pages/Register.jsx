@@ -644,12 +644,15 @@ const Register = () => {
                     const isOtherDoc = otherDocKeywords.some(kw => lowerText.includes(kw));
 
                     if (isOtherDoc) {
-                        setScanStatus("Invalid Document!");
+                        setScanStatus("⚠️ WRONG DOCUMENT");
                         window.speechSynthesis.cancel();
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document."));
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document. Please show your IPS Academy I D."));
+
+                        // Red Alert Blink
                         setErrorFlash(true);
-                        setTimeout(() => setErrorFlash(false), 2000);
-                        setScanBuffer([]);
+                        setTimeout(() => setErrorFlash(false), 2500);
+
+                        setScanBuffer([]); // Reset progress
                         setIsScanning(false);
                         return;
                     }
