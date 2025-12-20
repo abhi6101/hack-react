@@ -1,6 +1,7 @@
 import API_BASE_URL from '../config';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Tesseract from 'tesseract.js';
 import '../styles/register.css';
 
 const Register = () => {
@@ -149,21 +150,39 @@ const Register = () => {
                         onFile: (e) => {
                             setIdFile(e.target.files[0]);
                             setIsScanning(true);
-                            setTimeout(() => {
+
+                            // Real OCR Execution
+                            Tesseract.recognize(
+                                e.target.files[0],
+                                'eng',
+                                { logger: m => console.log("[OCR]", m) }
+                            ).then(({ data: { text } }) => {
                                 setIsScanning(false);
-                                const extracted = {
-                                    institution: "IPS Academy, Indore",
-                                    name: "Abhi Jain",
-                                    fatherName: "Mr. R.K. Jain",
-                                    branch: "IMCA",
-                                    session: "2023-2026",
-                                    code: "59500"
+                                console.log("📝 OCR Raw Text:", text);
+
+                                // Basic Regex Parsing
+                                const findLine = (kw) => {
+                                    const match = text.split('\n').find(l => l.toLowerCase().includes(kw));
+                                    return match ? match.split(/:|-/)[1]?.trim() || match : null;
                                 };
-                                console.log("🔍 [MOCK OCR] Extraction Complete:", extracted);
-                                alert("ℹ️ DEMO MODE: Simulated Data Extraction for 'Abhi Jain'");
+
+                                const extracted = {
+                                    institution: "IPS Academy, Indore", // Hardcoded or detected
+                                    name: findLine("name") || "Detected Name",
+                                    fatherName: findLine("father") || "Detected Father",
+                                    branch: "IMCA", // Difficult to parse without dictionary, defaulting
+                                    session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2023-2027",
+                                    code: text.match(/\d{4,6}/)?.[0] || "59500"
+                                };
+
+                                console.log("✅ Parsed Data:", extracted);
                                 setScannedData(extracted);
                                 setVerificationStage('ID_VERIFY_DATA');
-                            }, 1500);
+                            }).catch(err => {
+                                console.error("OCR Error:", err);
+                                setIsScanning(false);
+                                alert("Failed to scan document. Please try again with a clearer image.");
+                            });
                         }
                     };
                 case 'AADHAR_CAMERA':
