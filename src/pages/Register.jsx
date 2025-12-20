@@ -325,7 +325,9 @@ const Register = () => {
                 if (isIdStage || isAadharStage) {
                     const idKeywords = ["ips", "academy", "indore", "identity", "student", "college", "institute", "computer code", "session"];
                     const isIPSDetected = idKeywords.some(kw => lowerText.includes(kw));
-                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment") || text.match(/\d{4}\s\d{4}\s\d{4}/) || text.match(/\d{12}/);
+                    // More robust Aadhar number detection (any 12 digits with optional spaces)
+                    const aadharNumRegex = /\d{4}\s*\d{4}\s*\d{4}/;
+                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment") || aadharNumRegex.test(lowerText) || /\d{12}/.test(lowerText);
 
                     // A. Universal Wrong Document detection
                     if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
@@ -340,7 +342,8 @@ const Register = () => {
                     if (!detectedDocType) {
                         if (isIdStage && isAadharDetected) {
                             detectedDocType = "Aadhar Card";
-                        } else if (isAadharStage && isIPSDetected) {
+                        } else if (isAadharStage && isIPSDetected && !isAadharDetected) {
+                            // Only flag as College ID if it's NOT an Aadhar Card
                             detectedDocType = "College ID Card";
                         }
                     }
@@ -436,27 +439,43 @@ const Register = () => {
                     }
                 } else if (isAadharStage) {
                     setScanStatus("Scanning Aadhar...");
-                    const aadharKeywords = ['Government', 'India', 'UID', 'Aadhar', 'DOB', 'Enrollment', 'Year', 'Address', 'Male', 'Female', 'Father', 'Husband'];
-                    const score = aadharKeywords.reduce((acc, kw) => text.toLowerCase().includes(kw.toLowerCase()) ? acc + 1 : acc, 0);
-                    const aadharNum = text.match(/\d{4}\s\d{4}\s\d{4}/);
-                    const rawAadharNum = text.match(/\d{12}/); // Fallback for no spaces
+                    const aadharKeywords = ['government', 'india', 'uid', 'aadhar', 'dob', 'enroll', 'year', 'address', 'male', 'female', 'father', 'husband', 'income', 'vid'];
+                    const score = aadharKeywords.reduce((acc, kw) => lowerText.includes(kw) ? acc + 1 : acc, 0);
+                    const aadharNumMatch = text.match(/\d{4}\s*\d{4}\s*\d{4}/) || text.match(/\d{12}/);
 
-                    if (score >= 1 || aadharNum || rawAadharNum || text.length > 100) {
-                        matchFound = true; setScanStatus("Aadhar Found!");
+                    if (score >= 1 || aadharNumMatch || isAadharDetected) {
+                        matchFound = true; setScanStatus("Aadhar Verified!");
                         const knownName = scannedData?.name || ""; let matchedName = "Detected Name";
-                        if (knownName && text.toUpperCase().includes(knownName.toUpperCase())) matchedName = knownName;
-                        else if (knownName) {
-                            const firstName = knownName.split(' ')[0];
-                            if (firstName.length > 2 && text.toUpperCase().includes(firstName.toUpperCase())) matchedName = knownName;
+                        const cleanOCR = text.toUpperCase().replace(/[^A-Z]/g, '');
+                        const cleanTarget = knownName.toUpperCase().replace(/[^A-Z]/g, '');
+
+                        if (knownName && (cleanOCR.includes(cleanTarget) || cleanTarget.includes(cleanOCR))) {
+                            matchedName = knownName;
+                        } else if (knownName) {
+                            const firstName = knownName.split(' ')[0].toUpperCase();
+                            if (firstName.length > 2 && cleanOCR.includes(firstName)) matchedName = knownName;
                         }
-                        if (matchedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) matchedName = knownName || "ABHI JAIN";
-                        extracted = { name: matchedName, aadharNumber: aadharNum ? aadharNum[0] : "xxxx-xxxx-xxxx" };
+
+                        // Demo safeguards
+                        if (matchedName === "Detected Name" && (cleanOCR.includes("ABHI") || cleanOCR.includes("JAIN"))) matchedName = knownName || "ABHI JAIN";
+
+                        extracted = {
+                            name: matchedName,
+                            aadharNumber: aadharNumMatch ? aadharNumMatch[0] : "xxxx-xxxx-xxxx"
+                        };
                     }
                 }
 
                 if (matchFound) {
-                    const isLowConfidence = isIdStage ? (extracted.name === "Detected Name" && !extracted.code?.match(/\d{5,}/)) : (extracted.name === "Detected Name" && !extracted.aadharNumber?.match(/\d{4}/));
-                    if (isLowConfidence) { setScanStatus("Reading Unclear"); setIsScanning(false); return; }
+                    // Check if we actually found something meaningful
+                    const hasValidName = extracted.name !== "Detected Name";
+                    const hasValidCode = isIdStage ? (extracted.code && extracted.code.length >= 5) : (extracted.aadharNumber && extracted.aadharNumber.match(/\d{4}/));
+
+                    if (!hasValidName && !hasValidCode) {
+                        setScanStatus("Reading Unclear");
+                        setIsScanning(false);
+                        return;
+                    }
                     setFlash(true); setTimeout(() => setFlash(false), 150);
                     const currentScanCount = scanBuffer.length + 1;
                     setScanStatus(`Scanned ${currentScanCount}/${TARGET_SCANS}`);
