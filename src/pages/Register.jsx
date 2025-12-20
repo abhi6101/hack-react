@@ -528,7 +528,7 @@ const Register = () => {
                         // 2. Visual Prompt (Alert is blocking, so we use it to 'pause' user attention)
                         // In a real AI app, we would use TensorFlow.js to detect this specific movement.
                         // Here, we simulate the "Observation Phase".
-                        alert(`� SECURITY CHALLENGE REQUIRED\n\nAI Command: "${challenge.text.toUpperCase()}"\n\nPerform this action NOW to prove you are human.`);
+                        alert(`🔐 SECURITY CHALLENGE REQUIRED\n\nAI Command: "${challenge.text.toUpperCase()}"\n\nPerform this action NOW to prove you are human.`);
 
                         // 3. Execution Delay (Simulating Analysis)
                         setTimeout(() => {
@@ -677,6 +677,7 @@ const Register = () => {
                 interval = setInterval(attemptAutoCapture, 2000);
             }
             return () => clearInterval(interval);
+            // eslint-disable-next-line
         }, [showCamera, verificationStage, isScanning]);
 
         // --- Auto-Start Camera Logic ---
@@ -686,6 +687,7 @@ const Register = () => {
                 setCameraMode('environment');
                 startCamera();
             }
+            // eslint-disable-next-line
         }, [verificationStage]);
 
         // --- Auto-Fill & Lock Effect ---
