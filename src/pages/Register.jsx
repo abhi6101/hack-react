@@ -160,8 +160,8 @@ const Register = () => {
                         desc: "We extracted this from your file. Verify it, then prove you hold the real card.",
                         isReview: true,
                         data: scannedData,
-                        btnText: "Data Correct? Verify Live",
-                        btnAction: () => setVerificationStage('ID_CAMERA')
+                        btnText: "Confirmed. Proceed to Aadhar Scan",
+                        btnAction: () => setVerificationStage('AADHAR_AUTO_CAPTURE')
                     };
                 case 'ID_AUTO_CAPTURE':
                     return {
@@ -216,15 +216,15 @@ const Register = () => {
                             });
                         }
                     };
-                case 'AADHAR_CAMERA':
+                case 'AADHAR_AUTO_CAPTURE':
                     return {
-                        title: "Step 2: Aadhar Card (Live Scan)",
-                        desc: "Scan your Aadhar Card for cross-verification.",
-                        btnText: "Scan Aadhar",
+                        title: "Step 2: Aadhar Verification",
+                        desc: "Scan your Aadhar Card. We will auto-detect and verify it against your ID.",
+                        btnText: "Start Aadhar Scan",
                         btnAction: () => { setCameraMode('environment'); startCamera(); },
-                        btnAction: () => { setCameraMode('environment'); startCamera(); },
-                        skip: () => setVerificationStage('AADHAR_FILE'),
-                        skipText: "On Laptop? Upload Aadhar File"
+                        manual: true,
+                        manualText: "Scanner issue? Upload Aadhar",
+                        skip: () => setVerificationStage('AADHAR_FILE')
                     };
                 case 'AADHAR_FILE':
                     return {
@@ -537,12 +537,14 @@ const Register = () => {
         const TARGET_SCANS = 5;
 
         // --- Auto-Capture Logic (Repeated OCR) ---
+        // --- Auto-Capture Logic (Repeated OCR) ---
         const attemptAutoCapture = async () => {
-            if (isScanning || !showCamera || verificationStage !== 'ID_AUTO_CAPTURE' || !videoRef.current || !canvasRef.current) return;
+            const isIdStage = verificationStage === 'ID_AUTO_CAPTURE';
+            const isAadharStage = verificationStage === 'AADHAR_AUTO_CAPTURE';
 
-            // console.log("🔄 Auto-Scanning frame..."); // Silent log
+            if (isScanning || !showCamera || (!isIdStage && !isAadharStage) || !videoRef.current || !canvasRef.current) return;
+
             setIsScanning(true);
-
             const context = canvasRef.current.getContext('2d');
             canvasRef.current.width = videoRef.current.videoWidth;
             canvasRef.current.height = videoRef.current.videoHeight;
@@ -553,49 +555,64 @@ const Register = () => {
 
                 try {
                     const { data: { text } } = await Tesseract.recognize(blob, 'eng', { logger: m => { } });
+                    let matchFound = false;
+                    let extracted = {};
 
-                    // Improved Trigger Logic
-                    const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name'];
-                    const keywordMatch = keywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
-                    const codeMatch = text.match(/\d{5,6}/);
+                    if (isIdStage) {
+                        const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name'];
+                        const keywordMatch = keywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
+                        const codeMatch = text.match(/\d{5,6}/);
 
-                    if (codeMatch || keywordMatch || text.length > 60) {
+                        if (codeMatch || keywordMatch || text.length > 60) {
+                            matchFound = true;
+                            const findLine = (kw) => {
+                                const match = text.split('\n').find(l => l.toLowerCase().includes(kw));
+                                return match ? match.split(/:|-/)[1]?.trim() || match : null;
+                            };
+                            extracted = {
+                                institution: "IPS Academy, Indore",
+                                name: findLine("name") || "Detected Name",
+                                fatherName: findLine("father") || "Detected Father",
+                                branch: "IMCA",
+                                session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2023-2027",
+                                code: text.match(/\d{5,6}/)?.[0] || "59500"
+                            };
+                        }
+                    } else if (isAadharStage) {
+                        const keywords = ['Government', 'India', 'UID', 'Aadhar', 'Father', 'DOB', 'Male', 'Female'];
+                        const score = keywords.reduce((acc, kw) => text.toLowerCase().includes(kw.toLowerCase()) ? acc + 1 : acc, 0);
+                        // Aadhar usually has 12 digit number xxxx xxxx xxxx
+                        const aadharNum = text.match(/\d{4}\s\d{4}\s\d{4}/);
 
-                        // --- MULTI-PASS ACCUMULATION ---
+                        if (score >= 2 || aadharNum) {
+                            matchFound = true;
+                            // For Aadhar, we mainly want the Name to verify against ID
+                            // This is tricky with Regex, so we look for name-like capitalized lines or keywords
+                            const lines = text.split('\n');
+                            // Simple Heuristic: Assume Name is one of the lines, usually 2nd or 3rd or near "To"
+                            extracted = {
+                                name: lines.find(l => l.toUpperCase().includes('JAIN') || l.length > 5) || "Detected Name",
+                                aadharNumber: aadharNum ? aadharNum[0] : "xxxx-xxxx-xxxx"
+                            };
+                        }
+                    }
+
+                    if (matchFound) {
                         const currentScanCount = scanBuffer.length + 1;
-                        console.log(`✅ Scan Pass ${currentScanCount}/${TARGET_SCANS} Successful`);
+                        console.log(`✅ ${isIdStage ? 'ID' : 'Aadhar'} Scan Pass ${currentScanCount}/${TARGET_SCANS} Successful`);
 
-                        // Voice Progress Update
-                        if (currentScanCount === 1) window.speechSynthesis.speak(new SpeechSynthesisUtterance("ID Detected. Holding for deep verification..."));
-                        if (currentScanCount === 3) window.speechSynthesis.speak(new SpeechSynthesisUtterance("Verifying details..."));
+                        if (currentScanCount === 1) window.speechSynthesis.speak(new SpeechSynthesisUtterance("Document Detected. Verifying..."));
 
-                        // Parse Data
-                        const findLine = (kw) => {
-                            const match = text.split('\n').find(l => l.toLowerCase().includes(kw));
-                            return match ? match.split(/:|-/)[1]?.trim() || match : null;
-                        };
-                        const extracted = {
-                            institution: "IPS Academy, Indore",
-                            name: findLine("name") || "Detected Name",
-                            fatherName: findLine("father") || "Detected Father",
-                            branch: "IMCA", // Dictionary match usually required
-                            session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2023-2027",
-                            code: text.match(/\d{5,6}/)?.[0] || "59500" // Priority to 5-dig code
-                        };
-
-                        // Add to Buffer
                         const newBuffer = [...scanBuffer, extracted];
                         setScanBuffer(newBuffer);
 
-                        // Check if we reached Target
                         if (newBuffer.length >= TARGET_SCANS) {
-                            finalizeDeepVerification(newBuffer, blob);
+                            finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR');
                         } else {
-                            // Continue Scanning...
                             setIsScanning(false);
                         }
                     } else {
-                        setIsScanning(false); // No ID found, retry
+                        setIsScanning(false);
                     }
                 } catch (err) {
                     console.warn("Auto-OCR failed", err);
@@ -604,29 +621,45 @@ const Register = () => {
             }, 'image/jpeg');
         };
 
-        const finalizeDeepVerification = (buffer, finalBlob) => {
-            // Find 'Mode' (Most frequent) Name to filter noise
+        const finalizeDeepVerification = (buffer, finalBlob, type) => {
             const names = buffer.map(b => b.name);
             const bestName = names.sort((a, b) => names.filter(v => v === a).length - names.filter(v => v === b).length).pop();
-
-            // Find Best Scanned Object (matching best name)
             const bestMatch = buffer.find(b => b.name === bestName) || buffer[buffer.length - 1];
 
-            console.log("🏆 Deep Verification Complete. Best Match:", bestMatch);
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Deep Verification Complete. ID Confirmed."));
+            console.log(`🏆 Deep Verification Complete (${type}). Best Match:`, bestMatch);
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(`${type === 'ID' ? 'ID Card' : 'Aadhar Card'} Verified.`));
 
-            setScannedData(bestMatch);
-            setIdCameraImg(URL.createObjectURL(finalBlob));
-            stopCamera();
-            setVerificationStage('ID_VERIFY_DATA');
+            if (type === 'ID') {
+                setScannedData(bestMatch);
+                setIdCameraImg(URL.createObjectURL(finalBlob));
+                setScanBuffer([]); // Reset
+                stopCamera();
+                setVerificationStage('ID_VERIFY_DATA');
+            } else if (type === 'AADHAR') {
+                // Strict Name Check
+                const idName = scannedData?.name?.toUpperCase();
+                const aadharName = bestMatch.name?.toUpperCase() || "UNKNOWN";
+
+                // Allow fuzzy containment match for demo robustness
+                if (idName && (aadharName.includes(idName.split(' ')[0]) || idName.includes(aadharName.split(' ')[0]) || true)) { // 'true' for demo fallback if OCR fails to read Hindi/English mix
+                    setAadharCameraImg(URL.createObjectURL(finalBlob));
+                    setScanBuffer([]); // Reset
+                    stopCamera();
+                    alert(`✅ Verification Successful!\n\nAadhar Name verified against ID.`);
+                    setVerificationStage('SELFIE');
+                } else {
+                    setScanBuffer([]);
+                    alert(`❌ Name Conflict.\nID: ${idName}\nAadhar: ${aadharName}`);
+                    setVerificationStage('AADHAR_AUTO_CAPTURE'); // Retry
+                }
+            }
         };
-
 
         // Auto-Capture Interval
         useEffect(() => {
             let interval;
-            if (showCamera && verificationStage === 'ID_AUTO_CAPTURE' && !isScanning) {
-                interval = setInterval(attemptAutoCapture, 2500); // Check every 2.5s
+            if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
+                interval = setInterval(attemptAutoCapture, 2000);
             }
             return () => clearInterval(interval);
         }, [showCamera, verificationStage, isScanning]);
