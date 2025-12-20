@@ -29,7 +29,7 @@ const Register = () => {
     // --- Identity Verification State ---
     const [step, setStep] = useState(1); // 1: Choice, 2: Upload, 3: Verify Data, 4: Final Form
     // --- Verification Journey State ---
-    const [verificationStage, setVerificationStage] = useState('AADHAR_AUTO_CAPTURE');
+    const [verificationStage, setVerificationStage] = useState('ID_AUTO_CAPTURE');
 
     // Data Containers
     const [scannedData, setScannedData] = useState(null); // stores parsed JSON from ID
@@ -177,8 +177,14 @@ const Register = () => {
                             {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
                         </div>
                     </div>
-                    <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <p className="text-sm text-gray-400 animate-pulse">Scanning Active... Align Card</p>
+                    <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                        {verificationStage === 'SELFIE' ? (
+                            <button className="btn btn-primary" style={{ padding: '12px 30px', borderRadius: '30px', fontWeight: 'bold' }} onClick={takeSelfie}>
+                                <i className="fas fa-camera"></i> Take Selfie
+                            </button>
+                        ) : (
+                            <p className="text-sm text-gray-400 animate-pulse">Scanning Active... Align Card</p>
+                        )}
                     </div>
                 </div>
             );
@@ -186,38 +192,38 @@ const Register = () => {
 
         const renderStageContent = () => {
             switch (verificationStage) {
-                case 'AADHAR_VERIFY_DATA':
-                    return {
-                        title: "Aadhar Verified",
-                        desc: "Your official identity has been stored. Now we need to verify your College ID.",
-                        isReview: true,
-                        data: aadharData,
-                        image: aadharCameraImg,
-                        btnText: "Proceed to College ID",
-                        btnAction: () => setVerificationStage('ID_AUTO_CAPTURE')
-                    };
-                case 'AADHAR_AUTO_CAPTURE':
-                    return {
-                        title: "Step 1: Aadhar Verification",
-                        desc: "Scan your Aadhar Card. This will be stored as your primary identity.",
-                        btnText: "Start Aadhar Scan",
-                        btnAction: () => { setCameraMode('environment'); startCamera(); }
-                    };
-                case 'ID_AUTO_CAPTURE':
-                    return {
-                        title: "Step 2: Scan College ID",
-                        desc: "Hold your IPS Academy ID Card. We will match it against your Aadhar.",
-                        btnText: "Start ID Scan",
-                        btnAction: () => { setCameraMode('environment'); startCamera(); }
-                    };
                 case 'ID_VERIFY_DATA':
                     return {
-                        title: "Details Matched",
-                        desc: "College ID matched against Aadhar. Confirm your student details.",
+                        title: "ID Verified",
+                        desc: "Your student identity has been captured. Now please verify your Aadhar Card.",
                         isReview: true,
                         data: scannedData,
                         image: idCameraImg,
-                        btnText: "Details are correct",
+                        btnText: "Proceed to Aadhar Scan",
+                        btnAction: () => setVerificationStage('AADHAR_AUTO_CAPTURE')
+                    };
+                case 'ID_AUTO_CAPTURE':
+                    return {
+                        title: "Step 1: Scan College ID",
+                        desc: "Hold your IPS Academy ID Card. This will be your primary student identity.",
+                        btnText: "Start ID Scan",
+                        btnAction: () => { setCameraMode('environment'); startCamera(); }
+                    };
+                case 'AADHAR_AUTO_CAPTURE':
+                    return {
+                        title: "Step 2: Aadhar Verification",
+                        desc: "Scan your Aadhar Card. We will match it against your College ID.",
+                        btnText: "Start Aadhar Scan",
+                        btnAction: () => { setCameraMode('environment'); startCamera(); }
+                    };
+                case 'AADHAR_VERIFY_DATA':
+                    return {
+                        title: "Identity Matched",
+                        desc: "Aadhar matched against College ID. Proceed to final liveness check.",
+                        isReview: true,
+                        data: aadharData,
+                        image: aadharCameraImg,
+                        btnText: "Confirm & Finalize",
                         btnAction: () => setVerificationStage('SELFIE')
                     };
                 case 'SELFIE':
@@ -269,6 +275,25 @@ const Register = () => {
                 )}
             </div>
         );
+    };
+
+    const takeSelfie = () => {
+        if (!videoRef.current || !canvasRef.current) return;
+        const context = canvasRef.current.getContext('2d');
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
+        context.drawImage(videoRef.current, 0, 0);
+
+        canvasRef.current.toBlob((blob) => {
+            if (blob) {
+                setSelfieImg(URL.createObjectURL(blob));
+                setFlash(true);
+                setTimeout(() => setFlash(false), 150);
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Selfie Captured Successfully. Moving to final step."));
+                stopCamera();
+                setStep(4);
+            }
+        }, 'image/jpeg');
     };
 
     const startCamera = async () => {
@@ -528,36 +553,36 @@ const Register = () => {
         const bestName = names.sort((a, b) => names.filter(v => v === a).length - names.filter(v => v === b).length).pop();
         const bestMatch = buffer.find(b => b.name === bestName) || buffer[buffer.length - 1];
 
-        if (type === 'AADHAR') {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar Card Verified."));
-            setAadharData(bestMatch);
-            setAadharCameraImg(URL.createObjectURL(finalBlob));
+        if (type === 'ID') {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("ID Card Verified."));
+            setScannedData(bestMatch);
+            setIdCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]); stopCamera();
-            setVerificationStage('AADHAR_VERIFY_DATA');
-        } else if (type === 'ID') {
-            const aadharName = (aadharData?.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
-            const idName = (bestMatch.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
+            setVerificationStage('ID_VERIFY_DATA');
+        } else if (type === 'AADHAR') {
+            const idName = (scannedData?.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
+            const aadharName = (bestMatch.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
 
-            setScanStatus("AI: Matching against Aadhar...");
+            setScanStatus("AI: Matching against ID Card...");
 
-            // Fuzzy Match: Check if one name contains the other or they are identical
-            const isMatch = aadharName && idName && (aadharName === idName || aadharName.includes(idName) || idName.includes(aadharName));
+            // Fuzzy Match
+            const isMatch = idName && aadharName && (idName === aadharName || idName.includes(aadharName) || aadharName.includes(idName));
 
             if (isMatch) {
-                setScannedData(bestMatch);
-                setIdCameraImg(URL.createObjectURL(finalBlob));
+                setAadharData(bestMatch);
+                setAadharCameraImg(URL.createObjectURL(finalBlob));
                 setScanBuffer([]); stopCamera();
                 setScanStatus("✅ Verification Successful");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance("ID Matched against Aadhar. Verification Successful."));
-                setVerificationStage('ID_VERIFY_DATA');
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched against ID. Verification Successful."));
+                setVerificationStage('AADHAR_VERIFY_DATA');
             } else {
                 setScanBuffer([]);
                 setScanStatus("❌ Name Mismatch - Try Again");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance(`Name on ID Card ${bestMatch.name} does not match your Aadhar name.`));
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance(`Name on Aadhar ${bestMatch.name} does not match your College ID name.`));
                 setErrorFlash(true);
                 setTimeout(() => {
                     setErrorFlash(false);
-                    setScanStatus("AI: Waiting for ID Card...");
+                    setScanStatus("AI: Waiting for Aadhar...");
                 }, 4000);
             }
         }
