@@ -131,8 +131,8 @@ const Register = () => {
                         btnText: "Open Camera",
                         btnAction: () => { setCameraMode('environment'); startCamera(); },
                         btnAction: () => { setCameraMode('environment'); startCamera(); },
-                        skip: () => setVerificationStage('ID_FILE'),
-                        skipText: "On Laptop? Upload ID File"
+                        btnText: "Open Camera",
+                        btnAction: () => { setCameraMode('environment'); startCamera(); }
                     };
                 case 'ID_VERIFY_DATA':
                     return {
