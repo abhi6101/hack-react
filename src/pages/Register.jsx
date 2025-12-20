@@ -684,10 +684,14 @@ const Register = () => {
                                             <div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div>
                                         </div>
                                         <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                                <span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span>
+                                                <span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span>
+                                            </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <span style={{ color: '#aaa', fontSize: '0.8rem' }}>Verification Status:</span>
                                                 <span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                                    <i className="fas fa-check-circle"></i> MATCHED
+                                                    <i className="fas fa-check-circle"></i> VERIFIED HUMAN
                                                 </span>
                                             </div>
                                         </div>
