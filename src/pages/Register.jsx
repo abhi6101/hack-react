@@ -79,72 +79,31 @@ const Register = () => {
 
     // --- Steps Renderers ---
 
-    // Step 1: Choose Document
+    // Step 1: Upload Document (Primary: ID Card, Secondary: Fee Receipt)
     const renderStep1 = () => (
         <div className="animate-fade-in">
-            <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Select Verification Document</h2>
-            <div className="verification-options" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div
-                    className={`option-card ${verifyMethod === 'id_card' ? 'selected' : ''}`}
-                    onClick={() => setVerifyMethod('id_card')}
-                    style={{
-                        padding: '1.5rem',
-                        border: verifyMethod === 'id_card' ? '2px solid #667eea' : '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '12px',
-                        background: verifyMethod === 'id_card' ? 'rgba(102, 126, 234, 0.1)' : 'rgba(255,255,255,0.05)',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        transition: 'all 0.3s ease'
-                    }}
-                >
-                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🪪</div>
-                    <h3>College ID Card</h3>
-                    <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>Fastest. Auto-fills via AI.</p>
-                </div>
+            <Link to="/" style={{
+                position: 'absolute',
+                top: '1rem',
+                left: '1rem',
+                color: '#667eea',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.9rem',
+                fontWeight: '600'
+            }}>
+                <i className="fas fa-home"></i> Home
+            </Link>
 
-                <div
-                    className={`option-card ${verifyMethod === 'fee_receipt' ? 'selected' : ''}`}
-                    onClick={() => setVerifyMethod('fee_receipt')}
-                    style={{
-                        padding: '1.5rem',
-                        border: verifyMethod === 'fee_receipt' ? '2px solid #667eea' : '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '12px',
-                        background: verifyMethod === 'fee_receipt' ? 'rgba(102, 126, 234, 0.1)' : 'rgba(255,255,255,0.05)',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        transition: 'all 0.3s ease'
-                    }}
-                >
-                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📄</div>
-                    <h3>Fee Receipt + Aadhar</h3>
-                    <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>For new students / Lost ID.</p>
-                </div>
-            </div>
-
-            <button
-                className="btn btn-primary"
-                style={{ width: '100%', marginTop: '2rem' }}
-                onClick={() => setStep(2)}
-            >
-                Continue <i className="fas fa-arrow-right"></i>
-            </button>
-            <p className="form-footer-text" style={{ marginTop: '1rem' }}>Already verified? <Link to="/login">Login here</Link></p>
-        </div>
-    );
-
-    // Step 2: Upload Document
-    const renderStep2 = () => (
-        <div className="animate-fade-in">
-            <button onClick={() => setStep(1)} style={{ background: 'none', border: 'none', color: '#aaa', cursor: 'pointer', marginBottom: '1rem' }}>
-                <i className="fas fa-arrow-left"></i> Back
-            </button>
             <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-                Upload {verifyMethod === 'id_card' ? 'College ID' : 'Fee Receipt'}
+                {verifyMethod === 'id_card' ? 'Upload College ID Card' : 'Upload Fee Receipt'}
             </h2>
             <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#aaa', marginBottom: '2rem' }}>
                 {verifyMethod === 'id_card'
-                    ? "Ensure your Name, Photo, and Phone Number are visible."
-                    : "Upload your latest Semester Fee Receipt."}
+                    ? "Please upload a clear photo of your ID Card to verify identity."
+                    : "Upload your latest Semester Fee Receipt + Aadhar."}
             </p>
 
             <div
@@ -168,16 +127,29 @@ const Register = () => {
             </div>
 
             {isScanning && (
-                <div style={{ textAlign: 'center' }}>
+                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
                     <div className="spinner" style={{ display: 'inline-block', width: '30px', height: '30px', border: '3px solid rgba(255,255,255,0.3)', borderTop: '3px solid #667eea', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
                     <p style={{ marginTop: '1rem', color: '#667eea' }}>AI is analyzing your document...</p>
                 </div>
             )}
+
+            {/* Method Switcher */}
+            <div style={{ textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+                <p style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '0.5rem' }}>
+                    {verifyMethod === 'id_card' ? "Don't have your ID Card?" : "Have your ID Card?"}
+                </p>
+                <button
+                    onClick={() => setVerifyMethod(prev => prev === 'id_card' ? 'fee_receipt' : 'id_card')}
+                    style={{ background: 'none', border: 'none', color: '#667eea', textDecoration: 'underline', cursor: 'pointer', fontSize: '0.95rem' }}
+                >
+                    {verifyMethod === 'id_card' ? "Use Fee Receipt instead" : "Use College ID Card instead"}
+                </button>
+            </div>
         </div>
     );
 
-    // Step 3: Verify Extracted Data
-    const renderStep3 = () => (
+    // Step 2: Verify Extracted Data
+    const renderStep2 = () => (
         <div className="animate-fade-in">
             <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Scan Complete</h2>
             <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)', marginBottom: '2rem' }}>
@@ -221,7 +193,7 @@ const Register = () => {
                             computerCode: scannedData?.code || "59500",
                             // In real app, we would lock these fields
                         }));
-                        setStep(4);
+                        setStep(3);
                     }}
                 >
                     Yes, Verified
@@ -246,7 +218,7 @@ const Register = () => {
                 code: "59500",
                 phone: "9876543210"
             });
-            setStep(3);
+            setStep(2);
         }, 2000);
     };
 
@@ -303,7 +275,7 @@ const Register = () => {
     return (
         <main className="register-page-container">
             <section id="register-form-card" className="register-card surface-glow">
-                {step < 4 ? (
+                {step < 3 ? (
                     <>
                         <Link to="/" style={{
                             position: 'absolute',
@@ -320,10 +292,9 @@ const Register = () => {
                             <i className="fas fa-home"></i> Home
                         </Link>
                         <h1 style={{ marginBottom: '0.5rem', textAlign: 'center' }}>Identity Check</h1>
-                        <p style={{ color: '#aaa', textAlign: 'center', marginBottom: '2rem' }}>Safety Step {step}/3</p>
+                        <p style={{ color: '#aaa', textAlign: 'center', marginBottom: '2rem' }}>Safety Step {step}/2</p>
                         {step === 1 && renderStep1()}
                         {step === 2 && renderStep2()}
-                        {step === 3 && renderStep3()}
                     </>
                 ) : (
                     <>
