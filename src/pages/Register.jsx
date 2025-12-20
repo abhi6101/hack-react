@@ -159,6 +159,8 @@ const Register = () => {
                                     session: "2023-2026",
                                     code: "59500"
                                 };
+                                console.log("🔍 [MOCK OCR] Extraction Complete:", extracted);
+                                alert("ℹ️ DEMO MODE: Simulated Data Extraction for 'Abhi Jain'");
                                 setScannedData(extracted);
                                 setVerificationStage('ID_VERIFY_DATA');
                             }, 1500);
