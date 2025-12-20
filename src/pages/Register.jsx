@@ -640,19 +640,22 @@ const Register = () => {
                     // NEGATIVE CHECK
                     // NEGATIVE CHECK: Targeted Aadhar/Document rejection
                     const lowerText = text.toLowerCase().replace(/\s+/g, '');
-                    const otherDocKeywords = ["aadhar", "uidai", "incometax", "permanentaccount", "drivinglicense", "voter", "governmentofindia", "enrollmentno", "electioncommission"];
+                    const otherDocKeywords = ["aadhar", "uidai", "incometax", "permanentaccount", "drivinglicense", "voter", "governmentofindia", "enrollmentno", "electioncommission", "yob", "dob", "yearofbirth", "birth", "uniqueidentification"];
                     const isOtherDoc = otherDocKeywords.some(kw => lowerText.includes(kw));
 
                     if (isOtherDoc) {
                         setScanStatus("⚠️ WRONG DOCUMENT");
                         window.speechSynthesis.cancel();
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document. Please show your IPS Academy I D."));
+                        const msg = new SpeechSynthesisUtterance("Security Alert. This is an Aadhar Card. Please show your Physical IPS Academy ID Card to proceed.");
+                        msg.rate = 1.0;
+                        msg.pitch = 1.0;
+                        window.speechSynthesis.speak(msg);
 
-                        // Red Alert Blink
+                        // Aggressive Red Alert Blink
                         setErrorFlash(true);
-                        setTimeout(() => setErrorFlash(false), 2500);
+                        setTimeout(() => setErrorFlash(false), 3000);
 
-                        setScanBuffer([]); // Reset progress
+                        setScanBuffer([]);
                         setIsScanning(false);
                         return;
                     }
