@@ -598,7 +598,11 @@ const Register = () => {
                         console.warn("⚠️ Wrong Document Detected: Aadhar presented as ID");
                         window.speechSynthesis.cancel();
                         window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document. Please show College ID."));
+
+                        // RESET LOGIC
+                        setScanBuffer([]); // Clear previous progress
                         setIsScanning(false);
+
                         alert("⚠️ SECURITY ALERT\n\nYou are scanning an Aadhar Card.\n\nFor Step 1, you MUST scan your IPS ACADEMY ID CARD.");
                         return;
                     }
