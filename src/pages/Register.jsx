@@ -201,11 +201,20 @@ const Register = () => {
                         <span style={{ color: '#aaa' }}>Computer Code:</span>
                         <span style={{ fontWeight: 'bold' }}>{scannedData?.code || "59500"}</span>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#aaa' }}>Phone:</span>
-                        <span style={{ fontWeight: 'bold', color: '#fca5a5' }}>
-                            {scannedData?.phone || "9876543210"}
-                        </span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#aaa' }}>Send OTP to:</span>
+                        {scannedData?.phones?.length > 1 ? (
+                            <select
+                                onChange={(e) => setScannedData(prev => ({ ...prev, selectedPhone: e.target.value }))}
+                                style={{ background: '#334155', border: '1px solid #475569', color: '#fff', borderRadius: '4px', padding: '2px 5px' }}
+                            >
+                                {scannedData.phones.map(p => <option key={p} value={p}>{p}</option>)}
+                            </select>
+                        ) : (
+                            <span style={{ fontWeight: 'bold', color: '#fca5a5' }}>
+                                {scannedData?.phones?.[0] || scannedData?.phone || "9876543210"}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>
@@ -231,8 +240,9 @@ const Register = () => {
                     style={{ flex: 1 }}
                     onClick={() => {
                         // Send OTP Logic
+                        const phoneToSend = scannedData?.selectedPhone || scannedData?.phones?.[0];
                         setOtpSent(true);
-                        alert(`OTP sent to ${scannedData?.phone || 'your mobile number'}`);
+                        alert(`OTP sent to ${phoneToSend}`);
                         setStep(3); // Go to OTP Step
                     }}
                 >
@@ -248,7 +258,7 @@ const Register = () => {
             <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Verify Mobile</h2>
             <p style={{ textAlign: 'center', color: '#aaa', marginBottom: '2rem' }}>
                 Enter the 4-digit OTP sent to <br />
-                <span style={{ color: '#fff', fontWeight: 'bold' }}>{scannedData?.phone || "your number"}</span>
+                <span style={{ color: '#fff', fontWeight: 'bold' }}>{scannedData?.selectedPhone || scannedData?.phones?.[0] || "your number"}</span>
             </p>
 
             <div style={{ maxWidth: '300px', margin: '0 auto', textAlign: 'center' }}>
@@ -313,7 +323,7 @@ const Register = () => {
                 fatherName: "Mr. R.K. Jain",
                 branch: "Computer Science",
                 code: "59500",
-                phone: "9876543210"
+                phones: ["9876543210", "9123456789"]
             });
             setStep(2);
         }, 2000);
@@ -370,7 +380,7 @@ const Register = () => {
                         fatherName: "Mr. R.K. Jain",
                         branch: "Computer Science",
                         code: "59500",
-                        phone: "9876543210"
+                        phones: ["9876543210", "9123456789"] // Simulated Multiple Numbers
                     });
                     setStep(2);
                 }, 2000);
