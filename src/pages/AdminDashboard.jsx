@@ -105,6 +105,17 @@ const AdminDashboard = () => {
     }, [isCompanyAdmin, myCompanyName]);
 
     const [activeTab, setActiveTab] = useState('dashboard');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // Close sidebar when tab changes (good for mobile)
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [activeTab]);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
     const [interviews, setInterviews] = useState([]);
     const [interviewForm, setInterviewForm] = useState({
         company: '',
@@ -2319,7 +2330,10 @@ const AdminDashboard = () => {
 
     return (
         <div className="admin-container">
-            <aside className="sidebar">
+            <button className="mobile-menu-toggle" onClick={toggleSidebar}>
+                <i className={`fas ${isSidebarOpen ? 'fa-times' : 'fa-bars'}`}></i>
+            </button>
+            <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
                 <div className="sidebar-header">
                     <h2><i className="fas fa-user-shield"></i> Admin Panel</h2>
                 </div>

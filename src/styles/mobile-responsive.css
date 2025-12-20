@@ -27,39 +27,8 @@
 /* Mobile Navigation Improvements */
 @media (max-width: 768px) {
 
-    /* Navigation */
-    nav {
-        padding: 1rem 3% !important;
-        flex-wrap: wrap;
-    }
-
-    nav .logo {
-        font-size: 1.4rem !important;
-    }
-
-    nav ul {
-        flex-direction: column;
-        gap: 0.5rem !important;
-        width: 100%;
-        margin-top: 1rem;
-        display: none;
-        /* Hidden by default on mobile */
-    }
-
-    nav ul.active {
-        display: flex;
-    }
-
-    /* Mobile menu toggle button */
-    .mobile-menu-toggle {
-        display: block !important;
-        background: none;
-        border: none;
-        color: var(--text-primary, #fff);
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-    }
+    /* Mobile Navigation Improvements - Navbar handled in index.css */
+    /* Removed conflicting nav styles to accept index.css as source of truth */
 
     /* Hero Section */
     .hero {
