@@ -323,11 +323,13 @@ const Register = () => {
 
                 // 1. SECURITY CHECKS (Negative / Replay Detection)
                 if (isIdStage || isAadharStage) {
-                    const isIPSDetected = text.match(/IPS\s*Academy/i) || text.includes("Indore");
-                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment");
+                    const idKeywords = ["ips", "academy", "indore", "identity", "student", "college", "institute", "computer code", "session"];
+                    const isIPSDetected = idKeywords.some(kw => lowerText.includes(kw));
+                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment") || text.match(/\d{4}\s\d{4}\s\d{4}/);
 
-                    if (isIdStage && isAadharDetected) {
-                        detectedDocType = "Aadhar Card";
+                    if (isAadharDetected) {
+                        // If it's Aadhar, it's never a "wrong" ID card
+                        if (isIdStage) detectedDocType = "Aadhar Card";
                     } else if (isAadharStage && isIPSDetected) {
                         detectedDocType = "College ID Card";
                     } else if (isIdStage) {
@@ -431,7 +433,9 @@ const Register = () => {
                     const aadharKeywords = ['Government', 'India', 'UID', 'Aadhar', 'DOB', 'Enrollment', 'Year', 'Address', 'Male', 'Female', 'Father', 'Husband'];
                     const score = aadharKeywords.reduce((acc, kw) => text.toLowerCase().includes(kw.toLowerCase()) ? acc + 1 : acc, 0);
                     const aadharNum = text.match(/\d{4}\s\d{4}\s\d{4}/);
-                    if (score >= 2 || aadharNum || text.length > 100) {
+                    const rawAadharNum = text.match(/\d{12}/); // Fallback for no spaces
+
+                    if (score >= 1 || aadharNum || rawAadharNum || text.length > 100) {
                         matchFound = true; setScanStatus("Aadhar Found!");
                         const knownName = scannedData?.name || ""; let matchedName = "Detected Name";
                         if (knownName && text.toUpperCase().includes(knownName.toUpperCase())) matchedName = knownName;
