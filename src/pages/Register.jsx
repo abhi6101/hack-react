@@ -169,9 +169,6 @@ const Register = () => {
                     </div>
                     <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                         <button className="btn" onClick={stopCamera} style={{ background: '#334155', border: '1px solid #475569' }}>Cancel</button>
-                        <button className="btn btn-primary" onClick={handleJourneyCapture}>
-                            <i className="fas fa-camera"></i> Capture
-                        </button>
                     </div>
                 </div>
             );
