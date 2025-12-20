@@ -7,8 +7,9 @@ const Register = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
+        fullName: '', // Added for verified name
         email: '',
-        role: '',
+        role: 'USER', // Default to USER
         branch: '',
         semester: '',
         startYear: new Date().getFullYear().toString(),
@@ -154,7 +155,7 @@ const Register = () => {
                                     institution: "IPS Academy, Indore",
                                     name: "Abhi Jain",
                                     fatherName: "Mr. R.K. Jain",
-                                    branch: "Computer Science",
+                                    branch: "IMCA", // Matches option code
                                     code: "59500"
                                 };
                                 setScannedData(extracted);
@@ -441,6 +442,19 @@ const Register = () => {
         }
     };
 
+    // --- Auto-Fill & Lock Effect ---
+    useEffect(() => {
+        if (step === 4 && scannedData) {
+            setFormData(prev => ({
+                ...prev,
+                fullName: scannedData.name,
+                computerCode: scannedData.code,
+                branch: scannedData.branch || 'IMCA', // Fallback or map
+                role: 'USER'
+            }));
+        }
+    }, [step, scannedData]);
+
     return (
         <main className="register-page-container">
             <section id="register-form-card" className="register-card surface-glow">
@@ -469,6 +483,20 @@ const Register = () => {
                         {success && <div className="alert alert-success" style={{ display: 'block' }}>{success}</div>}
 
                         <form id="registrationForm" onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>
+                                <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    value={formData.fullName}
+                                    readOnly={true}
+                                    className="locked-field"
+                                    style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
+                                />
+                                <small style={{ color: '#34d399' }}>Verified from ID Card</small>
+                            </div>
+
                             <div className="form-group">
                                 <label htmlFor="username">Username</label>
                                 <input
@@ -521,6 +549,8 @@ const Register = () => {
                                             required
                                             value={formData.branch}
                                             onChange={handleChange}
+                                            disabled={!!scannedData} // Lock if scanned
+                                            style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff' } : {}}
                                         >
                                             <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Your Branch --</option>
                                             {departments.length > 0 ? departments.map(d => (
@@ -594,6 +624,8 @@ const Register = () => {
                                                     placeholder="e.g. 59500"
                                                     value={formData.computerCode}
                                                     onChange={handleChange}
+                                                    readOnly={!!scannedData}
+                                                    style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}}
                                                 />
                                                 <small>Your unique college ID/Roll Number.</small>
                                             </div>
