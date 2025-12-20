@@ -614,10 +614,18 @@ const Register = () => {
                         const allNumbers = text.match(/\d+/g) || [];
                         const validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n)); // Crude phone check
 
+                        // Final Quality Validation
+                        if (extractedName === "Detected Name") {
+                            console.warn("⚠️ Scan rejected: Name not identified");
+                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Reading Unclear. Please Re-verify."));
+                            setIsScanning(false);
+                            return; // Do NOT proceed with fake/default data
+                        }
+
                         extracted = {
                             institution: "IPS Academy, Indore",
                             name: extractedName,
-                            fatherName: extractedFather,
+                            fatherName: extractedFather === "Detected Father" ? "" : extractedFather,
                             branch: "IMCA",
                             session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2022-2027",
                             code: validCode || "59500"
