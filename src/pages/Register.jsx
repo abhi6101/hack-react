@@ -325,38 +325,44 @@ const Register = () => {
                 if (isIdStage || isAadharStage) {
                     const idKeywords = ["ips", "academy", "indore", "identity", "student", "college", "institute", "computer code", "session"];
                     const isIPSDetected = idKeywords.some(kw => lowerText.includes(kw));
-                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment") || text.match(/\d{4}\s\d{4}\s\d{4}/);
+                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment") || text.match(/\d{4}\s\d{4}\s\d{4}/) || text.match(/\d{12}/);
 
-                    if (isAadharDetected) {
-                        // If it's Aadhar, it's never a "wrong" ID card
-                        if (isIdStage) detectedDocType = "Aadhar Card";
-                    } else if (isAadharStage && isIPSDetected) {
-                        detectedDocType = "College ID Card";
-                    } else if (isIdStage) {
-                        if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
-                            detectedDocType = "PAN Card";
-                        } else if (lowerText.includes("drivinglicense") || lowerText.includes("license")) {
-                            detectedDocType = "Driving License";
-                        } else if (lowerText.includes("voter") || lowerText.includes("electioncommission") || lowerText.includes("epic")) {
-                            detectedDocType = "Voter ID";
-                        } else if (!isIPSDetected) {
-                            const objectCategories = [
-                                { name: "Food/Snack", keywords: ["biscuit", "snack", "parle", "britannia", "sunfeast", "cadbury", "lays", "kurkur", "bingo", "haldiram", "maggi", "chocolate", "cookie", "mrp", "flavor", "nutrition"] },
-                                { name: "Bottle/Drink", keywords: ["bottle", "water", "pepsi", "coke", "sprite", "thumsup", "maaza", "bisleri", "aquafina"] },
-                                { name: "Toiletry/Cosmetic", keywords: ["shampoo", "soap", "facewash", "cream", "lotion", "nivea", "dove", "ponds", "himalaya"] },
-                                { name: "Stationery/Book", keywords: ["notebook", "book", "magazine", "register", "classmate", "pen", "pencil"] }
-                            ];
-                            const matchedCategory = objectCategories.find(cat => cat.keywords.some(kw => lowerText.includes(kw)));
-                            const genericIdKeywords = ["university", "college", "school", "identity", "employee", "institute", "address", "card"];
+                    // A. Universal Wrong Document detection
+                    if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
+                        detectedDocType = "PAN Card";
+                    } else if (lowerText.includes("drivinglicense") || lowerText.includes("license")) {
+                        detectedDocType = "Driving License";
+                    } else if (lowerText.includes("voter") || lowerText.includes("electioncommission") || lowerText.includes("epic")) {
+                        detectedDocType = "Voter ID";
+                    }
 
-                            if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 40) {
-                                detectedDocType = "External Identity Card";
-                            } else if (matchedCategory) {
-                                const specificBrand = matchedCategory.keywords.find(kw => lowerText.includes(kw));
-                                detectedDocType = `Invalid Item (${matchedCategory.name}${specificBrand ? ': ' + specificBrand.toUpperCase() : ''})`;
-                            } else if (text.length > 60 && !lowerText.includes("card") && !lowerText.includes("ips")) {
-                                detectedDocType = "Invalid Item (Object Detected)";
-                            }
+                    // B. Stage-specific cross-document detection
+                    if (!detectedDocType) {
+                        if (isIdStage && isAadharDetected) {
+                            detectedDocType = "Aadhar Card";
+                        } else if (isAadharStage && isIPSDetected) {
+                            detectedDocType = "College ID Card";
+                        }
+                    }
+
+                    // C. Generic Object detection (applies if no specific doc found)
+                    if (!detectedDocType && !isIPSDetected && !isAadharDetected) {
+                        const objectCategories = [
+                            { name: "Food/Snack", keywords: ["biscuit", "snack", "parle", "britannia", "sunfeast", "cadbury", "lays", "kurkur", "bingo", "haldiram", "maggi", "chocolate", "cookie", "mrp", "flavor", "nutrition"] },
+                            { name: "Bottle/Drink", keywords: ["bottle", "water", "pepsi", "coke", "sprite", "thumsup", "maaza", "bisleri", "aquafina"] },
+                            { name: "Toiletry/Cosmetic", keywords: ["shampoo", "soap", "facewash", "cream", "lotion", "nivea", "dove", "ponds", "himalaya"] },
+                            { name: "Stationery/Book", keywords: ["notebook", "book", "magazine", "register", "classmate", "pen", "pencil"] }
+                        ];
+                        const matchedCategory = objectCategories.find(cat => cat.keywords.some(kw => lowerText.includes(kw)));
+                        const genericIdKeywords = ["university", "college", "school", "identity", "employee", "institute", "address", "card"];
+
+                        if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 40) {
+                            detectedDocType = "External Identity Card";
+                        } else if (matchedCategory) {
+                            const specificBrand = matchedCategory.keywords.find(kw => lowerText.includes(kw));
+                            detectedDocType = `Invalid Item (${matchedCategory.name}${specificBrand ? ': ' + specificBrand.toUpperCase() : ''})`;
+                        } else if (text.length > 60) {
+                            detectedDocType = "Invalid Item (Object Detected)";
                         }
                     }
                 }
