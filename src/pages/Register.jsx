@@ -29,8 +29,8 @@ const Register = () => {
     // --- Identity Verification State ---
     const [step, setStep] = useState(1); // 1: Choice, 2: Upload, 3: Verify Data, 4: Final Form
     // --- Verification Journey State ---
-    // Journey: ID_CAMERA -> ID_FILE -> AADHAR_CAMERA -> AADHAR_FILE -> SELFIE -> FORM
-    const [verificationStage, setVerificationStage] = useState('ID_FILE');
+    // Journey: ID_AUTO_CAPTURE -> ID_VERIFY_DATA -> AADHAR_CAMERA -> ...
+    const [verificationStage, setVerificationStage] = useState('ID_AUTO_CAPTURE');
 
     // Data Containers
     const [scannedData, setScannedData] = useState(null); // stores parsed JSON from ID/Aadhar
@@ -141,6 +141,16 @@ const Register = () => {
                         data: scannedData,
                         btnText: "Data Correct? Verify Live",
                         btnAction: () => setVerificationStage('ID_CAMERA')
+                    };
+                case 'ID_AUTO_CAPTURE':
+                    return {
+                        title: "Step 1: Auto-Scan ID Card",
+                        desc: "Hold your ID Card steady in the camera view. We will auto-capture it.",
+                        btnText: "Start Auto-Scanner",
+                        btnAction: () => { setCameraMode('environment'); startCamera(); },
+                        manual: true,
+                        manualText: "Scanner not working? Upload File",
+                        skip: () => setVerificationStage('ID_FILE') // Fallback
                     };
                 case 'ID_FILE':
                     return {
@@ -474,6 +484,15 @@ const Register = () => {
             }, 'image/jpeg');
         }
     };
+
+    // Auto-Capture Interval
+    useEffect(() => {
+        let interval;
+        if (showCamera && verificationStage === 'ID_AUTO_CAPTURE' && !isScanning) {
+            interval = setInterval(attemptAutoCapture, 2500); // Check every 2.5s
+        }
+        return () => clearInterval(interval);
+    }, [showCamera, verificationStage, isScanning]);
 
     // --- Auto-Fill & Lock Effect ---
     useEffect(() => {
