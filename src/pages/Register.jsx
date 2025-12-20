@@ -1,5 +1,5 @@
 import API_BASE_URL from '../config';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/register.css';
 
@@ -30,6 +30,14 @@ const Register = () => {
     const [scannedData, setScannedData] = useState(null);
     const [verificationFile, setVerificationFile] = useState(null);
     const [isScanning, setIsScanning] = useState(false);
+    const [otp, setOtp] = useState('');
+    const [otpSent, setOtpSent] = useState(false);
+
+    // --- Camera State ---
+    const [showCamera, setShowCamera] = useState(false);
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+    const streamRef = useRef(null);
 
     React.useEffect(() => {
         const fetchDepts = async () => {
@@ -106,26 +114,60 @@ const Register = () => {
                     : "Since ID details were incorrect, please upload Fee Receipt & Aadhar for manual verification."}
             </p>
 
-            <div
-                style={{
-                    border: '2px dashed rgba(255,255,255,0.2)',
-                    borderRadius: '12px',
-                    padding: '3rem',
-                    textAlign: 'center',
-                    background: verifyMethod === 'id_card' ? 'rgba(255,255,255,0.02)' : 'rgba(239, 68, 68, 0.05)',
-                    borderColor: verifyMethod === 'id_card' ? 'rgba(255,255,255,0.2)' : 'rgba(239, 68, 68, 0.3)',
-                    marginBottom: '2rem'
-                }}
-            >
-                <i className={`fas ${verifyMethod === 'id_card' ? 'fa-id-card' : 'fa-file-invoice'}`} style={{ fontSize: '3rem', color: verifyMethod === 'id_card' ? '#667eea' : '#d1d5db', marginBottom: '1rem' }}></i>
-                <p>Click to browse or drag {verifyMethod === 'id_card' ? 'ID Card' : 'Documents'} here</p>
-                <input
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={handleFileUpload}
-                    style={{ marginTop: '1rem' }}
-                />
-            </div>
+            {showCamera ? (
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                    <div style={{ position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', border: '2px solid #667eea', background: '#000' }}>
+                        <video ref={videoRef} style={{ width: '100%', display: 'block' }} autoPlay playsInline muted></video>
+                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                        <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black' }}>
+                            Align ID Card within frame
+                        </div>
+                    </div>
+                    <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                        <button className="btn" onClick={stopCamera} style={{ background: '#334155', border: '1px solid #475569' }}>Cancel</button>
+                        <button className="btn btn-primary" onClick={capturePhoto}>
+                            <i className="fas fa-camera"></i> Capture Photo
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <div
+                        style={{
+                            border: '2px dashed rgba(255,255,255,0.2)',
+                            borderRadius: '12px',
+                            padding: '3rem',
+                            textAlign: 'center',
+                            background: verifyMethod === 'id_card' ? 'rgba(255,255,255,0.02)' : 'rgba(239, 68, 68, 0.05)',
+                            borderColor: verifyMethod === 'id_card' ? 'rgba(255,255,255,0.2)' : 'rgba(239, 68, 68, 0.3)',
+                            marginBottom: '1rem'
+                        }}
+                    >
+                        <i className={`fas ${verifyMethod === 'id_card' ? 'fa-id-card' : 'fa-file-invoice'}`} style={{ fontSize: '3rem', color: verifyMethod === 'id_card' ? '#667eea' : '#d1d5db', marginBottom: '1rem' }}></i>
+                        <p>Click to browse or drag {verifyMethod === 'id_card' ? 'ID Card' : 'Documents'} here</p>
+                        <input
+                            type="file"
+                            accept="image/*,.pdf"
+                            onChange={handleFileUpload}
+                            style={{ marginTop: '1rem' }}
+                        />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1.5rem 0', justifyContent: 'center' }}>
+                        <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', flex: 1 }}></div>
+                        <span style={{ color: '#aaa', fontSize: '0.8rem' }}>OR</span>
+                        <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', flex: 1 }}></div>
+                    </div>
+
+                    <button
+                        className="btn"
+                        style={{ display: 'block', width: '100%', background: 'rgba(102, 126, 234, 0.1)', color: '#667eea', border: '1px solid rgba(102, 126, 234, 0.3)', marginBottom: '2rem' }}
+                        onClick={startCamera}
+                    >
+                        <i className="fas fa-camera" style={{ marginRight: '0.5rem' }}></i> Use Camera to Scan
+                    </button>
+                </>
+            )}
 
             {isScanning && (
                 <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
@@ -148,13 +190,21 @@ const Register = () => {
                         <span style={{ fontWeight: 'bold' }}>{scannedData?.name || "Abhi Jain"}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#aaa' }}>Father's Name:</span>
+                        <span style={{ fontWeight: 'bold' }}>{scannedData?.fatherName || "Mr. R.K. Jain"}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#aaa' }}>Branch:</span>
+                        <span style={{ fontWeight: 'bold' }}>{scannedData?.branch || "Computer Science"}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span style={{ color: '#aaa' }}>Computer Code:</span>
                         <span style={{ fontWeight: 'bold' }}>{scannedData?.code || "59500"}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#aaa' }}>Detected Phone:</span>
+                        <span style={{ color: '#aaa' }}>Phone:</span>
                         <span style={{ fontWeight: 'bold', color: '#fca5a5' }}>
-                            {scannedData?.phone ? `XXXXXX${scannedData.phone.slice(-4)}` : "Not detected"}
+                            {scannedData?.phone || "9876543210"}
                         </span>
                     </div>
                 </div>
@@ -180,18 +230,69 @@ const Register = () => {
                     className="btn btn-primary"
                     style={{ flex: 1 }}
                     onClick={() => {
-                        // Auto-fill form
-                        setFormData(prev => ({
-                            ...prev,
-                            username: (scannedData?.name || "abhi").toLowerCase().replace(/\s/g, '') + Math.floor(Math.random() * 100),
-                            computerCode: scannedData?.code || "59500",
-                            // In real app, we would lock these fields
-                        }));
-                        setStep(3);
+                        // Send OTP Logic
+                        setOtpSent(true);
+                        alert(`OTP sent to ${scannedData?.phone || 'your mobile number'}`);
+                        setStep(3); // Go to OTP Step
                     }}
                 >
-                    Yes, Verified
+                    Yes, Send OTP
                 </button>
+            </div>
+        </div>
+    );
+
+    // Step 3: OTP Verification
+    const renderStep3 = () => (
+        <div className="animate-fade-in">
+            <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Verify Mobile</h2>
+            <p style={{ textAlign: 'center', color: '#aaa', marginBottom: '2rem' }}>
+                Enter the 4-digit OTP sent to <br />
+                <span style={{ color: '#fff', fontWeight: 'bold' }}>{scannedData?.phone || "your number"}</span>
+            </p>
+
+            <div style={{ maxWidth: '300px', margin: '0 auto', textAlign: 'center' }}>
+                <input
+                    type="text"
+                    placeholder="- - - -"
+                    maxLength="4"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                    style={{
+                        width: '100%',
+                        fontSize: '2rem',
+                        textAlign: 'center',
+                        letterSpacing: '1rem',
+                        padding: '1rem',
+                        marginBottom: '2rem',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '12px',
+                        color: '#fff'
+                    }}
+                />
+
+                <button
+                    className="btn btn-primary"
+                    style={{ width: '100%' }}
+                    onClick={() => {
+                        if (otp === '1234') {
+                            // OTP Verified, Auto-fill and Go to Form
+                            setFormData(prev => ({
+                                ...prev,
+                                username: (scannedData?.name || "abhi").toLowerCase().replace(/\s/g, '') + Math.floor(Math.random() * 100),
+                                computerCode: scannedData?.code || "59500",
+                            }));
+                            setStep(4);
+                        } else {
+                            alert("Invalid OTP. Try 1234.");
+                        }
+                    }}
+                >
+                    Verify & Proceed
+                </button>
+
+                <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#667eea', cursor: 'pointer' }} onClick={() => alert("OTP Resent!")}>Resend OTP</p>
             </div>
         </div>
     );
@@ -209,11 +310,72 @@ const Register = () => {
             // Mock Extracted Data - In real app, this comes from Backend OCR
             setScannedData({
                 name: "Abhi Jain",
+                fatherName: "Mr. R.K. Jain",
+                branch: "Computer Science",
                 code: "59500",
                 phone: "9876543210"
             });
             setStep(2);
         }, 2000);
+    };
+
+    // --- Camera Functions ---
+    const startCamera = async () => {
+        try {
+            setShowCamera(true);
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            streamRef.current = stream;
+            // Short delay to ensure video element is rendered
+            setTimeout(() => {
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                }
+            }, 100);
+        } catch (err) {
+            console.error("Camera Error:", err);
+            alert("Could not access camera. Please allow permissions or use file upload.");
+            setShowCamera(false);
+        }
+    };
+
+    const stopCamera = () => {
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+        }
+        setShowCamera(false);
+    };
+
+    const capturePhoto = () => {
+        if (videoRef.current && canvasRef.current) {
+            const context = canvasRef.current.getContext('2d');
+            // Set canvas size to match video
+            canvasRef.current.width = videoRef.current.videoWidth;
+            canvasRef.current.height = videoRef.current.videoHeight;
+
+            context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+
+            canvasRef.current.toBlob(blob => {
+                const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
+
+                // Trigger Scan Logic (Duplicate of handleFileUpload for now)
+                setVerificationFile(file);
+                stopCamera();
+                setIsScanning(true);
+
+                setTimeout(() => {
+                    setIsScanning(false);
+                    setScannedData({
+                        name: "Abhi Jain",
+                        fatherName: "Mr. R.K. Jain",
+                        branch: "Computer Science",
+                        code: "59500",
+                        phone: "9876543210"
+                    });
+                    setStep(2);
+                }, 2000);
+            }, 'image/jpeg');
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -269,7 +431,7 @@ const Register = () => {
     return (
         <main className="register-page-container">
             <section id="register-form-card" className="register-card surface-glow">
-                {step < 3 ? (
+                {step < 4 ? (
                     <>
                         <Link to="/" style={{
                             position: 'absolute',
@@ -286,9 +448,10 @@ const Register = () => {
                             <i className="fas fa-home"></i> Home
                         </Link>
                         <h1 style={{ marginBottom: '0.5rem', textAlign: 'center' }}>Identity Check</h1>
-                        <p style={{ color: '#aaa', textAlign: 'center', marginBottom: '2rem' }}>Safety Step {step}/2</p>
+                        <p style={{ color: '#aaa', textAlign: 'center', marginBottom: '2rem' }}>Safety Step {step}/3</p>
                         {step === 1 && renderStep1()}
                         {step === 2 && renderStep2()}
+                        {step === 3 && renderStep3()}
                     </>
                 ) : (
                     <>
