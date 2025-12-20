@@ -13,6 +13,7 @@ const Register = () => {
         semester: '',
         startYear: new Date().getFullYear().toString(),
         batch: '',
+        computerCode: '',
         password: '',
         confirmPassword: ''
     });
@@ -91,7 +92,9 @@ const Register = () => {
                     password: formData.password,
                     role: formData.role,
                     branch: formData.role === 'USER' ? formData.branch : undefined,
-                    semester: formData.role === 'USER' ? parseInt(formData.semester) : undefined
+                    semester: formData.role === 'USER' ? parseInt(formData.semester) : undefined,
+                    batch: formData.role === 'USER' ? formData.batch : undefined,
+                    computerCode: formData.role === 'USER' ? formData.computerCode : undefined
                 }),
             });
 
@@ -254,6 +257,20 @@ const Register = () => {
                                                 style={{ background: 'rgba(255,255,255,0.05)', cursor: 'not-allowed', color: '#4ade80', fontWeight: 'bold' }}
                                             />
                                         </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="computerCode">Computer Code (Student ID) *</label>
+                                        <input
+                                            type="text"
+                                            id="computerCode"
+                                            name="computerCode"
+                                            required
+                                            placeholder="e.g. 59500"
+                                            value={formData.computerCode}
+                                            onChange={handleChange}
+                                        />
+                                        <small>Your unique college ID/Roll Number.</small>
                                     </div>
 
                                     <div style={{
