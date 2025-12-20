@@ -65,6 +65,7 @@ const Register = () => {
 
     const [location, setLocation] = useState(null);
     const [flash, setFlash] = useState(false); // Flash Effect State
+    const [errorFlash, setErrorFlash] = useState(false); // Red Alert State
 
     // --- Geolocation Capture (Forensic Trail) ---
     const captureLocation = () => {
@@ -135,6 +136,29 @@ const Register = () => {
                         {/* Flash Effect */}
                         {flash && (
                             <div className="animate-fade-out" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: '#fff', zIndex: 10, opacity: 0.8 }}></div>
+                        )}
+
+                        {/* Red Error Alert Overlay */}
+                        {errorFlash && (
+                            <div className="animate-pulse" style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                background: 'rgba(220, 38, 38, 0.7)', // Red-600 with transparency
+                                zIndex: 20,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                border: '4px solid #ef4444'
+                            }}>
+                                <div style={{ textAlign: 'center', color: '#fff' }}>
+                                    <i className="fas fa-exclamation-triangle" style={{ fontSize: '3rem', marginBottom: '10px' }}></i>
+                                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0 }}>WRONG DOCUMENT</h2>
+                                    <p style={{ margin: '5px 0 0', fontWeight: '500' }}>Please show IPS Academy ID</p>
+                                </div>
+                            </div>
                         )}
 
                         {/* Document Label Overlay */}
@@ -608,17 +632,25 @@ const Register = () => {
                 let extracted = {};
 
                 if (isIdStage) {
-                    // NEGATIVE CHECK: Ensure user isn't showing Aadhar Card
-                    if (text.toLowerCase().includes("aadhar") || text.toLowerCase().includes("uidai") || text.toLowerCase().includes("govt") || text.toLowerCase().includes("india")) {
-                        console.warn("⚠️ Wrong Document Detected: Aadhar presented as ID");
+                    // NEGATIVE CHECK: Ensure user isn't showing Aadhar, PAN, License, etc.
+                    const lowerText = text.toLowerCase();
+                    const otherDocKeywords = ["aadhar", "uidai", "govt", "india", "income tax", "permanent account", "driving license", "voter"];
+                    const isOtherDoc = otherDocKeywords.some(kw => lowerText.includes(kw));
+
+                    if (isOtherDoc) {
+                        console.warn("⚠️ Wrong Document Detected:", isOtherDoc);
                         window.speechSynthesis.cancel();
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document. Please show College ID."));
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document. Please show IPS Academy ID."));
+
+                        // TRIGGER RED ALERT
+                        setErrorFlash(true);
+                        setTimeout(() => setErrorFlash(false), 4000);
 
                         // RESET LOGIC
                         setScanBuffer([]); // Clear previous progress
                         setIsScanning(false);
 
-                        alert("⚠️ SECURITY ALERT\n\nYou are scanning an Aadhar Card.\n\nFor Step 1, you MUST scan your IPS ACADEMY ID CARD.");
+                        alert("⚠️ SECURITY ALERT\n\nYou are scanning an invalid document.\n\nFor Step 1, you MUST scan your IPS ACADEMY ID CARD.");
                         return;
                     }
 
