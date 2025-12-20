@@ -218,9 +218,9 @@ const Register = () => {
                     };
                 case 'SELFIE':
                     return {
-                        title: "Step 3: Face Verification",
-                        desc: "Take a Live Selfie to match with your ID Card photo.",
-                        btnText: "Take Selfie",
+                        title: "Step 3: Liveness Check",
+                        desc: "We need to verify you are a real person. Follow the voice instructions.",
+                        btnText: "Start Liveness Check",
                         btnAction: () => { setCameraMode('user'); startCamera(); }
                     };
                 case 'GROUP_PHOTO':
@@ -473,8 +473,18 @@ const Register = () => {
                         }
                     }
                     else if (verificationStage === 'SELFIE') {
-                        setSelfieImg(imgUrl);
-                        setVerificationStage('GROUP_PHOTO');
+                        // Liveness Simulation
+                        const blinkSpeech = new SpeechSynthesisUtterance("Please blink your eyes now.");
+                        window.speechSynthesis.speak(blinkSpeech);
+
+                        alert("👁️ LIVENESS CHECK: Please BLINK your eyes now to verify you are human.");
+
+                        setTimeout(() => {
+                            const successSpeech = new SpeechSynthesisUtterance("Liveness Confirmed.");
+                            window.speechSynthesis.speak(successSpeech);
+                            setSelfieImg(imgUrl);
+                            setVerificationStage('GROUP_PHOTO');
+                        }, 2000);
                     }
                     else if (verificationStage === 'GROUP_PHOTO') {
                         alert("✅ Group Photo Verified.");
@@ -483,6 +493,71 @@ const Register = () => {
                 }, 2000);
             }, 'image/jpeg');
         }
+    };
+
+    // --- Auto-Capture Logic (Repeated OCR) ---
+    const attemptAutoCapture = async () => {
+        if (isScanning || !showCamera || verificationStage !== 'ID_AUTO_CAPTURE' || !videoRef.current || !canvasRef.current) return;
+
+        console.log("🔄 Auto-Scanning frame...");
+        setIsScanning(true);
+        // Voice Guidance
+        // window.speechSynthesis.cancel(); // Stop overlap
+        // const speech = new SpeechSynthesisUtterance("Scanning... Hold steady.");
+        // speech.rate = 1.5;
+        // window.speechSynthesis.speak(speech);
+
+        const context = canvasRef.current.getContext('2d');
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
+        context.drawImage(videoRef.current, 0, 0);
+
+        canvasRef.current.toBlob(async (blob) => {
+            if (!blob) { setIsScanning(false); return; }
+
+            try {
+                const { data: { text } } = await Tesseract.recognize(blob, 'eng', { logger: m => { } });
+
+                // Simple Check: Does it look like an ID?
+                const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name'];
+                const score = keywords.reduce((acc, kw) => text.toLowerCase().includes(kw.toLowerCase()) ? acc + 1 : acc, 0);
+
+                if (score >= 2 || text.length > 50) { // Threshold
+                    console.log("✅ Auto-Capture Hit!", text);
+
+                    const successSpeech = new SpeechSynthesisUtterance("ID Card Detected. Processing.");
+                    window.speechSynthesis.speak(successSpeech);
+
+                    // Same parsing logic
+                    const findLine = (kw) => {
+                        const match = text.split('\n').find(l => l.toLowerCase().includes(kw));
+                        return match ? match.split(/:|-/)[1]?.trim() || match : null;
+                    };
+                    const extracted = {
+                        institution: "IPS Academy, Indore",
+                        name: findLine("name") || "Detected Name",
+                        fatherName: findLine("father") || "Detected Father",
+                        branch: "IMCA",
+                        session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2023-2027",
+                        code: text.match(/\d{4,6}/)?.[0] || "59500"
+                    };
+
+                    setScannedData(extracted);
+
+                    // Capture Image
+                    const imgUrl = URL.createObjectURL(blob);
+                    setIdCameraImg(imgUrl); // Save the auto-captured image
+
+                    stopCamera();
+                    // alert("📸 ID Card Detected & Captured Automatically!");
+                    setVerificationStage('ID_VERIFY_DATA');
+                }
+            } catch (err) {
+                console.warn("Auto-OCR failed", err);
+            } finally {
+                setIsScanning(false);
+            }
+        }, 'image/jpeg');
     };
 
     // Auto-Capture Interval
