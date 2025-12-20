@@ -1566,6 +1566,15 @@ const AdminDashboard = () => {
                         <section className="card surface-glow">
                             <div className="card-header">
                                 <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
+                                {isSuperAdmin && jobs.length > 0 && (
+                                    <button
+                                        onClick={handleDeleteAllJobs}
+                                        className="btn btn-danger"
+                                        style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}
+                                    >
+                                        <i className="fas fa-trash-alt"></i> Delete All
+                                    </button>
+                                )}
                             </div>
                             {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
                             {!loadingJobs && (
