@@ -603,7 +603,16 @@ const Register = () => {
                         return;
                     }
 
-                    const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name'];
+                    // CRITICAL VALIDATION: Must be "IPS Academy" ID Card
+                    // User Rule: "First we want to get IPS Academy... otherwise not verify"
+                    const isIPSAcademy = text.match(/IPS\s*Academy/i) || text.includes("IPS");
+
+                    if (!isIPSAcademy) {
+                        setIsScanning(false);
+                        return; // Silent fail (retry) if logo/text not visible yet
+                    }
+
+                    const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name', 'IPS'];
                     const keywordMatch = keywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
                     const codeMatch = text.match(/\d{5,6}/);
 
@@ -645,19 +654,23 @@ const Register = () => {
                         const validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n)); // Crude phone check
 
                         // Final Quality Validation
+                        // Final Quality Validation
                         if (extractedName === "Detected Name") {
-                            console.warn("⚠️ Scan rejected: Name not identified");
-                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Reading Unclear. Please Re-verify."));
+                            // console.warn("Name Check Failed - Retrying silently");
                             setIsScanning(false);
-                            return; // Do NOT proceed with fake/default data
+                            return; // Retry immediately on next tick
                         }
+
+                        // Specific Extraction for 'Course' and 'Session'
+                        const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
+                        const sessionMatch = text.match(/Session\s*[:|-]?\s*(\d{4}-\d{4})/i);
 
                         extracted = {
                             institution: "IPS Academy, Indore",
                             name: extractedName,
                             fatherName: extractedFather === "Detected Father" ? "" : extractedFather,
-                            branch: "IMCA",
-                            session: text.match(/\d{4}\s*-\s*\d{4}/)?.[0] || "2022-2027",
+                            branch: courseMatch ? courseMatch[1].trim() : "INTG.MCA",
+                            session: sessionMatch ? sessionMatch[1] : (text.match(/\d{4}-\d{4}/)?.[0] || "2022-2027"),
                             code: validCode || "59500"
                         };
                     }
@@ -771,7 +784,7 @@ const Register = () => {
     useEffect(() => {
         let interval;
         if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
-            interval = setInterval(attemptAutoCapture, 2000);
+            interval = setInterval(attemptAutoCapture, 800);
         }
         return () => clearInterval(interval);
         // eslint-disable-next-line
