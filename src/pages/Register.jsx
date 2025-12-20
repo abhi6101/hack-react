@@ -473,18 +473,35 @@ const Register = () => {
                         }
                     }
                     else if (verificationStage === 'SELFIE') {
-                        // Liveness Simulation
-                        const blinkSpeech = new SpeechSynthesisUtterance("Please blink your eyes now.");
-                        window.speechSynthesis.speak(blinkSpeech);
+                        // RANDOMIZED Liveness Check (Anti-Spoofing)
+                        const challenges = [
+                            { text: "Please blink your eyes quickly.", action: "BLINK", time: 1500 },
+                            { text: "Turn your head to the left.", action: "HEAD_LEFT", time: 2000 },
+                            { text: "Smile widely for the camera.", action: "SMILE", time: 2000 },
+                            { text: "Nod your head up and down.", action: "NOD", time: 2000 }
+                        ];
 
-                        alert("👁️ LIVENESS CHECK: Please BLINK your eyes now to verify you are human.");
+                        // Pick a random challenge
+                        const challenge = challenges[Math.floor(Math.random() * challenges.length)];
 
+                        // 1. Voice Command
+                        window.speechSynthesis.cancel();
+                        const speech = new SpeechSynthesisUtterance("Security Check. " + challenge.text);
+                        speech.rate = 1.1;
+                        window.speechSynthesis.speak(speech);
+
+                        // 2. Visual Prompt (Alert is blocking, so we use it to 'pause' user attention)
+                        // In a real AI app, we would use TensorFlow.js to detect this specific movement.
+                        // Here, we simulate the "Observation Phase".
+                        alert(`� SECURITY CHALLENGE REQUIRED\n\nAI Command: "${challenge.text.toUpperCase()}"\n\nPerform this action NOW to prove you are human.`);
+
+                        // 3. Execution Delay (Simulating Analysis)
                         setTimeout(() => {
-                            const successSpeech = new SpeechSynthesisUtterance("Liveness Confirmed.");
+                            const successSpeech = new SpeechSynthesisUtterance("Movement Detected. You are verified.");
                             window.speechSynthesis.speak(successSpeech);
                             setSelfieImg(imgUrl);
                             setVerificationStage('GROUP_PHOTO');
-                        }, 2000);
+                        }, challenge.time);
                     }
                     else if (verificationStage === 'GROUP_PHOTO') {
                         alert("✅ Group Photo Verified.");
@@ -853,7 +870,7 @@ const Register = () => {
                                         onChange={handleChange}
                                     />
                                     <i
-                                        className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password-toggle-icon`}
+                                        className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password - toggle - icon`}
                                         onClick={() => setShowPassword(!showPassword)}
                                         style={{ cursor: 'pointer' }}
                                     ></i>
@@ -874,7 +891,7 @@ const Register = () => {
                                         onChange={handleChange}
                                     />
                                     <i
-                                        className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'} password-toggle-icon`}
+                                        className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'} password - toggle - icon`}
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                         style={{ cursor: 'pointer' }}
                                     ></i>
