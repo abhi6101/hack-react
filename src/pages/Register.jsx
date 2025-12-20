@@ -726,13 +726,15 @@ const Register = () => {
                         };
                     }
                 } else if (isAadharStage) {
-                    const keywords = ['Government', 'India', 'UID', 'Aadhar', 'Father', 'DOB', 'Male', 'Female'];
+                    setScanStatus("Scanning Aadhar...");
+                    const keywords = ['Government', 'India', 'UID', 'Aadhar', 'Father', 'DOB', 'Male', 'Female', 'Address', 'Enrollment', 'Year'];
                     const score = keywords.reduce((acc, kw) => text.toLowerCase().includes(kw.toLowerCase()) ? acc + 1 : acc, 0);
                     // Aadhar usually has 12 digit number xxxx xxxx xxxx
                     const aadharNum = text.match(/\d{4}\s\d{4}\s\d{4}/);
 
-                    if (score >= 2 || aadharNum) {
+                    if (score >= 1 || aadharNum || text.length > 100) {
                         matchFound = true;
+                        setScanStatus("Aadhar Found!");
 
                         // Smart Match: Search for the ALREADY VERIFIED ID Name in the Aadhar Text
                         const knownName = scannedData?.name || "";
@@ -764,16 +766,20 @@ const Register = () => {
 
                 if (matchFound) {
                     // QUALITY CHECK: Don't buffer if we only have defaults
-                    if (extracted.name === "Detected Name" && !extracted.code?.match(/\d{5,}/)) {
+                    const isLowConfidence = isIdStage
+                        ? (extracted.name === "Detected Name" && !extracted.code?.match(/\d{5,}/))
+                        : (extracted.name === "Detected Name" && !extracted.aadharNumber?.match(/\d{4}/));
+
+                    if (isLowConfidence) {
                         console.warn("⚠️ Scan skipped: Low confidence extraction");
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Adjust angle."));
+                        setScanStatus("Reading Unclear");
                         setIsScanning(false);
                         return;
                     }
 
                     setFlash(true); setTimeout(() => setFlash(false), 150); // TRIGGER FLASH
                     const currentScanCount = scanBuffer.length + 1;
-                    console.log(`✅ ${isIdStage ? 'ID' : 'Aadhar'} Scan Pass ${currentScanCount}/${TARGET_SCANS} Successful`);
+                    setScanStatus(`Scanned ${currentScanCount}/${TARGET_SCANS}`);
 
                     if (currentScanCount === 1) window.speechSynthesis.speak(new SpeechSynthesisUtterance("Document Detected. Verifying..."));
 
