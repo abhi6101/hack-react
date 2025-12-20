@@ -222,10 +222,34 @@ const Register = () => {
                     <div style={{ maxWidth: '500px', margin: '0 auto' }}>
                         <div style={{ display: 'flex', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'left' }}>
                             <img src={idCameraImg} alt="Scanned ID" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #444' }} />
-                            <div style={{ fontSize: '0.9rem' }}>
-                                <p style={{ margin: '0 0 0.5rem 0' }}><strong style={{ color: '#aaa' }}>Name:</strong> {content.data?.name}</p>
-                                <p style={{ margin: '0 0 0.5rem 0' }}><strong style={{ color: '#aaa' }}>Father:</strong> {content.data?.fatherName}</p>
-                                <p style={{ margin: '0' }}><strong style={{ color: '#aaa' }}>Institute:</strong> <span style={{ color: '#4ade80' }}>{content.data?.institution}</span></p>
+                            <div style={{ fontSize: '0.9rem', width: '100%' }}>
+                                <div style={{ marginBottom: '0.5rem' }}>
+                                    <label style={{ fontSize: '0.75rem', color: '#aaa', display: 'block' }}>Name</label>
+                                    <input
+                                        type="text"
+                                        value={scannedData.name}
+                                        onChange={(e) => setScannedData({ ...scannedData, name: e.target.value })}
+                                        style={{ width: '100%', background: 'rgba(0,0,0,0.3)', border: '1px solid #444', borderRadius: '4px', padding: '4px 8px', color: '#fff' }}
+                                    />
+                                </div>
+                                <div style={{ marginBottom: '0.5rem' }}>
+                                    <label style={{ fontSize: '0.75rem', color: '#aaa', display: 'block' }}>Father's Name</label>
+                                    <input
+                                        type="text"
+                                        value={scannedData.fatherName}
+                                        onChange={(e) => setScannedData({ ...scannedData, fatherName: e.target.value })}
+                                        style={{ width: '100%', background: 'rgba(0,0,0,0.3)', border: '1px solid #444', borderRadius: '4px', padding: '4px 8px', color: '#fff' }}
+                                    />
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: '0.75rem', color: '#aaa', display: 'block' }}>Computer Code</label>
+                                    <input
+                                        type="text"
+                                        value={scannedData.code}
+                                        onChange={(e) => setScannedData({ ...scannedData, code: e.target.value })}
+                                        style={{ width: '100%', background: 'rgba(0,0,0,0.3)', border: '1px solid #444', borderRadius: '4px', padding: '4px 8px', color: '#fff' }}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <button className="btn btn-primary" style={{ width: '100%' }} onClick={content.btnAction}>
