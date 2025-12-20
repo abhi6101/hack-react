@@ -491,44 +491,59 @@ const Register = () => {
                         return;
                     }
                     setFlash(true); setTimeout(() => setFlash(false), 150);
-                    const currentScanCount = scanBuffer.length + 1;
-                    setScanStatus(`Scanned ${currentScanCount}/${TARGET_SCANS}`);
+                    const targetFrames = isIdStage ? TARGET_SCANS : 2;
                     const newBuffer = [...scanBuffer, extracted];
                     setScanBuffer(newBuffer);
-                    const targetFrames = isIdStage ? TARGET_SCANS : 2;
                     setScanStatus(`Scanned ${newBuffer.length}/${targetFrames}`);
-                    if (newBuffer.length >= targetFrames) finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR');
-                    else setIsScanning(false);
+
+                    if (newBuffer.length >= targetFrames) {
+                        finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR');
+                        // Crucial: Unlock scanning after deep verification is initiated
+                        setTimeout(() => setIsScanning(false), 500);
+                    } else {
+                        setIsScanning(false);
+                    }
                 } else { setIsScanning(false); }
             } catch (err) { console.warn("Auto-OCR failed", err); setIsScanning(false); }
         }, 'image/jpeg');
     };
 
     const finalizeDeepVerification = (buffer, finalBlob, type) => {
-        const names = buffer.map(b => b.name);
+        const names = buffer.map(b => b.name).filter(n => n !== "Detected Name");
+        if (names.length === 0) names.push("Detected Name");
+
         const bestName = names.sort((a, b) => names.filter(v => v === a).length - names.filter(v => v === b).length).pop();
         const bestMatch = buffer.find(b => b.name === bestName) || buffer[buffer.length - 1];
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(`${type === 'ID' ? 'ID Card' : 'Aadhar Card'} Verified.`));
+
         if (type === 'ID') {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("ID Card Verified."));
             setScannedData(bestMatch);
             setIdCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]); stopCamera(); setVerificationStage('ID_VERIFY_DATA');
         } else if (type === 'AADHAR') {
-            const idName = scannedData?.name?.toUpperCase()?.replace(/[^A-Z ]/g, '')?.trim();
-            const aadharName = bestMatch.name?.toUpperCase()?.replace(/[^A-Z ]/g, '')?.trim() || "UNKNOWN";
-            if (idName && aadharName && (idName === aadharName)) {
+            const idName = (scannedData?.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
+            const aadharName = (bestMatch.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
+
+            setScanStatus("AI: Finalizing Verification...");
+
+            // Fuzzy Match: Check if one name contains the other or they are identical
+            const isMatch = idName && aadharName && (idName === aadharName || idName.includes(aadharName) || aadharName.includes(idName));
+
+            if (isMatch) {
                 setAadharCameraImg(URL.createObjectURL(finalBlob));
                 setScanBuffer([]); stopCamera();
                 setScanStatus("✅ Verification Successful");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Verification Successful. Aadhar Name verified against ID."));
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Verification Successful. Aadhar Name verified."));
                 setVerificationStage('SELFIE');
             } else {
                 setScanBuffer([]);
                 setScanStatus("❌ Name Mismatch - Try Again");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance(`Verification failed. Name on Aadhar does not match ID Card. Please ensure names align.`));
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance(`Name on Aadhar ${bestMatch.name} does not match ID Card name.`));
                 setErrorFlash(true);
-                setTimeout(() => setErrorFlash(false), 4000);
-                setVerificationStage('AADHAR_AUTO_CAPTURE');
+                setTimeout(() => {
+                    setErrorFlash(false);
+                    setScanStatus("AI: Waiting for Aadhar...");
+                }, 4000);
             }
         }
     };
