@@ -322,33 +322,39 @@ const Register = () => {
                 const lowerText = text.toLowerCase().replace(/\s+/g, '');
 
                 // 1. SECURITY CHECKS (Negative / Replay Detection)
-                if (isIdStage) {
-                    if (lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("dob") || lowerText.includes("enrollment")) {
+                if (isIdStage || isAadharStage) {
+                    const isIPSDetected = text.match(/IPS\s*Academy/i) || text.includes("Indore");
+                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment");
+
+                    if (isIdStage && isAadharDetected) {
                         detectedDocType = "Aadhar Card";
-                    } else if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
-                        detectedDocType = "PAN Card";
-                    } else if (lowerText.includes("drivinglicense") || lowerText.includes("license")) {
-                        detectedDocType = "Driving License";
-                    } else if (lowerText.includes("voter") || lowerText.includes("electioncommission") || lowerText.includes("epic")) {
-                        detectedDocType = "Voter ID";
-                    } else if (!text.match(/IPS\s*Academy/i) && !text.includes("Indore")) {
-                        const objectCategories = [
-                            { name: "Food/Snack", keywords: ["biscuit", "snack", "parle", "britannia", "sunfeast", "cadbury", "lays", "kurkur", "bingo", "haldiram", "maggi", "chocolate", "cookie", "mrp", "flavor", "nutrition"] },
-                            { name: "Bottle/Drink", keywords: ["bottle", "water", "pepsi", "coke", "sprite", "thumsup", "maaza", "bisleri", "aquafina"] },
-                            { name: "Toiletry/Cosmetic", keywords: ["shampoo", "soap", "facewash", "cream", "lotion", "nivea", "dove", "ponds", "himalaya"] },
-                            { name: "Stationery/Book", keywords: ["notebook", "book", "magazine", "register", "classmate", "pen", "pencil"] }
-                        ];
+                    } else if (isAadharStage && isIPSDetected) {
+                        detectedDocType = "College ID Card";
+                    } else if (isIdStage) {
+                        if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
+                            detectedDocType = "PAN Card";
+                        } else if (lowerText.includes("drivinglicense") || lowerText.includes("license")) {
+                            detectedDocType = "Driving License";
+                        } else if (lowerText.includes("voter") || lowerText.includes("electioncommission") || lowerText.includes("epic")) {
+                            detectedDocType = "Voter ID";
+                        } else if (!isIPSDetected) {
+                            const objectCategories = [
+                                { name: "Food/Snack", keywords: ["biscuit", "snack", "parle", "britannia", "sunfeast", "cadbury", "lays", "kurkur", "bingo", "haldiram", "maggi", "chocolate", "cookie", "mrp", "flavor", "nutrition"] },
+                                { name: "Bottle/Drink", keywords: ["bottle", "water", "pepsi", "coke", "sprite", "thumsup", "maaza", "bisleri", "aquafina"] },
+                                { name: "Toiletry/Cosmetic", keywords: ["shampoo", "soap", "facewash", "cream", "lotion", "nivea", "dove", "ponds", "himalaya"] },
+                                { name: "Stationery/Book", keywords: ["notebook", "book", "magazine", "register", "classmate", "pen", "pencil"] }
+                            ];
+                            const matchedCategory = objectCategories.find(cat => cat.keywords.some(kw => lowerText.includes(kw)));
+                            const genericIdKeywords = ["university", "college", "school", "identity", "employee", "institute", "address", "card"];
 
-                        const matchedCategory = objectCategories.find(cat => cat.keywords.some(kw => lowerText.includes(kw)));
-                        const genericIdKeywords = ["university", "college", "school", "identity", "employee", "institute", "address", "card"];
-
-                        if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 40) {
-                            detectedDocType = "External Identity Card";
-                        } else if (matchedCategory) {
-                            const specificBrand = matchedCategory.keywords.find(kw => lowerText.includes(kw));
-                            detectedDocType = `Invalid Item (${matchedCategory.name}${specificBrand ? ': ' + specificBrand.toUpperCase() : ''})`;
-                        } else if (text.length > 60 && !lowerText.includes("card") && !lowerText.includes("ips")) {
-                            detectedDocType = "Invalid Item (Object Detected)";
+                            if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 40) {
+                                detectedDocType = "External Identity Card";
+                            } else if (matchedCategory) {
+                                const specificBrand = matchedCategory.keywords.find(kw => lowerText.includes(kw));
+                                detectedDocType = `Invalid Item (${matchedCategory.name}${specificBrand ? ': ' + specificBrand.toUpperCase() : ''})`;
+                            } else if (text.length > 60 && !lowerText.includes("card") && !lowerText.includes("ips")) {
+                                detectedDocType = "Invalid Item (Object Detected)";
+                            }
                         }
                     }
                 }
@@ -365,12 +371,14 @@ const Register = () => {
                     window.speechSynthesis.cancel();
                     let alertText = "";
                     if (detectedDocType === "Digital Screenshot") {
-                        alertText = "Security Alert. Digital screen detected. You must show your Physical ID Card.";
+                        alertText = "Security Alert. Digital screen detected. You must show your Physical Document.";
                     } else if (detectedDocType === "External Identity Card") {
                         alertText = "Security Alert. Only IPS Academy IDs are permitted. This card is not from our campus.";
+                    } else if (detectedDocType === "College ID Card") {
+                        alertText = "Security Alert. You are showing your College ID again. Please show your Aadhar Card for Step 2.";
                     } else if (detectedDocType.startsWith("Invalid Item")) {
                         const itemName = detectedDocType.replace("Invalid Item (", "").replace(")", "");
-                        alertText = `Security Alert. You are showing ${itemName}. This is not allowed. Please show your Physical IPS Academy ID.`;
+                        alertText = `Security Alert. You are showing ${itemName}. This is not allowed. Please show your Physical ID.`;
                     } else {
                         alertText = `Security Alert. You are showing a ${detectedDocType}. This is not allowed. Please show your Physical IPS Academy ID Card.`;
                     }
@@ -379,7 +387,7 @@ const Register = () => {
                     setErrorFlash(true);
                     setTimeout(() => {
                         setErrorFlash(false);
-                        setScanStatus("AI: Waiting for IPS ID...");
+                        setScanStatus(isIdStage ? "AI: Waiting for IPS ID..." : "AI: Waiting for Aadhar...");
                     }, 4000);
                     setScanBuffer([]); setIsScanning(false); return;
                 }
