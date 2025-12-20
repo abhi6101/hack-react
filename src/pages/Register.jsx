@@ -232,10 +232,10 @@ const Register = () => {
                     };
                 case 'SELFIE':
                     return {
-                        title: "Step 3: Liveness Check",
-                        desc: "Final step. Take a live selfie to complete verification.",
-                        btnText: "Start Liveness Check",
-                        btnAction: () => { setCameraMode('user'); startCamera(); }
+                        title: "Step 3: Auto-Selfie",
+                        desc: "Stay still. The AI will automatically capture your selfie in 2 seconds.",
+                        btnText: "Capturing...",
+                        btnAction: null // Automated
                     };
                 default:
                     return null;
@@ -623,6 +623,16 @@ const Register = () => {
         }
     }, [verificationStage]);
 
+    // Auto-Selfie Logic
+    useEffect(() => {
+        if (verificationStage === 'SELFIE' && showCamera && !isScanning) {
+            setScanStatus("AI: Detecting Face...");
+            const timer = setTimeout(() => {
+                takeSelfie();
+            }, 2000); // 2 second delay for alignment
+            return () => clearTimeout(timer);
+        }
+    }, [verificationStage, showCamera, isScanning]);
 
     useEffect(() => {
         if (step === 4 && scannedData) {
