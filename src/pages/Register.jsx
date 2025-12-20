@@ -64,6 +64,7 @@ const Register = () => {
     }, []);
 
     const [location, setLocation] = useState(null);
+    const [flash, setFlash] = useState(false); // Flash Effect State
 
     // --- Geolocation Capture (Forensic Trail) ---
     const captureLocation = () => {
@@ -130,6 +131,19 @@ const Register = () => {
                     <div style={{ position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', border: '2px solid #667eea', background: '#000' }}>
                         <video ref={videoRef} style={{ width: '100%', display: 'block' }} autoPlay playsInline muted></video>
                         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+
+                        {/* Flash Effect */}
+                        {flash && (
+                            <div className="animate-fade-out" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: '#fff', zIndex: 10, opacity: 0.8 }}></div>
+                        )}
+
+                        {/* Scan Progress Overlay */}
+                        {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
+                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', color: '#4ade80', fontSize: '0.8rem', border: '1px solid #4ade80', zIndex: 5 }}>
+                                <i className="fas fa-satellite-dish animate-pulse"></i> Deep Scan: {scanBuffer.length}/5
+                            </div>
+                        )}
+
                         <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black' }}>
                             {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
                         </div>
@@ -598,6 +612,7 @@ const Register = () => {
                     }
 
                     if (matchFound) {
+                        setFlash(true); setTimeout(() => setFlash(false), 150); // TRIGGER FLASH
                         const currentScanCount = scanBuffer.length + 1;
                         console.log(`✅ ${isIdStage ? 'ID' : 'Aadhar'} Scan Pass ${currentScanCount}/${TARGET_SCANS} Successful`);
 
@@ -663,6 +678,15 @@ const Register = () => {
             }
             return () => clearInterval(interval);
         }, [showCamera, verificationStage, isScanning]);
+
+        // --- Auto-Start Camera Logic ---
+        useEffect(() => {
+            if ((verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !showCamera && !isScanning) {
+                console.log("🚀 Auto-Starting Camera for Stage:", verificationStage);
+                setCameraMode('environment');
+                startCamera();
+            }
+        }, [verificationStage]);
 
         // --- Auto-Fill & Lock Effect ---
         useEffect(() => {
