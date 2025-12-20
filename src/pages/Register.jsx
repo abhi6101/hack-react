@@ -519,10 +519,12 @@ const Register = () => {
                 const { data: { text } } = await Tesseract.recognize(blob, 'eng', { logger: m => { } });
 
                 // Simple Check: Does it look like an ID?
+                // Improved Trigger Logic: Check for ID Code OR Keywords
                 const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name'];
-                const score = keywords.reduce((acc, kw) => text.toLowerCase().includes(kw.toLowerCase()) ? acc + 1 : acc, 0);
+                const keywordMatch = keywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
+                const codeMatch = text.match(/\d{5,6}/); // Strong signal: 5-6 digit number
 
-                if (score >= 2 || text.length > 50) { // Threshold
+                if (codeMatch || keywordMatch || text.length > 60) { // Relaxed Trigger
                     console.log("✅ Auto-Capture Hit!", text);
 
                     const successSpeech = new SpeechSynthesisUtterance("ID Card Detected. Processing.");
