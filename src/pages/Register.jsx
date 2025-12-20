@@ -840,7 +840,8 @@ const Register = () => {
                                                         required
                                                         value={formData.startYear}
                                                         onChange={handleChange}
-                                                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%' }}
+                                                        disabled={!!scannedData}
+                                                        style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff', width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(52,211,153,0.3)' } : { background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%' }}
                                                     >
                                                         {Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i + 1).map(y => (
                                                             <option key={y} value={y} style={{ background: '#1e293b' }}>{y}</option>
