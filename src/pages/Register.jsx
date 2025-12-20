@@ -656,7 +656,7 @@ const Register = () => {
 
                     const isIPSAcademy = text.match(/IPS\s*Academy/i) || text.includes("IPS") || text.includes("Academy") || text.includes("Indore");
                     if (!isIPSAcademy) {
-                        setScanStatus("Lacks IPS Branding");
+                        setScanStatus("Align Card Properly");
                         setIsScanning(false);
                         return;
                     }
