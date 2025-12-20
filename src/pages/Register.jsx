@@ -200,7 +200,9 @@ const Register = () => {
                         data: scannedData,
                         image: idCameraImg,
                         btnText: "Proceed to Aadhar Scan",
-                        btnAction: () => setVerificationStage('AADHAR_AUTO_CAPTURE')
+                        btnAction: () => setVerificationStage('AADHAR_AUTO_CAPTURE'),
+                        secondaryBtnText: "Incorrect name? Rescan ID",
+                        secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); }
                     };
                 case 'ID_AUTO_CAPTURE':
                     return {
@@ -224,7 +226,9 @@ const Register = () => {
                         data: aadharData,
                         image: aadharCameraImg,
                         btnText: "Confirm & Finalize",
-                        btnAction: () => setVerificationStage('SELFIE')
+                        btnAction: () => setVerificationStage('SELFIE'),
+                        secondaryBtnText: "Wrong Aadhar? Rescan",
+                        secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); }
                     };
                 case 'SELFIE':
                     return {
@@ -259,9 +263,14 @@ const Register = () => {
                                 {content.data?.aadharNumber && <p style={{ margin: '0' }}><strong style={{ color: '#aaa' }}>Aadhar:</strong> <span style={{ color: '#4ade80' }}>{content.data?.aadharNumber}</span></p>}
                             </div>
                         </div>
-                        <button className="btn btn-primary" style={{ width: '100%' }} onClick={content.btnAction}>
+                        <button className="btn btn-primary" style={{ width: '100%', marginBottom: '0.8rem' }} onClick={content.btnAction}>
                             <i className="fas fa-check-circle"></i> {content.btnText}
                         </button>
+                        {content.secondaryBtnText && (
+                            <button className="btn" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#aaa', fontSize: '0.9rem' }} onClick={content.secondaryBtnAction}>
+                                <i className="fas fa-redo-alt"></i> {content.secondaryBtnText}
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div style={{ maxWidth: '400px', margin: '0 auto' }}>
@@ -375,9 +384,10 @@ const Register = () => {
                     const idKeywords = ["ips", "academy", "computer code", "computercode", "session", "ips academy", "ipsacademy"];
                     const isIPSDetected = idKeywords.some(kw => lowerText.includes(kw));
 
-                    // Comprehensive Aadhar Signature detection
-                    const aadharKeywords = ['aadhar', 'uidai', 'enroll', 'governmentofindia', 'india', 'male', 'female', 'dob:', 'yearofbirth', 'yob:', 'address:', 'vid:'];
-                    const isAadharDetected = aadharKeywords.some(kw => lowerText.includes(kw)) || /\d{4}\s*\d{4}\s*\d{4}/.test(text) || /\d{12}/.test(text);
+                    // Specific Aadhar Signature detection (avoid common ID words like 'india' or 'dob' if not clearly Aadhar)
+                    const aadharCoreKeywords = ['aadhar', 'uidai', 'enroll', 'governmentofindia', 'vid:'];
+                    const aadharNumPattern = /\d{4}\s*\d{4}\s*\d{4}/.test(text) || /\d{12}/.test(text);
+                    const isAadharDetected = aadharCoreKeywords.some(kw => lowerText.includes(kw)) || aadharNumPattern;
 
                     // A. Universal Wrong Document detection
                     if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
@@ -390,7 +400,7 @@ const Register = () => {
 
                     // B. Stage-specific cross-document detection
                     if (!detectedDocType) {
-                        if (isIdStage && isAadharDetected) {
+                        if (isIdStage && isAadharDetected && !isIPSDetected) {
                             detectedDocType = "Aadhar Card";
                         } else if (isAadharStage && isIPSDetected && !isAadharDetected) {
                             // Only flag as College ID if it's NOT an Aadhar Card
@@ -401,20 +411,19 @@ const Register = () => {
                     // C. Generic Object detection (applies if no specific doc found)
                     if (!detectedDocType && !isIPSDetected && !isAadharDetected) {
                         const objectCategories = [
-                            { name: "Food/Snack", keywords: ["biscuit", "snack", "parle", "britannia", "sunfeast", "cadbury", "lays", "kurkur", "bingo", "haldiram", "maggi", "chocolate", "cookie", "mrp", "flavor", "nutrition"] },
-                            { name: "Bottle/Drink", keywords: ["bottle", "water", "pepsi", "coke", "sprite", "thumsup", "maaza", "bisleri", "aquafina"] },
-                            { name: "Toiletry/Cosmetic", keywords: ["shampoo", "soap", "facewash", "cream", "lotion", "nivea", "dove", "ponds", "himalaya"] },
-                            { name: "Stationery/Book", keywords: ["notebook", "book", "magazine", "register", "classmate", "pen", "pencil"] }
+                            { name: "Food/Snack", keywords: ["parle", "britannia", "sunfeast", "cadbury", "lays", "kurkur", "bingo", "haldiram", "maggi", "chocolate", "cookie", "mrp", "flavor", "nutrition"] },
+                            { name: "Bottle/Drink", keywords: ["pepsi", "coke", "sprite", "thumsup", "maaza", "bisleri", "aquafina"] },
+                            { name: "Toiletry/Cosmetic", keywords: ["shampoo", "facewash", "nivea", "dove", "ponds", "himalaya"] },
+                            { name: "Stationery/Book", keywords: ["notebook", "magazine", "register", "classmate"] }
                         ];
                         const matchedCategory = objectCategories.find(cat => cat.keywords.some(kw => lowerText.includes(kw)));
-                        const genericIdKeywords = ["university", "college", "school", "identity", "employee", "institute", "address", "card"];
+                        const genericIdKeywords = ["university", "school", "employee", "institute"];
 
-                        if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 40) {
+                        if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 80 && !isIPSDetected) {
                             detectedDocType = "External Identity Card";
                         } else if (matchedCategory) {
-                            const specificBrand = matchedCategory.keywords.find(kw => lowerText.includes(kw));
-                            detectedDocType = `Invalid Item (${matchedCategory.name}${specificBrand ? ': ' + specificBrand.toUpperCase() : ''})`;
-                        } else if (text.length > 60) {
+                            detectedDocType = `Invalid Item (${matchedCategory.name})`;
+                        } else if (text.length > 120 && !isIPSDetected) {
                             detectedDocType = "Invalid Item (Object Detected)";
                         }
                     }
@@ -553,9 +562,16 @@ const Register = () => {
         const bestName = names.sort((a, b) => names.filter(v => v === a).length - names.filter(v => v === b).length).pop();
         const bestMatch = buffer.find(b => b.name === bestName) || buffer[buffer.length - 1];
 
+        const cleanOCRName = (name) => {
+            if (!name || name === "Detected Name") return name;
+            // Remove common OCR noise like trailing punctuation or random single chars
+            return name.replace(/[^A-Za-z ]+$/g, '').trim();
+        };
+
         if (type === 'ID') {
             window.speechSynthesis.speak(new SpeechSynthesisUtterance("ID Card Verified."));
-            setScannedData(bestMatch);
+            const cleanedMatch = { ...bestMatch, name: cleanOCRName(bestMatch.name) };
+            setScannedData(cleanedMatch);
             setIdCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]); stopCamera();
             setVerificationStage('ID_VERIFY_DATA');
@@ -569,7 +585,8 @@ const Register = () => {
             const isMatch = idName && aadharName && (idName === aadharName || idName.includes(aadharName) || aadharName.includes(idName));
 
             if (isMatch) {
-                setAadharData(bestMatch);
+                const cleanedMatch = { ...bestMatch, name: cleanOCRName(bestMatch.name) };
+                setAadharData(cleanedMatch);
                 setAadharCameraImg(URL.createObjectURL(finalBlob));
                 setScanBuffer([]); stopCamera();
                 setScanStatus("✅ Verification Successful");
