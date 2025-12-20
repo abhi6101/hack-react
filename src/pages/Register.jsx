@@ -269,8 +269,8 @@ const Register = () => {
                                     </>
                                 ) : (
                                     <div style={{ marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.5rem' }}>
-                                        <p style={{ margin: '0' }}><strong style={{ color: '#aaa' }}>Aadhar No:</strong> <span style={{ color: '#4ade80' }}>{content.data?.aadharNumber}</span></p>
-                                        <p style={{ fontSize: '0.75rem', color: '#4ade80', marginTop: '4px' }}><i className="fas fa-check-circle"></i> Identity Match Confirmed</p>
+                                        <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>AADHAR NUMBER:</strong> <span style={{ color: '#4ade80', fontWeight: '600' }}>{content.data?.aadharNumber}</span></p>
+                                        <p style={{ fontSize: '0.75rem', color: '#4ade80', marginTop: '8px' }}><i className="fas fa-check-circle"></i> Identity Match Confirmed</p>
                                     </div>
                                 )}
                             </div>
@@ -712,6 +712,7 @@ const Register = () => {
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>INSTITITE</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.institution}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>SESSION</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>COURSE (BRANCH)</strong><div style={{ color: '#fff', fontWeight: '500', color: '#4ade80' }}>{scannedData.branch}</div></div>
+                                        {aadharData && <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>AADHAR NUMBER</strong><div style={{ color: '#fff', fontWeight: '500', color: '#4ade80' }}>{aadharData.aadharNumber}</div></div>}
                                         <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span><span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span></div>
                                             {location && (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span><span style={{ color: '#60a5fa', fontSize: '0.8rem' }}><i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}</span></div>)}
