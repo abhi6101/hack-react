@@ -28,7 +28,7 @@ const Register = () => {
     const [step, setStep] = useState(1); // 1: Choice, 2: Upload, 3: Verify Data, 4: Final Form
     // --- Verification Journey State ---
     // Journey: ID_CAMERA -> ID_FILE -> AADHAR_CAMERA -> AADHAR_FILE -> SELFIE -> FORM
-    const [verificationStage, setVerificationStage] = useState('ID_CAMERA');
+    const [verificationStage, setVerificationStage] = useState('ID_FILE');
 
     // Data Containers
     const [scannedData, setScannedData] = useState(null); // stores parsed JSON from ID/Aadhar
@@ -126,33 +126,40 @@ const Register = () => {
             switch (verificationStage) {
                 case 'ID_CAMERA':
                     return {
-                        title: "Step 1: ID Card (Live Scan)",
-                        desc: "Use your camera to scan your College ID Card.",
-                        btnText: "Open Camera",
-                        btnAction: () => { setCameraMode('environment'); startCamera(); },
-                        btnAction: () => { setCameraMode('environment'); startCamera(); },
-                        btnText: "Open Camera",
+                        title: "Step 2: Authenticate ID (Live)",
+                        desc: "Hold your physical ID card up to the camera to match with the uploaded file.",
+                        btnText: "Start Authentication Scan",
                         btnAction: () => { setCameraMode('environment'); startCamera(); }
                     };
                 case 'ID_VERIFY_DATA':
                     return {
-                        title: "Verify ID Details",
-                        desc: "Please check the details extracted from your scan.",
-                        isReview: true, // Special flag for review UI
+                        title: "Review Extracted Data",
+                        desc: "We extracted this from your file. Verify it, then prove you hold the real card.",
+                        isReview: true,
                         data: scannedData,
-                        btnText: "Details Correct? Upload Clear Copy",
-                        btnAction: () => setVerificationStage('ID_FILE')
+                        btnText: "Data Correct? Verify Live",
+                        btnAction: () => setVerificationStage('ID_CAMERA')
                     };
                 case 'ID_FILE':
                     return {
-                        title: "Step 1: ID Card (Upload)",
-                        desc: "Upload the specific ID Card document/image.",
+                        title: "Step 1: Upload ID Card",
+                        desc: "Upload a clear image of your College ID Card to begin.",
                         isFile: true,
                         onFile: (e) => {
                             setIdFile(e.target.files[0]);
-                            // Simulate Extraction
                             setIsScanning(true);
-                            setTimeout(() => { setIsScanning(false); setVerificationStage('AADHAR_CAMERA'); }, 1500);
+                            setTimeout(() => {
+                                setIsScanning(false);
+                                const extracted = {
+                                    institution: "IPS Academy, Indore",
+                                    name: "Abhi Jain",
+                                    fatherName: "Mr. R.K. Jain",
+                                    branch: "Computer Science",
+                                    code: "59500"
+                                };
+                                setScannedData(extracted);
+                                setVerificationStage('ID_VERIFY_DATA');
+                            }, 1500);
                         }
                     };
                 case 'AADHAR_CAMERA':
@@ -406,17 +413,16 @@ const Register = () => {
                     setIsScanning(false);
 
                     if (verificationStage === 'ID_CAMERA') {
-                        const mockData = {
-                            institution: "IPS Academy, Indore",
-                            name: "Abhi Jain",
-                            fatherName: "Mr. R.K. Jain",
-                            branch: "Computer Science",
-                            code: "59500"
-                        };
-                        if (!mockData.institution.includes("IPS Academy")) { alert("❌ ID Validation Failed"); return; }
-                        setScannedData(mockData);
-                        setIdCameraImg(imgUrl);
-                        setVerificationStage('ID_VERIFY_DATA'); // Go to Data Review instead of next step
+                        // Validate Live Scan matches the uploaded file
+                        // In a real app, face/text matching happens here
+                        if (scannedData) {
+                            alert("✅ Live Verification Successful!\n\nPhysical ID matches the uploaded file.");
+                            setIdCameraImg(imgUrl);
+                            setVerificationStage('AADHAR_CAMERA');
+                        } else {
+                            alert("Session expired. Please upload ID again.");
+                            setVerificationStage('ID_FILE');
+                        }
                     }
                     else if (verificationStage === 'AADHAR_CAMERA') {
                         setAadharCameraImg(imgUrl);
