@@ -134,6 +134,15 @@ const Register = () => {
                         skip: () => setVerificationStage('ID_FILE'),
                         skipText: "On Laptop? Upload ID File"
                     };
+                case 'ID_VERIFY_DATA':
+                    return {
+                        title: "Verify ID Details",
+                        desc: "Please check the details extracted from your scan.",
+                        isReview: true, // Special flag for review UI
+                        data: scannedData,
+                        btnText: "Details Correct? Upload Clear Copy",
+                        btnAction: () => setVerificationStage('ID_FILE')
+                    };
                 case 'ID_FILE':
                     return {
                         title: "Step 1: ID Card (Upload)",
@@ -201,7 +210,21 @@ const Register = () => {
                 <h2 style={{ marginBottom: '0.5rem' }}>{content.title}</h2>
                 <p style={{ color: '#aaa', marginBottom: '2rem' }}>{content.desc}</p>
 
-                {content.isFile ? (
+                {content.isReview ? (
+                    <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+                        <div style={{ display: 'flex', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'left' }}>
+                            <img src={idCameraImg} alt="Scanned ID" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #444' }} />
+                            <div style={{ fontSize: '0.9rem' }}>
+                                <p style={{ margin: '0 0 0.5rem 0' }}><strong style={{ color: '#aaa' }}>Name:</strong> {content.data?.name}</p>
+                                <p style={{ margin: '0 0 0.5rem 0' }}><strong style={{ color: '#aaa' }}>Father:</strong> {content.data?.fatherName}</p>
+                                <p style={{ margin: '0' }}><strong style={{ color: '#aaa' }}>Institute:</strong> <span style={{ color: '#4ade80' }}>{content.data?.institution}</span></p>
+                            </div>
+                        </div>
+                        <button className="btn btn-primary" style={{ width: '100%' }} onClick={content.btnAction}>
+                            <i className="fas fa-check-circle"></i> {content.btnText}
+                        </button>
+                    </div>
+                ) : content.isFile ? (
                     <div style={{ border: '2px dashed rgba(255,255,255,0.2)', padding: '3rem', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
                         <i className="fas fa-file-upload" style={{ fontSize: '3rem', color: '#667eea', marginBottom: '1rem' }}></i>
                         <p>Click to browse or drag file here</p>
@@ -391,7 +414,7 @@ const Register = () => {
                 if (!mockData.institution.includes("IPS Academy")) {alert("❌ ID Validation Failed"); return; }
                 setScannedData(mockData);
                 setIdCameraImg(imgUrl);
-                setVerificationStage('AADHAR_CAMERA');
+                setVerificationStage('ID_VERIFY_DATA'); // Go to Data Review instead of next step
                     }
                 else if (verificationStage === 'AADHAR_CAMERA') {
                     setAadharCameraImg(imgUrl);
