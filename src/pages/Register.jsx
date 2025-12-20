@@ -168,7 +168,8 @@ const Register = () => {
                         </div>
                     </div>
                     <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <button className="btn" onClick={stopCamera} style={{ background: '#334155', border: '1px solid #475569' }}>Cancel</button>
+                        {/* No Buttons - Fully Automatic & Mandatory */}
+                        <p className="text-sm text-gray-400 animate-pulse">Scanning Active... Align Card</p>
                     </div>
                 </div>
             );
@@ -196,12 +197,10 @@ const Register = () => {
                 case 'ID_AUTO_CAPTURE':
                     return {
                         title: "Step 1: Auto-Scan ID Card",
-                        desc: "Hold your ID Card steady in the camera view. We will auto-capture it.",
+                        desc: "Hold your IPS Academy ID Card steady in the camera view.",
                         btnText: "Start Auto-Scanner",
                         btnAction: () => { setCameraMode('environment'); startCamera(); },
-                        manual: true,
-                        manualText: "Scanner not working? Upload File",
-                        skip: () => setVerificationStage('ID_FILE') // Fallback
+                        manual: false // STRICT MODE: No File Upload
                     };
                 case 'ID_FILE':
                     return {
