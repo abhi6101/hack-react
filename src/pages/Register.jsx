@@ -66,6 +66,7 @@ const Register = () => {
     const [location, setLocation] = useState(null);
     const [flash, setFlash] = useState(false); // Flash Effect State
     const [errorFlash, setErrorFlash] = useState(false); // Red Alert State
+    const [scanStatus, setScanStatus] = useState("Align Document"); // Feedback State
 
     // --- Geolocation Capture (Forensic Trail) ---
     const captureLocation = () => {
@@ -146,15 +147,16 @@ const Register = () => {
                                 left: 0,
                                 width: '100%',
                                 height: '100%',
-                                zIndex: 20,
+                                zIndex: 100, // Top Priority
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
+                                background: 'rgba(220, 38, 38, 0.5)' // Fallback solid tint
                             }}>
-                                <div style={{ textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.6)', padding: '20px', borderRadius: '16px', backdropFilter: 'blur(5px)' }}>
-                                    <i className="fas fa-id-card-alt" style={{ fontSize: '4rem', marginBottom: '15px' }}></i>
-                                    <h2 style={{ fontSize: '1.8rem', fontWeight: 'bold', margin: 0 }}>INVALID IDENTITY</h2>
-                                    <p style={{ margin: '8px 0 0', fontWeight: '600', color: '#ffb9b9' }}>Please show IPS Academy ID Card</p>
+                                <div style={{ textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.8)', padding: '25px', borderRadius: '20px', border: '2px solid #ef4444', backdropFilter: 'blur(8px)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+                                    <i className="fas fa-id-card-alt" style={{ fontSize: '5rem', marginBottom: '15px' }}></i>
+                                    <h2 style={{ fontSize: '2rem', fontWeight: '900', margin: 0 }}>INVALID ID</h2>
+                                    <p style={{ margin: '10px 0 0', fontWeight: 'bold', color: '#ffc1c1', fontSize: '1.2rem' }}>Please show your COLLEGE ID</p>
                                 </div>
                             </div>
                         )}
@@ -180,9 +182,14 @@ const Register = () => {
                         {/* Scan Progress Overlay */}
                         {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
                             <div style={{ position: 'absolute', top: '70px', right: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', color: '#4ade80', fontSize: '0.8rem', border: '1px solid #4ade80', zIndex: 5 }}>
-                                <i className="fas fa-satellite-dish animate-pulse"></i> Deep Scan: {scanBuffer.length}/5
+                                <i className="fas fa-satellite-dish animate-pulse"></i> Scan: {scanBuffer.length}/4
                             </div>
                         )}
+
+                        {/* AI Status Overlay */}
+                        <div style={{ position: 'absolute', top: '70px', left: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', color: scanStatus === "Reading..." ? "#00d4ff" : "#fff", fontSize: '0.8rem', border: '1px solid rgba(255,255,255,0.2)', zIndex: 5 }}>
+                            <i className={`fas ${scanStatus === "Reading..." ? "fa-brain animate-pulse" : "fa-eye"}`}></i> {scanStatus}
+                        </div>
 
 
                         <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black' }}>
@@ -586,7 +593,7 @@ const Register = () => {
 
     // --- Multi-Pass Verification State ---
     const [scanBuffer, setScanBuffer] = useState([]); // Stores accumualted scans
-    const TARGET_SCANS = 5;
+    const TARGET_SCANS = 4; // Reduced for speed while keeping accuracy
 
     // --- Auto-Capture Logic (Repeated OCR) ---
     const attemptAutoCapture = async () => {
@@ -623,47 +630,38 @@ const Register = () => {
 
         canvasRef.current.toBlob(async (blob) => {
             if (!blob) { setIsScanning(false); return; }
-
+            setScanStatus("Reading...");
             try {
-                const { data: { text } } = await Tesseract.recognize(blob, 'eng', { logger: m => { } });
+                const { data: { text } } = await Tesseract.recognize(blob, 'eng');
                 let matchFound = false;
                 let extracted = {};
 
                 if (isIdStage) {
-                    // NEGATIVE CHECK: Ensure user isn't showing Aadhar, PAN, License, etc.
-                    const lowerText = text.toLowerCase();
-                    const otherDocKeywords = ["aadhar", "uidai", "govt", "india", "income tax", "permanent account", "driving license", "voter"];
+                    // NEGATIVE CHECK
+                    // NEGATIVE CHECK: Targeted Aadhar/Document rejection
+                    const lowerText = text.toLowerCase().replace(/\s+/g, '');
+                    const otherDocKeywords = ["aadhar", "uidai", "incometax", "permanentaccount", "drivinglicense", "voter", "governmentofindia", "enrollmentno", "electioncommission"];
                     const isOtherDoc = otherDocKeywords.some(kw => lowerText.includes(kw));
 
                     if (isOtherDoc) {
-                        console.warn("⚠️ Wrong Document Detected:", isOtherDoc);
+                        setScanStatus("Invalid Document!");
                         window.speechSynthesis.cancel();
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document. Please show IPS Academy ID."));
-
-                        // TRIGGER RED ALERT
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Wrong Document."));
                         setErrorFlash(true);
-                        setTimeout(() => setErrorFlash(false), 4000);
-
-                        // RESET LOGIC
-                        setScanBuffer([]); // Clear previous progress
+                        setTimeout(() => setErrorFlash(false), 2000);
+                        setScanBuffer([]);
                         setIsScanning(false);
-
                         return;
                     }
 
-                    // CRITICAL VALIDATION: Must be "IPS Academy" ID Card
-                    const isIPSAcademy = text.match(/IPS\s*Academy/i) || text.includes("IPS");
-
+                    const isIPSAcademy = text.match(/IPS\s*Academy/i) || text.includes("IPS") || text.includes("Academy") || text.includes("Indore");
                     if (!isIPSAcademy) {
-                        // If it looks like a card but lacks IPS branding, show warning
-                        if (text.length > 50) {
-                            setErrorFlash(true);
-                            setTimeout(() => setErrorFlash(false), 2000);
-                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("IPS Academy ID not detected."));
-                        }
+                        setScanStatus("Lacks IPS Branding");
                         setIsScanning(false);
                         return;
                     }
+
+                    setScanStatus("Scanning ID...");
 
                     const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name', 'IPS'];
                     const keywordMatch = keywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
@@ -837,7 +835,7 @@ const Register = () => {
     useEffect(() => {
         let interval;
         if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
-            interval = setInterval(attemptAutoCapture, 800);
+            interval = setInterval(attemptAutoCapture, 1200);
         }
         return () => clearInterval(interval);
         // eslint-disable-next-line
