@@ -140,23 +140,21 @@ const Register = () => {
 
                         {/* Red Error Alert Overlay */}
                         {errorFlash && (
-                            <div className="animate-pulse" style={{
+                            <div className="blink-red-overlay" style={{
                                 position: 'absolute',
                                 top: 0,
                                 left: 0,
                                 width: '100%',
                                 height: '100%',
-                                background: 'rgba(220, 38, 38, 0.7)', // Red-600 with transparency
                                 zIndex: 20,
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
-                                border: '4px solid #ef4444'
+                                justifyContent: 'center'
                             }}>
-                                <div style={{ textAlign: 'center', color: '#fff' }}>
-                                    <i className="fas fa-exclamation-triangle" style={{ fontSize: '3rem', marginBottom: '10px' }}></i>
-                                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0 }}>WRONG DOCUMENT</h2>
-                                    <p style={{ margin: '5px 0 0', fontWeight: '500' }}>Please show IPS Academy ID</p>
+                                <div style={{ textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.6)', padding: '20px', borderRadius: '16px', backdropFilter: 'blur(5px)' }}>
+                                    <i className="fas fa-id-card-alt" style={{ fontSize: '4rem', marginBottom: '15px' }}></i>
+                                    <h2 style={{ fontSize: '1.8rem', fontWeight: 'bold', margin: 0 }}>INVALID IDENTITY</h2>
+                                    <p style={{ margin: '8px 0 0', fontWeight: '600', color: '#ffb9b9' }}>Please show IPS Academy ID Card</p>
                                 </div>
                             </div>
                         )}
@@ -211,11 +209,11 @@ const Register = () => {
                     };
                 case 'ID_VERIFY_DATA':
                     return {
-                        title: "Review Extracted Data",
-                        desc: "We extracted this from your file. Verify it, then prove you hold the real card.",
+                        title: "Details Extracted",
+                        desc: "Please review and confirm your student identity details.",
                         isReview: true,
                         data: scannedData,
-                        btnText: "Confirmed. Proceed to Aadhar Scan",
+                        btnText: "Details are correct",
                         btnAction: () => setVerificationStage('AADHAR_AUTO_CAPTURE')
                     };
                 case 'ID_AUTO_CAPTURE':
@@ -654,12 +652,17 @@ const Register = () => {
                     }
 
                     // CRITICAL VALIDATION: Must be "IPS Academy" ID Card
-                    // User Rule: "First we want to get IPS Academy... otherwise not verify"
                     const isIPSAcademy = text.match(/IPS\s*Academy/i) || text.includes("IPS");
 
                     if (!isIPSAcademy) {
+                        // If it looks like a card but lacks IPS branding, show warning
+                        if (text.length > 50) {
+                            setErrorFlash(true);
+                            setTimeout(() => setErrorFlash(false), 2000);
+                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("IPS Academy ID not detected."));
+                        }
                         setIsScanning(false);
-                        return; // Silent fail (retry) if logo/text not visible yet
+                        return;
                     }
 
                     const keywords = ['Identity', 'Card', 'Student', 'College', 'Institute', 'Name', 'IPS'];
