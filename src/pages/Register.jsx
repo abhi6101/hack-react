@@ -228,10 +228,10 @@ const Register = () => {
                     };
                 case 'SELFIE':
                     return {
-                        title: "Step 3: Liveness Check",
-                        desc: "Final step. Take a live selfie to complete verification.",
-                        btnText: "Start Liveness Check",
-                        btnAction: () => { setCameraMode('user'); startCamera(); }
+                        title: "Step 3: Auto-Selfie",
+                        desc: "Stay still. The AI will automatically capture your selfie in 3 seconds.",
+                        btnText: "Capturing...",
+                        btnAction: null // Automated
                     };
                 default:
                     return null;
@@ -597,10 +597,25 @@ const Register = () => {
     }, [showCamera, verificationStage, isScanning]);
 
     useEffect(() => {
-        if ((verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !showCamera && !isScanning) {
-            setCameraMode('environment'); startCamera();
+        if (!showCamera && !isScanning) {
+            if (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') {
+                setCameraMode('environment'); startCamera();
+            } else if (verificationStage === 'SELFIE') {
+                setCameraMode('user'); startCamera();
+            }
         }
     }, [verificationStage]);
+
+    // Auto-Selfie Logic
+    useEffect(() => {
+        if (verificationStage === 'SELFIE' && showCamera && !isScanning) {
+            setScanStatus("AI: Detecting Face...");
+            const timer = setTimeout(() => {
+                takeSelfie();
+            }, 3000); // 3 second delay for alignment
+            return () => clearTimeout(timer);
+        }
+    }, [verificationStage, showCamera]);
 
     useEffect(() => {
         if (step === 4 && scannedData) {
