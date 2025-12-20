@@ -551,7 +551,6 @@ const Register = () => {
         const TARGET_SCANS = 5;
 
         // --- Auto-Capture Logic (Repeated OCR) ---
-        // --- Auto-Capture Logic (Repeated OCR) ---
         const attemptAutoCapture = async () => {
             const isIdStage = verificationStage === 'ID_AUTO_CAPTURE';
             const isAadharStage = verificationStage === 'AADHAR_AUTO_CAPTURE';
