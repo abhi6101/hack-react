@@ -309,7 +309,7 @@ const Register = () => {
     };
 
     const [scanBuffer, setScanBuffer] = useState([]);
-    const TARGET_SCANS = 4;
+    const TARGET_SCANS = 3;
 
     const attemptAutoCapture = async () => {
         const isIdStage = verificationStage === 'ID_AUTO_CAPTURE';
@@ -334,11 +334,11 @@ const Register = () => {
 
                 // 1. SECURITY CHECKS (Negative / Replay Detection)
                 if (isIdStage || isAadharStage) {
-                    const idKeywords = ["ips", "academy", "indore", "identity", "student", "college", "institute", "computer code", "session"];
+                    const idKeywords = ["ips", "academy", "computer code", "computercode", "session", "ips academy", "ipsacademy"];
                     const isIPSDetected = idKeywords.some(kw => lowerText.includes(kw));
                     // More robust Aadhar number detection (any 12 digits with optional spaces)
                     const aadharNumRegex = /\d{4}\s*\d{4}\s*\d{4}/;
-                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment") || aadharNumRegex.test(lowerText) || /\d{12}/.test(lowerText);
+                    const isAadharDetected = lowerText.includes("aadhar") || lowerText.includes("uidai") || lowerText.includes("yob") || lowerText.includes("enrollment") || lowerText.includes("governmentofindia") || lowerText.includes("india") || aadharNumRegex.test(lowerText) || /\d{12}/.test(lowerText);
 
                     // A. Universal Wrong Document detection
                     if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
@@ -490,10 +490,11 @@ const Register = () => {
                     setFlash(true); setTimeout(() => setFlash(false), 150);
                     const currentScanCount = scanBuffer.length + 1;
                     setScanStatus(`Scanned ${currentScanCount}/${TARGET_SCANS}`);
-                    if (currentScanCount === 1) window.speechSynthesis.speak(new SpeechSynthesisUtterance("Document Detected. Verifying..."));
                     const newBuffer = [...scanBuffer, extracted];
                     setScanBuffer(newBuffer);
-                    if (newBuffer.length >= TARGET_SCANS) finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR');
+                    const targetFrames = isIdStage ? TARGET_SCANS : 2;
+                    setScanStatus(`Scanned ${newBuffer.length}/${targetFrames}`);
+                    if (newBuffer.length >= targetFrames) finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR');
                     else setIsScanning(false);
                 } else { setIsScanning(false); }
             } catch (err) { console.warn("Auto-OCR failed", err); setIsScanning(false); }
