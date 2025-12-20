@@ -173,6 +173,7 @@ const StudentProfile = () => {
 
                     <h2>Documents & Verification</h2>
                     <div className="form-grid">
+                        {/* ID Card Upload */}
                         <div className="form-group full-width">
                             <label>College ID Card (Upload Image/PDF)</label>
                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -182,37 +183,94 @@ const StudentProfile = () => {
                                     onChange={async (e) => {
                                         const file = e.target.files[0];
                                         if (!file) return;
-
                                         const formData = new FormData();
                                         formData.append('file', file);
                                         const token = localStorage.getItem('authToken');
-
                                         try {
-                                            // Show uploading state (simple alert for now or status adjacent)
                                             e.target.disabled = true;
                                             const res = await fetch(`${API_BASE_URL}/student-profile/upload-id-card`, {
                                                 method: 'POST',
                                                 headers: { 'Authorization': `Bearer ${token}` },
                                                 body: formData
                                             });
-
                                             if (res.ok) {
                                                 alert('ID Card uploaded successfully!');
-                                                // Refresh profile to show uploaded status if needed
-                                            } else {
-                                                alert('Failed to upload ID Card');
-                                            }
-                                        } catch (err) {
-                                            alert('Error uploading ID Card');
-                                        } finally {
-                                            e.target.disabled = false;
-                                        }
+                                                setProfile(prev => ({ ...prev, idCardUrl: 'uploaded' }));
+                                            } else alert('Failed to upload ID Card');
+                                        } catch (err) { alert('Error uploading ID Card'); }
+                                        finally { e.target.disabled = false; }
                                     }}
                                     className="form-control"
                                 />
                                 {profile.idCardUrl && <span className="badge badge-success">Uploaded</span>}
                             </div>
-                            <small className="text-muted">Required for verification. Please upload a clear scan or photo.</small>
+                        </div>
+
+                        {/* Aadhar Card Upload */}
+                        <div className="form-group full-width">
+                            <label>Aadhar Card (Upload Image/PDF)</label>
+                            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <input
+                                    type="file"
+                                    accept="image/*,.pdf"
+                                    onChange={async (e) => {
+                                        const file = e.target.files[0];
+                                        if (!file) return;
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+                                        const token = localStorage.getItem('authToken');
+                                        try {
+                                            e.target.disabled = true;
+                                            const res = await fetch(`${API_BASE_URL}/student-profile/upload-aadhar`, {
+                                                method: 'POST',
+                                                headers: { 'Authorization': `Bearer ${token}` },
+                                                body: formData
+                                            });
+                                            if (res.ok) {
+                                                alert('Aadhar Card uploaded successfully!');
+                                                setProfile(prev => ({ ...prev, aadharCardUrl: 'uploaded' }));
+                                            } else alert('Failed to upload Aadhar Card');
+                                        } catch (err) { alert('Error uploading Aadhar Card'); }
+                                        finally { e.target.disabled = false; }
+                                    }}
+                                    className="form-control"
+                                />
+                                {profile.aadharCardUrl && <span className="badge badge-success">Uploaded</span>}
+                            </div>
+                        </div>
+
+                        {/* Admit Card Upload */}
+                        <div className="form-group full-width">
+                            <label>Latest Admit Card (Upload Image/PDF)</label>
+                            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <input
+                                    type="file"
+                                    accept="image/*,.pdf"
+                                    onChange={async (e) => {
+                                        const file = e.target.files[0];
+                                        if (!file) return;
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+                                        const token = localStorage.getItem('authToken');
+                                        try {
+                                            e.target.disabled = true;
+                                            const res = await fetch(`${API_BASE_URL}/student-profile/upload-admit-card`, {
+                                                method: 'POST',
+                                                headers: { 'Authorization': `Bearer ${token}` },
+                                                body: formData
+                                            });
+                                            if (res.ok) {
+                                                alert('Admit Card uploaded successfully!');
+                                                setProfile(prev => ({ ...prev, admitCardUrl: 'uploaded' }));
+                                            } else alert('Failed to upload Admit Card');
+                                        } catch (err) { alert('Error uploading Admit Card'); }
+                                        finally { e.target.disabled = false; }
+                                    }}
+                                    className="form-control"
+                                />
+                                {profile.admitCardUrl && <span className="badge badge-success">Uploaded</span>}
+                            </div>
+                            <small className="text-muted">Required for exam eligibility verification.</small>
                         </div>
                     </div>
 
