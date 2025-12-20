@@ -636,9 +636,26 @@ const Register = () => {
 
     useEffect(() => {
         if (step === 4 && scannedData) {
-            const generatedUsername = "@" + scannedData.name.toLowerCase().replace(/\s+/g, "_");
-            const startYear = scannedData.session ? scannedData.session.split('-')[0] : new Date().getFullYear().toString();
-            setFormData(prev => ({ ...prev, fullName: scannedData.name, computerCode: scannedData.code, branch: scannedData.branch || 'IMCA', username: generatedUsername, startYear: startYear, role: 'USER' }));
+            // Standardize username to @first_last format
+            const cleanName = scannedData.name.toLowerCase().trim().replace(/[^a-z ]/g, '');
+            const generatedUsername = "@" + cleanName.replace(/\s+/g, "_");
+
+            // Extract start year from session (e.g., "2023-2027" -> "2023")
+            const startYear = scannedData.session ? scannedData.session.split('-')[0].trim() : new Date().getFullYear().toString();
+
+            // Re-map common branch abbreviations to codes if needed
+            let branchCode = scannedData.branch || 'IMCA';
+            if (branchCode.toUpperCase() === 'INTG.MCA') branchCode = 'IMCA';
+
+            setFormData(prev => ({
+                ...prev,
+                fullName: scannedData.name,
+                computerCode: scannedData.code,
+                branch: branchCode,
+                username: generatedUsername,
+                startYear: startYear,
+                role: 'USER'
+            }));
         }
     }, [step, scannedData]);
 
@@ -668,6 +685,7 @@ const Register = () => {
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FATHER'S NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.fatherName}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>INSTITITE</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.institution}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>SESSION</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div></div>
+                                        <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>COURSE (BRANCH)</strong><div style={{ color: '#fff', fontWeight: '500', color: '#4ade80' }}>{scannedData.branch}</div></div>
                                         <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span><span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span></div>
                                             {location && (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span><span style={{ color: '#60a5fa', fontSize: '0.8rem' }}><i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}</span></div>)}
