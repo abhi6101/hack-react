@@ -224,30 +224,68 @@ const StudentDashboard = () => {
                             <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '8px' }}>
                                 <i className="fas fa-user" style={{ fontSize: '1.5rem', color: '#667eea', marginBottom: '0.5rem' }}></i>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Full Name</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.name || 'Not provided'}</p>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.fullName || user?.name || 'Not provided'}</p>
                             </div>
                             <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(118, 75, 162, 0.1)', borderRadius: '8px' }}>
-                                <i className="fas fa-envelope" style={{ fontSize: '1.5rem', color: '#764ba2', marginBottom: '0.5rem' }}></i>
+                                <i className="fas fa-user-tie" style={{ fontSize: '1.5rem', color: '#764ba2', marginBottom: '0.5rem' }}></i>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Father's Name</strong>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.fatherName || 'Not provided'}</p>
+                            </div>
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(52, 211, 153, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-envelope" style={{ fontSize: '1.5rem', color: '#34d399', marginBottom: '0.5rem' }}></i>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Email</strong>
                                 <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500', wordBreak: 'break-word' }}>{user?.email || 'N/A'}</p>
                             </div>
-                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(52, 211, 153, 0.1)', borderRadius: '8px' }}>
-                                <i className="fas fa-phone" style={{ fontSize: '1.5rem', color: '#34d399', marginBottom: '0.5rem' }}></i>
-                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Phone</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.phone || 'Not provided'}</p>
-                            </div>
                             <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '8px' }}>
-                                <i className="fas fa-graduation-cap" style={{ fontSize: '1.5rem', color: '#fbbf24', marginBottom: '0.5rem' }}></i>
+                                <i className="fas fa-phone" style={{ fontSize: '1.5rem', color: '#fbbf24', marginBottom: '0.5rem' }}></i>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Mobile Primary</strong>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobilePrimary || user?.phone || 'Not provided'}</p>
+                            </div>
+                            {user?.mobileSecondary && (
+                                <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '8px' }}>
+                                    <i className="fas fa-phone-alt" style={{ fontSize: '1.5rem', color: '#fbbf24', marginBottom: '0.5rem' }}></i>
+                                    <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Mobile Secondary</strong>
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobileSecondary}</p>
+                                </div>
+                            )}
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-university" style={{ fontSize: '1.5rem', color: '#ef4444', marginBottom: '0.5rem' }}></i>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Institution</strong>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.institution || 'Not provided'}</p>
+                            </div>
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-graduation-cap" style={{ fontSize: '1.5rem', color: '#667eea', marginBottom: '0.5rem' }}></i>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Branch</strong>
                                 <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.branch || 'Not set'}</p>
                             </div>
-                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px' }}>
-                                <i className="fas fa-calendar-alt" style={{ fontSize: '1.5rem', color: '#ef4444', marginBottom: '0.5rem' }}></i>
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(118, 75, 162, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-calendar-alt" style={{ fontSize: '1.5rem', color: '#764ba2', marginBottom: '0.5rem' }}></i>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Semester</strong>
                                 <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.semester || 'Not set'}</p>
                             </div>
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(52, 211, 153, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-calendar-check" style={{ fontSize: '1.5rem', color: '#34d399', marginBottom: '0.5rem' }}></i>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Session</strong>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.session || user?.batch || 'Not set'}</p>
+                            </div>
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-id-card" style={{ fontSize: '1.5rem', color: '#fbbf24', marginBottom: '0.5rem' }}></i>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Computer Code</strong>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.computerCode || 'Not set'}</p>
+                            </div>
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-certificate" style={{ fontSize: '1.5rem', color: '#ef4444', marginBottom: '0.5rem' }}></i>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Enrollment Number</strong>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.enrollmentNumber || 'Not set'}</p>
+                            </div>
+                            <div style={{ textAlign: 'center', padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '8px' }}>
+                                <i className="fas fa-calendar-day" style={{ fontSize: '1.5rem', color: '#667eea', marginBottom: '0.5rem' }}></i>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Start Year</strong>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.startYear || 'Not set'}</p>
+                            </div>
                         </div>
                     </div>
+
                 </header>
 
                 {/* Application Status Section */}
