@@ -423,11 +423,27 @@ const Register = () => {
 
         canvasRef.current.toBlob((blob) => {
             if (blob) {
-                setSelfieImg(URL.createObjectURL(blob));
+                const selfieUrl = URL.createObjectURL(blob);
+                setSelfieImg(selfieUrl);
                 setFlash(true);
                 setTimeout(() => setFlash(false), 150);
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance("Selfie Captured Successfully. Moving to final step."));
                 stopCamera();
+
+                // TEMPORARY: Save verification data to localStorage (until backend is ready)
+                const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
+                const verificationData = {
+                    allStepsCompleted: true,
+                    scannedData: scannedData,
+                    aadharData: aadharData,
+                    selfieImg: selfieUrl,
+                    idCameraImg: idCameraImg,
+                    aadharCameraImg: aadharCameraImg,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+                console.log('✅ Verification data saved to localStorage');
+
                 setStep(4);
             }
         }, 'image/jpeg');
@@ -508,6 +524,11 @@ const Register = () => {
             });
             const result = await response.json();
             if (response.ok) {
+                // Clean up localStorage verification data after successful registration
+                const localVerificationKey = `verification_${formData.computerCode}_${deviceFingerprint}`;
+                localStorage.removeItem(localVerificationKey);
+                console.log('✅ Verification data cleaned up from localStorage');
+
                 setSuccess(result.message || "Registration successful!");
                 setTimeout(() => navigate(`/verify-account?email=${encodeURIComponent(formData.email)}`), 1500);
             } else {
@@ -738,10 +759,32 @@ const Register = () => {
     };
 
     // SECURITY: Check backend verification status
-    const checkVerificationStatus = async (cleanedMatch) => {
+    const checkVerificationStatus = async (cleanedMatch, finalBlob) => {
         try {
             setScanStatus("Checking verification status...");
 
+            // TEMPORARY: Check localStorage first (until backend is ready)
+            const localVerificationKey = `verification_${cleanedMatch.code}_${deviceFingerprint}`;
+            const localVerification = localStorage.getItem(localVerificationKey);
+
+            if (localVerification) {
+                const savedData = JSON.parse(localVerification);
+
+                // Check if verification is complete
+                if (savedData.allStepsCompleted) {
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("Verification found. Proceeding to registration."));
+                    setScannedData(savedData.scannedData);
+                    setAadharData(savedData.aadharData);
+                    setSelfieImg(savedData.selfieImg);
+                    setIdCameraImg(savedData.idCameraImg);
+                    setAadharCameraImg(savedData.aadharCameraImg);
+                    setScanBuffer([]); stopCamera();
+                    setStep(4); // Skip to registration form
+                    return;
+                }
+            }
+
+            // Try backend API (will be available when backend is implemented)
             const response = await fetch(`${API_BASE_URL}/verification/check-status`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
