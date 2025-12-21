@@ -633,15 +633,26 @@ const Register = () => {
         const cleanOCRName = (name) => {
             if (!name || name === "Detected Name" || name === "Detected Father") return name;
 
-            // 1. Remove prefixes (Father, Mr, Shri, etc.)
-            let cleaned = name.replace(/^(Father|Father's|Mr|Mrs|Ms|Shri|Smt|Late|Dr|Name|Course|Session|Institution)\s*[:|-]?\s*/i, '').trim();
+            // 1. Remove common OCR symbols and arrows
+            let cleaned = name.replace(/[»›→~•·]/g, '').trim();
 
-            // 2. Remove trailing punctuation/junk
+            // 2. Remove prefixes (Father, Mr, Shri, etc.) - more aggressive
+            cleaned = cleaned.replace(/^(Father|Father's|Mr|Mrs|Ms|Shri|Smt|Late|Dr|Name|Course|Session|Institution)[\s:|-]*/gi, '').trim();
+
+            // 3. Remove the word "Father" if it appears anywhere (not just prefix)
+            cleaned = cleaned.replace(/\bFather\b[\s:|-]*/gi, '').trim();
+
+            // 4. Remove leading special characters and punctuation
+            cleaned = cleaned.replace(/^[^A-Za-z]+/, '').trim();
+
+            // 5. Remove trailing punctuation/junk
             cleaned = cleaned.replace(/[^A-Za-z ]+$/g, '').trim();
 
-            // 3. Remove trailing OCR noise (single chars like 'c Y', 'v', etc.)
-            // Matches a space followed by 1-2 random letters/numbers at the very end
+            // 6. Remove trailing OCR noise (single chars like 'c Y', 'v', etc.)
             cleaned = cleaned.replace(/\s+[A-Za-z0-9]$|\s+[A-Za-z0-9]\s+[A-Za-z0-9]$/i, '').trim();
+
+            // 7. Clean up multiple spaces
+            cleaned = cleaned.replace(/\s+/g, ' ').trim();
 
             return cleaned;
         };
