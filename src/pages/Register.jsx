@@ -218,8 +218,10 @@ const Register = () => {
                             }}>
                                 <div style={{ textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.8)', padding: '25px', borderRadius: '20px', border: '2px solid #ef4444', backdropFilter: 'blur(8px)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
                                     <i className="fas fa-id-card-alt" style={{ fontSize: '5rem', marginBottom: '15px' }}></i>
-                                    <h2 style={{ fontSize: '2rem', fontWeight: '900', margin: 0 }}>INVALID ID</h2>
-                                    <p style={{ margin: '10px 0 0', fontWeight: 'bold', color: '#ffc1c1', fontSize: '1.2rem' }}>Please show your COLLEGE ID</p>
+                                    <h2 style={{ fontSize: '2rem', fontWeight: '900', margin: 0 }}>WRONG DOCUMENT</h2>
+                                    <p style={{ margin: '10px 0 0', fontWeight: 'bold', color: '#ffc1c1', fontSize: '1.2rem' }}>
+                                        {verificationStage === 'AADHAR_AUTO_CAPTURE' ? "Please show your AADHAR CARD" : "Please show your COLLEGE ID"}
+                                    </p>
                                 </div>
                             </div>
                         )}
