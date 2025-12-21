@@ -285,7 +285,7 @@ const Register = () => {
                         data: scannedData,
                         image: idCameraImg,
                         btnText: "Proceed to Aadhar Scan",
-                        btnAction: () => setVerificationStage('AADHAR_AUTO_CAPTURE'),
+                        btnAction: () => checkVerificationStatus(scannedData, null, 'ID'),
                         secondaryBtnText: scannedData?.mobileCount === 0 ? "Mobile not detected? Rescan ID" : "Incorrect details? Rescan ID",
                         secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); }
                     };
@@ -310,8 +310,8 @@ const Register = () => {
                         isReview: true,
                         data: aadharData,
                         image: aadharCameraImg,
-                        btnText: "Confirm & Finalize",
-                        btnAction: () => setVerificationStage('SELFIE'),
+                        btnText: "Proceed to Selfie",
+                        btnAction: () => checkVerificationStatus(aadharData, null, 'AADHAR'),
                         secondaryBtnText: "Wrong Aadhar? Rescan",
                         secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); }
                     };
@@ -858,20 +858,15 @@ const Register = () => {
 
                 case 'NEW_USER':
                 default:
-                    // Continue normal verification flow
+                    // Success! Proceed to next stage based on what we just checked.
                     if (checkType === 'ID') {
-                        setScannedData(cleanedMatch);
-                        setIdCameraImg(URL.createObjectURL(finalBlob));
-                        setScanBuffer([]); stopCamera();
-                        setVerificationStage('ID_VERIFY_DATA');
+                        // ID is clean. Move to Aadhar.
+                        setVerificationStage('AADHAR_AUTO_CAPTURE');
                     } else {
-                        // AADHAR Success
-                        setAadharData(cleanedMatch);
-                        setAadharCameraImg(URL.createObjectURL(finalBlob));
-                        setScanBuffer([]); stopCamera();
-                        setScanStatus("✅ Verification Successful");
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched unique identity. Verification Successful."));
-                        setVerificationStage('AADHAR_VERIFY_DATA');
+                        // Aadhar is clean. Move to Selfie.
+                        // But first capture location if valid
+                        if (checkType === 'AADHAR') captureLocation();
+                        setVerificationStage('SELFIE');
                     }
                     break;
             }
@@ -884,9 +879,8 @@ const Register = () => {
             setErrorFlash(true);
             setTimeout(() => {
                 setErrorFlash(false);
-                setScanStatus(checkType === 'ID' ? "Align College ID" : "Align Aadhar");
-                setIsScanning(false);
-                // Don't stop camera, let them retry
+                // Don't change stage, just let them try clicking again
+                setLoading(false);
             }, 3000);
         }
     };
@@ -930,18 +924,20 @@ const Register = () => {
         };
 
         if (type === 'ID') {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("ID Card Verified."));
             const cleanedMatch = {
                 ...bestMatch,
                 name: cleanOCRName(bestMatch.name),
                 fatherName: cleanOCRName(bestMatch.fatherName)
             };
 
-            // SECURITY: Check backend for existing verification/registration
-            checkVerificationStatus(cleanedMatch, finalBlob);
+            // Move to Review Screen (Check happens on Button Click now)
+            setScannedData(cleanedMatch);
+            setIdCameraImg(URL.createObjectURL(finalBlob));
+            setScanBuffer([]); stopCamera();
+            setVerificationStage('ID_VERIFY_DATA');
         } else if (type === 'AADHAR') {
-            const idName = (scannedData?.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
-            const aadharName = (bestMatch.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
+            const idName = cleanOCRName(scannedData?.name).toUpperCase();
+            const aadharName = cleanOCRName(bestMatch.name).toUpperCase();
 
             setScanStatus("AI: Matching against ID Card...");
 
@@ -950,8 +946,14 @@ const Register = () => {
 
             if (isMatch) {
                 const cleanedMatch = { ...bestMatch, name: cleanOCRName(bestMatch.name) };
-                // SECURITY: Check backend for duplicate Aadhar (Step 2 check)
-                checkVerificationStatus(cleanedMatch, finalBlob, 'AADHAR');
+
+                // Move to Review Screen (Check happens on Button Click now)
+                setAadharData(cleanedMatch);
+                setAadharCameraImg(URL.createObjectURL(finalBlob));
+                setScanBuffer([]); stopCamera();
+                setScanStatus("✅ Verification Successful");
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched. Please review details."));
+                setVerificationStage('AADHAR_VERIFY_DATA');
             } else {
                 // SECURITY: Track failed attempts and lock out after 3 tries
                 const newAttempts = failedVerificationAttempts + 1;
