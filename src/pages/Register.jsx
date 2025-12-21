@@ -633,8 +633,8 @@ const Register = () => {
         const cleanOCRName = (name) => {
             if (!name || name === "Detected Name" || name === "Detected Father") return name;
 
-            // 1. Remove common OCR symbols and arrows
-            let cleaned = name.replace(/[»›→~•·]/g, '').trim();
+            // 1. Remove common OCR symbols and arrows (added |)
+            let cleaned = name.replace(/[»›→~•·|]/g, '').trim();
 
             // 2. Remove prefixes (Father, Mr, Shri, etc.) - more aggressive
             cleaned = cleaned.replace(/^(Father|Father's|Mr|Mrs|Ms|Shri|Smt|Late|Dr|Name|Course|Session|Institution)[\s:|-]*/gi, '').trim();
@@ -645,13 +645,17 @@ const Register = () => {
             // 4. Remove leading special characters and punctuation
             cleaned = cleaned.replace(/^[^A-Za-z]+/, '').trim();
 
-            // 5. Remove trailing punctuation/junk
+            // 5. Remove trailing numbers (like "4" in "ASHISH JAIN 4")
+            cleaned = cleaned.replace(/\s+\d+\s*$/g, '').trim();
+
+            // 6. Remove trailing punctuation/junk
             cleaned = cleaned.replace(/[^A-Za-z ]+$/g, '').trim();
 
-            // 6. Remove trailing OCR noise (single chars like 'c Y', 'v', etc.)
-            cleaned = cleaned.replace(/\s+[A-Za-z0-9]$|\s+[A-Za-z0-9]\s+[A-Za-z0-9]$/i, '').trim();
+            // 7. Remove trailing OCR noise (like "A pe", "c Y", "v", etc.)
+            // Matches: space + 1-2 letters + optional (space + 1-2 letters/numbers)
+            cleaned = cleaned.replace(/\s+[A-Za-z]{1,2}(\s+[A-Za-z0-9]{1,2})?$/i, '').trim();
 
-            // 7. Clean up multiple spaces
+            // 8. Clean up multiple spaces
             cleaned = cleaned.replace(/\s+/g, ' ').trim();
 
             return cleaned;
