@@ -949,31 +949,31 @@ const Register = () => {
             if (!rawAddr) return "Not Detected";
             let addr = rawAddr.trim();
 
-            // 1. Remove OCR noise & common artifacts
-            addr = addr.replace(/Director\/Principal|Director|Principal|Direclor|Direc|Signature|Govt|India/gi, '')
-                .replace(/[;:{}_=]/g, '')
-                .replace(/[_\\-]{2,}/g, '')
-                .replace(/\b(GRAI|GRM|GRMA)\b/gi, 'Gram') // Fix OCR typos for Village
+            // 1. Remove OCR noise & common artifacts header words
+            addr = addr.replace(/Director\/Principal|Director|Principal|Direclor|Direc|Signature|Govt|India|DicclorSines|Dicclor|Sines/gi, '')
+                .replace(/[;:{}_=]/g, '') // Remove specific symbols
+                .replace(/[-]{2,}/g, '')   // Remove multiple dashes
+                .replace(/\b(GRAI|GRM|GRMA)\b/gi, 'Gram')
                 .replace(/\b(DIST|DISTT|DT)\b/gi, 'Dist.')
                 .replace(/\b(TEH|TAH)\b/gi, 'Tehsil')
                 .replace(/Da\s?,/g, '')
-                .replace(/,\s*[iIlL1!]\s*,/g, ',') // Remove separated single chars like ", i ,"
-                .replace(/,\s*[iIlL1!] /g, ', ')   // Remove trailing random chars
+                .replace(/S\/O|D\/O|W\/O|C\/O/gi, '') // Remove relationship prefixes from address part
+                .replace(/\d+\s*=\s*[a-z-]+/gi, '')   // Remove patterns like "4 =a--"
+                .replace(/\bSha\b/g, '') // Remove isolated "Sha" noise
                 .trim();
 
-            // 2. Remove trailing commas/spaces
-            addr = addr.replace(/[,\\s]+$/, '');
-            addr = addr.replace(/^[,\\s]+/, '');
+            // 2. Remove isolated single characters (like "i", "I", "4") that aren't A/B (often block no)
+            // Keep digits if they part of a pincode or house number
+            addr = addr.replace(/\b[a-zA-Z]\b(?!\.)/g, '').replace(/\s+/g, ' ');
 
-            // 3. Smart State Mapping (Using imported complete map)
-            const upperAddr = addr.toUpperCase();
-            let detectedState = '';
+            // 3. Detect State from Map (Granular)
+            let detectedState = null;
+            let upperAddr = addr.toUpperCase();
 
             for (const [district, state] of Object.entries(DISTRICT_STATE_MAP)) {
-                if (upperAddr.includes(district)) { // Check only for district name to avoid false positives
+                if (upperAddr.includes(district)) {
                     detectedState = state;
-
-                    // Prevent Duplicate State Appending if it's already there
+                    // Prevent Duplicate State Appending
                     if (!upperAddr.includes(state.toUpperCase())) {
                         addr = `${addr}, ${state}`;
                     }
@@ -981,31 +981,39 @@ const Register = () => {
                 }
             }
 
-            // 4. Final Cleanup: Deduplicate words (e.g. "Sehore, Sehore")
-            const words = addr.split(/[,\s]+/);
-            const uniqueWords = [];
-            words.forEach(word => {
-                const cleanWord = word.replace(/[^a-zA-Z0-9]/g, '');
-                if (cleanWord.length > 2 && !uniqueWords.some(w => w.toLowerCase().includes(cleanWord.toLowerCase()))) {
-                    uniqueWords.push(word);
-                } else if (cleanWord.length <= 2) {
-                    uniqueWords.push(word); // Keep short words/numbers
+            // 4. Aggressive Structure Clean & Deduplicate
+            // Split by commas OR spaces to handle "Sehore Sehore"
+            let parts = addr.split(/[,\s]+/);
+            let cleanParts = [];
+            let seenWords = new Set();
+
+            parts.forEach(part => {
+                let cleanPart = part.replace(/[^a-zA-Z0-9\-\.]/g, '').trim(); // Remove strictly symbols
+                if (cleanPart.length > 1 || !isNaN(cleanPart)) { // Keep numbers, discard single chars
+                    const lower = cleanPart.toLowerCase();
+                    // Fuzzy duplicate check (e.g. "Sehore" vs "Sehore,")
+                    if (!seenWords.has(lower)) {
+                        // Filter out garbage words containing mixed repeated symbols
+                        if (!/^[=\-_]+$/.test(cleanPart) && !cleanPart.includes('=')) {
+                            seenWords.add(lower);
+                            cleanParts.push(cleanPart);
+                        }
+                    }
                 }
             });
 
-            // Re-assemble (Simple dedup strategy) - Better approach for "Sehore, Sehore"
-            let finalParts = addr.split(',').map(p => p.trim()).filter(p => p.length > 0);
-            finalParts = [...new Set(finalParts)]; // Remove exact duplicates
-            addr = finalParts.join(', ');
+            // 5. Re-assemble with proper comma separation
+            // Heuristic: If part is a number (pincode), it goes at end. If duplicate, ignored.
+            let finalAddr = cleanParts.join(', ');
 
-            const finalCleaned = addr.replace(/\s+/g, ' ').replace(/, \./g, '.').replace(/,,+/g, ',').trim();
+            // Fix spaces around punctuation
+            finalAddr = finalAddr.replace(/ ,/g, ',').replace(/,+/g, ',').replace(/\s+/g, ' ').trim();
 
-            // FAILSAFE: If cleaning removed almost everything (e.g. only had noise), return original raw text "as it is"
-            if (finalCleaned.length < 3) {
-                return rawAddr.trim();
-            }
+            // Remove trailing commas/dashes
+            finalAddr = finalAddr.replace(/^[,\-\s]+|[,\-\s]+$/g, '');
 
-            return finalCleaned;
+            if (finalAddr.length < 5) return rawAddr; // Fallback if we destroyed it
+            return finalAddr;
         };
 
         const names = buffer.map(b => b.name).filter(n => n !== "Detected Name");
