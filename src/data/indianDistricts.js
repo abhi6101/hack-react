@@ -27,7 +27,38 @@ export const DISTRICT_STATE_MAP = {
     'BETUL': 'Madhya Pradesh',
     'RAISEN': 'Madhya Pradesh', // Near Bhopal/Sehore
 
-    // 2. REST OF MADHYA PRADESH
+    // 2. MADHYA PRADESH TEHSILS & TOWNS (Granular Verification)
+    'ASHTA': 'Madhya Pradesh', 'SONKATCH': 'Madhya Pradesh', 'TONK KHURD': 'Madhya Pradesh', 'BAGLI': 'Madhya Pradesh',
+    'KANNOD': 'Madhya Pradesh', 'KHATEGAON': 'Madhya Pradesh', 'NAGDA': 'Madhya Pradesh', 'KHACHROD': 'Madhya Pradesh',
+    'MAHIDPUR': 'Madhya Pradesh', 'TARANA': 'Madhya Pradesh', 'BADNAGAR': 'Madhya Pradesh', 'ALOT': 'Madhya Pradesh',
+    'JAORA': 'Madhya Pradesh', 'SAILANA': 'Madhya Pradesh', 'PIPLODA': 'Madhya Pradesh',
+    'SARDARPUR': 'Madhya Pradesh', 'BADNAWAR': 'Madhya Pradesh', 'KUKSHI': 'Madhya Pradesh', 'MANAWAR': 'Madhya Pradesh',
+    'DHARAMPURI': 'Madhya Pradesh', 'GANDHWANI': 'Madhya Pradesh', 'PETLAWAD': 'Madhya Pradesh', 'THANDLA': 'Madhya Pradesh',
+    'JOBAT': 'Madhya Pradesh', 'BHABRA': 'Madhya Pradesh', 'SENDHWA': 'Madhya Pradesh', 'RAJPUR': 'Madhya Pradesh',
+    'ANJAD': 'Madhya Pradesh', 'THIKRI': 'Madhya Pradesh', 'PANSEMAL': 'Madhya Pradesh', 'KHETIA': 'Madhya Pradesh',
+    'NEPANAGAR': 'Madhya Pradesh', 'PANDHANA': 'Madhya Pradesh', 'PUNASA': 'Madhya Pradesh', 'HARSUD': 'Madhya Pradesh',
+    'BHIKANGAON': 'Madhya Pradesh', 'MAHESHWAR': 'Madhya Pradesh', 'KASRAWAD': 'Madhya Pradesh', 'BARWAHA': 'Madhya Pradesh',
+    'SANAWAD': 'Madhya Pradesh', 'KHIRKIYA': 'Madhya Pradesh', 'TIMARNI': 'Madhya Pradesh', 'ITARSI': 'Madhya Pradesh',
+    'PIPARIYA': 'Madhya Pradesh', 'SOHAGPUR': 'Madhya Pradesh', 'BABAI': 'Madhya Pradesh', 'BUDNI': 'Madhya Pradesh',
+    'NASRULLAGANJ': 'Madhya Pradesh', 'GOHARGANJ': 'Madhya Pradesh', 'BARELI': 'Madhya Pradesh', 'UDAIPURA': 'Madhya Pradesh',
+    'SILWANI': 'Madhya Pradesh', 'BEGUMGANJ': 'Madhya Pradesh', 'GAIRATGANJ': 'Madhya Pradesh', 'BERASIA': 'Madhya Pradesh',
+    'SHAMSHABAD': 'Madhya Pradesh', 'LATERI': 'Madhya Pradesh', 'SIRONJ': 'Madhya Pradesh', 'KURWAI': 'Madhya Pradesh',
+    'BASODA': 'Madhya Pradesh', 'GYARASPUR': 'Madhya Pradesh', 'KHILCHIPUR': 'Madhya Pradesh', 'ZEERAPUR': 'Madhya Pradesh',
+    'BIAORA': 'Madhya Pradesh', 'SARANGPUR': 'Madhya Pradesh', 'NARSINGHGARH': 'Madhya Pradesh', 'AGAR': 'Madhya Pradesh',
+    'SUSNER': 'Madhya Pradesh', 'NALKHERA': 'Madhya Pradesh', 'BADOD': 'Madhya Pradesh', 'SITAMAU': 'Madhya Pradesh',
+    'MALHARGARH': 'Madhya Pradesh', 'GAROTH': 'Madhya Pradesh', 'BHANPURA': 'Madhya Pradesh', 'MANASA': 'Madhya Pradesh',
+    'JAWAD': 'Madhya Pradesh', 'SINGOLI': 'Madhya Pradesh', 'GOTEGAON': 'Madhya Pradesh', 'GADARWARA': 'Madhya Pradesh',
+    'TENKHEDA': 'Madhya Pradesh', 'KARELI': 'Madhya Pradesh', 'LAKHNADON': 'Madhya Pradesh', 'CHAPARA': 'Madhya Pradesh',
+    'KEOLARI': 'Madhya Pradesh', 'BARGHAT': 'Madhya Pradesh', 'WARASEONI': 'Madhya Pradesh', 'KATANGI': 'Madhya Pradesh',
+    'LALBURRA': 'Madhya Pradesh', 'BAIHAR': 'Madhya Pradesh', 'LANJI': 'Madhya Pradesh', 'KIRNAPUR': 'Madhya Pradesh',
+    'PARASIA': 'Madhya Pradesh', 'JUNNARDEO': 'Madhya Pradesh', 'AMARWARA': 'Madhya Pradesh', 'SAUSAR': 'Madhya Pradesh',
+    'PANDHURNA': 'Madhya Pradesh', 'MULTAI': 'Madhya Pradesh', 'AMLA': 'Madhya Pradesh', 'BHAINSDEHI': 'Madhya Pradesh',
+    'ATNER': 'Madhya Pradesh', 'CHICHOLI': 'Madhya Pradesh', 'GHODADONGRI': 'Madhya Pradesh', 'SHAHHPUR': 'Madhya Pradesh',
+    'REHLI': 'Madhya Pradesh', 'BANDA': 'Madhya Pradesh', 'KHURAI': 'Madhya Pradesh', 'BINA': 'Madhya Pradesh',
+    'DEORI': 'Madhya Pradesh', 'KESLI': 'Madhya Pradesh', 'GARHAKOTA': 'Madhya Pradesh', 'RAHATGARH': 'Madhya Pradesh',
+    'MAISHAR': 'Madhya Pradesh', 'AMARPATAN': 'Madhya Pradesh', 'RAMPUR': 'Madhya Pradesh', 'NAGOD': 'Madhya Pradesh',
+
+    // 3. REST OF MADHYA PRADESH (Districts)
     'BHOPAL': 'Madhya Pradesh', // Capital
     'GWALIOR': 'Madhya Pradesh',
     'JABALPUR': 'Madhya Pradesh',
