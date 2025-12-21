@@ -83,11 +83,13 @@ function Layout({ children }) {
             {showNavbar && <Navbar />}
             {children}
             {showNavbar && <Footer />}
+            {/* DISABLED: Profile completion modal - all data collected during registration
             <ProfileUpdateModal
                 isOpen={showProfileModal}
                 onClose={() => setShowProfileModal(false)}
                 onUpdate={handleProfileUpdate}
             />
+            */}
         </>
     );
 }
