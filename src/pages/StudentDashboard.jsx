@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProfileUpdateModal from '../components/ProfileUpdateModal';
+// ProfileUpdateModal import removed
 import API_BASE_URL from '../config';
 import '../styles/dashboard.css';
 
