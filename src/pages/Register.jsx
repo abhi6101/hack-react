@@ -483,7 +483,7 @@ const Register = () => {
 
         // VALIDATION: Check for valid Aadhar Number
         if (formData.role === 'USER' && formData.aadharNumber && formData.aadharNumber.toLowerCase().includes('x')) {
-            setError('Invalid Aadhar Number (XXXX detected). Please click "Rescan Identity" to fix.');
+            setError('Invalid Aadhar Number (XXXX detected). Verification Failed. Please REFRESH the page to scan carefully.');
             setLoading(false);
             window.scrollTo(0, 0);
             return;
@@ -1075,31 +1075,7 @@ const Register = () => {
                                                 <strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>AADHAR NUMBER</strong>
                                                 <div style={{ color: '#fff', fontWeight: '500', color: '#4ade80', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                     {aadharData.aadharNumber}
-                                                    {aadharData.aadharNumber.toLowerCase().includes('x') && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                if (window.confirm("Rescan to fix Aadhar Number?")) {
-                                                                    Object.keys(localStorage).forEach(key => {
-                                                                        if (key.startsWith('verification_')) localStorage.removeItem(key);
-                                                                    });
-                                                                    setScannedData(null);
-                                                                    setAadharData(null);
-                                                                    setIdCameraImg(null);
-                                                                    setAadharCameraImg(null);
-                                                                    setSelfieImg(null);
-                                                                    setStep(1);
-                                                                    setVerificationStage('ID_AUTO_CAPTURE');
-                                                                }
-                                                            }}
-                                                            style={{
-                                                                background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '4px',
-                                                                padding: '2px 8px', fontSize: '0.65rem', cursor: 'pointer', fontWeight: 'bold'
-                                                            }}
-                                                        >
-                                                            <i className="fas fa-camera"></i> FIX
-                                                        </button>
-                                                    )}
+
                                                 </div>
                                             </div>
                                         )}
@@ -1110,40 +1086,7 @@ const Register = () => {
                                         </div>
                                     </div>
                                 )}
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        if (window.confirm("Are you sure you want to rescan? This will clear your verification progress.")) {
-                                            Object.keys(localStorage).forEach(key => {
-                                                if (key.startsWith('verification_')) localStorage.removeItem(key);
-                                            });
-                                            setScannedData(null);
-                                            setAadharData(null);
-                                            setIdCameraImg(null);
-                                            setAadharCameraImg(null);
-                                            setSelfieImg(null);
-                                            setStep(1);
-                                            setVerificationStage('ID_AUTO_CAPTURE');
-                                        }
-                                    }}
-                                    style={{
-                                        width: '100%',
-                                        padding: '0.75rem',
-                                        marginTop: '1rem',
-                                        background: 'rgba(239, 68, 68, 0.1)',
-                                        border: '1px solid rgba(239, 68, 68, 0.3)',
-                                        borderRadius: '8px',
-                                        color: '#ef4444',
-                                        cursor: 'pointer',
-                                        fontSize: '0.9rem',
-                                        fontWeight: '600',
-                                        transition: 'all 0.2s'
-                                    }}
-                                    onMouseOver={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.2)'}
-                                    onMouseOut={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}
-                                >
-                                    <i className="fas fa-redo" style={{ marginRight: '8px' }}></i> Incorrect Details? Rescan Identity
-                                </button>
+
                             </div>
                             <div className="form-group">
                                 <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>
