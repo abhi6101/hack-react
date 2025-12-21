@@ -1,5 +1,14 @@
 export const DISTRICT_STATE_MAP = {
-    // 1. INDORE & NEIGHBORS (Highest Priority - 50km radius)
+    // 1. INDORE LOCAL AREAS & NEIGHBORS (Highest Priority)
+    // Local Indore Areas (Often printed on ID cards)
+    'VIJAY NAGAR': 'Madhya Pradesh', 'BHAWARKUA': 'Madhya Pradesh', 'RAJENDRA NAGAR': 'Madhya Pradesh',
+    'PALASIA': 'Madhya Pradesh', 'RAJWAADA': 'Madhya Pradesh', 'KHAJRANA': 'Madhya Pradesh',
+    'SUDAMA NAGAR': 'Madhya Pradesh', 'ANNAPURNA': 'Madhya Pradesh', 'NANDA NAGAR': 'Madhya Pradesh',
+    'MUSAKHEDI': 'Madhya Pradesh', 'RAU': 'Madhya Pradesh', 'MHOW': 'Madhya Pradesh',
+    'PITHAMPUR': 'Madhya Pradesh', 'SANWER': 'Madhya Pradesh', 'DEPALPUR': 'Madhya Pradesh',
+    'HATOD': 'Madhya Pradesh', 'MANPUR': 'Madhya Pradesh', 'SIMROL': 'Madhya Pradesh',
+
+    // Major Neighbors (50km radius)
     'INDORE': 'Madhya Pradesh',
     'DEWAS': 'Madhya Pradesh',
     'UJJAIN': 'Madhya Pradesh',
