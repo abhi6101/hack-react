@@ -46,6 +46,8 @@ const Register = () => {
 
     const [isScanning, setIsScanning] = useState(false);
     const [failedVerificationAttempts, setFailedVerificationAttempts] = useState(0); // Security: Track failed attempts
+    const [deviceFingerprint, setDeviceFingerprint] = useState(''); // Security: Device binding
+    const [verificationStatus, setVerificationStatus] = useState(null); // Backend verification status
 
     // --- Camera State ---
     const [showCamera, setShowCamera] = useState(false);
@@ -84,8 +86,28 @@ const Register = () => {
         }
     };
 
+    // --- Device Fingerprinting (Security) ---
+    const generateDeviceFingerprint = () => {
+        const data = [
+            navigator.userAgent,
+            navigator.language,
+            screen.width,
+            screen.height,
+            screen.colorDepth,
+            new Date().getTimezoneOffset(),
+            navigator.hardwareConcurrency || 'unknown',
+            navigator.platform
+        ].join('|');
+
+        // Simple base64 encoding (in production, use crypto.subtle.digest for SHA-256)
+        return btoa(data);
+    };
+
     React.useEffect(() => {
         captureLocation();
+        // Generate device fingerprint on mount
+        const fingerprint = generateDeviceFingerprint();
+        setDeviceFingerprint(fingerprint);
     }, []);
 
     const handleChange = (e) => {
@@ -292,9 +314,15 @@ const Register = () => {
                 case 'SELFIE':
                     return {
                         title: "Step 3: Auto-Selfie",
-                        desc: "Stay still. The AI will automatically capture your selfie in 2 seconds.",
+                        desc: "Stay still. The AI will automatically capture your selfie in 1 second.",
                         btnText: "Capturing...",
                         btnAction: null // Automated
+                    };
+                case 'DEVICE_MISMATCH_ERROR':
+                    return {
+                        title: "🔒 Security Alert",
+                        desc: "Device mismatch detected. This ID was verified on a different device.",
+                        isError: true
                     };
                 default:
                     return null;
@@ -352,6 +380,25 @@ const Register = () => {
                                 <i className="fas fa-redo-alt"></i> {content.secondaryBtnText}
                             </button>
                         )}
+                    </div>
+                ) : content.isError ? (
+                    // Error screen for device mismatch
+                    <div style={{ maxWidth: '500px', margin: '0 auto', textAlign: 'center' }}>
+                        <div style={{ padding: '3rem 2rem', border: '2px solid rgba(239, 68, 68, 0.5)', borderRadius: '16px', background: 'rgba(239, 68, 68, 0.1)', marginBottom: '1.5rem' }}>
+                            <i className="fas fa-lock" style={{ fontSize: '4rem', color: '#ef4444', marginBottom: '1rem' }}></i>
+                            <h3 style={{ color: '#ef4444', marginBottom: '1rem' }}>Security Alert</h3>
+                            <p style={{ color: '#aaa', marginBottom: '1.5rem' }}>
+                                {error || "This ID card has already been verified on a different device. If you verified on another device and want to complete registration here, please contact support."}
+                            </p>
+                            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px', marginBottom: '1.5rem' }}>
+                                <h4 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#fff' }}>Contact Support:</h4>
+                                <p style={{ margin: '0.5rem 0', color: '#aaa' }}>📧 Email: support@ipsacademy.edu</p>
+                                <p style={{ margin: '0.5rem 0', color: '#aaa' }}>📞 Phone: +91-XXXX-XXXX</p>
+                            </div>
+                            <button className="btn" style={{ width: '100%', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => navigate('/')}>
+                                <i className="fas fa-home"></i> Go to Home
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <div style={{ maxWidth: '400px', margin: '0 auto' }}>
@@ -690,6 +737,72 @@ const Register = () => {
         }, 'image/jpeg');
     };
 
+    // SECURITY: Check backend verification status
+    const checkVerificationStatus = async (cleanedMatch) => {
+        try {
+            setScanStatus("Checking verification status...");
+
+            const response = await fetch(`${API_BASE_URL}/verification/check-status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    computerCode: cleanedMatch.code,
+                    deviceFingerprint: deviceFingerprint,
+                    ipAddress: location?.lat || 'unknown', // You can get actual IP from backend
+                    location: location
+                })
+            });
+
+            const result = await response.json();
+            setVerificationStatus(result);
+
+            // Handle different scenarios
+            switch (result.status) {
+                case 'ALREADY_REGISTERED':
+                    // User already has an account
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("This account is already registered. Redirecting to login."));
+                    setError(`Account already exists. Username: ${result.userData.username}`);
+                    setTimeout(() => navigate('/login'), 3000);
+                    break;
+
+                case 'VERIFIED_NOT_REGISTERED':
+                    // User completed verification before, skip to registration form
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("Verification found. Proceeding to registration."));
+                    setScannedData(result.data);
+                    setAadharData({ aadharNumber: result.data.aadharNumber });
+                    setSelfieImg(result.data.selfieImageUrl);
+                    setIdCameraImg(result.data.idCardImageUrl);
+                    setAadharCameraImg(result.data.aadharImageUrl);
+                    setScanBuffer([]); stopCamera();
+                    setStep(4); // Skip to registration form
+                    break;
+
+                case 'DEVICE_MISMATCH':
+                    // Security alert: Different device detected
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("Security alert. Device mismatch detected. Contact support."));
+                    setError(result.message);
+                    setVerificationStage('DEVICE_MISMATCH_ERROR');
+                    setScanBuffer([]); stopCamera();
+                    break;
+
+                case 'NEW_USER':
+                default:
+                    // Continue normal verification flow
+                    setScannedData(cleanedMatch);
+                    setIdCameraImg(URL.createObjectURL(new Blob([await (await fetch(idCameraImg || '')).arrayBuffer()])));
+                    setScanBuffer([]); stopCamera();
+                    setVerificationStage('ID_VERIFY_DATA');
+                    break;
+            }
+        } catch (error) {
+            console.error('Verification check failed:', error);
+            // If backend check fails, continue with normal flow (fallback)
+            setScannedData(cleanedMatch);
+            setScanBuffer([]); stopCamera();
+            setVerificationStage('ID_VERIFY_DATA');
+        }
+    };
+
     const finalizeDeepVerification = (buffer, finalBlob, type) => {
         const names = buffer.map(b => b.name).filter(n => n !== "Detected Name");
         if (names.length === 0) names.push("Detected Name");
@@ -735,10 +848,9 @@ const Register = () => {
                 name: cleanOCRName(bestMatch.name),
                 fatherName: cleanOCRName(bestMatch.fatherName)
             };
-            setScannedData(cleanedMatch);
-            setIdCameraImg(URL.createObjectURL(finalBlob));
-            setScanBuffer([]); stopCamera();
-            setVerificationStage('ID_VERIFY_DATA');
+
+            // SECURITY: Check backend for existing verification/registration
+            checkVerificationStatus(cleanedMatch, finalBlob);
         } else if (type === 'AADHAR') {
             const idName = (scannedData?.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
             const aadharName = (bestMatch.name || "").toUpperCase().replace(/[^A-Z]/g, '').trim();
@@ -819,7 +931,7 @@ const Register = () => {
             setScanStatus("AI: Detecting Face...");
             const timer = setTimeout(() => {
                 takeSelfie();
-            }, 2000); // 2 second delay for alignment
+            }, 1000); // 1 second delay for alignment
             return () => clearTimeout(timer);
         }
     }, [verificationStage, showCamera, isScanning]);
