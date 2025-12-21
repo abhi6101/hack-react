@@ -508,13 +508,16 @@ const StudentDashboard = () => {
                                         onChange={(e) => handleFieldChange('mobilePrimary', e.target.value)}
                                         style={{
                                             width: '100%',
-                                            background: 'rgba(0, 0, 0, 0.2)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            background: '#fff',
+                                            color: '#000',
+                                            border: '2px solid #3b82f6',
                                             borderRadius: '8px',
-                                            padding: '0.5rem',
-                                            color: '#fff',
-                                            fontSize: '1rem'
+                                            padding: '0.75rem',
+                                            fontSize: '1rem',
+                                            outline: 'none',
+                                            fontWeight: '600'
                                         }}
+                                        placeholder="Enter Mobile Number"
                                     />
                                 ) : (
                                     <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobilePrimary || user?.phone || 'Not provided'}</p>
@@ -533,16 +536,18 @@ const StudentDashboard = () => {
                                             type="text"
                                             value={editedData.mobileSecondary || ''}
                                             onChange={(e) => handleFieldChange('mobileSecondary', e.target.value)}
-                                            placeholder="Add secondary mobile"
                                             style={{
                                                 width: '100%',
-                                                background: 'rgba(0, 0, 0, 0.2)',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                background: '#fff',
+                                                color: '#000',
+                                                border: '2px solid #3b82f6',
                                                 borderRadius: '8px',
-                                                padding: '0.5rem',
-                                                color: '#fff',
-                                                fontSize: '1rem'
+                                                padding: '0.75rem',
+                                                fontSize: '1rem',
+                                                outline: 'none',
+                                                fontWeight: '600'
                                             }}
+                                            placeholder="Enter Secondary Mobile"
                                         />
                                     ) : (
                                         <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobileSecondary}</p>
@@ -556,25 +561,7 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Branch</strong>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        value={user?.branch || ''}
-                                        readOnly
-                                        style={{
-                                            width: '100%',
-                                            background: 'rgba(0, 0, 0, 0.2)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                                            borderRadius: '8px',
-                                            padding: '0.5rem',
-                                            color: 'rgba(255, 255, 255, 0.7)',
-                                            fontSize: '1rem',
-                                            cursor: 'not-allowed'
-                                        }}
-                                    />
-                                ) : (
-                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.branch || 'Not set'}</p>
-                                )}
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.branch || 'Not set'}</p>
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',
@@ -583,25 +570,7 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Semester</strong>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        value={user?.semester || ''}
-                                        readOnly
-                                        style={{
-                                            width: '100%',
-                                            background: 'rgba(0, 0, 0, 0.2)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                                            borderRadius: '8px',
-                                            padding: '0.5rem',
-                                            color: 'rgba(255, 255, 255, 0.7)',
-                                            fontSize: '1rem',
-                                            cursor: 'not-allowed'
-                                        }}
-                                    />
-                                ) : (
-                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.semester || 'Not set'}</p>
-                                )}
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.semester || 'Not set'}</p>
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',
@@ -635,13 +604,16 @@ const StudentDashboard = () => {
                                         onChange={(e) => handleFieldChange('enrollmentNumber', e.target.value)}
                                         style={{
                                             width: '100%',
-                                            background: 'rgba(0, 0, 0, 0.2)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            background: '#fff',
+                                            color: '#000',
+                                            border: '2px solid #3b82f6',
                                             borderRadius: '8px',
-                                            padding: '0.5rem',
-                                            color: '#fff',
-                                            fontSize: '1rem'
+                                            padding: '0.75rem',
+                                            fontSize: '1rem',
+                                            outline: 'none',
+                                            fontWeight: '600'
                                         }}
+                                        placeholder="Enter Enrollment Number"
                                     />
                                 ) : (
                                     <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.enrollmentNumber || 'Not set'}</p>
@@ -656,18 +628,21 @@ const StudentDashboard = () => {
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Start Year</strong>
                                 {isEditing ? (
                                     <input
-                                        type="text"
+                                        type="number"
                                         value={editedData.startYear || ''}
                                         onChange={(e) => handleFieldChange('startYear', e.target.value)}
                                         style={{
                                             width: '100%',
-                                            background: 'rgba(0, 0, 0, 0.2)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            background: '#fff',
+                                            color: '#000',
+                                            border: '2px solid #3b82f6',
                                             borderRadius: '8px',
-                                            padding: '0.5rem',
-                                            color: '#fff',
-                                            fontSize: '1rem'
+                                            padding: '0.75rem',
+                                            fontSize: '1rem',
+                                            outline: 'none',
+                                            fontWeight: '600'
                                         }}
+                                        placeholder="Year"
                                     />
                                 ) : (
                                     <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.startYear || 'Not set'}</p>
