@@ -923,6 +923,78 @@ const Register = () => {
     };
 
     const finalizeDeepVerification = (buffer, finalBlob, type) => {
+        const cleanAddress = (rawAddr) => {
+            if (!rawAddr) return "Not Detected";
+            let addr = rawAddr.trim();
+
+            // 1. Remove OCR noise
+            addr = addr.replace(/Director\/Principal|Director|Principal|Direclor/gi, '').replace(/[_\-]{2,}/g, '').replace(/Da\s?,/g, '').trim();
+
+            // 2. Remove trailing commas/spaces
+            addr = addr.replace(/[,\s]+$/, '');
+
+            // 3. Smart State Mapping (Major Districts + Educational Hubs)
+            const DISTRICT_STATE_MAP = {
+                // Madhya Pradesh (Focus)
+                'SEHORE': 'Madhya Pradesh', 'INDORE': 'Madhya Pradesh', 'BHOPAL': 'Madhya Pradesh', 'UJJAIN': 'Madhya Pradesh',
+                'DEWAS': 'Madhya Pradesh', 'RAISEN': 'Madhya Pradesh', 'VIDISHA': 'Madhya Pradesh', 'DHAR': 'Madhya Pradesh',
+                'RATLAM': 'Madhya Pradesh', 'KHANDWA': 'Madhya Pradesh', 'RAJGARH': 'Madhya Pradesh', 'SHAJAPUR': 'Madhya Pradesh',
+                'JABALPUR': 'Madhya Pradesh', 'GWALIOR': 'Madhya Pradesh', 'SAGAR': 'Madhya Pradesh', 'SATNA': 'Madhya Pradesh',
+
+                // Maharashtra
+                'MUMBAI': 'Maharashtra', 'PUNE': 'Maharashtra', 'NAGPUR': 'Maharashtra', 'NASHIK': 'Maharashtra',
+                'THANE': 'Maharashtra', 'AURANGABAD': 'Maharashtra', 'SOLAPUR': 'Maharashtra',
+
+                // Uttar Pradesh
+                'LUCKNOW': 'Uttar Pradesh', 'KANPUR': 'Uttar Pradesh', 'VARANASI': 'Uttar Pradesh', 'AGRA': 'Uttar Pradesh',
+                'NOIDA': 'Uttar Pradesh', 'GHAZIABAD': 'Uttar Pradesh', 'PRAYAGRAJ': 'Uttar Pradesh',
+
+                // Rajasthan
+                'JAIPUR': 'Rajasthan', 'JODHPUR': 'Rajasthan', 'KOTA': 'Rajasthan', 'UDAIPUR': 'Rajasthan', 'AJMER': 'Rajasthan',
+
+                // Gujarat
+                'AHMEDABAD': 'Gujarat', 'SURAT': 'Gujarat', 'VADODARA': 'Gujarat', 'RAJKOT': 'Gujarat',
+
+                // Delhi
+                'DELHI': 'Delhi', 'NEW DELHI': 'Delhi',
+
+                // Karnataka
+                'BANGALORE': 'Karnataka', 'BENGALURU': 'Karnataka', 'MYSORE': 'Karnataka', 'MYSURU': 'Karnataka',
+
+                // Tamil Nadu
+                'CHENNAI': 'Tamil Nadu', 'COIMBATORE': 'Tamil Nadu', 'MADURAI': 'Tamil Nadu',
+
+                // Telangana & AP
+                'HYDERABAD': 'Telangana', 'WARANGAL': 'Telangana', 'VISAKHAPATNAM': 'Andhra Pradesh', 'VIJAYAWADA': 'Andhra Pradesh',
+
+                // West Bengal
+                'KOLKATA': 'West Bengal', 'HOWRAH': 'West Bengal', 'DARJEELING': 'West Bengal',
+
+                // Others
+                'CHANDIGARH': 'Chandigarh', 'LUDHIANA': 'Punjab', 'AMRITSAR': 'Punjab',
+                'PATNA': 'Bihar', 'RANCHI': 'Jharkhand', 'RAIPUR': 'Chhattisgarh', 'BHILAI': 'Chhattisgarh',
+                'BHUBANESWAR': 'Odisha', 'CUTTACK': 'Odisha',
+                'GUWAHATI': 'Assam', 'SHILLONG': 'Meghalaya'
+            };
+
+            const upperAddr = addr.toUpperCase();
+            let detectedState = '';
+
+            for (const [district, state] of Object.entries(DISTRICT_STATE_MAP)) {
+                if (upperAddr.includes(district)) {
+                    detectedState = state;
+                    // Ensure proper casing for district if found (optional, but keeps it clean)
+                    // If address doesn't already have the state, we can append it?
+                    if (!upperAddr.includes(state.toUpperCase())) {
+                        addr = `${addr}, ${state}`;
+                    }
+                    break;
+                }
+            }
+
+            return addr.replace(/\s+/g, ' ').replace(/, \./g, '.').trim();
+        };
+
         const names = buffer.map(b => b.name).filter(n => n !== "Detected Name");
         if (names.length === 0) names.push("Detected Name");
 
@@ -964,7 +1036,8 @@ const Register = () => {
             const cleanedMatch = {
                 ...bestMatch,
                 name: cleanOCRName(bestMatch.name),
-                fatherName: cleanOCRName(bestMatch.fatherName)
+                fatherName: cleanOCRName(bestMatch.fatherName),
+                address: cleanAddress(bestMatch.address)
             };
 
             // Move to Review Screen (Check happens on Button Click now)
