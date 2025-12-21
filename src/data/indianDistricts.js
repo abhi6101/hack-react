@@ -15,6 +15,39 @@ export const DISTRICT_STATE_MAP = {
     'DHAR': 'Madhya Pradesh',
     'SEHORE': 'Madhya Pradesh',
     'SHAJAPUR': 'Madhya Pradesh',
+
+    // 1.1 TEHSIL CLUSTERS (Tehsil + ~10km Radius Villages)
+
+    // ICHHAWAR CLUSTER (Sehore)
+    'ICHHAWAR': 'Madhya Pradesh', 'DIWADIYA': 'Madhya Pradesh', 'BHOURA': 'Madhya Pradesh',
+    'ARYA': 'Madhya Pradesh', 'JHALKI': 'Madhya Pradesh', 'MOLGA': 'Madhya Pradesh',
+    'DHABLA': 'Madhya Pradesh', 'VEERPUR': 'Madhya Pradesh', 'NAYA PURA': 'Madhya Pradesh',
+    'RAMNAGAR': 'Madhya Pradesh', 'AMLAHA': 'Madhya Pradesh',
+
+    // ASHTA CLUSTER (Sehore)
+    'ASHTA': 'Madhya Pradesh', 'JAWAR': 'Madhya Pradesh', 'MAINA': 'Madhya Pradesh',
+    'KOTHRI': 'Madhya Pradesh', 'METWADA': 'Madhya Pradesh', 'PAGARIA': 'Madhya Pradesh',
+    'KHAMKHEDA': 'Madhya Pradesh', 'SIDDIQGANJ': 'Madhya Pradesh',
+
+    // SEHORE RURAL CLUSTERS
+    'BILKISGANJ': 'Madhya Pradesh', 'SHYAMNAPUR': 'Madhya Pradesh', 'DORAHA': 'Madhya Pradesh',
+    'AHMEDPUR': 'Madhya Pradesh', 'BIJORI': 'Madhya Pradesh', 'MOGRA': 'Madhya Pradesh',
+    'SHYAMPUR': 'Madhya Pradesh',
+
+    // INDORE RURAL CLUSTERS
+    'HATOD': 'Madhya Pradesh', 'SAWER': 'Madhya Pradesh', 'DEPALPUR': 'Madhya Pradesh',
+    'MANPUR': 'Madhya Pradesh', 'SIMROL': 'Madhya Pradesh', 'KAMPEL': 'Madhya Pradesh',
+    'KHUDEL': 'Madhya Pradesh', 'BETMA': 'Madhya Pradesh', 'GAUTAMPURA': 'Madhya Pradesh',
+    'HASALPUR': 'Madhya Pradesh', 'PEDMI': 'Madhya Pradesh',
+
+    // DEWAS RURAL CLUSTERS
+    'TONK KHURD': 'Madhya Pradesh', 'SONKATCH': 'Madhya Pradesh', 'BHORASA': 'Madhya Pradesh',
+    'PIPALRAWAN': 'Madhya Pradesh', 'KATEGAON': 'Madhya Pradesh', 'LOHARDA': 'Madhya Pradesh',
+    'DOUBLE CHOWKI': 'Madhya Pradesh',
+
+    // UJJAIN RURAL CLUSTERS
+    'NARWAR': 'Madhya Pradesh', 'TAJPUR': 'Madhya Pradesh', 'GHATIA': 'Madhya Pradesh',
+    'PANBIHAR': 'Madhya Pradesh', 'UNHEL': 'Madhya Pradesh',
     'KHANDWA': 'Madhya Pradesh',
     'KHARGONE': 'Madhya Pradesh',
     'BARWANI': 'Madhya Pradesh',
