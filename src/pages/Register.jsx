@@ -1054,7 +1054,7 @@ const Register = () => {
 
             // 2. CRITICAL CHECK: If we didn't find the name matching the ID OR No Numbers found
             if (!cleanedText || cleanedText.length < 3 || !hasNumbers || !nameMatchScore) {
-                setScanStatus("⚠️ Poor Scan. Valid Name/Number not found. Rescanning...");
+                setScanStatus("⚠️ Poor Scan. Valid Name/Number not found. Retrying in 2s...");
                 setScanBuffer(prev => [...prev.slice(-4), "Bad Scan"]); // Keep buffer small to keep trying
                 setIsScanning(false);
                 return; // SKIP PROCEEDING
