@@ -1263,7 +1263,11 @@ const Register = () => {
                                                     required
                                                     placeholder="Enter your enrollment number"
                                                     value={formData.enrollmentNumber}
-                                                    onChange={handleChange}
+                                                    onChange={(e) => {
+                                                        // Enforce Alphanumeric Only and Uppercase
+                                                        const cleanVal = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                                                        setFormData(prev => ({ ...prev, enrollmentNumber: cleanVal }));
+                                                    }}
                                                     style={{ textTransform: 'uppercase' }}
                                                 />
                                                 <small>Your official enrollment number from the institute</small>
