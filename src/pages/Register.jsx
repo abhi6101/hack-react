@@ -928,23 +928,31 @@ const Register = () => {
             if (!rawAddr) return "Not Detected";
             let addr = rawAddr.trim();
 
-            // 1. Remove OCR noise
-            addr = addr.replace(/Director\/Principal|Director|Principal|Direclor/gi, '').replace(/[_\-]{2,}/g, '').replace(/Da\s?,/g, '').trim();
+            // 1. Remove OCR noise & common artifacts
+            addr = addr.replace(/Director\/Principal|Director|Principal|Direclor|Direc|Signature|Govt|India/gi, '')
+                .replace(/[;:{}_=]/g, '')
+                .replace(/[_\\-]{2,}/g, '')
+                .replace(/\b(GRAI|GRM|GRMA)\b/gi, 'Gram') // Fix OCR typos for Village
+                .replace(/\b(DIST|DISTT|DT)\b/gi, 'Dist.')
+                .replace(/\b(TEH|TAH)\b/gi, 'Tehsil')
+                .replace(/Da\s?,/g, '')
+                .replace(/,\s*[iIlL1!]\s*,/g, ',') // Remove separated single chars like ", i ,"
+                .replace(/,\s*[iIlL1!] /g, ', ')   // Remove trailing random chars
+                .trim();
 
             // 2. Remove trailing commas/spaces
-            addr = addr.replace(/[,\s]+$/, '');
+            addr = addr.replace(/[,\\s]+$/, '');
+            addr = addr.replace(/^[,\\s]+/, '');
 
             // 3. Smart State Mapping (Using imported complete map)
-
-
             const upperAddr = addr.toUpperCase();
             let detectedState = '';
 
             for (const [district, state] of Object.entries(DISTRICT_STATE_MAP)) {
-                if (upperAddr.includes(district)) {
+                if (upperAddr.includes(district)) { // Check only for district name to avoid false positives
                     detectedState = state;
-                    // Ensure proper casing for district if found (optional, but keeps it clean)
-                    // If address doesn't already have the state, we can append it?
+
+                    // Prevent Duplicate State Appending if it's already there
                     if (!upperAddr.includes(state.toUpperCase())) {
                         addr = `${addr}, ${state}`;
                     }
@@ -952,7 +960,24 @@ const Register = () => {
                 }
             }
 
-            return addr.replace(/\s+/g, ' ').replace(/, \./g, '.').trim();
+            // 4. Final Cleanup: Deduplicate words (e.g. "Sehore, Sehore")
+            const words = addr.split(/[,\s]+/);
+            const uniqueWords = [];
+            words.forEach(word => {
+                const cleanWord = word.replace(/[^a-zA-Z0-9]/g, '');
+                if (cleanWord.length > 2 && !uniqueWords.some(w => w.toLowerCase().includes(cleanWord.toLowerCase()))) {
+                    uniqueWords.push(word);
+                } else if (cleanWord.length <= 2) {
+                    uniqueWords.push(word); // Keep short words/numbers
+                }
+            });
+
+            // Re-assemble (Simple dedup strategy) - Better approach for "Sehore, Sehore"
+            let finalParts = addr.split(',').map(p => p.trim()).filter(p => p.length > 0);
+            finalParts = [...new Set(finalParts)]; // Remove exact duplicates
+            addr = finalParts.join(', ');
+
+            return addr.replace(/\s+/g, ' ').replace(/, \./g, '.').replace(/,,+/g, ',').trim();
         };
 
         const names = buffer.map(b => b.name).filter(n => n !== "Detected Name");
