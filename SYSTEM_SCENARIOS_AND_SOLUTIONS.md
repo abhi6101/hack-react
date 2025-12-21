@@ -39,6 +39,13 @@ This document outlines every possible user scenario in the Registration & Dashbo
     1.  **Anti-Spoofing:** Detects pixel patterns/glare (simulated logic).
     2.  **Outcome:** Alerts "Digital Copy Detected" and requires a physical card.
 
+### F. Double Verification Protection
+*   **Possibility:** User passes Step 1 (ID Scan) with a new ID, but uses an *already registered* Aadhar Card in Step 2.
+*   **System Action (Solution):**
+    1.  **Step 2 Check:** The system re-checks the database using the **Aadhar Number**.
+    2.  **Outcome:** Even if ID was new, if the Aadhar is duplicate, the system alerts "Account Exists" and **Redirects to Login**.
+    3.  **Security:** This prevents users from creating multiple accounts using different Student IDs but the same Government ID.
+
 ---
 
 ## 2. Dashboard Scenarios

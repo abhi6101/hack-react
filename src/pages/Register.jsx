@@ -507,7 +507,7 @@ const Register = () => {
                 computerCode: formData.role === 'USER' ? formData.computerCode : undefined,
                 enrollmentNumber: formData.role === 'USER' ? formData.enrollmentNumber : undefined,
                 startYear: formData.role === 'USER' ? formData.startYear : undefined,
-                aadharNumber: formData.role === 'USER' ? formData.aadharNumber : undefined,
+                aadharNumber: formData.role === 'USER' ? formData.aadharNumber?.replace(/\D/g, '') : undefined,
 
                 // Verified Identity Data (from ID card)
                 fullName: scannedData?.name,
@@ -522,7 +522,7 @@ const Register = () => {
                 mobileSource: scannedData?.mobileCount > 0 ? 'ID_CARD_AUTO' : 'MANUAL_ENTRY',
 
                 // Verified Identity Data (from Aadhar)
-                aadharNumber: aadharData?.aadharNumber,
+
 
                 // Verification Metadata
                 verificationData: {
@@ -765,7 +765,8 @@ const Register = () => {
 
                         extracted = {
                             name: matchedName,
-                            aadharNumber: aadharNumMatch ? aadharNumMatch[0] : "xxxx-xxxx-xxxx"
+                            // Standardize: Remove spaces/dashes to get pure 12 digits
+                            aadharNumber: aadharNumMatch ? aadharNumMatch[0].replace(/\D/g, '') : "xxxx-xxxx-xxxx"
                         };
                     }
                 }
@@ -815,7 +816,7 @@ const Register = () => {
             };
 
             if (checkType === 'AADHAR' && cleanedMatch.aadharNumber) {
-                payload.aadharNumber = cleanedMatch.aadharNumber;
+                payload.aadharNumber = cleanedMatch.aadharNumber.replace(/\D/g, '');
             }
 
             const response = await fetch(`${API_BASE_URL}/verification/check-status`, {
