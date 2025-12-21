@@ -45,9 +45,113 @@ export const DISTRICT_STATE_MAP = {
     'PIPALRAWAN': 'Madhya Pradesh', 'KATEGAON': 'Madhya Pradesh', 'LOHARDA': 'Madhya Pradesh',
     'DOUBLE CHOWKI': 'Madhya Pradesh',
 
+    // ------------------------------------------------------------------
+    // INDORE REGION (~200km Radius) - VILLAGE & TEHSIL CLUSTERS
+    // ------------------------------------------------------------------
+
+    // 1. INDORE DISTRICT
+    'SANWER': 'Madhya Pradesh', 'CHANDRAWATIGANJ': 'Madhya Pradesh', 'KSHIPRA': 'Madhya Pradesh', 'MANGLIYA': 'Madhya Pradesh', 'AJNOD': 'Madhya Pradesh',
+    'DEPALPUR': 'Madhya Pradesh', 'GAUTAMPURA': 'Madhya Pradesh', 'BETMA': 'Madhya Pradesh', 'HASALPUR': 'Madhya Pradesh',
+    'MHOW': 'Madhya Pradesh', 'KISHANGANJ': 'Madhya Pradesh', 'KODARIYA': 'Madhya Pradesh', 'JAMLI': 'Madhya Pradesh', 'BADGONA': 'Madhya Pradesh',
+
+    // 2. DEWAS DISTRICT
+    'SONKATCH': 'Madhya Pradesh', 'BHORASA': 'Madhya Pradesh', 'PIPALRAWAN': 'Madhya Pradesh', 'GANDHARVPURI': 'Madhya Pradesh',
+    'BAGLI': 'Madhya Pradesh', 'UDAINAGAR': 'Madhya Pradesh', 'CHAPDA': 'Madhya Pradesh', 'PUNJAPURA': 'Madhya Pradesh', 'HATPIPLIYA': 'Madhya Pradesh',
+    'KANNOD': 'Madhya Pradesh', 'SATWAS': 'Madhya Pradesh', 'LOHARDA': 'Madhya Pradesh', 'KANTAPHOD': 'Madhya Pradesh',
+    'TONK KHURD': 'Madhya Pradesh', 'CHIRAWAD': 'Madhya Pradesh',
+    'KHATEGAON': 'Madhya Pradesh', 'NEMAWAR': 'Madhya Pradesh', 'HARANGAON': 'Madhya Pradesh',
+
+    // 3. UJJAIN DISTRICT
+    'NAGDA': 'Madhya Pradesh', 'UNHEL': 'Madhya Pradesh', 'RUPETA': 'Madhya Pradesh',
+    'BADNAGAR': 'Madhya Pradesh', 'INGORIA': 'Madhya Pradesh', 'RUNIJA': 'Madhya Pradesh',
+    'TARANA': 'Madhya Pradesh', 'MAKDON': 'Madhya Pradesh', 'KAYTHA': 'Madhya Pradesh',
+    'MAHIDPUR': 'Madhya Pradesh', 'JHARDA': 'Madhya Pradesh', 'GHOSLA': 'Madhya Pradesh',
+    'KHACHROD': 'Madhya Pradesh', 'BHATPACHLANA': 'Madhya Pradesh',
+
+    // 4. DHAR DISTRICT
+    'BADNAWAR': 'Madhya Pradesh', 'KOD': 'Madhya Pradesh', 'BIDWAL': 'Madhya Pradesh', 'KANWAN': 'Madhya Pradesh',
+    'SARDARPUR': 'Madhya Pradesh', 'RAJGARH': 'Madhya Pradesh', 'AMJHERA': 'Madhya Pradesh', 'DASAI': 'Madhya Pradesh',
+    'MANAWAR': 'Madhya Pradesh', 'SINGHANA': 'Madhya Pradesh', 'BAKANER': 'Madhya Pradesh',
+    'DHARAMPURI': 'Madhya Pradesh', 'DHAMNOD': 'Madhya Pradesh', 'SUNDREL': 'Madhya Pradesh',
+    'KUKSHI': 'Madhya Pradesh', 'BAGH': 'Madhya Pradesh', 'DAHI': 'Madhya Pradesh',
+    'GANDHWANI': 'Madhya Pradesh', 'JEERABAD': 'Madhya Pradesh',
+
+    // 5. SEHORE DISTRICT (Extended)
+    'NASRULLAGANJ': 'Madhya Pradesh', 'BHERUNDA': 'Madhya Pradesh', 'LADKUI': 'Madhya Pradesh', 'GOPALPUR': 'Madhya Pradesh', 'CHHIPANER': 'Madhya Pradesh',
+    'BUDNI': 'Madhya Pradesh', 'SHAHGANJ': 'Madhya Pradesh', 'BAKARA': 'Madhya Pradesh', 'JAHANPUR': 'Madhya Pradesh',
+    'SHYAMPUR': 'Madhya Pradesh', 'DORAHA': 'Madhya Pradesh', 'AHMEDPUR': 'Madhya Pradesh',
+
+    // 6. SHAJAPUR & AGAR DISTRICTS
+    'SHAJAPUR': 'Madhya Pradesh', 'BERCHA': 'Madhya Pradesh', 'MAKSI': 'Madhya Pradesh',
+    'SHUJALPUR': 'Madhya Pradesh', 'AKODIA': 'Madhya Pradesh', 'POLAYKALAN': 'Madhya Pradesh',
+    'KALAPIPAL': 'Madhya Pradesh', 'KHOKRA': 'Madhya Pradesh',
+    'AGAR': 'Madhya Pradesh', 'BADOD': 'Madhya Pradesh', 'KANAD': 'Madhya Pradesh',
+    'SUSNER': 'Madhya Pradesh', 'SOYAT KALAN': 'Madhya Pradesh',
+    'NALKHERA': 'Madhya Pradesh', 'CHHAPIHEDA': 'Madhya Pradesh',
+
+    // 7. RATLAM DISTRICT
+    'JAORA': 'Madhya Pradesh', 'PIPLODA': 'Madhya Pradesh', 'BARAWADA': 'Madhya Pradesh',
+    'ALOT': 'Madhya Pradesh', 'TAL': 'Madhya Pradesh', 'KHARWA KALAN': 'Madhya Pradesh',
+    'SAILANA': 'Madhya Pradesh', 'BAJNA': 'Madhya Pradesh', 'RAOTI': 'Madhya Pradesh',
+
+    // 8. KHANDWA (East Nimar)
+    'PANDHANA': 'Madhya Pradesh', 'CHHEGAON MAKHAN': 'Madhya Pradesh',
+    'PUNASA': 'Madhya Pradesh', 'MUNDI': 'Madhya Pradesh', 'OMKARESHWAR': 'Madhya Pradesh',
+    'HARSUD': 'Madhya Pradesh', 'KHALWA': 'Madhya Pradesh',
+
+    // 9. KHARGONE (West Nimar)
+    'MAHESHWAR': 'Madhya Pradesh', 'MANDLESHWAR': 'Madhya Pradesh', 'DHAMANGAON': 'Madhya Pradesh',
+    'KASRAWAD': 'Madhya Pradesh', 'BALKWARA': 'Madhya Pradesh',
+    'SANAWAD': 'Madhya Pradesh', 'BARWAHA': 'Madhya Pradesh', 'BEDIA': 'Madhya Pradesh',
+    'BHIKANGAON': 'Madhya Pradesh', 'GOGAWAN': 'Madhya Pradesh',
+    'SEGAON': 'Madhya Pradesh', 'JULWANIA': 'Madhya Pradesh',
+
+    // 10. RAJGARH DISTRICT
+    'SARANGPUR': 'Madhya Pradesh', 'PACHORE': 'Madhya Pradesh',
+    'BIAORA': 'Madhya Pradesh', 'SUTHALIYA': 'Madhya Pradesh',
+    'NARSINGHGARH': 'Madhya Pradesh', 'BODA': 'Madhya Pradesh', 'KURAYAR': 'Madhya Pradesh',
+    'KHILCHIPUR': 'Madhya Pradesh', 'CHHAPIHEDA': 'Madhya Pradesh',
+    'ZEERAPUR': 'Madhya Pradesh', 'MACHALPUR': 'Madhya Pradesh',
+
+    // 11. HARDA DISTRICT
+    'HARDA': 'Madhya Pradesh', 'HANDIA': 'Madhya Pradesh',
+    'TIMARNI': 'Madhya Pradesh', 'RAHATGAON': 'Madhya Pradesh',
+    'KHIRKIYA': 'Madhya Pradesh', 'CHHIPABAD': 'Madhya Pradesh',
+
+    // 12. BARWANI DISTRICT
+    'SENDHWA': 'Madhya Pradesh', 'KHETIA': 'Madhya Pradesh', 'PANSEMAL': 'Madhya Pradesh',
+    'RAJPUR': 'Madhya Pradesh', 'ANJAD': 'Madhya Pradesh', 'PALSUD': 'Madhya Pradesh',
+    'THIKRI': 'Madhya Pradesh', 'PATI': 'Madhya Pradesh',
+
     // UJJAIN RURAL CLUSTERS
     'NARWAR': 'Madhya Pradesh', 'TAJPUR': 'Madhya Pradesh', 'GHATIA': 'Madhya Pradesh',
     'PANBIHAR': 'Madhya Pradesh', 'UNHEL': 'Madhya Pradesh',
+
+    // 1.2 MAJOR PANCHAYATS & RURAL HUBS (MP)
+    // Sehore Hubs
+    'REHTI': 'Madhya Pradesh', 'NASRULLAGANJ': 'Madhya Pradesh', 'BHERUNDA': 'Madhya Pradesh',
+    'BUDNI': 'Madhya Pradesh', 'BAKARA': 'Madhya Pradesh', 'SEMRI': 'Madhya Pradesh',
+    'SHAHGANJ': 'Madhya Pradesh', 'GOPALPUR': 'Madhya Pradesh', 'LADKUI': 'Madhya Pradesh',
+
+    // Indore Rural Hubs
+    'MHOWGAON': 'Madhya Pradesh', 'RANGWASA': 'Madhya Pradesh', 'TILLOR': 'Madhya Pradesh',
+    'PEDMI': 'Madhya Pradesh', 'KAMPEL': 'Madhya Pradesh', 'KHUDEL': 'Madhya Pradesh',
+
+    // Dewas Rural Hubs
+    'HATPIPLIYA': 'Madhya Pradesh', 'KARNAWAD': 'Madhya Pradesh', 'KANTAPHOD': 'Madhya Pradesh',
+    'SATWAS': 'Madhya Pradesh', 'LOHARDA': 'Madhya Pradesh', 'KHAATEGAON': 'Madhya Pradesh',
+
+    // Ujjain Rural Hubs
+    'MAKDON': 'Madhya Pradesh', 'JHARDA': 'Madhya Pradesh', 'KAYTHA': 'Madhya Pradesh',
+
+    // Other Regional Hubs
+    'MANDLESHWAR': 'Madhya Pradesh', 'DHAMNOD': 'Madhya Pradesh', 'MANAWAR': 'Madhya Pradesh',
+    'KUKSHI': 'Madhya Pradesh', 'BADNAWAR': 'Madhya Pradesh', 'SARDARPUR': 'Madhya Pradesh',
+    'JOBAT': 'Madhya Pradesh', 'PETLAWAD': 'Madhya Pradesh', 'THANDLA': 'Madhya Pradesh',
+    'ALOT': 'Madhya Pradesh', 'JAORA': 'Madhya Pradesh', 'SAILANA': 'Madhya Pradesh',
+    'AGAR': 'Madhya Pradesh', 'SUSNER': 'Madhya Pradesh', 'NALKHERA': 'Madhya Pradesh',
+    'SITAMAU': 'Madhya Pradesh', 'SHAMGARH': 'Madhya Pradesh', 'SUWASRA': 'Madhya Pradesh',
+    'GAROTH': 'Madhya Pradesh', 'BHANPURA': 'Madhya Pradesh',
     'KHANDWA': 'Madhya Pradesh',
     'KHARGONE': 'Madhya Pradesh',
     'BARWANI': 'Madhya Pradesh',
