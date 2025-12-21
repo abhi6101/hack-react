@@ -203,22 +203,7 @@ const Register = () => {
         if (showCamera) {
             return (
                 <div className="animate-fade-in text-center">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', padding: '0 1rem' }}>
-                        <h2 className="mb-4" style={{ textAlign: 'center', margin: 0 }}>Live Scan</h2>
-                        <span onClick={() => {
-                            if (window.confirm("Restart Verification Process?")) {
-                                setStep(1);
-                                setVerificationStage('ID_AUTO_CAPTURE');
-                                setScannedData(null);
-                                setAadharData(null);
-                                setIdCameraImg(null);
-                                setAadharCameraImg(null);
-                                setSelfieImg(null);
-                            }
-                        }} style={{ color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem', border: '1px solid #ef4444', padding: '4px 8px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <i className="fas fa-redo"></i> Restart
-                        </span>
-                    </div>
+                    <h2 className="mb-4" style={{ textAlign: 'center' }}>Live Scan</h2>
                     <div style={{ position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', border: '2px solid #667eea', background: '#000' }}>
                         <video ref={videoRef} style={{ width: '100%', display: 'block' }} autoPlay playsInline muted></video>
                         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
