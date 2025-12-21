@@ -360,34 +360,36 @@ const Register = () => {
                         <div style={{ display: 'flex', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'left' }}>
                             <img src={content.image} alt="Scanned Doc" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #444' }} />
                             <div style={{ fontSize: '0.9rem', width: '100%' }}>
-                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa' }}>Name:</strong> {content.data?.name}</p>
-                                {verificationStage === 'ID_VERIFY_DATA' ? (
-                                    <>
-                                        {content.data?.fatherName && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa' }}>Father:</strong> {content.data?.fatherName}</p>}
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.5rem' }}>
-                                            <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></div>
-                                            <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Branch:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></div>
-                                            <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></div>
-                                            {content.data?.mobileCount > 0 ? (
-                                                <>
-                                                    <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Mobile:</strong> <span style={{ color: '#4ade80' }}>+91 {content.data?.mobilePrimary}</span> <i className="fas fa-check-circle" style={{ color: '#4ade80', fontSize: '0.7rem' }}></i></div>
-                                                    {content.data?.mobileSecondary && <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Mobile 2:</strong> <span style={{ color: '#4ade80' }}>+91 {content.data?.mobileSecondary}</span> <i className="fas fa-check-circle" style={{ color: '#4ade80', fontSize: '0.7rem' }}></i></div>}
-                                                </>
-                                            ) : (
-                                                <div style={{ gridColumn: '1 / -1', background: 'rgba(251, 191, 36, 0.1)', padding: '0.5rem', borderRadius: '6px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
-                                                    <p style={{ margin: 0, fontSize: '0.75rem', color: '#fbbf24' }}><i className="fas fa-exclamation-triangle"></i> Mobile number not detected. Please rescan ID card.</p>
-                                                </div>
-                                            )}
-                                            {content.data?.address && <div style={{ gridColumn: '1 / -1', marginTop: '4px' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Address:</strong> <div style={{ color: '#ddd', fontSize: '0.8rem', lineHeight: '1.2' }}>{content.data?.address}</div></div>}
-                                            {content.data?.dob && <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>DOB:</strong> <span style={{ color: '#fff' }}>{content.data?.dob}</span></div>}
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div style={{ marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.5rem' }}>
-                                        <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>AADHAR NUMBER:</strong> <span style={{ color: '#4ade80', fontWeight: '600' }}>{content.data?.aadharNumber?.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')}</span></p>
-                                        <p style={{ fontSize: '0.75rem', color: '#4ade80', marginTop: '8px' }}><i className="fas fa-check-circle"></i> Identity Match Confirmed</p>
+                                {/* 1. Institution */}
+                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Institution:</strong> <span style={{ color: '#fff' }}>{content.data?.institution}</span></p>
+
+                                {/* 2. Session */}
+                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></p>
+
+                                {/* 3. Computer Code */}
+                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Computer Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></p>
+
+                                {/* 4. Name */}
+                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Name:</strong> {content.data?.name}</p>
+
+                                {/* 5. Father */}
+                                {content.data?.fatherName && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Father:</strong> {content.data?.fatherName}</p>}
+
+                                {/* 6. Course */}
+                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Course:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></p>
+
+                                {/* 7. Contact */}
+                                {content.data?.mobileCount > 0 ? (
+                                    <div style={{ margin: '0 0 0.4rem 0' }}>
+                                        <strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Contact:</strong> <span style={{ color: '#4ade80' }}>+91 {content.data?.mobilePrimary}</span>
+                                        {content.data?.mobileSecondary && <span style={{ color: '#4ade80', marginLeft: '0.5rem' }}>, +91 {content.data?.mobileSecondary}</span>}
                                     </div>
+                                ) : (
+                                    <p style={{ margin: '0 0 0.4rem 0', color: '#fbbf24', fontSize: '0.75rem' }}><i className="fas fa-exclamation-triangle"></i> Contact not detected</p>
                                 )}
+
+                                {/* 8. Address */}
+                                {content.data?.address && <div style={{ marginTop: '4px' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Address:</strong> <div style={{ color: '#ddd', fontSize: '0.8rem', lineHeight: '1.2' }}>{content.data?.address}</div></div>}
                             </div>
                         </div>
                         {content.btnText && (
@@ -731,6 +733,9 @@ const Register = () => {
                         // Extract DOB (DD-MM-YYYY pattern)
                         const dobMatch = text.match(/\b\d{2}-\d{2}-\d{4}\b/);
 
+                        // Extract Blood Group (BG)
+                        const bgMatch = text.match(/BG\s*[:|-]?\s*([A-Za-z+-]+)/i);
+
                         // Extract mobile numbers (Indian format: 10 digits starting with 6-9)
                         const mobilePattern = /(?:Mobile|Mob|Ph|Phone|Contact|Tel)?[:\s]*([6-9]\d{9})/gi;
                         const mobileMatches = [];
@@ -756,7 +761,8 @@ const Register = () => {
                             mobileSecondary: mobileMatches[1] || null,
                             mobileCount: mobileMatches.length,
                             address: addressMatch ? addressMatch[1].trim().replace(/\n/g, ', ') : "Not Detected",
-                            dob: dobMatch ? dobMatch[0] : null
+                            dob: dobMatch ? dobMatch[0] : null,
+                            bg: bgMatch ? bgMatch[1] : null
                         };
                     }
                 } else if (isAadharStage) {
