@@ -113,6 +113,13 @@ const Register = () => {
         // Generate device fingerprint on mount
         const fingerprint = generateDeviceFingerprint();
         setDeviceFingerprint(fingerprint);
+
+        // CLEANUP: Stop camera when component unmounts (e.g. back to home)
+        return () => {
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+            }
+        };
     }, []);
 
     const handleChange = (e) => {
