@@ -1048,7 +1048,7 @@ const Register = () => {
 
             // Re-map common branch abbreviations to codes if needed
             let branchCode = scannedData.branch || 'IMCA';
-            if (branchCode.toUpperCase() === 'INTG.MCA') branchCode = 'IMCA';
+            if (['INTG', 'INTE', 'INTG.MCA', 'INTEGRATED'].some(k => branchCode.toUpperCase().includes(k))) branchCode = 'IMCA';
 
             setFormData(prev => ({
                 ...prev,
