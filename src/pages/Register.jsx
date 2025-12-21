@@ -1,4 +1,4 @@
-import API_BASE_URL from '../config';
+﻿import API_BASE_URL from '../config';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
@@ -567,13 +567,20 @@ const Register = () => {
 
                 // 1. SECURITY CHECKS (Negative / Replay Detection)
                 if (isIdStage || isAadharStage) {
-                    const idKeywords = ["ips", "academy", "computer code", "computercode", "session", "ips academy", "ipsacademy"];
-                    const isIPSDetected = idKeywords.some(kw => lowerText.includes(kw));
+                    // ENHANCED: Stronger detection with priority keywords
+                    const idStrongKeywords = ["ips", "academy", "ipsacademy", "computer code", "computercode"];
+                    const idWeakKeywords = ["session", "course", "branch", "student"];
+                    const hasStrongIDIndicator = idStrongKeywords.some(kw => lowerText.includes(kw));
+                    const hasWeakIDIndicator = idWeakKeywords.some(kw => lowerText.includes(kw));
+                    const isIPSDetected = hasStrongIDIndicator || (hasWeakIDIndicator && text.length > 100);
 
-                    // Specific Aadhar Signature detection (avoid common ID words like 'india' or 'dob' if not clearly Aadhar)
-                    const aadharCoreKeywords = ['aadhar', 'uidai', 'enroll', 'governmentofindia', 'vid:'];
-                    const aadharNumPattern = /\d{4}\s*\d{4}\s*\d{4}/.test(text) || /\d{12}/.test(text);
-                    const isAadharDetected = aadharCoreKeywords.some(kw => lowerText.includes(kw)) || aadharNumPattern;
+                    // ENHANCED: Aadhar detection with stronger patterns
+                    const aadharStrongKeywords = ['aadhar', 'aadhaar', 'uidai', 'unique identification'];
+                    const aadharWeakKeywords = ['enroll', 'governmentofindia', 'vid:', 'government of india'];
+                    const aadharNumPattern = /\d{4}\s*\d{4}\s*\d{4}/.test(text); // 12 digits in 4-4-4 format
+                    const hasStrongAadharIndicator = aadharStrongKeywords.some(kw => lowerText.includes(kw));
+                    const hasWeakAadharIndicator = aadharWeakKeywords.some(kw => lowerText.includes(kw));
+                    const isAadharDetected = hasStrongAadharIndicator || (hasWeakAadharIndicator && aadharNumPattern);
 
                     // A. Universal Wrong Document detection
                     if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
@@ -627,16 +634,24 @@ const Register = () => {
                     window.speechSynthesis.cancel();
                     let alertText = "";
                     if (detectedDocType === "Digital Screenshot") {
-                        alertText = "Security Alert. Digital screen detected. You must show your Physical Document.";
+                        alertText = isIdStage
+                            ? "Security Alert. Digital screen detected. Please show your PHYSICAL College ID Card."
+                            : "Security Alert. Digital screen detected. Please show your PHYSICAL Aadhar Card.";
                     } else if (detectedDocType === "External Identity Card") {
                         alertText = "Security Alert. Only IPS Academy IDs are permitted. This card is not from our campus.";
                     } else if (detectedDocType === "College ID Card") {
-                        alertText = "Security Alert. You are showing your College ID again. Please show your Aadhar Card for Step 2.";
+                        alertText = "Wrong Document! You are showing your College ID Card. Please show your AADHAR CARD for Step 2.";
+                    } else if (detectedDocType === "Aadhar Card") {
+                        alertText = "Wrong Document! You are showing your Aadhar Card. Please show your COLLEGE ID CARD for Step 1.";
                     } else if (detectedDocType.startsWith("Invalid Item")) {
                         const itemName = detectedDocType.replace("Invalid Item (", "").replace(")", "");
-                        alertText = `Security Alert. You are showing ${itemName}. This is not allowed. Please show your Physical ID.`;
+                        alertText = isIdStage
+                            ? `Wrong Item! You are showing ${itemName}. Please show your College ID Card.`
+                            : `Wrong Item! You are showing ${itemName}. Please show your Aadhar Card.`;
                     } else {
-                        alertText = `Security Alert. You are showing a ${detectedDocType}. This is not allowed. Please show your Physical IPS Academy ID Card.`;
+                        alertText = isIdStage
+                            ? `Wrong Document! You are showing a ${detectedDocType}. Please show your IPS Academy College ID Card.`
+                            : `Wrong Document! You are showing a ${detectedDocType}. Please show your Aadhar Card.`;
                     }
 
                     window.speechSynthesis.speak(new SpeechSynthesisUtterance(alertText));
