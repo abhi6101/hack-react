@@ -19,6 +19,7 @@ const Register = () => {
         enrollmentNumber: '',
         mobilePrimary: '',
         mobileSecondary: '',
+        aadharNumber: '',
         password: '',
         confirmPassword: ''
     });
@@ -479,6 +480,15 @@ const Register = () => {
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match'); setLoading(false); return;
         }
+
+        // VALIDATION: Check for valid Aadhar Number
+        if (formData.role === 'USER' && formData.aadharNumber && formData.aadharNumber.toLowerCase().includes('x')) {
+            setError('Invalid Aadhar Number (XXXX detected). Please click "Rescan Identity" to fix.');
+            setLoading(false);
+            window.scrollTo(0, 0);
+            return;
+        }
+
         try {
             // Prepare complete registration payload with verified identity data
             const registrationData = {
@@ -495,6 +505,7 @@ const Register = () => {
                 computerCode: formData.role === 'USER' ? formData.computerCode : undefined,
                 enrollmentNumber: formData.role === 'USER' ? formData.enrollmentNumber : undefined,
                 startYear: formData.role === 'USER' ? formData.startYear : undefined,
+                aadharNumber: formData.role === 'USER' ? formData.aadharNumber : undefined,
 
                 // Verified Identity Data (from ID card)
                 fullName: scannedData?.name,
@@ -806,11 +817,14 @@ const Register = () => {
             }
 
             // Try backend API (will be available when backend is implemented)
+            const cleanedCode = cleanedMatch.code.toString().replace(/^0+/, '').trim();
+            console.log("Checking status for code:", cleanedCode, "Original:", cleanedMatch.code);
+
             const response = await fetch(`${API_BASE_URL}/verification/check-status`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    computerCode: cleanedMatch.code,
+                    computerCode: cleanedCode,
                     deviceFingerprint: deviceFingerprint,
                     ipAddress: location?.lat || 'unknown', // You can get actual IP from backend
                     location: location
@@ -1017,16 +1031,17 @@ const Register = () => {
             setFormData(prev => ({
                 ...prev,
                 fullName: scannedData.name,
-                computerCode: scannedData.code,
+                computerCode: scannedData.code ? scannedData.code.toString().replace(/^0+/, '').trim() : '',
                 branch: branchCode,
                 username: generatedUsername,
                 startYear: startYear,
                 mobilePrimary: scannedData.mobilePrimary || '',
                 mobileSecondary: scannedData.mobileSecondary || '',
+                aadharNumber: aadharData?.aadharNumber || '',
                 role: 'USER'
             }));
         }
-    }, [step, scannedData]);
+    }, [step, scannedData, aadharData]);
 
     return (
         <main className="register-page-container">
@@ -1055,7 +1070,39 @@ const Register = () => {
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>INSTITITE</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.institution}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>SESSION</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>COURSE (BRANCH)</strong><div style={{ color: '#fff', fontWeight: '500', color: '#4ade80' }}>{scannedData.branch}</div></div>
-                                        {aadharData && <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>AADHAR NUMBER</strong><div style={{ color: '#fff', fontWeight: '500', color: '#4ade80' }}>{aadharData.aadharNumber}</div></div>}
+                                        {aadharData && (
+                                            <div>
+                                                <strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>AADHAR NUMBER</strong>
+                                                <div style={{ color: '#fff', fontWeight: '500', color: '#4ade80', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    {aadharData.aadharNumber}
+                                                    {aadharData.aadharNumber.toLowerCase().includes('x') && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (window.confirm("Rescan to fix Aadhar Number?")) {
+                                                                    Object.keys(localStorage).forEach(key => {
+                                                                        if (key.startsWith('verification_')) localStorage.removeItem(key);
+                                                                    });
+                                                                    setScannedData(null);
+                                                                    setAadharData(null);
+                                                                    setIdCameraImg(null);
+                                                                    setAadharCameraImg(null);
+                                                                    setSelfieImg(null);
+                                                                    setStep(1);
+                                                                    setVerificationStage('ID_AUTO_CAPTURE');
+                                                                }
+                                                            }}
+                                                            style={{
+                                                                background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '4px',
+                                                                padding: '2px 8px', fontSize: '0.65rem', cursor: 'pointer', fontWeight: 'bold'
+                                                            }}
+                                                        >
+                                                            <i className="fas fa-camera"></i> FIX
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
                                         <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span><span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span></div>
                                             {location && (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span><span style={{ color: '#60a5fa', fontSize: '0.8rem' }}><i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}</span></div>)}
@@ -1063,6 +1110,40 @@ const Register = () => {
                                         </div>
                                     </div>
                                 )}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (window.confirm("Are you sure you want to rescan? This will clear your verification progress.")) {
+                                            Object.keys(localStorage).forEach(key => {
+                                                if (key.startsWith('verification_')) localStorage.removeItem(key);
+                                            });
+                                            setScannedData(null);
+                                            setAadharData(null);
+                                            setIdCameraImg(null);
+                                            setAadharCameraImg(null);
+                                            setSelfieImg(null);
+                                            setStep(1);
+                                            setVerificationStage('ID_AUTO_CAPTURE');
+                                        }
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.75rem',
+                                        marginTop: '1rem',
+                                        background: 'rgba(239, 68, 68, 0.1)',
+                                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                                        borderRadius: '8px',
+                                        color: '#ef4444',
+                                        cursor: 'pointer',
+                                        fontSize: '0.9rem',
+                                        fontWeight: '600',
+                                        transition: 'all 0.2s'
+                                    }}
+                                    onMouseOver={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.2)'}
+                                    onMouseOut={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}
+                                >
+                                    <i className="fas fa-redo" style={{ marginRight: '8px' }}></i> Incorrect Details? Rescan Identity
+                                </button>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>

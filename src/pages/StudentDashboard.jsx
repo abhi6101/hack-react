@@ -103,7 +103,7 @@ const StudentDashboard = () => {
     useEffect(() => {
         if (!loading) {
             calculateStats();
-            checkAutoModalTrigger();
+            // checkAutoModalTrigger(); // DISABLED: Annoying form on dashboard
         }
     }, [applications, interviews, profile, loading]);
 
