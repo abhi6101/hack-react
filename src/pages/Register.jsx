@@ -372,7 +372,7 @@ const Register = () => {
                                     </>
                                 ) : (
                                     <div style={{ marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.5rem' }}>
-                                        <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>AADHAR NUMBER:</strong> <span style={{ color: '#4ade80', fontWeight: '600' }}>{content.data?.aadharNumber}</span></p>
+                                        <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>AADHAR NUMBER:</strong> <span style={{ color: '#4ade80', fontWeight: '600' }}>{content.data?.aadharNumber?.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')}</span></p>
                                         <p style={{ fontSize: '0.75rem', color: '#4ade80', marginTop: '8px' }}><i className="fas fa-check-circle"></i> Identity Match Confirmed</p>
                                     </div>
                                 )}
