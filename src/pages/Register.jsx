@@ -1273,6 +1273,27 @@ const Register = () => {
                                                 <input type="text" id="computerCode" name="computerCode" required placeholder="e.g. 59500" value={formData.computerCode} onChange={handleChange} readOnly={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} />
                                                 <small>Your unique college ID/Roll Number.</small>
                                             </div>
+                                            <div className="form-group">
+                                                <label htmlFor="aadharNumber">Aadhar Number *</label>
+                                                <input
+                                                    type="text"
+                                                    id="aadharNumber"
+                                                    name="aadharNumber"
+                                                    required
+                                                    placeholder="12-digit Aadhar Number"
+                                                    value={formData.aadharNumber || ''}
+                                                    onChange={handleChange}
+                                                    readOnly={formData.aadharNumber && !formData.aadharNumber.toLowerCase().includes('x') && formData.aadharNumber.replace(/\D/g, '').length === 12}
+                                                    style={formData.aadharNumber && !formData.aadharNumber.toLowerCase().includes('x') && formData.aadharNumber.replace(/\D/g, '').length === 12
+                                                        ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }
+                                                        : { borderColor: '#fbbf24', background: 'rgba(251, 191, 36, 0.05)' }}
+                                                />
+                                                <small>
+                                                    {formData.aadharNumber && formData.aadharNumber.toLowerCase().includes('x')
+                                                        ? <span style={{ color: '#fbbf24' }}>⚠️ OCR incomplete. Please correct manually.</span>
+                                                        : <span style={{ color: '#34d399' }}>✓ Verified from Aadhar Card</span>}
+                                                </small>
+                                            </div>
                                         </>
                                     )}
                                 </>
