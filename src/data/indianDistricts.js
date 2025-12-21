@@ -319,68 +319,104 @@ export const DISTRICT_STATE_MAP = {
     'RAJGARH': 'Madhya Pradesh',
     'SHEOPUR': 'Madhya Pradesh',
 
-    // 3. BIHAR (Likely student origin)
+    // 3. BIHAR (Complete 38 Districts)
     'PATNA': 'Bihar', 'GAYA': 'Bihar', 'BHAGALPUR': 'Bihar', 'MUZAFFARPUR': 'Bihar', 'DARBHANGA': 'Bihar',
     'ARARIA': 'Bihar', 'ARWAL': 'Bihar', 'AURANGABAD': 'Bihar', 'BANKA': 'Bihar', 'BEGUSARAI': 'Bihar',
-    'BHOJPUR': 'Bihar', 'BUXAR': 'Bihar', 'EAST CHAMPARAN': 'Bihar', 'GOPALGANJ': 'Bihar',
-    'JAMUI': 'Bihar', 'JEHANABAD': 'Bihar', 'KAIMUR': 'Bihar', 'KATIHAR': 'Bihar', 'KHAGARIA': 'Bihar', 'KISHANGANJ': 'Bihar',
-    'LAKHISARAI': 'Bihar', 'MADHEPURA': 'Bihar', 'MADHUBANI': 'Bihar', 'MUNGER': 'Bihar', 'NALANDA': 'Bihar',
-    'NAWADA': 'Bihar', 'PURNIA': 'Bihar', 'ROHTAS': 'Bihar', 'SAHARSA': 'Bihar', 'SAMASTIPUR': 'Bihar',
-    'SARAN': 'Bihar', 'SHEIKHPURA': 'Bihar', 'SHEOHAR': 'Bihar', 'SITAMARHI': 'Bihar', 'SIWAN': 'Bihar', 'SUPAUL': 'Bihar',
-    'VAISHALI': 'Bihar', 'WEST CHAMPARAN': 'Bihar',
+    'BHOJPUR': 'Bihar', 'BUXAR': 'Bihar', 'EAST CHAMPARAN': 'Bihar', 'MOTIHARI': 'Bihar', 'GOPALGANJ': 'Bihar',
+    'JAMUI': 'Bihar', 'JEHANABAD': 'Bihar', 'KAIMUR': 'Bihar', 'BHABUA': 'Bihar', 'KATIHAR': 'Bihar', 'KHAGARIA': 'Bihar',
+    'KISHANGANJ': 'Bihar', 'LAKHISARAI': 'Bihar', 'MADHEPURA': 'Bihar', 'MADHUBANI': 'Bihar', 'MUNGER': 'Bihar',
+    'NALANDA': 'Bihar', 'BIHAR SHARIF': 'Bihar', 'NAWADA': 'Bihar', 'PURNIA': 'Bihar', 'ROHTAS': 'Bihar', 'SASARAM': 'Bihar',
+    'SAHARSA': 'Bihar', 'SAMASTIPUR': 'Bihar', 'SARAN': 'Bihar', 'CHAPRA': 'Bihar', 'SHEIKHPURA': 'Bihar',
+    'SHEOHAR': 'Bihar', 'SITAMARHI': 'Bihar', 'SIWAN': 'Bihar', 'SUPAUL': 'Bihar', 'VAISHALI': 'Bihar',
+    'HAJIPUR': 'Bihar', 'WEST CHAMPARAN': 'Bihar', 'BETTIAH': 'Bihar',
 
-    // 4. MAHARASHTRA
-    'MUMBAI': 'Maharashtra', 'PUNE': 'Maharashtra', 'NAGPUR': 'Maharashtra', 'NASHIK': 'Maharashtra', 'AURANGABAD': 'Maharashtra',
-    'AHMEDNAGAR': 'Maharashtra', 'AKOLA': 'Maharashtra', 'AMRAVATI': 'Maharashtra', 'BEED': 'Maharashtra', 'BHANDARA': 'Maharashtra',
-    'BULDHANA': 'Maharashtra', 'CHANDRAPUR': 'Maharashtra', 'DHULE': 'Maharashtra', 'GADCHIROLI': 'Maharashtra', 'GONDIA': 'Maharashtra',
-    'HINGOLI': 'Maharashtra', 'JALGAON': 'Maharashtra', 'JALNA': 'Maharashtra', 'KOLHAPUR': 'Maharashtra', 'LATUR': 'Maharashtra',
-    'NANDED': 'Maharashtra', 'NANDURBAR': 'Maharashtra', 'OSMANABAD': 'Maharashtra', 'PALGHAR': 'Maharashtra', 'PARBHANI': 'Maharashtra',
-    'RAIGAD': 'Maharashtra', 'RATNAGIRI': 'Maharashtra', 'SANGLI': 'Maharashtra', 'SATARA': 'Maharashtra', 'SINDHUDURG': 'Maharashtra',
-    'SOLAPUR': 'Maharashtra', 'THANE': 'Maharashtra', 'WARDHA': 'Maharashtra', 'WASHIM': 'Maharashtra', 'YAVATMAL': 'Maharashtra', 'RAIGARH': 'Maharashtra',
+    // 4. MAHARASHTRA (Complete 36 Districts + New Names)
+    'MUMBAI': 'Maharashtra', 'MUMBAI CITY': 'Maharashtra', 'MUMBAI SUBURBAN': 'Maharashtra',
+    'PUNE': 'Maharashtra', 'NAGPUR': 'Maharashtra', 'NASHIK': 'Maharashtra',
+    'AURANGABAD': 'Maharashtra', 'CHHATRAPATI SAMBHAJINAGAR': 'Maharashtra', 'SAMBHAJINAGAR': 'Maharashtra', // New Name
+    'OSMANABAD': 'Maharashtra', 'DHARASHIV': 'Maharashtra', // New Name
+    'AHMEDNAGAR': 'Maharashtra', 'AHILYANAGAR': 'Maharashtra', // Proposed/New Name
+    'AKOLA': 'Maharashtra', 'AMRAVATI': 'Maharashtra', 'BEED': 'Maharashtra', 'BHANDARA': 'Maharashtra',
+    'BULDHANA': 'Maharashtra', 'CHANDRAPUR': 'Maharashtra', 'DHULE': 'Maharashtra', 'GADCHIROLI': 'Maharashtra',
+    'GONDIA': 'Maharashtra', 'HINGOLI': 'Maharashtra', 'JALGAON': 'Maharashtra', 'JALNA': 'Maharashtra',
+    'KOLHAPUR': 'Maharashtra', 'LATUR': 'Maharashtra', 'NANDED': 'Maharashtra', 'NANDURBAR': 'Maharashtra',
+    'PALGHAR': 'Maharashtra', 'PARBHANI': 'Maharashtra', 'RAIGAD': 'Maharashtra', 'RATNAGIRI': 'Maharashtra',
+    'SANGLI': 'Maharashtra', 'SATARA': 'Maharashtra', 'SINDHUDURG': 'Maharashtra', 'SOLAPUR': 'Maharashtra',
+    'THANE': 'Maharashtra', 'WARDHA': 'Maharashtra', 'WASHIM': 'Maharashtra', 'YAVATMAL': 'Maharashtra',
 
-    // 5. GUJARAT
+    // 5. GUJARAT (Complete 33 Districts)
     'AHMEDABAD': 'Gujarat', 'SURAT': 'Gujarat', 'VADODARA': 'Gujarat', 'RAJKOT': 'Gujarat', 'GANDHINAGAR': 'Gujarat',
-    'AMRELI': 'Gujarat', 'ANAND': 'Gujarat', 'ARAVALLI': 'Gujarat', 'BANASKANTHA': 'Gujarat', 'BHARUCH': 'Gujarat',
-    'BHAVNAGAR': 'Gujarat', 'BOTAD': 'Gujarat', 'CHHOTA UDEPUR': 'Gujarat', 'DAHOD': 'Gujarat', 'DANGS': 'Gujarat', 'DEVBHOOMI DWARKA': 'Gujarat',
-    'GIR SOMNATH': 'Gujarat', 'JAMNAGAR': 'Gujarat', 'JUNAGADH': 'Gujarat', 'KHEDA': 'Gujarat', 'KUTCH': 'Gujarat',
-    'MAHISAGAR': 'Gujarat', 'MEHSANA': 'Gujarat', 'MORBI': 'Gujarat', 'NARMADA': 'Gujarat', 'NAVSARI': 'Gujarat', 'PANCHMAHAL': 'Gujarat',
-    'PATAN': 'Gujarat', 'PORBANDAR': 'Gujarat', 'SABARKANTHA': 'Gujarat', 'SURENDRANAGAR': 'Gujarat',
-    'TAPI': 'Gujarat', 'VALSAD': 'Gujarat',
+    'AMRELI': 'Gujarat', 'ANAND': 'Gujarat', 'ARAVALLI': 'Gujarat', 'BANASKANTHA': 'Gujarat', 'PALANPUR': 'Gujarat',
+    'BHARUCH': 'Gujarat', 'BHAVNAGAR': 'Gujarat', 'BOTAD': 'Gujarat', 'CHHOTA UDEPUR': 'Gujarat',
+    'DAHOD': 'Gujarat', 'DANGS': 'Gujarat', 'AHWA': 'Gujarat', 'DEVBHOOMI DWARKA': 'Gujarat', 'DWARKA': 'Gujarat',
+    'GIR SOMNATH': 'Gujarat', 'VERAVAL': 'Gujarat', 'JAMNAGAR': 'Gujarat', 'JUNAGADH': 'Gujarat',
+    'KHEDA': 'Gujarat', 'NADIAD': 'Gujarat', 'KUTCH': 'Gujarat', 'BHUJ': 'Gujarat',
+    'MAHISAGAR': 'Gujarat', 'LUNAVADA': 'Gujarat', 'MEHSANA': 'Gujarat', 'MORBI': 'Gujarat',
+    'NARMADA': 'Gujarat', 'RAJPIPLA': 'Gujarat', 'NAVSARI': 'Gujarat', 'PANCHMAHAL': 'Gujarat', 'GODHRA': 'Gujarat',
+    'PATAN': 'Gujarat', 'PORBANDAR': 'Gujarat', 'SABARKANTHA': 'Gujarat', 'HIMATNAGAR': 'Gujarat',
+    'SURENDRANAGAR': 'Gujarat', 'TAPI': 'Gujarat', 'VYARA': 'Gujarat', 'VALSAD': 'Gujarat',
 
-    // 6. RAJASTHAN
-    'JAIPUR': 'Rajasthan', 'KOTA': 'Rajasthan', 'JODHPUR': 'Rajasthan', 'UDAIPUR': 'Rajasthan', 'AJMER': 'Rajasthan',
-    'ALWAR': 'Rajasthan', 'BANSWARA': 'Rajasthan', 'BARAN': 'Rajasthan', 'BARMER': 'Rajasthan', 'BHARATPUR': 'Rajasthan',
-    'BHILWARA': 'Rajasthan', 'BIKANER': 'Rajasthan', 'BUNDI': 'Rajasthan', 'CHITTORGARH': 'Rajasthan', 'CHURU': 'Rajasthan', 'DAUSA': 'Rajasthan',
-    'DHOLPUR': 'Rajasthan', 'DUNGARPUR': 'Rajasthan', 'HANUMANGARH': 'Rajasthan', 'JAISALMER': 'Rajasthan', 'JALORE': 'Rajasthan',
-    'JHALAWAR': 'Rajasthan', 'JHUNJHUNU': 'Rajasthan', 'KARAULI': 'Rajasthan', 'NAGAUR': 'Rajasthan',
-    'PALI': 'Rajasthan', 'PRATAPGARH': 'Rajasthan', 'RAJSAMAND': 'Rajasthan', 'SAWAI MADHOPUR': 'Rajasthan', 'SIKAR': 'Rajasthan', 'SIROHI': 'Rajasthan',
-    'SRI GANGANAGAR': 'Rajasthan', 'TONK': 'Rajasthan',
+    // 6. RAJASTHAN (Complete 50 Districts including New 2023)
+    'JAIPUR': 'Rajasthan', 'JAIPUR RURAL': 'Rajasthan', 'JODHPUR': 'Rajasthan', 'JODHPUR RURAL': 'Rajasthan',
+    'KOTA': 'Rajasthan', 'UDAIPUR': 'Rajasthan', 'AJMER': 'Rajasthan', 'ALWAR': 'Rajasthan', 'BANSWARA': 'Rajasthan',
+    'BARAN': 'Rajasthan', 'BARMER': 'Rajasthan', 'BALOTRA': 'Rajasthan', // New
+    'BHARATPUR': 'Rajasthan', 'BHILWARA': 'Rajasthan', 'SHAHPURA': 'Rajasthan', // New
+    'BIKANER': 'Rajasthan', 'BUNDI': 'Rajasthan', 'CHITTORGARH': 'Rajasthan',
+    'CHURU': 'Rajasthan', 'DAUSA': 'Rajasthan', 'DHOLPUR': 'Rajasthan', 'DUNGARPUR': 'Rajasthan',
+    'GANGAPUR CITY': 'Rajasthan', // New
+    'HANUMANGARH': 'Rajasthan', 'JAISALMER': 'Rajasthan', 'JALORE': 'Rajasthan', 'SANCHORE': 'Rajasthan', // New
+    'JHALAWAR': 'Rajasthan', 'JHUNJHUNU': 'Rajasthan',
+    'KARAULI': 'Rajasthan', 'KEKRI': 'Rajasthan', // New
+    'KHAIRTHAL-TIJARA': 'Rajasthan', 'KHAIRTHAL': 'Rajasthan', // New
+    'KOTPUTLI-BEHROR': 'Rajasthan', 'KOTPUTLI': 'Rajasthan', // New
+    'NAGAUR': 'Rajasthan', 'DIDWANA-KUCHAMAN': 'Rajasthan', 'DIDWANA': 'Rajasthan', 'KUCHAMAN': 'Rajasthan', // New
+    'NEEM KA THANA': 'Rajasthan', // New
+    'PALI': 'Rajasthan', 'PHALODI': 'Rajasthan', // New
+    'PRATAPGARH': 'Rajasthan', 'RAJSAMAND': 'Rajasthan', 'SAWAI MADHOPUR': 'Rajasthan',
+    'SIKAR': 'Rajasthan', 'SIROHI': 'Rajasthan', 'SRI GANGANAGAR': 'Rajasthan', 'ANUPGARH': 'Rajasthan', // New
+    'TONK': 'Rajasthan', 'DUDU': 'Rajasthan', // New
+    'DEEG': 'Rajasthan', // New
+    'BEAWAR': 'Rajasthan', // New
+    'SALUMBAR': 'Rajasthan', // New
 
-    // 7. UTTAR PRADESH
-    'LUCKNOW': 'Uttar Pradesh', 'KANPUR': 'Uttar Pradesh', 'VARANASI': 'Uttar Pradesh', 'AGRA': 'Uttar Pradesh', 'NOIDA': 'Uttar Pradesh',
-    'ALIGARH': 'Uttar Pradesh', 'AMBEDKAR NAGAR': 'Uttar Pradesh', 'AMETHI': 'Uttar Pradesh', 'AMROHA': 'Uttar Pradesh',
-    'AURAIYA': 'Uttar Pradesh', 'AYODHYA': 'Uttar Pradesh', 'AZAMGARH': 'Uttar Pradesh', 'BAGHPAT': 'Uttar Pradesh', 'BAHRAICH': 'Uttar Pradesh',
-    'BALLIA': 'Uttar Pradesh', 'BALRAMPUR': 'Uttar Pradesh', 'BANDA': 'Uttar Pradesh', 'BARABANKI': 'Uttar Pradesh', 'BAREILLY': 'Uttar Pradesh',
-    'BASTI': 'Uttar Pradesh', 'BHADOHI': 'Uttar Pradesh', 'BIJNOR': 'Uttar Pradesh', 'BUDAUN': 'Uttar Pradesh', 'BULANDSHAHR': 'Uttar Pradesh',
-    'CHANDAULI': 'Uttar Pradesh', 'CHITRAKOOT': 'Uttar Pradesh', 'DEORIA': 'Uttar Pradesh', 'ETAH': 'Uttar Pradesh', 'ETAWAH': 'Uttar Pradesh',
-    'FARRUKHABAD': 'Uttar Pradesh', 'FATEHPUR': 'Uttar Pradesh', 'FIROZABAD': 'Uttar Pradesh', 'GAUTAM BUDDHA NAGAR': 'Uttar Pradesh',
-    'GHAZIABAD': 'Uttar Pradesh', 'GHAZIPUR': 'Uttar Pradesh', 'GONDA': 'Uttar Pradesh', 'GORAKHPUR': 'Uttar Pradesh', 'HAMIRPUR': 'Uttar Pradesh',
-    'HAPUR': 'Uttar Pradesh', 'HARDOI': 'Uttar Pradesh', 'HATHRAS': 'Uttar Pradesh', 'JALAUN': 'Uttar Pradesh', 'JAUNPUR': 'Uttar Pradesh',
-    'JHANSI': 'Uttar Pradesh', 'KANNAUJ': 'Uttar Pradesh', 'KASGANJ': 'Uttar Pradesh', 'KAUSHAMBI': 'Uttar Pradesh',
-    'LAKHIMPUR KHERI': 'Uttar Pradesh', 'KHERI': 'Uttar Pradesh', 'KUSHINAGAR': 'Uttar Pradesh', 'LALITPUR': 'Uttar Pradesh',
-    'MAHARAJGANJ': 'Uttar Pradesh', 'MAHOBA': 'Uttar Pradesh', 'MAINPURI': 'Uttar Pradesh', 'MATHURA': 'Uttar Pradesh', 'MAU': 'Uttar Pradesh',
-    'MEERUT': 'Uttar Pradesh', 'MIRZAPUR': 'Uttar Pradesh', 'MORADABAD': 'Uttar Pradesh', 'MUZAFFARNAGAR': 'Uttar Pradesh', 'PILIBHIT': 'Uttar Pradesh',
-    'PRAYAGRAJ': 'Uttar Pradesh', 'ALLAHABAD': 'Uttar Pradesh', 'RAEBARELI': 'Uttar Pradesh', 'RAMPUR': 'Uttar Pradesh', 'SAHARANPUR': 'Uttar Pradesh',
-    'SAMBHAL': 'Uttar Pradesh', 'SANT KABIR NAGAR': 'Uttar Pradesh', 'SHAHJAHANPUR': 'Uttar Pradesh', 'SHAMLI': 'Uttar Pradesh', 'SHRAVASTI': 'Uttar Pradesh',
+    // 7. UTTAR PRADESH (Complete 75 Districts)
+    'LUCKNOW': 'Uttar Pradesh', 'KANPUR': 'Uttar Pradesh', 'KANPUR NAGAR': 'Uttar Pradesh', 'KANPUR DEHAT': 'Uttar Pradesh',
+    'VARANASI': 'Uttar Pradesh', 'KASHI': 'Uttar Pradesh', 'AGRA': 'Uttar Pradesh', 'NOIDA': 'Uttar Pradesh', 'GAUTAM BUDDHA NAGAR': 'Uttar Pradesh',
+    'GHAZIABAD': 'Uttar Pradesh', 'PRAYAGRAJ': 'Uttar Pradesh', 'ALLAHABAD': 'Uttar Pradesh',
+    'AGRA': 'Uttar Pradesh', 'ALIGARH': 'Uttar Pradesh', 'AMBEDKAR NAGAR': 'Uttar Pradesh', 'AMETHI': 'Uttar Pradesh', 'AMROHA': 'Uttar Pradesh',
+    'AURAIYA': 'Uttar Pradesh', 'AYODHYA': 'Uttar Pradesh', 'FAIZABAD': 'Uttar Pradesh', 'AZAMGARH': 'Uttar Pradesh',
+    'BAGHPAT': 'Uttar Pradesh', 'BAHRAICH': 'Uttar Pradesh', 'BALLIA': 'Uttar Pradesh', 'BALRAMPUR': 'Uttar Pradesh',
+    'BANDA': 'Uttar Pradesh', 'BARABANKI': 'Uttar Pradesh', 'BAREILLY': 'Uttar Pradesh', 'BASTI': 'Uttar Pradesh',
+    'BHADOHI': 'Uttar Pradesh', 'SANT RAVIDAS NAGAR': 'Uttar Pradesh', 'BIJNOR': 'Uttar Pradesh', 'BUDAUN': 'Uttar Pradesh',
+    'BULANDSHAHR': 'Uttar Pradesh', 'CHANDAULI': 'Uttar Pradesh', 'CHITRAKOOT': 'Uttar Pradesh', 'DEORIA': 'Uttar Pradesh',
+    'ETAH': 'Uttar Pradesh', 'ETAWAH': 'Uttar Pradesh', 'FARRUKHABAD': 'Uttar Pradesh', 'FATEHPUR': 'Uttar Pradesh',
+    'FIROZABAD': 'Uttar Pradesh', 'GHAZIPUR': 'Uttar Pradesh', 'GONDA': 'Uttar Pradesh', 'GORAKHPUR': 'Uttar Pradesh',
+    'HAMIRPUR': 'Uttar Pradesh', 'HAPUR': 'Uttar Pradesh', 'PANCHSHEEL NAGAR': 'Uttar Pradesh', 'HARDOI': 'Uttar Pradesh',
+    'HATHRAS': 'Uttar Pradesh', 'MAHAMAYA NAGAR': 'Uttar Pradesh', 'JALAUN': 'Uttar Pradesh', 'ORAI': 'Uttar Pradesh',
+    'JAUNPUR': 'Uttar Pradesh', 'JHANSI': 'Uttar Pradesh', 'KANNAUJ': 'Uttar Pradesh', 'KASGANJ': 'Uttar Pradesh', 'KANS HIRAM NAGAR': 'Uttar Pradesh',
+    'KAUSHAMBI': 'Uttar Pradesh', 'KHERI': 'Uttar Pradesh', 'LAKHIMPUR KHERI': 'Uttar Pradesh', 'KUSHINAGAR': 'Uttar Pradesh', 'PADRAUNA': 'Uttar Pradesh',
+    'LALITPUR': 'Uttar Pradesh', 'MAHARAJGANJ': 'Uttar Pradesh', 'MAHOBA': 'Uttar Pradesh', 'MAINPURI': 'Uttar Pradesh',
+    'MATHURA': 'Uttar Pradesh', 'MAU': 'Uttar Pradesh', 'MEERUT': 'Uttar Pradesh', 'MIRZAPUR': 'Uttar Pradesh',
+    'MORADABAD': 'Uttar Pradesh', 'MUZAFFARNAGAR': 'Uttar Pradesh', 'PILIBHIT': 'Uttar Pradesh', 'PRATAPGARH': 'Uttar Pradesh',
+    'RAEBARELI': 'Uttar Pradesh', 'RAMPUR': 'Uttar Pradesh', 'SAHARANPUR': 'Uttar Pradesh', 'SAMBHAL': 'Uttar Pradesh', 'BHIMNAGAR': 'Uttar Pradesh',
+    'SANT KABIR NAGAR': 'Uttar Pradesh', 'SHAHJAHANPUR': 'Uttar Pradesh', 'SHAMLI': 'Uttar Pradesh', 'SHRAVASTI': 'Uttar Pradesh',
     'SIDDHARTHNAGAR': 'Uttar Pradesh', 'SITAPUR': 'Uttar Pradesh', 'SONBHADRA': 'Uttar Pradesh', 'SULTANPUR': 'Uttar Pradesh', 'UNNAO': 'Uttar Pradesh',
 
-    // 8. CHHATTISGARH
+    // 8. CHHATTISGARH (Complete 33 Districts)
     'RAIPUR': 'Chhattisgarh', 'BHILAI': 'Chhattisgarh', 'BILASPUR': 'Chhattisgarh', 'DURG': 'Chhattisgarh',
-    'BALOD': 'Chhattisgarh', 'BALODA BAZAR': 'Chhattisgarh', 'BASTAR': 'Chhattisgarh', 'BEMETARA': 'Chhattisgarh', 'BIJAPUR': 'Chhattisgarh',
+    'BALOD': 'Chhattisgarh', 'BALODA BAZAR': 'Chhattisgarh', 'BALRAMPUR': 'Chhattisgarh',
+    'BASTAR': 'Chhattisgarh', 'JAGDALPUR': 'Chhattisgarh', 'BEMETARA': 'Chhattisgarh', 'BIJAPUR': 'Chhattisgarh',
     'DANTEWADA': 'Chhattisgarh', 'DHAMTARI': 'Chhattisgarh', 'GARIYABAND': 'Chhattisgarh',
-    'JANJGIR-CHAMPA': 'Chhattisgarh', 'JASHPUR': 'Chhattisgarh', 'KABIRDHAM': 'Chhattisgarh', 'KANKER': 'Chhattisgarh', 'KONDAGAON': 'Chhattisgarh',
-    'KORBA': 'Chhattisgarh', 'KOREA': 'Chhattisgarh', 'MAHASAMUND': 'Chhattisgarh', 'MUNGELI': 'Chhattisgarh', 'NARAYANPUR': 'Chhattisgarh',
-    'RAJNANDGAON': 'Chhattisgarh', 'SUKMA': 'Chhattisgarh', 'SURAJPUR': 'Chhattisgarh', 'SURGUJA': 'Chhattisgarh',
+    'GAURELA-PENDRA-MARWAHI': 'Chhattisgarh', 'PENDRA': 'Chhattisgarh', // New
+    'JANJGIR-CHAMPA': 'Chhattisgarh', 'JASHPUR': 'Chhattisgarh', 'KABIRDHAM': 'Chhattisgarh', 'KAWARDHA': 'Chhattisgarh',
+    'KANKER': 'Chhattisgarh', 'KONDAGAON': 'Chhattisgarh', 'KORBA': 'Chhattisgarh', 'KOREA': 'Chhattisgarh',
+    'MAHASAMUND': 'Chhattisgarh', 'MANENDRAGARH-CHIRMIRI-BHARATPUR': 'Chhattisgarh', 'MANENDRAGARH': 'Chhattisgarh', // New
+    'MOHLA-MANPUR-AMBAGARH CHOWKI': 'Chhattisgarh', 'MOHLA': 'Chhattisgarh', // New
+    'MUNGELI': 'Chhattisgarh', 'NARAYANPUR': 'Chhattisgarh', 'RAIGARH': 'Chhattisgarh',
+    'RAJNANDGAON': 'Chhattisgarh', 'SAKTI': 'Chhattisgarh', // New
+    'SARANGARH-BILAIGARH': 'Chhattisgarh', 'SARANGARH': 'Chhattisgarh', // New
+    'SUKMA': 'Chhattisgarh', 'SURAJPUR': 'Chhattisgarh', 'SURGUJA': 'Chhattisgarh', 'AMBIKAPUR': 'Chhattisgarh',
+    'KHAIRAGARH-CHHUIKHADAN-GANDAI': 'Chhattisgarh', 'KHAIRAGARH': 'Chhattisgarh', // New
 
     // 9. REST OF INDIA (Alphabetical)
     // ANDHRA PRADESH
