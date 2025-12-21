@@ -682,7 +682,11 @@ const Register = () => {
                     if (!isIPSAcademy) { setScanStatus("Align Card Properly"); setIsScanning(false); return; }
 
                     const keywordMatch = ['Identity', 'Card', 'Student', 'College', 'IPS'].some(kw => text.toLowerCase().includes(kw.toLowerCase()));
-                    const codeMatch = text.match(/\d{5,6}/);
+
+                    // Smart Clean: Fix common OCR errors in Computer Code (59500 -> S9SOO)
+                    const cleanTextForNumbers = text.replace(/O/g, '0').replace(/S/g, '5').replace(/l/g, '1').replace(/Z/g, '2');
+                    const codeMatch = cleanTextForNumbers.match(/\d{5,6}/);
+                    const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
 
                     if (codeMatch || keywordMatch || text.length > 60) {
                         matchFound = true;
