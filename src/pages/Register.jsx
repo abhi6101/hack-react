@@ -281,9 +281,8 @@ const Register = () => {
                                     <span><i className="fas fa-check-circle"></i> VERIFIED</span>
                                     <span>98% Match</span>
                                 </div>
-                                <h3 style={{ margin: '0 0 5px 0', fontSize: '1.1rem', color: '#fff' }}>{aadharData.name}</h3>
-                                <p style={{ margin: '0 0 5px 0', color: '#ccc', fontSize: '0.85rem' }}>{aadharData.aadharNumber}</p>
-                                <p style={{ margin: '0 0 15px 0', color: '#aaa', fontSize: '0.75rem', lineHeight: '1.2', maxHeight: '36px', overflow: 'hidden' }}>{aadharData.address}</p>
+                                <h3 style={{ margin: '0 0 5px 0', fontSize: '1.2rem', color: '#fff' }}>{aadharData.name}</h3>
+                                <p style={{ margin: '0 0 15px 0', color: '#ccc', fontSize: '1rem', letterSpacing: '1px' }}>{aadharData.aadharNumber}</p>
 
                                 <button className="btn btn-primary" style={{ width: '100%', padding: '12px', fontWeight: 'bold', fontSize: '1rem', background: '#4ade80', color: '#000', border: 'none' }} onClick={takeSelfie}>
                                     Confirm Details & Continue <i className="fas fa-arrow-right"></i>
@@ -345,9 +344,10 @@ const Register = () => {
                         data: aadharData,
                         image: aadharCameraImg,
                         btnText: "Proceed to Selfie",
-                        btnAction: () => checkVerificationStatus(aadharData, null, 'AADHAR'),
+                        btnAction: () => takeSelfie(), // Direct call for consistency
                         secondaryBtnText: "Wrong Aadhar? Rescan",
-                        secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); }
+                        secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); },
+                        simpleView: true // Flag to hide extra details
                     };
                 case 'SELFIE':
                     return {
@@ -382,36 +382,39 @@ const Register = () => {
                         <div style={{ display: 'flex', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'left' }}>
                             <img src={content.image} alt="Scanned Doc" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #444' }} />
                             <div style={{ fontSize: '0.9rem', width: '100%' }}>
-                                {/* 1. Institution */}
-                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Institution:</strong> <span style={{ color: '#fff' }}>{content.data?.institution}</span></p>
+                                {/* 1. Institution (Hidden in simpleView) */}
+                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Institution:</strong> <span style={{ color: '#fff' }}>{content.data?.institution}</span></p>}
 
-                                {/* 2. Session */}
-                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></p>
+                                {/* 2. Session (Hidden in simpleView) */}
+                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></p>}
 
-                                {/* 3. Computer Code */}
-                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Computer Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></p>
+                                {/* 3. Computer Code (Hidden in simpleView) */}
+                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Computer Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></p>}
 
-                                {/* 4. Name */}
+                                {/* 4. Name (ALWAYS SHOWN) */}
                                 <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Name:</strong> {content.data?.name}</p>
 
-                                {/* 5. Father */}
-                                {content.data?.fatherName && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Father:</strong> {content.data?.fatherName}</p>}
+                                {/* 4.5. Aadhar Number (Only for Aadhar Step) */}
+                                {content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Aadhar No:</strong> <span style={{ color: '#4ade80', letterSpacing: '1px' }}>{content.data?.aadharNumber}</span></p>}
 
-                                {/* 6. Course */}
-                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Course:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></p>
+                                {/* 5. Father (Hidden in simpleView) */}
+                                {!content.simpleView && content.data?.fatherName && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Father:</strong> {content.data?.fatherName}</p>}
 
-                                {/* 7. Contact */}
-                                {content.data?.mobileCount > 0 ? (
+                                {/* 6. Course (Hidden in simpleView) */}
+                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Course:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></p>}
+
+                                {/* 7. Contact (Hidden in simpleView) */}
+                                {!content.simpleView && (content.data?.mobileCount > 0 ? (
                                     <div style={{ margin: '0 0 0.4rem 0' }}>
                                         <strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Contact:</strong> <span style={{ color: '#4ade80' }}>+91 {content.data?.mobilePrimary}</span>
                                         {content.data?.mobileSecondary && <span style={{ color: '#4ade80', marginLeft: '0.5rem' }}>, +91 {content.data?.mobileSecondary}</span>}
                                     </div>
                                 ) : (
                                     <p style={{ margin: '0 0 0.4rem 0', color: '#fbbf24', fontSize: '0.75rem' }}><i className="fas fa-exclamation-triangle"></i> Contact not detected</p>
-                                )}
+                                ))}
 
-                                {/* 8. Address */}
-                                {content.data?.address && <div style={{ marginTop: '4px' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Address:</strong> <div style={{ color: '#ddd', fontSize: '0.8rem', lineHeight: '1.2' }}>{content.data?.address}</div></div>}
+                                {/* 8. Address (Hidden in simpleView) */}
+                                {!content.simpleView && content.data?.address && <div style={{ marginTop: '4px' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Address:</strong> <div style={{ color: '#ddd', fontSize: '0.8rem', lineHeight: '1.2' }}>{content.data?.address}</div></div>}
                             </div>
                         </div>
                         {content.btnText && (
