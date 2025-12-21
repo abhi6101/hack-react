@@ -904,8 +904,8 @@ const Register = () => {
         const cleanOCRName = (name) => {
             if (!name || name === "Detected Name" || name === "Detected Father") return name;
 
-            // 1. Remove common OCR symbols and arrows (added |)
-            let cleaned = name.replace(/[»›→~•·|]/g, '').trim();
+            // 1. Remove common OCR symbols and arrows (including §, ¶, and other artifacts)
+            let cleaned = name.replace(/[»›→~•·|§¶©®™°±×÷¢£¤¥¦¨ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾]/g, '').trim();
 
             // 2. Remove prefixes (Father, Mr, Shri, etc.) - more aggressive
             cleaned = cleaned.replace(/^(Father|Father's|Mr|Mrs|Ms|Shri|Smt|Late|Dr|Name|Course|Session|Institution)[\s:|-]*/gi, '').trim();
