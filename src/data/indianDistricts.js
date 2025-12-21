@@ -200,6 +200,24 @@ export const DISTRICT_STATE_MAP = {
     'SUTHALIYA': 'Madhya Pradesh', 'NARSINGHGARH': 'Madhya Pradesh', 'BODA': 'Madhya Pradesh',
     'KHILCHIPUR': 'Madhya Pradesh', 'JEERAPUR': 'Madhya Pradesh', 'MACHALPUR': 'Madhya Pradesh',
 
+    // ------------------------------------------------------------------
+    // BORDER TOWNS (Out-of-State but close to MP)
+    // ------------------------------------------------------------------
+
+    // MAHARASHTRA BORDER
+    'BHUSAWAL': 'Maharashtra', 'AMALNER': 'Maharashtra', 'SHIRPUR': 'Maharashtra',
+    'MALKAPUR': 'Maharashtra', 'RAVER': 'Maharashtra', 'MUKTAINAGAR': 'Maharashtra',
+    'CHOPDA': 'Maharashtra', 'YAWAL': 'Maharashtra', 'SHAHADA': 'Maharashtra',
+
+    // RAJASTHAN BORDER
+    'JHALAWAR': 'Rajasthan', 'BHAWANI MANDI': 'Rajasthan', 'RAMGANJ MANDI': 'Rajasthan',
+    'PIRAWA': 'Rajasthan', 'JHALRAPATAN': 'Rajasthan', 'CHHABRA': 'Rajasthan',
+    'RAWATBHATA': 'Rajasthan', 'MANOHAR THANA': 'Rajasthan',
+
+    // GUJARAT BORDER
+    'DAHOD': 'Gujarat', 'GODHRA': 'Gujarat', 'JHALOD': 'Gujarat', 'FATEPURA': 'Gujarat',
+    'LIMKHEDA': 'Gujarat', 'SANTRAMPUR': 'Gujarat',
+
     // 11. HARDA DISTRICT
     'HARDA': 'Madhya Pradesh', 'HANDIA': 'Madhya Pradesh',
     'TIMARNI': 'Madhya Pradesh', 'RAHATGAON': 'Madhya Pradesh',
