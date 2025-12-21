@@ -236,11 +236,13 @@ const Register = () => {
                                 fontWeight: '800', fontSize: '1.2rem', letterSpacing: '1px', border: '2px solid rgba(255, 255, 255, 0.2)',
                                 textTransform: 'uppercase', boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
                             }}>
-                                {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" : (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR CARD" : "FACE VERIFICATION")}
+                                {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" :
+                                    (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR CARD" :
+                                        (verificationStage === 'AADHAR_VERIFY_DATA' ? "IDENTITY MATCHED" : "FACE VERIFICATION"))}
                             </span>
                         </div>
 
-                        {/* Unified AI Status Monitor */}
+                        {/* Unified AI Status Monitor - Only show during Scanning phases */}
                         {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
                             <div style={{
                                 position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)',
@@ -261,18 +263,30 @@ const Register = () => {
                             </div>
                         )}
 
-                        <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black' }}>
+                        {/* AADHAR CONFIRMATION OVERLAY (Silent Capture Trap) */}
+                        {verificationStage === 'AADHAR_VERIFY_DATA' && aadharData && (
+                            <div style={{
+                                position: 'absolute', bottom: '0', left: '0', width: '100%',
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6))',
+                                padding: '20px 15px', backdropFilter: 'blur(4px)', zIndex: 30, textAlign: 'left', borderTop: '1px solid #4ade80'
+                            }}>
+                                <div style={{ color: '#4ade80', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '5px', display: 'flex', justifyContent: 'space-between' }}>
+                                    <span><i className="fas fa-check-circle"></i> VERIFIED</span>
+                                    <span>98% Match</span>
+                                </div>
+                                <h3 style={{ margin: '0 0 5px 0', fontSize: '1.1rem', color: '#fff' }}>{aadharData.name}</h3>
+                                <p style={{ margin: '0 0 5px 0', color: '#ccc', fontSize: '0.85rem' }}>{aadharData.aadharNumber}</p>
+                                <p style={{ margin: '0 0 15px 0', color: '#aaa', fontSize: '0.75rem', lineHeight: '1.2', maxHeight: '36px', overflow: 'hidden' }}>{aadharData.address}</p>
+
+                                <button className="btn btn-primary" style={{ width: '100%', padding: '12px', fontWeight: 'bold', fontSize: '1rem', background: '#4ade80', color: '#000', border: 'none' }} onClick={takeSelfie}>
+                                    Confirm Details & Continue <i className="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        )}
+
+                        <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black', display: verificationStage === 'AADHAR_VERIFY_DATA' ? 'none' : 'block' }}>
                             {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
                         </div>
-                    </div>
-                    <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        {verificationStage === 'SELFIE' ? (
-                            <button className="btn btn-primary" style={{ padding: '12px 30px', borderRadius: '30px', fontWeight: 'bold' }} onClick={takeSelfie}>
-                                <i className="fas fa-camera"></i> Take Selfie
-                            </button>
-                        ) : (
-                            <p className="text-sm text-gray-400 animate-pulse">Scanning Active... Align Card</p>
-                        )}
                     </div>
                 </div>
             );
@@ -1073,7 +1087,7 @@ const Register = () => {
             setAadharData(bestMatch);
             setAadharCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]);
-            stopCamera();
+            // stopCamera(); // <--- REMOVED: Keep camera running for Silent Selfie
             setScanStatus("✅ Aadhar Verified");
             window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched. Please confirm details."));
             setVerificationStage('AADHAR_VERIFY_DATA');
@@ -1102,6 +1116,13 @@ useEffect(() => {
     return () => clearInterval(interval);
 }, [showCamera, verificationStage, isScanning]);
 
+// Cleanup: Only stop camera when we completely exit verification
+useEffect(() => {
+    if (step === 4) {
+        stopCamera();
+    }
+}, [step]);
+
 useEffect(() => {
     if (!showCamera && !isScanning) {
         if (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') {
@@ -1112,16 +1133,7 @@ useEffect(() => {
     }
 }, [verificationStage]);
 
-// Auto-Selfie Logic
-useEffect(() => {
-    if (verificationStage === 'SELFIE' && showCamera && !isScanning) {
-        setScanStatus("AI: Detecting Face...");
-        const timer = setTimeout(() => {
-            takeSelfie();
-        }, 1000); // 1 second delay for alignment
-        return () => clearTimeout(timer);
-    }
-}, [verificationStage, showCamera, isScanning]);
+// Auto-Selfie Logic REMOVED/NOT NEEDED - We capture on button click now
 
 useEffect(() => {
     if (step === 4 && scannedData) {
