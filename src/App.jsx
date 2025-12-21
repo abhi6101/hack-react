@@ -37,6 +37,9 @@ function Layout({ children }) {
     const [showProfileModal, setShowProfileModal] = useState(false);
 
     // Check if student needs to update profile
+    // DISABLED: Iron Dome Guard - All data now collected during registration
+    // Users no longer need to complete onboarding form after registration
+    /*
     useEffect(() => {
         const checkProfileStatus = async () => {
             const token = localStorage.getItem('authToken');
@@ -68,6 +71,7 @@ function Layout({ children }) {
 
         checkProfileStatus();
     }, [location.pathname, navigate]);
+    */
 
     const handleProfileUpdate = () => {
         setShowProfileModal(false);
