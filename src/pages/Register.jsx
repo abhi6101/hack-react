@@ -280,15 +280,25 @@ const Register = () => {
         const renderStageContent = () => {
             switch (verificationStage) {
                 case 'ID_VERIFY_DATA':
+                    // Check for missing critical details
+                    const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
+                        scannedData?.fatherName &&
+                        scannedData?.code &&
+                        scannedData?.branch &&
+                        scannedData?.mobileCount > 0;
+
                     return {
-                        title: "ID Verified",
-                        desc: "Your student identity has been captured. Now please verify your Aadhar Card.",
+                        title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
+                        desc: isIdScanComplete
+                            ? "All details captured successfully. Proceed to Aadhar verification."
+                            : "Some details (like Mobile Number or Father's Name) were not detected clearly. please rescan.",
                         isReview: true,
                         data: scannedData,
                         image: idCameraImg,
-                        btnText: "Proceed to Aadhar Scan",
-                        btnAction: () => checkVerificationStatus(scannedData, null, 'ID'),
-                        secondaryBtnText: scannedData?.mobileCount === 0 ? "Mobile not detected? Rescan ID" : "Incorrect details? Rescan ID",
+                        // CONDITIONAL BUTTON LOGIC
+                        btnText: isIdScanComplete ? "Proceed to Aadhar Scan" : null, // Null text hides button logic below? No, I need to handle null action
+                        btnAction: isIdScanComplete ? () => checkVerificationStatus(scannedData, null, 'ID') : null,
+                        secondaryBtnText: isIdScanComplete ? "Incorrect details? Rescan ID" : "Rescan ID Card",
                         secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); }
                     };
                 case 'ID_AUTO_CAPTURE':
@@ -378,9 +388,11 @@ const Register = () => {
                                 )}
                             </div>
                         </div>
-                        <button className="btn btn-primary" style={{ width: '100%', marginBottom: '0.8rem' }} onClick={content.btnAction}>
-                            <i className="fas fa-check-circle"></i> {content.btnText}
-                        </button>
+                        {content.btnText && (
+                            <button className="btn btn-primary" style={{ width: '100%', marginBottom: '0.8rem' }} onClick={content.btnAction}>
+                                <i className="fas fa-check-circle"></i> {content.btnText}
+                            </button>
+                        )}
                         {content.secondaryBtnText && (
                             <button className="btn" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#aaa', fontSize: '0.9rem' }} onClick={content.secondaryBtnAction}>
                                 <i className="fas fa-redo-alt"></i> {content.secondaryBtnText}
@@ -557,7 +569,7 @@ const Register = () => {
     };
 
     const [scanBuffer, setScanBuffer] = useState([]);
-    const TARGET_SCANS = 3;
+    const TARGET_SCANS = 4;
 
     const attemptAutoCapture = async () => {
         const isIdStage = verificationStage === 'ID_AUTO_CAPTURE';
@@ -1011,7 +1023,7 @@ const Register = () => {
     useEffect(() => {
         let interval;
         if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
-            interval = setInterval(attemptAutoCapture, 1200);
+            interval = setInterval(attemptAutoCapture, 2000);
         }
         return () => clearInterval(interval);
     }, [showCamera, verificationStage, isScanning]);
