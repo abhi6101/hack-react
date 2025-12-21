@@ -16,6 +16,8 @@ const Register = () => {
         startYear: new Date().getFullYear().toString(),
         batch: '',
         computerCode: '',
+        mobilePrimary: '',
+        mobileSecondary: '',
         password: '',
         confirmPassword: ''
     });
@@ -366,6 +368,12 @@ const Register = () => {
                 institution: scannedData?.institution,
                 session: scannedData?.session,
 
+                // Mobile Numbers (from ID card or manual entry)
+                mobilePrimary: formData.mobilePrimary || scannedData?.mobilePrimary,
+                mobileSecondary: formData.mobileSecondary || scannedData?.mobileSecondary,
+                mobileCount: scannedData?.mobileCount || (formData.mobilePrimary ? (formData.mobileSecondary ? 2 : 1) : 0),
+                mobileSource: scannedData?.mobileCount > 0 ? 'ID_CARD_AUTO' : 'MANUAL_ENTRY',
+
                 // Verified Identity Data (from Aadhar)
                 aadharNumber: aadharData?.aadharNumber,
 
@@ -529,12 +537,31 @@ const Register = () => {
                         if (extractedName === "Detected Name") { setIsScanning(false); return; }
                         const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
                         const sessionMatch = text.match(/Session\s*[:|-]?\s*(\d{4}-\d{4})/i);
+
+                        // Extract mobile numbers (Indian format: 10 digits starting with 6-9)
+                        const mobilePattern = /(?:Mobile|Mob|Ph|Phone|Contact|Tel)?[:\s]*([6-9]\d{9})/gi;
+                        const mobileMatches = [];
+                        let mobileMatch;
+
+                        while ((mobileMatch = mobilePattern.exec(text)) !== null) {
+                            const number = mobileMatch[1];
+                            // Avoid duplicates and ensure it's not the computer code
+                            if (!mobileMatches.includes(number) && number !== validCode && number.length === 10) {
+                                mobileMatches.push(number);
+                            }
+                        }
+
                         extracted = {
-                            institution: "IPS Academy, Indore", name: extractedName,
+                            institution: "IPS Academy, Indore",
+                            name: extractedName,
                             fatherName: extractedFather === "Detected Father" ? "" : extractedFather,
                             branch: courseMatch ? courseMatch[1].trim() : "INTG.MCA",
                             session: sessionMatch ? sessionMatch[1] : (text.match(/\d{4}-\d{4}/)?.[0] || "2022-2027"),
-                            code: validCode || "59500"
+                            code: validCode || "59500",
+                            // Mobile numbers
+                            mobilePrimary: mobileMatches[0] || null,
+                            mobileSecondary: mobileMatches[1] || null,
+                            mobileCount: mobileMatches.length
                         };
                     }
                 } else if (isAadharStage) {
@@ -709,6 +736,8 @@ const Register = () => {
                 branch: branchCode,
                 username: generatedUsername,
                 startYear: startYear,
+                mobilePrimary: scannedData.mobilePrimary || '',
+                mobileSecondary: scannedData.mobileSecondary || '',
                 role: 'USER'
             }));
         }
@@ -764,6 +793,109 @@ const Register = () => {
                                 <label htmlFor="email">Email Address</label>
                                 <input type="email" id="email" name="email" required placeholder="your.email@example.com" value={formData.email} onChange={handleChange} />
                             </div>
+
+                            {/* Dynamic Mobile Number Fields */}
+                            {scannedData?.mobileCount === 2 ? (
+                                // Case 1: Two mobile numbers found on ID card
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="mobilePrimary">Primary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
+                                        <input
+                                            type="tel"
+                                            id="mobilePrimary"
+                                            value={`+91 ${scannedData.mobilePrimary}`}
+                                            readOnly
+                                            className="locked-field"
+                                            style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
+                                        />
+                                        <small style={{ color: '#34d399' }}>✓ Verified from ID Card</small>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="mobileSecondary">Secondary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
+                                        <input
+                                            type="tel"
+                                            id="mobileSecondary"
+                                            value={`+91 ${scannedData.mobileSecondary}`}
+                                            readOnly
+                                            className="locked-field"
+                                            style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
+                                        />
+                                        <small style={{ color: '#34d399' }}>✓ Both numbers can receive OTP for login</small>
+                                    </div>
+                                </>
+                            ) : scannedData?.mobileCount === 1 ? (
+                                // Case 2: One mobile number found on ID card
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="mobilePrimary">Primary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
+                                        <input
+                                            type="tel"
+                                            id="mobilePrimary"
+                                            value={`+91 ${scannedData.mobilePrimary}`}
+                                            readOnly
+                                            className="locked-field"
+                                            style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
+                                        />
+                                        <small style={{ color: '#34d399' }}>✓ Verified from ID Card</small>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="mobileSecondary">Secondary Mobile Number (Optional)</label>
+                                        <input
+                                            type="tel"
+                                            id="mobileSecondary"
+                                            name="mobileSecondary"
+                                            placeholder="Add another number if available"
+                                            value={formData.mobileSecondary || ''}
+                                            onChange={handleChange}
+                                            pattern="[6-9][0-9]{9}"
+                                            maxLength="10"
+                                        />
+                                        <small>You can add a second number for backup access</small>
+                                    </div>
+                                </>
+                            ) : (
+                                // Case 3: No mobile numbers found (OCR failed)
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="mobilePrimary">Primary Mobile Number *</label>
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <span style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>+91</span>
+                                            <input
+                                                type="tel"
+                                                id="mobilePrimary"
+                                                name="mobilePrimary"
+                                                required
+                                                placeholder="Enter 10-digit mobile number"
+                                                value={formData.mobilePrimary || ''}
+                                                onChange={handleChange}
+                                                pattern="[6-9][0-9]{9}"
+                                                maxLength="10"
+                                                style={{ flex: 1 }}
+                                            />
+                                        </div>
+                                        <small>⚠️ We couldn't detect mobile number from ID card. Please enter manually.</small>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="mobileSecondary">Secondary Mobile Number (Optional)</label>
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <span style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>+91</span>
+                                            <input
+                                                type="tel"
+                                                id="mobileSecondary"
+                                                name="mobileSecondary"
+                                                placeholder="Add another number for backup"
+                                                value={formData.mobileSecondary || ''}
+                                                onChange={handleChange}
+                                                pattern="[6-9][0-9]{9}"
+                                                maxLength="10"
+                                                style={{ flex: 1 }}
+                                            />
+                                        </div>
+                                        <small>Optional, for backup access</small>
+                                    </div>
+                                </>
+                            )}
+
                             <div className="form-group">
                                 <label htmlFor="role">Select Role</label>
                                 <select id="role" name="role" required value={formData.role} onChange={handleChange}><option value="USER">Student</option></select>
