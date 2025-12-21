@@ -807,7 +807,7 @@ const Register = () => {
             const rawCode = checkType === 'ID' ? cleanedMatch.code : scannedData?.code;
             const cleanedCode = rawCode ? rawCode.toString().replace(/^0+/, '').trim() : '';
 
-            console.log(`Checking status [${checkType}] code:`, cleanedCode);
+
 
             const payload = {
                 computerCode: cleanedCode,
