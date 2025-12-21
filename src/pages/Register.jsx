@@ -868,10 +868,14 @@ const Register = () => {
                             setVerificationStage('AADHAR_AUTO_CAPTURE');
                         }
                     } else {
-                        // Aadhar is clean. Move to Selfie.
-                        // But first capture location if valid
-                        if (checkType === 'AADHAR') captureLocation();
-                        setVerificationStage('SELFIE');
+                        if (isAutoCheck) {
+                            // Auto-check passed. Stay on review.
+                            console.log("Auto-check: Aadhar valid.");
+                        } else {
+                            // Manual Proceed click. Move to Selfie.
+                            if (checkType === 'AADHAR') captureLocation();
+                            setVerificationStage('SELFIE');
+                        }
                     }
                     break;
             }
@@ -961,6 +965,9 @@ const Register = () => {
                 setScanStatus("✅ Verification Successful");
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched. Please review details."));
                 setVerificationStage('AADHAR_VERIFY_DATA');
+
+                // NEW: Auto-check Aadhar immediately
+                checkVerificationStatus(cleanedMatch, finalBlob, 'AADHAR', true);
             } else {
                 // SECURITY: Track failed attempts and lock out after 3 tries
                 const newAttempts = failedVerificationAttempts + 1;
