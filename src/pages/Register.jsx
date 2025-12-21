@@ -678,7 +678,7 @@ const Register = () => {
 
                 // 2. DOCUMENT PROCESSING
                 if (isIdStage) {
-                    const isIPSAcademy = text.match(/IPS\s*Academy/i) || text.includes("IPS") || text.includes("Academy") || text.includes("Indore");
+                    const isIPSAcademy = /IPS|Academy|Institute|College|University|Student|Campus|Indore|Identity/i.test(text);
                     if (!isIPSAcademy) { setScanStatus("Align Card Properly"); setIsScanning(false); return; }
 
                     const keywordMatch = ['Identity', 'Card', 'Student', 'College', 'IPS'].some(kw => text.toLowerCase().includes(kw.toLowerCase()));
