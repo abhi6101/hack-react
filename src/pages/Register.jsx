@@ -722,7 +722,9 @@ const Register = () => {
                     setScanStatus("Scanning Aadhar...");
                     const aadharKeywords = ['government', 'india', 'uid', 'aadhar', 'dob', 'enroll', 'year', 'address', 'male', 'female', 'father', 'husband', 'income', 'vid'];
                     const score = aadharKeywords.reduce((acc, kw) => lowerText.includes(kw) ? acc + 1 : acc, 0);
-                    const aadharNumMatch = text.match(/\d{4}\s*\d{4}\s*\d{4}/) || text.match(/\d{12}/);
+                    // ENHANCED: Robust Aadhar Number Detection
+                    let cleanAadharText = text.replace(/O/g, '0').replace(/o/g, '0').replace(/S/g, '5').replace(/I/g, '1');
+                    const aadharNumMatch = cleanAadharText.match(/\d{4}[\s-]?\d{4}[\s-]?\d{4}/) || cleanAadharText.match(/\d{12}/);
 
                     if (score >= 1 || aadharNumMatch || isAadharDetected) {
                         matchFound = true; setScanStatus("Aadhar Verified!");
