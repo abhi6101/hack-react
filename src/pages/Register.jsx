@@ -791,44 +791,31 @@ const Register = () => {
     };
 
     // SECURITY: Check backend verification status
-    const checkVerificationStatus = async (cleanedMatch, finalBlob) => {
+    const checkVerificationStatus = async (cleanedMatch, finalBlob, checkType = 'ID') => {
         try {
             setScanStatus("Checking verification status...");
 
-            // TEMPORARY: Check localStorage first (until backend is ready)
-            const localVerificationKey = `verification_${cleanedMatch.code}_${deviceFingerprint}`;
-            const localVerification = localStorage.getItem(localVerificationKey);
+            // Determine Computer Code based on stage
+            const rawCode = checkType === 'ID' ? cleanedMatch.code : scannedData?.code;
+            const cleanedCode = rawCode ? rawCode.toString().replace(/^0+/, '').trim() : '';
 
-            if (localVerification) {
-                const savedData = JSON.parse(localVerification);
+            console.log(`Checking status [${checkType}] code:`, cleanedCode);
 
-                // Check if verification is complete
-                if (savedData.allStepsCompleted) {
-                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("Verification found. Proceeding to registration."));
-                    setScannedData(savedData.scannedData);
-                    setAadharData(savedData.aadharData);
-                    setSelfieImg(savedData.selfieImg);
-                    setIdCameraImg(savedData.idCameraImg);
-                    setAadharCameraImg(savedData.aadharCameraImg);
-                    setScanBuffer([]); stopCamera();
-                    setStep(4); // Skip to registration form
-                    return;
-                }
+            const payload = {
+                computerCode: cleanedCode,
+                deviceFingerprint: deviceFingerprint,
+                ipAddress: location?.lat || 'unknown',
+                location: location
+            };
+
+            if (checkType === 'AADHAR' && cleanedMatch.aadharNumber) {
+                payload.aadharNumber = cleanedMatch.aadharNumber;
             }
-
-            // Try backend API (will be available when backend is implemented)
-            const cleanedCode = cleanedMatch.code.toString().replace(/^0+/, '').trim();
-            console.log("Checking status for code:", cleanedCode, "Original:", cleanedMatch.code);
 
             const response = await fetch(`${API_BASE_URL}/verification/check-status`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    computerCode: cleanedCode,
-                    deviceFingerprint: deviceFingerprint,
-                    ipAddress: location?.lat || 'unknown', // You can get actual IP from backend
-                    location: location
-                })
+                body: JSON.stringify(payload)
             });
 
             const result = await response.json();
@@ -838,8 +825,8 @@ const Register = () => {
             switch (result.status) {
                 case 'ALREADY_REGISTERED':
                     // User already has an account
-                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("This account is already registered. Redirecting to login."));
-                    setError(`Account already exists. Username: ${result.userData.username}`);
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance(result.message || "Account already exists. Redirecting to login."));
+                    setError(`Account already exists. ${result.userData?.username ? 'Username: ' + result.userData.username : ''}`);
                     setTimeout(() => navigate('/login'), 3000);
                     break;
 
@@ -866,19 +853,36 @@ const Register = () => {
                 case 'NEW_USER':
                 default:
                     // Continue normal verification flow
-                    setScannedData(cleanedMatch);
-                    setIdCameraImg(URL.createObjectURL(finalBlob));
-                    setScanBuffer([]); stopCamera();
-                    setVerificationStage('ID_VERIFY_DATA');
+                    if (checkType === 'ID') {
+                        setScannedData(cleanedMatch);
+                        setIdCameraImg(URL.createObjectURL(finalBlob));
+                        setScanBuffer([]); stopCamera();
+                        setVerificationStage('ID_VERIFY_DATA');
+                    } else {
+                        // AADHAR Success
+                        setAadharData(cleanedMatch);
+                        setAadharCameraImg(URL.createObjectURL(finalBlob));
+                        setScanBuffer([]); stopCamera();
+                        setScanStatus("✅ Verification Successful");
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched unique identity. Verification Successful."));
+                        setVerificationStage('AADHAR_VERIFY_DATA');
+                    }
                     break;
             }
         } catch (error) {
             console.error('Verification check failed:', error);
-            // If backend check fails, continue with normal flow (fallback)
-            setScannedData(cleanedMatch);
-            setIdCameraImg(URL.createObjectURL(finalBlob));
-            setScanBuffer([]); stopCamera();
-            setVerificationStage('ID_VERIFY_DATA');
+            // If backend check fails, assume NEW_USER (fallback) but warn logic
+            if (checkType === 'ID') {
+                setScannedData(cleanedMatch);
+                setIdCameraImg(URL.createObjectURL(finalBlob));
+                setScanBuffer([]); stopCamera();
+                setVerificationStage('ID_VERIFY_DATA');
+            } else {
+                setAadharData(cleanedMatch);
+                setAadharCameraImg(URL.createObjectURL(finalBlob));
+                setScanBuffer([]); stopCamera();
+                setVerificationStage('AADHAR_VERIFY_DATA');
+            }
         }
     };
 
@@ -941,12 +945,8 @@ const Register = () => {
 
             if (isMatch) {
                 const cleanedMatch = { ...bestMatch, name: cleanOCRName(bestMatch.name) };
-                setAadharData(cleanedMatch);
-                setAadharCameraImg(URL.createObjectURL(finalBlob));
-                setScanBuffer([]); stopCamera();
-                setScanStatus("✅ Verification Successful");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched against ID. Verification Successful."));
-                setVerificationStage('AADHAR_VERIFY_DATA');
+                // SECURITY: Check backend for duplicate Aadhar (Step 2 check)
+                checkVerificationStatus(cleanedMatch, finalBlob, 'AADHAR');
             } else {
                 // SECURITY: Track failed attempts and lock out after 3 tries
                 const newAttempts = failedVerificationAttempts + 1;
