@@ -45,6 +45,7 @@ const Register = () => {
     const [selfieImg, setSelfieImg] = useState(null);
 
     const [isScanning, setIsScanning] = useState(false);
+    const [failedVerificationAttempts, setFailedVerificationAttempts] = useState(0); // Security: Track failed attempts
 
     // --- Camera State ---
     const [showCamera, setShowCamera] = useState(false);
@@ -690,14 +691,40 @@ const Register = () => {
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched against ID. Verification Successful."));
                 setVerificationStage('AADHAR_VERIFY_DATA');
             } else {
+                // SECURITY: Track failed attempts and lock out after 3 tries
+                const newAttempts = failedVerificationAttempts + 1;
+                setFailedVerificationAttempts(newAttempts);
+
+                // Log suspicious activity (backend should also track this)
+                console.warn(`[SECURITY] Failed Aadhar verification attempt ${newAttempts}/3`, {
+                    timestamp: new Date().toISOString(),
+                    idName: idName,
+                    attemptedName: aadharName,
+                    location: location
+                });
+
+                if (newAttempts >= 3) {
+                    // LOCKOUT: Too many failed attempts
+                    setScanBuffer([]);
+                    stopCamera();
+                    setScanStatus("❌ Verification Locked");
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("Too many failed verification attempts. Please contact support for assistance."));
+                    setErrorFlash(true);
+                    // Don't reset - keep user locked out
+                    setError("Verification locked due to multiple failed attempts. Please contact support.");
+                    return;
+                }
+
+                // SECURITY: Use generic error message - don't reveal what failed
+                // This prevents users from knowing if it's name mismatch, photo issue, etc.
                 setScanBuffer([]);
-                setScanStatus("❌ Identity Verification Failed: Mismatch Detected");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identity Verification Failed. The name on this Aadhar card does not match your College ID. Please scan your own documents."));
+                setScanStatus(`❌ Document Verification Failed (Attempt ${newAttempts}/3)`);
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Document verification failed. Please ensure you are showing your own physical Aadhar card. If the issue persists, contact support."));
                 setErrorFlash(true);
                 setTimeout(() => {
                     setErrorFlash(false);
                     setScanStatus("AI: Waiting for Aadhar...");
-                }, 4000);
+                }, 5000); // Increased to 5 seconds for longer message
             }
         }
     };
