@@ -204,7 +204,7 @@ const Register = () => {
                         image: idCameraImg,
                         btnText: "Proceed to Aadhar Scan",
                         btnAction: () => setVerificationStage('AADHAR_AUTO_CAPTURE'),
-                        secondaryBtnText: "Incorrect name? Rescan ID",
+                        secondaryBtnText: scannedData?.mobileCount === 0 ? "Mobile not detected? Rescan ID" : "Incorrect details? Rescan ID",
                         secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); }
                     };
                 case 'ID_AUTO_CAPTURE':
@@ -268,6 +268,16 @@ const Register = () => {
                                             <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></div>
                                             <div><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Branch:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></div>
                                             <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></div>
+                                            {content.data?.mobileCount > 0 ? (
+                                                <>
+                                                    <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Mobile:</strong> <span style={{ color: '#4ade80' }}>+91 {content.data?.mobilePrimary}</span> <i className="fas fa-check-circle" style={{ color: '#4ade80', fontSize: '0.7rem' }}></i></div>
+                                                    {content.data?.mobileSecondary && <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Mobile 2:</strong> <span style={{ color: '#4ade80' }}>+91 {content.data?.mobileSecondary}</span> <i className="fas fa-check-circle" style={{ color: '#4ade80', fontSize: '0.7rem' }}></i></div>}
+                                                </>
+                                            ) : (
+                                                <div style={{ gridColumn: '1 / -1', background: 'rgba(251, 191, 36, 0.1)', padding: '0.5rem', borderRadius: '6px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
+                                                    <p style={{ margin: 0, fontSize: '0.75rem', color: '#fbbf24' }}><i className="fas fa-exclamation-triangle"></i> Mobile number not detected. Please rescan ID card.</p>
+                                                </div>
+                                            )}
                                         </div>
                                     </>
                                 ) : (
