@@ -1075,13 +1075,14 @@ const Register = () => {
 
             // 2. CRITICAL CHECK: If we didn't find the name matching the ID OR No Numbers found
             if (!cleanedText || cleanedText.length < 3 || !hasNumbers || !nameMatchScore) {
-                setScanStatus("⚠️ Poor Scan. Valid Name/Number not found. Retrying in 2s...");
-                setScanBuffer(prev => [...prev.slice(-4), "Bad Scan"]); // Keep buffer small to keep trying
-                setIsScanning(false);
-                return; // SKIP PROCEEDING
-            }
-
-            // 3. SUCCESSFUL EXTRACTION
+                setScanStatus("⚠️ Poor Scan. Adjust Card. Retrying...");
+                setScanBuffer(prev => {
+                    const newBuffer = [...prev.slice(-4), "Bad Scan"]; // Keep buffer but limited
+                    return newBuffer;
+                });
+                setIsScanning(false); // Validating complete for THIS frame, but loop continues via interval
+                return; // SKIP PROCEEDING, but interval will call attemptAutoCapture again
+            } // 3. SUCCESSFUL EXTRACTION
             const addressBlock = text.split(/Address:|Addr:|To:/i)[1] || text.split(/\n/).slice(-3).join(', ');
             const bestMatch = {
                 name: cleanedText,
