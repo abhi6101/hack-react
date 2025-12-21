@@ -1274,25 +1274,19 @@ const Register = () => {
                                                 <small>Your unique college ID/Roll Number.</small>
                                             </div>
                                             <div className="form-group">
-                                                <label htmlFor="aadharNumber">Aadhar Number *</label>
+                                                <label htmlFor="aadharNumber">Aadhar Number <i className="fas fa-lock text-green-400" title="Verified from Aadhar Card"></i></label>
                                                 <input
                                                     type="text"
                                                     id="aadharNumber"
                                                     name="aadharNumber"
                                                     required
-                                                    placeholder="12-digit Aadhar Number"
-                                                    value={formData.aadharNumber || ''}
-                                                    onChange={handleChange}
-                                                    readOnly={formData.aadharNumber && !formData.aadharNumber.toLowerCase().includes('x') && formData.aadharNumber.replace(/\D/g, '').length === 12}
-                                                    style={formData.aadharNumber && !formData.aadharNumber.toLowerCase().includes('x') && formData.aadharNumber.replace(/\D/g, '').length === 12
-                                                        ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }
-                                                        : { borderColor: '#fbbf24', background: 'rgba(251, 191, 36, 0.05)' }}
+                                                    placeholder="Scanned from Aadhar Card"
+                                                    value={formData.aadharNumber?.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
+                                                    readOnly
+                                                    className="locked-field"
+                                                    style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
                                                 />
-                                                <small>
-                                                    {formData.aadharNumber && formData.aadharNumber.toLowerCase().includes('x')
-                                                        ? <span style={{ color: '#fbbf24' }}>⚠️ OCR incomplete. Please correct manually.</span>
-                                                        : <span style={{ color: '#34d399' }}>✓ Verified from Aadhar Card</span>}
-                                                </small>
+                                                <small style={{ color: '#34d399' }}>✓ Verified from Aadhar Card (Read-only)</small>
                                             </div>
                                         </>
                                     )}
