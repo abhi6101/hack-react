@@ -6,33 +6,32 @@ This document outlines every possible user scenario in the Registration & Dashbo
 ### A. The "Happy Path" (New User)
 *   **Possibility:** A standard student scans their valid College ID and Aadhar Card.
 *   **System Action:**
-    1.  Extracts Name, Computer Code (e.g., "59500"), and Aadhar Number.
-    2.  Verifies Computer Code does NOT exist in DB.
-    3.  Pre-fills the Registration Form.
-    4.  User creates password -> Account Created.
+    1.  **Strict Scanning:** Takes **15 samples** to ensure OCR accuracy. Checks for "IPS/Academy" keywords.
+    2.  **Verification:** Upon clicking "Proceed", scans Backend for duplicate `computerCode`.
+    3.  **Validation:** Scans Aadhar (12-digits). Upon "Proceed", checks Backend for duplicate `aadharNumber`.
+    4.  **Completion:** User fills password -> Account Created.
 *   **Status:** ✅ Working perfectly.
 
 ### B. "Already Registered" User (Duplicate Attempt)
 *   **Possibility:** A student who *already has an account* tries to register again.
 *   **System Action (Solution):**
-    1.  **During Scan:** The system checks the Computer Code immediately.
-    2.  **Fix Applied:** We now strip leading zeros (e.g. `059500` -> `59500`) to ensure it matches the database.
-    3.  **Outcome:** System alerts "Account already exists" and **Redirects to Login**.
-*   **Edge Case:** If the old account is missing the Computer Code in the DB (Legacy account), the scan will pass, **BUT** the final form submission will fail with "Username/Email already exists".
+    1.  **Trigger:** User scans ID and clicks "Proceed".
+    2.  **Check:** System sends cleaned code (e.g., `59500`) to Backend.
+    3.  **Outcome:** System alerts "Account already exists" and **Redirects to Login** (after 3s delay).
+    4.  **Network Failure:** If Backend is down/unreachable, system BLOCKS progress with "Connection Error" instead of allowing bypass.
 
 ### C. Wrong Document Scanned
 *   **Possibility:** User shows an Aadhar Card when asked for College ID (or vice versa).
 *   **System Action (Solution):**
-    1.  **Keyword Detection:** The AI looks for specific words ("IPS Academy" vs "Govt of India").
-    2.  **Outcome:** The system **BLOCKS** the capture and shows a dynamic error: *"WRONG DOCUMENT - Please show [Correct Card]"*.
+    1.  **Keyword Detection:** AI looks for specific words ("IPS Academy" vs "Govt of India").
+    2.  **Outcome:** The system **BLOCKS** the capture and shows a dynamic error: *"WRONG DOCUMENT"*.
 
 ### D. Aadhar Number Not Read ("XXXX")
 *   **Possibility:** Lighting is bad or font is blurry, result is `XXXX-XXXX-XXXX`.
 *   **System Action (Solution):**
     1.  **Visual Cue:** Shows `XXXX` in the summary.
-    2.  **Immediate Fix:** A **"FIX"** button appears next to the number.
-    3.  **Nuclear Option:** A **"Rescan Identity"** button allows a full restart.
-    4.  **Final Guard:** If user tries to click Register anyway, the system **BLOCKS** submission with error: *"Invalid Aadhar Number"*.
+    2.  **Correction:** "Rescan" is encouraged.
+    3.  **Final Guard:** If user tries to click Register with "XXXX", the system **BLOCKS** submission.
 
 ### E. Digital Copy / Spoofing
 *   **Possibility:** User tries to scan a photo of an ID displayed on a phone screen.

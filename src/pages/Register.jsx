@@ -799,15 +799,13 @@ const Register = () => {
     };
 
     // SECURITY: Check backend verification status
-    const checkVerificationStatus = async (cleanedMatch, finalBlob, checkType = 'ID') => {
+    const checkVerificationStatus = async (cleanedMatch, finalBlob, checkType = 'ID', isAutoCheck = false) => {
         try {
             setScanStatus("Checking verification status...");
 
             // Determine Computer Code based on stage
             const rawCode = checkType === 'ID' ? cleanedMatch.code : scannedData?.code;
             const cleanedCode = rawCode ? rawCode.toString().replace(/^0+/, '').trim() : '';
-
-
 
             const payload = {
                 computerCode: cleanedCode,
@@ -862,8 +860,13 @@ const Register = () => {
                 default:
                     // Success! Proceed to next stage based on what we just checked.
                     if (checkType === 'ID') {
-                        // ID is clean. Move to Aadhar.
-                        setVerificationStage('AADHAR_AUTO_CAPTURE');
+                        if (isAutoCheck) {
+                            // Auto-check passed (New User). Stay on review screen.
+                            console.log("Auto-check: New User detected. Waiting for user confirmation.");
+                        } else {
+                            // Manual Proceed click. Move to Aadhar.
+                            setVerificationStage('AADHAR_AUTO_CAPTURE');
+                        }
                     } else {
                         // Aadhar is clean. Move to Selfie.
                         // But first capture location if valid
@@ -936,6 +939,9 @@ const Register = () => {
             setIdCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]); stopCamera();
             setVerificationStage('ID_VERIFY_DATA');
+
+            // NEW: Auto-check backend immediately (redirects if exists, ignores if new)
+            checkVerificationStatus(cleanedMatch, finalBlob, 'ID', true);
         } else if (type === 'AADHAR') {
             const idName = cleanOCRName(scannedData?.name).toUpperCase();
             const aadharName = cleanOCRName(bestMatch.name).toUpperCase();
