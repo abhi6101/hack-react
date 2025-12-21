@@ -977,7 +977,14 @@ const Register = () => {
             finalParts = [...new Set(finalParts)]; // Remove exact duplicates
             addr = finalParts.join(', ');
 
-            return addr.replace(/\s+/g, ' ').replace(/, \./g, '.').replace(/,,+/g, ',').trim();
+            const finalCleaned = addr.replace(/\s+/g, ' ').replace(/, \./g, '.').replace(/,,+/g, ',').trim();
+
+            // FAILSAFE: If cleaning removed almost everything (e.g. only had noise), return original raw text "as it is"
+            if (finalCleaned.length < 3) {
+                return rawAddr.trim();
+            }
+
+            return finalCleaned;
         };
 
         const names = buffer.map(b => b.name).filter(n => n !== "Detected Name");
