@@ -113,6 +113,93 @@ export const DISTRICT_STATE_MAP = {
     'KHILCHIPUR': 'Madhya Pradesh', 'CHHAPIHEDA': 'Madhya Pradesh',
     'ZEERAPUR': 'Madhya Pradesh', 'MACHALPUR': 'Madhya Pradesh',
 
+    // ------------------------------------------------------------------
+    // GRANULAR VILLAGE MAPPING (10km Radius of Tehsils)
+    // ------------------------------------------------------------------
+
+    // KHATEGAON (Dewas) Cluster
+    'KHATEGAON': 'Madhya Pradesh', 'NEMAWAR': 'Madhya Pradesh', 'HARANGAON': 'Madhya Pradesh',
+    'SANDALPUR': 'Madhya Pradesh', 'UMARIA': 'Madhya Pradesh', 'AJNAS': 'Madhya Pradesh',
+    'BIJALGAON': 'Madhya Pradesh', 'DEEPGAON': 'Madhya Pradesh',
+
+    // KANNOD (Dewas) Cluster
+    'KANNOD': 'Madhya Pradesh', 'SATWAS': 'Madhya Pradesh', 'LOHARDA': 'Madhya Pradesh',
+    'KANTAPHOD': 'Madhya Pradesh', 'NANASA': 'Madhya Pradesh', 'KUSMANIA': 'Madhya Pradesh',
+    'BAIGAON': 'Madhya Pradesh', 'JINWANI': 'Madhya Pradesh',
+
+    // BAGLI (Dewas) Cluster
+    'BAGLI': 'Madhya Pradesh', 'UDAINAGAR': 'Madhya Pradesh', 'CHAPDA': 'Madhya Pradesh',
+    'PUNJAPURA': 'Madhya Pradesh', 'HATPIPLIYA': 'Madhya Pradesh', 'KARNAWAD': 'Madhya Pradesh',
+    'KAMALAPUR': 'Madhya Pradesh', 'PIPRI': 'Madhya Pradesh',
+
+    // TONK KHURD (Dewas) Cluster
+    'TONK KHURD': 'Madhya Pradesh', 'CHIRAWAD': 'Madhya Pradesh', 'IQAALA': 'Madhya Pradesh',
+    'AMONA': 'Madhya Pradesh', 'DEOGARH': 'Madhya Pradesh',
+
+    // BADNAWAR (Dhar) Cluster
+    'BADNAWAR': 'Madhya Pradesh', 'KOD': 'Madhya Pradesh', 'BIDWAL': 'Madhya Pradesh',
+    'KANWAN': 'Madhya Pradesh', 'NAGDA': 'Madhya Pradesh', 'KESUR': 'Madhya Pradesh',
+    'MULTHAN': 'Madhya Pradesh', 'KACHAROD': 'Madhya Pradesh',
+
+    // SARDARPUR (Dhar) Cluster
+    'SARDARPUR': 'Madhya Pradesh', 'RAJGARH': 'Madhya Pradesh', 'AMJHERA': 'Madhya Pradesh',
+    'DASAI': 'Madhya Pradesh', 'CHALNISARA': 'Madhya Pradesh', 'RINGNOD': 'Madhya Pradesh',
+    'BOPLA': 'Madhya Pradesh',
+
+    // KUKSHI (Dhar) Cluster
+    'KUKSHI': 'Madhya Pradesh', 'BAGH': 'Madhya Pradesh', 'DAHI': 'Madhya Pradesh',
+    'NISARPUR': 'Madhya Pradesh', 'LOHARI': 'Madhya Pradesh', 'SUSANIYA': 'Madhya Pradesh',
+
+    // DHARAMPURI (Dhar) Cluster
+    'DHARAMPURI': 'Madhya Pradesh', 'DHAMNOD': 'Madhya Pradesh', 'SUNDREL': 'Madhya Pradesh',
+    'KHALGHAT': 'Madhya Pradesh', 'GUJRI': 'Madhya Pradesh', 'SEJWAYA': 'Madhya Pradesh',
+
+    // NAGDA (Ujjain) Cluster
+    'NAGDA': 'Madhya Pradesh', 'RUPETA': 'Madhya Pradesh', 'UNHEL': 'Madhya Pradesh',
+    'PALSODA': 'Madhya Pradesh', 'BERCHA': 'Madhya Pradesh', 'GINODA': 'Madhya Pradesh',
+
+    // BADNAGAR (Ujjain) Cluster
+    'BADNAGAR': 'Madhya Pradesh', 'INGORIA': 'Madhya Pradesh', 'RUNIJA': 'Madhya Pradesh',
+    'BHATPACHLANA': 'Madhya Pradesh', 'KHARSHOD KALAN': 'Madhya Pradesh',
+
+    // MAHIDPUR (Ujjain) Cluster
+    'MAHIDPUR': 'Madhya Pradesh', 'JHARDA': 'Madhya Pradesh', 'GHOSLA': 'Madhya Pradesh',
+    'KHELIA': 'Madhya Pradesh', 'BOLASA': 'Madhya Pradesh',
+
+    // TARANA (Ujjain) Cluster
+    'TARANA': 'Madhya Pradesh', 'MAKDON': 'Madhya Pradesh', 'KAYTHA': 'Madhya Pradesh',
+    'NANDED': 'Madhya Pradesh', 'SUMRAKHEDA': 'Madhya Pradesh',
+
+    // SHAJAPUR CLUSTER
+    'SHAJAPUR': 'Madhya Pradesh', 'BERCHA': 'Madhya Pradesh', 'MAKSI': 'Madhya Pradesh',
+    'DUPADA': 'Madhya Pradesh', 'MOMAN BADODIA': 'Madhya Pradesh',
+
+    // SHUJALPUR (Shajapur) Cluster
+    'SHUJALPUR': 'Madhya Pradesh', 'AKODIA': 'Madhya Pradesh', 'POLAYKALAN': 'Madhya Pradesh',
+    'KALAPIPAL': 'Madhya Pradesh', 'KHOKRA': 'Madhya Pradesh', 'AVANTIPUR BADODIA': 'Madhya Pradesh',
+
+    // SANWER (Indore) Cluster
+    'SANWER': 'Madhya Pradesh', 'CHANDRAWATIGANJ': 'Madhya Pradesh', 'KSHIPRA': 'Madhya Pradesh',
+    'AJNOD': 'Madhya Pradesh', 'PIRKARADIA': 'Madhya Pradesh', 'DHARAMPURI': 'Madhya Pradesh',
+
+    // DEPALPUR (Indore) Cluster
+    'DEPALPUR': 'Madhya Pradesh', 'GAUTAMPURA': 'Madhya Pradesh', 'BETMA': 'Madhya Pradesh',
+    'HASALPUR': 'Madhya Pradesh', 'ATAHEDA': 'Madhya Pradesh', 'BANEDIA': 'Madhya Pradesh',
+
+    // MHOW (Indore) Cluster
+    'MHOW': 'Madhya Pradesh', 'KISHANGANJ': 'Madhya Pradesh', 'KODARIYA': 'Madhya Pradesh',
+    'BADGONA': 'Madhya Pradesh', 'SIMROL': 'Madhya Pradesh', 'MANPUR': 'Madhya Pradesh',
+    'MEN': 'Madhya Pradesh', 'HASALPUR': 'Madhya Pradesh',
+
+    // AGAR MALWA Cluster
+    'AGAR': 'Madhya Pradesh', 'BADOD': 'Madhya Pradesh', 'KANAD': 'Madhya Pradesh',
+    'SUSNER': 'Madhya Pradesh', 'SOYAT KALAN': 'Madhya Pradesh', 'NALKHERA': 'Madhya Pradesh',
+
+    // RAJGARH Cluster
+    'SARANGPUR': 'Madhya Pradesh', 'PACHORE': 'Madhya Pradesh', 'BIAORA': 'Madhya Pradesh',
+    'SUTHALIYA': 'Madhya Pradesh', 'NARSINGHGARH': 'Madhya Pradesh', 'BODA': 'Madhya Pradesh',
+    'KHILCHIPUR': 'Madhya Pradesh', 'JEERAPUR': 'Madhya Pradesh', 'MACHALPUR': 'Madhya Pradesh',
+
     // 11. HARDA DISTRICT
     'HARDA': 'Madhya Pradesh', 'HANDIA': 'Madhya Pradesh',
     'TIMARNI': 'Madhya Pradesh', 'RAHATGAON': 'Madhya Pradesh',
