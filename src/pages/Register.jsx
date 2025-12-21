@@ -378,6 +378,8 @@ const Register = () => {
                                                     <p style={{ margin: 0, fontSize: '0.75rem', color: '#fbbf24' }}><i className="fas fa-exclamation-triangle"></i> Mobile number not detected. Please rescan ID card.</p>
                                                 </div>
                                             )}
+                                            {content.data?.address && <div style={{ gridColumn: '1 / -1', marginTop: '4px' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Address:</strong> <div style={{ color: '#ddd', fontSize: '0.8rem', lineHeight: '1.2' }}>{content.data?.address}</div></div>}
+                                            {content.data?.dob && <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>DOB:</strong> <span style={{ color: '#fff' }}>{content.data?.dob}</span></div>}
                                         </div>
                                     </>
                                 ) : (
@@ -723,6 +725,12 @@ const Register = () => {
                         const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
                         const sessionMatch = text.match(/Session\s*[:|-]?\s*(\d{4}-\d{4})/i);
 
+                        // Extract Address (multiline until Director/Principal or end)
+                        const addressMatch = text.match(/Address\s*[:|-]?\s*([\s\S]+?)(?=\bD\w+\/|\bDirector|\bPrincipal|$)/i);
+
+                        // Extract DOB (DD-MM-YYYY pattern)
+                        const dobMatch = text.match(/\b\d{2}-\d{2}-\d{4}\b/);
+
                         // Extract mobile numbers (Indian format: 10 digits starting with 6-9)
                         const mobilePattern = /(?:Mobile|Mob|Ph|Phone|Contact|Tel)?[:\s]*([6-9]\d{9})/gi;
                         const mobileMatches = [];
@@ -746,7 +754,9 @@ const Register = () => {
                             // Mobile numbers
                             mobilePrimary: mobileMatches[0] || null,
                             mobileSecondary: mobileMatches[1] || null,
-                            mobileCount: mobileMatches.length
+                            mobileCount: mobileMatches.length,
+                            address: addressMatch ? addressMatch[1].trim().replace(/\n/g, ', ') : "Not Detected",
+                            dob: dobMatch ? dobMatch[0] : null
                         };
                     }
                 } else if (isAadharStage) {
