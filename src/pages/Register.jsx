@@ -871,18 +871,17 @@ const Register = () => {
             }
         } catch (error) {
             console.error('Verification check failed:', error);
-            // If backend check fails, assume NEW_USER (fallback) but warn logic
-            if (checkType === 'ID') {
-                setScannedData(cleanedMatch);
-                setIdCameraImg(URL.createObjectURL(finalBlob));
-                setScanBuffer([]); stopCamera();
-                setVerificationStage('ID_VERIFY_DATA');
-            } else {
-                setAadharData(cleanedMatch);
-                setAadharCameraImg(URL.createObjectURL(finalBlob));
-                setScanBuffer([]); stopCamera();
-                setVerificationStage('AADHAR_VERIFY_DATA');
-            }
+            // SECURITY: Do NOT fallback to allowing access. Block if server is unreachable.
+            setScanStatus("❌ Connection Failed");
+            setError("Could not verify details with server. Please check connection.");
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Connection failed. Please try again."));
+            setErrorFlash(true);
+            setTimeout(() => {
+                setErrorFlash(false);
+                setScanStatus(checkType === 'ID' ? "Align College ID" : "Align Aadhar");
+                setIsScanning(false);
+                // Don't stop camera, let them retry
+            }, 3000);
         }
     };
 
