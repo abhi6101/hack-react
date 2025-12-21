@@ -8,7 +8,8 @@ const StudentDashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [showEditModal, setShowEditModal] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedData, setEditedData] = useState({});
     const [jobApplications, setJobApplications] = useState([]);
     const [interviews, setInterviews] = useState([]);
 
@@ -25,6 +26,57 @@ const StudentDashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         navigate('/login');
+    };
+
+    const handleEdit = () => {
+        setIsEditing(true);
+        setEditedData({
+            fullName: user?.fullName || user?.name || '',
+            fatherName: user?.fatherName || '',
+            institution: user?.institution || '',
+            aadharNumber: user?.aadharNumber || '',
+            mobilePrimary: user?.mobilePrimary || user?.phone || '',
+            mobileSecondary: user?.mobileSecondary || '',
+            enrollmentNumber: user?.enrollmentNumber || '',
+            startYear: user?.startYear || ''
+        });
+    };
+
+    const handleSave = async () => {
+        const token = localStorage.getItem('authToken');
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/update-profile`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(editedData)
+            });
+
+            if (response.ok) {
+                setIsEditing(false);
+                fetchData(); // Refresh data
+                alert('Profile updated successfully!');
+            } else {
+                alert('Failed to update profile');
+            }
+        } catch (err) {
+            console.error('Error updating profile:', err);
+            alert('Error updating profile');
+        }
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+        setEditedData({});
+    };
+
+    const handleFieldChange = (field, value) => {
+        setEditedData(prev => ({
+            ...prev,
+            [field]: value
+        }));
     };
 
     const fetchData = async () => {
@@ -117,62 +169,125 @@ const StudentDashboard = () => {
                             </p>
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                            <button
-                                onClick={() => setShowEditModal(true)}
-                                style={{
-                                    padding: '1rem 2rem',
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    color: '#fff',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    transition: 'all 0.3s ease',
-                                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
-                                }}
-                                onMouseOver={(e) => {
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
-                                }}
-                                onMouseOut={(e) => {
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
-                                }}
-                            >
-                                <i className="fas fa-edit"></i> Edit Profile
-                            </button>
-                            <button
-                                onClick={handleLogout}
-                                style={{
-                                    padding: '1rem 2rem',
-                                    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    color: '#fff',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    transition: 'all 0.3s ease',
-                                    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
-                                }}
-                                onMouseOver={(e) => {
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 6px 20px rgba(239, 68, 68, 0.6)';
-                                }}
-                                onMouseOut={(e) => {
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.4)';
-                                }}
-                            >
-                                <i className="fas fa-sign-out-alt"></i> Logout
-                            </button>
+                            {!isEditing ? (
+                                <>
+                                    <button
+                                        onClick={handleEdit}
+                                        style={{
+                                            padding: '1rem 2rem',
+                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            color: '#fff',
+                                            fontSize: '1rem',
+                                            fontWeight: '600',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.target.style.transform = 'translateY(-2px)';
+                                            e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.target.style.transform = 'translateY(0)';
+                                            e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+                                        }}
+                                    >
+                                        <i className="fas fa-edit"></i> Edit Profile
+                                    </button>
+                                    <button
+                                        onClick={handleLogout}
+                                        style={{
+                                            padding: '1rem 2rem',
+                                            background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            color: '#fff',
+                                            fontSize: '1rem',
+                                            fontWeight: '600',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.target.style.transform = 'translateY(-2px)';
+                                            e.target.style.boxShadow = '0 6px 20px rgba(239, 68, 68, 0.6)';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.target.style.transform = 'translateY(0)';
+                                            e.target.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.4)';
+                                        }}
+                                    >
+                                        <i className="fas fa-sign-out-alt"></i> Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={handleSave}
+                                        style={{
+                                            padding: '1rem 2rem',
+                                            background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            color: '#fff',
+                                            fontSize: '1rem',
+                                            fontWeight: '600',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: '0 4px 15px rgba(34, 197, 94, 0.4)'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.target.style.transform = 'translateY(-2px)';
+                                            e.target.style.boxShadow = '0 6px 20px rgba(34, 197, 94, 0.6)';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.target.style.transform = 'translateY(0)';
+                                            e.target.style.boxShadow = '0 4px 15px rgba(34, 197, 94, 0.4)';
+                                        }}
+                                    >
+                                        <i className="fas fa-save"></i> Save Changes
+                                    </button>
+                                    <button
+                                        onClick={handleCancel}
+                                        style={{
+                                            padding: '1rem 2rem',
+                                            background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            color: '#fff',
+                                            fontSize: '1rem',
+                                            fontWeight: '600',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: '0 4px 15px rgba(107, 114, 128, 0.4)'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.target.style.transform = 'translateY(-2px)';
+                                            e.target.style.boxShadow = '0 6px 20px rgba(107, 114, 128, 0.6)';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.target.style.transform = 'translateY(0)';
+                                            e.target.style.boxShadow = '0 4px 15px rgba(107, 114, 128, 0.4)';
+                                        }}
+                                    >
+                                        <i className="fas fa-times"></i> Cancel
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
