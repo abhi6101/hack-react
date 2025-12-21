@@ -849,7 +849,7 @@ const Register = () => {
                 default:
                     // Continue normal verification flow
                     setScannedData(cleanedMatch);
-                    setIdCameraImg(URL.createObjectURL(new Blob([await (await fetch(idCameraImg || '')).arrayBuffer()])));
+                    setIdCameraImg(URL.createObjectURL(finalBlob));
                     setScanBuffer([]); stopCamera();
                     setVerificationStage('ID_VERIFY_DATA');
                     break;
@@ -858,6 +858,7 @@ const Register = () => {
             console.error('Verification check failed:', error);
             // If backend check fails, continue with normal flow (fallback)
             setScannedData(cleanedMatch);
+            setIdCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]); stopCamera();
             setVerificationStage('ID_VERIFY_DATA');
         }
