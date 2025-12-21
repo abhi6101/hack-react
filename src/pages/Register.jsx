@@ -2,7 +2,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
-import '../styles/register.css';
+import { DISTRICT_STATE_MAP } from '../data/indianDistricts';
+import './Register.css';
 
 const TARGET_SCANS = 15; // Increased scan count for better accuracy
 
@@ -63,7 +64,7 @@ const Register = () => {
     React.useEffect(() => {
         const fetchDepts = async () => {
             try {
-                const res = await fetch(`${API_BASE_URL}/public/departments`);
+                const res = await fetch(`${API_BASE_URL} /public/departments`);
                 if (res.ok) setDepartments(await res.json());
             } catch (e) {
                 console.error("Failed to load departments", e);
@@ -134,7 +135,7 @@ const Register = () => {
 
             const durationYears = courseConfig[formData.branch] || 4;
             const endYear = parseInt(formData.startYear) + durationYears;
-            const batchStr = `${formData.startYear}-${endYear}`;
+            const batchStr = `${formData.startYear} -${endYear} `;
 
             if (formData.batch !== batchStr) {
                 setFormData(prev => ({ ...prev, batch: batchStr }));
@@ -181,7 +182,7 @@ const Register = () => {
             for (let year = Math.max(1, calculatedYear - 1); year <= Math.min(config.maxSemesters, calculatedYear + 1); year++) {
                 options.push({
                     value: year,
-                    label: `Year ${year}${year === calculatedYear ? ' (Current)' : ''}`
+                    label: `Year ${year}${year === calculatedYear ? ' (Current)' : ''} `
                 });
             }
 
@@ -193,7 +194,7 @@ const Register = () => {
             for (let sem = Math.max(1, calculatedSemester - 1); sem <= Math.min(config.maxSemesters, calculatedSemester + 1); sem++) {
                 options.push({
                     value: sem,
-                    label: `Semester ${sem}${sem === calculatedSemester ? ' (Current)' : ''}`
+                    label: `Semester ${sem}${sem === calculatedSemester ? ' (Current)' : ''} `
                 });
             }
 
@@ -245,7 +246,7 @@ const Register = () => {
                                 position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)',
                                 background: 'rgba(0,0,0,0.85)', padding: '8px 18px', borderRadius: '30px',
                                 display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20,
-                                border: `1px solid ${scanStatus.includes('⚠️') ? '#ef4444' : (scanStatus.includes('Reading') ? '#00d4ff' : '#4ade80')}`,
+                                border: `1px solid ${scanStatus.includes('⚠️') ? '#ef4444' : (scanStatus.includes('Reading') ? '#00d4ff' : '#4ade80')} `,
                                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', width: 'max-content'
                             }}>
                                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80', animation: 'pulse 1.5s infinite' }}></div>
@@ -253,9 +254,9 @@ const Register = () => {
                                     color: '#fff', fontSize: '0.85rem', fontWeight: '600', letterSpacing: '0.5px',
                                     display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap'
                                 }}>
-                                    <i className={`fas ${scanStatus.includes('Reading') ? 'fa-brain animate-pulse' : (scanStatus.includes('⚠️') ? 'fa-exclamation-triangle' : 'fa-check-circle')}`}
+                                    <i className={`fas ${scanStatus.includes('Reading') ? 'fa-brain animate-pulse' : (scanStatus.includes('⚠️') ? 'fa-exclamation-triangle' : 'fa-check-circle')} `}
                                         style={{ color: scanStatus.includes('Reading') ? '#00d4ff' : (scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80') }}></i>
-                                    {scanStatus} {scanBuffer.length > 0 && scanBuffer.length < TARGET_SCANS && `(${scanBuffer.length + 1}/${TARGET_SCANS})`}
+                                    {scanStatus} {scanBuffer.length > 0 && scanBuffer.length < TARGET_SCANS && `(${scanBuffer.length + 1} / ${TARGET_SCANS})`}
                                 </span>
                             </div>
                         )}
@@ -425,7 +426,7 @@ const Register = () => {
                 ) : (
                     <div style={{ maxWidth: '400px', margin: '0 auto' }}>
                         <div style={{ padding: '2rem', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', marginBottom: '1.5rem' }}>
-                            <i className={`fas ${verificationStage === 'SELFIE' ? 'fa-user' : 'fa-id-card'}`} style={{ fontSize: '4rem', color: '#667eea' }}></i>
+                            <i className={`fas ${verificationStage === 'SELFIE' ? 'fa-user' : 'fa-id-card'} `} style={{ fontSize: '4rem', color: '#667eea' }}></i>
                         </div>
                         <button className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem' }} onClick={content.btnAction}>
                             <i className="fas fa-camera"></i> {content.btnText}
@@ -453,7 +454,7 @@ const Register = () => {
                 stopCamera();
 
                 // TEMPORARY: Save verification data to localStorage (until backend is ready)
-                const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
+                const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint} `;
                 const verificationData = {
                     allStepsCompleted: true,
                     scannedData: scannedData,
@@ -551,19 +552,19 @@ const Register = () => {
                 }
             };
 
-            const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            const response = await fetch(`${API_BASE_URL} /auth/register`, {
                 method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registrationData),
             });
             const result = await response.json();
             if (response.ok) {
                 // Clean up localStorage verification data after successful registration
-                const localVerificationKey = `verification_${formData.computerCode}_${deviceFingerprint}`;
+                const localVerificationKey = `verification_${formData.computerCode}_${deviceFingerprint} `;
                 localStorage.removeItem(localVerificationKey);
                 console.log('✅ Verification data cleaned up from localStorage');
 
                 setSuccess(result.message || "Registration successful!");
-                setTimeout(() => navigate(`/verify-account?email=${encodeURIComponent(formData.email)}`), 1500);
+                setTimeout(() => navigate(`/ verify - account ? email = ${encodeURIComponent(formData.email)} `), 1500);
             } else {
                 setError(result.message || 'Registration failed.'); setLoading(false);
             }
@@ -646,7 +647,7 @@ const Register = () => {
                         if (genericIdKeywords.some(kw => lowerText.includes(kw)) && text.length > 80 && !isIPSDetected) {
                             detectedDocType = "External Identity Card";
                         } else if (matchedCategory) {
-                            detectedDocType = `Invalid Item (${matchedCategory.name})`;
+                            detectedDocType = `Invalid Item(${matchedCategory.name})`;
                         } else if (text.length > 120 && !isIPSDetected) {
                             detectedDocType = "Invalid Item (Object Detected)";
                         }
@@ -661,7 +662,7 @@ const Register = () => {
                 }
 
                 if (detectedDocType) {
-                    setScanStatus(`⚠️ ${detectedDocType.toUpperCase()}`);
+                    setScanStatus(`⚠️ ${detectedDocType.toUpperCase()} `);
                     window.speechSynthesis.cancel();
                     let alertText = "";
                     if (detectedDocType === "Digital Screenshot") {
@@ -933,49 +934,8 @@ const Register = () => {
             // 2. Remove trailing commas/spaces
             addr = addr.replace(/[,\s]+$/, '');
 
-            // 3. Smart State Mapping (Major Districts + Educational Hubs)
-            const DISTRICT_STATE_MAP = {
-                // Madhya Pradesh (Focus)
-                'SEHORE': 'Madhya Pradesh', 'INDORE': 'Madhya Pradesh', 'BHOPAL': 'Madhya Pradesh', 'UJJAIN': 'Madhya Pradesh',
-                'DEWAS': 'Madhya Pradesh', 'RAISEN': 'Madhya Pradesh', 'VIDISHA': 'Madhya Pradesh', 'DHAR': 'Madhya Pradesh',
-                'RATLAM': 'Madhya Pradesh', 'KHANDWA': 'Madhya Pradesh', 'RAJGARH': 'Madhya Pradesh', 'SHAJAPUR': 'Madhya Pradesh',
-                'JABALPUR': 'Madhya Pradesh', 'GWALIOR': 'Madhya Pradesh', 'SAGAR': 'Madhya Pradesh', 'SATNA': 'Madhya Pradesh',
+            // 3. Smart State Mapping (Using imported complete map)
 
-                // Maharashtra
-                'MUMBAI': 'Maharashtra', 'PUNE': 'Maharashtra', 'NAGPUR': 'Maharashtra', 'NASHIK': 'Maharashtra',
-                'THANE': 'Maharashtra', 'AURANGABAD': 'Maharashtra', 'SOLAPUR': 'Maharashtra',
-
-                // Uttar Pradesh
-                'LUCKNOW': 'Uttar Pradesh', 'KANPUR': 'Uttar Pradesh', 'VARANASI': 'Uttar Pradesh', 'AGRA': 'Uttar Pradesh',
-                'NOIDA': 'Uttar Pradesh', 'GHAZIABAD': 'Uttar Pradesh', 'PRAYAGRAJ': 'Uttar Pradesh',
-
-                // Rajasthan
-                'JAIPUR': 'Rajasthan', 'JODHPUR': 'Rajasthan', 'KOTA': 'Rajasthan', 'UDAIPUR': 'Rajasthan', 'AJMER': 'Rajasthan',
-
-                // Gujarat
-                'AHMEDABAD': 'Gujarat', 'SURAT': 'Gujarat', 'VADODARA': 'Gujarat', 'RAJKOT': 'Gujarat',
-
-                // Delhi
-                'DELHI': 'Delhi', 'NEW DELHI': 'Delhi',
-
-                // Karnataka
-                'BANGALORE': 'Karnataka', 'BENGALURU': 'Karnataka', 'MYSORE': 'Karnataka', 'MYSURU': 'Karnataka',
-
-                // Tamil Nadu
-                'CHENNAI': 'Tamil Nadu', 'COIMBATORE': 'Tamil Nadu', 'MADURAI': 'Tamil Nadu',
-
-                // Telangana & AP
-                'HYDERABAD': 'Telangana', 'WARANGAL': 'Telangana', 'VISAKHAPATNAM': 'Andhra Pradesh', 'VIJAYAWADA': 'Andhra Pradesh',
-
-                // West Bengal
-                'KOLKATA': 'West Bengal', 'HOWRAH': 'West Bengal', 'DARJEELING': 'West Bengal',
-
-                // Others
-                'CHANDIGARH': 'Chandigarh', 'LUDHIANA': 'Punjab', 'AMRITSAR': 'Punjab',
-                'PATNA': 'Bihar', 'RANCHI': 'Jharkhand', 'RAIPUR': 'Chhattisgarh', 'BHILAI': 'Chhattisgarh',
-                'BHUBANESWAR': 'Odisha', 'CUTTACK': 'Odisha',
-                'GUWAHATI': 'Assam', 'SHILLONG': 'Meghalaya'
-            };
 
             const upperAddr = addr.toUpperCase();
             let detectedState = '';
