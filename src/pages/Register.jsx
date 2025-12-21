@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
 import '../styles/register.css';
 
+const TARGET_SCANS = 15; // Increased scan count for better accuracy
+
 const Register = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -678,7 +680,7 @@ const Register = () => {
 
                 // 2. DOCUMENT PROCESSING
                 if (isIdStage) {
-                    const isIPSAcademy = /IPS|Academy|Institute|College|University|Student|Campus|Indore|Identity/i.test(text);
+                    const isIPSAcademy = /IPS|Academy|Indore/i.test(text);
 
                     // Smart Clean: Fix common OCR errors in Computer Code (59500 -> S9SOO)
                     const cleanTextForNumbers = text.replace(/O/g, '0').replace(/S/g, '5').replace(/l/g, '1').replace(/Z/g, '2');
@@ -871,15 +873,14 @@ const Register = () => {
                     break;
             }
         } catch (error) {
-            console.error('Verification check failed:', error);
+            console.error('Verification check failed details:', error);
             // SECURITY: Do NOT fallback to allowing access. Block if server is unreachable.
             setScanStatus("❌ Connection Failed");
-            setError("Could not verify details with server. Please check connection.");
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Connection failed. Please try again."));
+            setError(`Connection Error: ${error.message || "Server Unreachable"}`);
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Connection failed. Please check network."));
             setErrorFlash(true);
             setTimeout(() => {
                 setErrorFlash(false);
-                // Don't change stage, just let them try clicking again
                 setLoading(false);
             }, 3000);
         }
