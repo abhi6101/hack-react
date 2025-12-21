@@ -16,6 +16,7 @@ const Register = () => {
         startYear: new Date().getFullYear().toString(),
         batch: '',
         computerCode: '',
+        enrollmentNumber: '',
         mobilePrimary: '',
         mobileSecondary: '',
         password: '',
@@ -490,6 +491,7 @@ const Register = () => {
                 semester: formData.role === 'USER' ? parseInt(formData.semester) : undefined,
                 batch: formData.role === 'USER' ? formData.batch : undefined,
                 computerCode: formData.role === 'USER' ? formData.computerCode : undefined,
+                enrollmentNumber: formData.role === 'USER' ? formData.enrollmentNumber : undefined,
                 startYear: formData.role === 'USER' ? formData.startYear : undefined,
 
                 // Verified Identity Data (from ID card)
@@ -1185,6 +1187,20 @@ const Register = () => {
                                             <div className="form-row" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
                                                 <div className="form-group" style={{ flex: 1 }}><label htmlFor="startYear">Admission Year *</label><select id="startYear" name="startYear" required value={formData.startYear} onChange={handleChange} disabled={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff', width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(52,211,153,0.3)' } : { background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%' }}>{Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i + 1).map(y => (<option key={y} value={y} style={{ background: '#1e293b' }}>{y}</option>))}</select></div>
                                                 <div className="form-group" style={{ flex: 1 }}><label>Batch Session</label><input type="text" readOnly value={formData.batch} style={{ background: 'rgba(255,255,255,0.05)', cursor: 'not-allowed', color: '#4ade80', fontWeight: 'bold' }} /></div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="enrollmentNumber">Enrollment Number *</label>
+                                                <input
+                                                    type="text"
+                                                    id="enrollmentNumber"
+                                                    name="enrollmentNumber"
+                                                    required
+                                                    placeholder="Enter your enrollment number"
+                                                    value={formData.enrollmentNumber}
+                                                    onChange={handleChange}
+                                                    style={{ textTransform: 'uppercase' }}
+                                                />
+                                                <small>Your official enrollment number from the institute</small>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="computerCode">Computer Code (Student ID) *</label>
