@@ -351,7 +351,25 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Full Name</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.fullName || user?.name || 'Not provided'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={user?.fullName || user?.name || ''}
+                                        readOnly
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                            fontSize: '1rem',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.fullName || user?.name || 'Not provided'}</p>
+                                )}
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',
@@ -360,7 +378,25 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Father's Name</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.fatherName || 'Not provided'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={user?.fatherName || ''}
+                                        readOnly
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                            fontSize: '1rem',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.fatherName || 'Not provided'}</p>
+                                )}
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',
@@ -369,7 +405,25 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Institution</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.institution || 'Not provided'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={user?.institution || ''}
+                                        readOnly
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                            fontSize: '1rem',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.institution || 'Not provided'}</p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -426,7 +480,26 @@ const StudentDashboard = () => {
                             maxWidth: '400px'
                         }}>
                             <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Aadhar Number</strong>
-                            <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500', letterSpacing: '2px' }}>{user?.aadharNumber || 'Not provided'}</p>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={user?.aadharNumber || ''}
+                                    readOnly
+                                    style={{
+                                        width: '100%',
+                                        background: 'rgba(0, 0, 0, 0.2)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        borderRadius: '8px',
+                                        padding: '0.5rem',
+                                        color: 'rgba(255, 255, 255, 0.7)',
+                                        fontSize: '1rem',
+                                        cursor: 'not-allowed',
+                                        letterSpacing: '2px'
+                                    }}
+                                />
+                            ) : (
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500', letterSpacing: '2px' }}>{user?.aadharNumber || 'Not provided'}</p>
+                            )}
                         </div>
                     </div>
 
@@ -495,9 +568,26 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Mobile Primary</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobilePrimary || user?.phone || 'Not provided'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={editedData.mobilePrimary || ''}
+                                        onChange={(e) => handleFieldChange('mobilePrimary', e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: '#fff',
+                                            fontSize: '1rem'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobilePrimary || user?.phone || 'Not provided'}</p>
+                                )}
                             </div>
-                            {user?.mobileSecondary && (
+                            {(isEditing || user?.mobileSecondary) && (
                                 <div style={{
                                     background: 'rgba(255, 255, 255, 0.05)',
                                     padding: '1.25rem',
@@ -505,7 +595,25 @@ const StudentDashboard = () => {
                                     border: '1px solid rgba(255, 255, 255, 0.1)'
                                 }}>
                                     <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Mobile Secondary</strong>
-                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobileSecondary}</p>
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            value={editedData.mobileSecondary || ''}
+                                            onChange={(e) => handleFieldChange('mobileSecondary', e.target.value)}
+                                            placeholder="Add secondary mobile"
+                                            style={{
+                                                width: '100%',
+                                                background: 'rgba(0, 0, 0, 0.2)',
+                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                borderRadius: '8px',
+                                                padding: '0.5rem',
+                                                color: '#fff',
+                                                fontSize: '1rem'
+                                            }}
+                                        />
+                                    ) : (
+                                        <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.mobileSecondary}</p>
+                                    )}
                                 </div>
                             )}
                             <div style={{
@@ -515,7 +623,25 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Branch</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.branch || 'Not set'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={user?.branch || ''}
+                                        readOnly
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                            fontSize: '1rem',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.branch || 'Not set'}</p>
+                                )}
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',
@@ -524,7 +650,25 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Semester</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.semester || 'Not set'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={user?.semester || ''}
+                                        readOnly
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                            fontSize: '1rem',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.semester || 'Not set'}</p>
+                                )}
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',
@@ -551,7 +695,24 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Enrollment Number</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.enrollmentNumber || 'Not set'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={editedData.enrollmentNumber || ''}
+                                        onChange={(e) => handleFieldChange('enrollmentNumber', e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: '#fff',
+                                            fontSize: '1rem'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.enrollmentNumber || 'Not set'}</p>
+                                )}
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',
@@ -560,7 +721,24 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Start Year</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.startYear || 'Not set'}</p>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={editedData.startYear || ''}
+                                        onChange={(e) => handleFieldChange('startYear', e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: '#fff',
+                                            fontSize: '1rem'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.startYear || 'Not set'}</p>
+                                )}
                             </div>
                         </div>
                     </div>
