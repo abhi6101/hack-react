@@ -97,26 +97,82 @@ const Register = () => {
         }
     };
 
-    // Auto-calculate Batch
+    // Auto-calculate Batch based on course duration
     React.useEffect(() => {
         if (formData.branch && formData.startYear) {
-            const dept = departments.find(d => d.code === formData.branch);
-            if (dept) {
-                const durationYears = Math.ceil((dept.maxSemesters || 8) / 2);
-                const endYear = parseInt(formData.startYear) + durationYears;
-                const batchStr = `${formData.startYear}-${endYear}`;
-                if (formData.batch !== batchStr) {
-                    setFormData(prev => ({ ...prev, batch: batchStr }));
-                }
+            const courseConfig = {
+                'IMCA': 5, // 5 years
+                'MCA': 2,  // 2 years
+                'BCA': 3   // 3 years
+            };
+
+            const durationYears = courseConfig[formData.branch] || 4;
+            const endYear = parseInt(formData.startYear) + durationYears;
+            const batchStr = `${formData.startYear}-${endYear}`;
+
+            if (formData.batch !== batchStr) {
+                setFormData(prev => ({ ...prev, batch: batchStr }));
             }
         }
-    }, [formData.branch, formData.startYear, departments]);
+    }, [formData.branch, formData.startYear]);
 
     const getSemesterOptions = () => {
         const branchCode = formData.branch;
-        const dept = departments.find(d => d.code === branchCode);
-        const maxSem = (dept && dept.maxSemesters) ? dept.maxSemesters : 8;
-        return Array.from({ length: maxSem }, (_, i) => ({ value: i + 1, label: `Semester ${i + 1}` }));
+        const admissionYear = parseInt(formData.startYear) || new Date().getFullYear();
+
+        // Define course structures
+        const courseConfig = {
+            'IMCA': { maxSemesters: 10, type: 'semester', duration: 5 }, // Integrated MCA: 5 years
+            'MCA': { maxSemesters: 4, type: 'semester', duration: 2 },   // MCA: 2 years
+            'BCA': { maxSemesters: 3, type: 'year', duration: 3 }        // BCA: 3 years (year-wise)
+        };
+
+        const config = courseConfig[branchCode] || { maxSemesters: 8, type: 'semester', duration: 4 };
+
+        // Calculate current semester based on admission year
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1; // 1-12
+
+        // Years elapsed since admission
+        const yearsElapsed = currentYear - admissionYear;
+
+        // Determine if odd or even semester based on month
+        // Jan-Jun = Even semester, Jul-Dec = Odd semester
+        const isOddSemester = currentMonth >= 7;
+
+        // Calculate current semester: (years * 2) + (odd ? 1 : 0)
+        let calculatedSemester = (yearsElapsed * 2) + (isOddSemester ? 1 : 0);
+
+        // Ensure it's within valid range
+        calculatedSemester = Math.max(1, Math.min(calculatedSemester, config.maxSemesters));
+
+        if (config.type === 'year') {
+            // BCA: Year-wise (show ±1 year)
+            const calculatedYear = Math.min(yearsElapsed + 1, config.maxSemesters);
+            const options = [];
+
+            for (let year = Math.max(1, calculatedYear - 1); year <= Math.min(config.maxSemesters, calculatedYear + 1); year++) {
+                options.push({
+                    value: year,
+                    label: `Year ${year}${year === calculatedYear ? ' (Current)' : ''}`
+                });
+            }
+
+            return options;
+        } else {
+            // IMCA, MCA: Semester-wise (show ±1 semester)
+            const options = [];
+
+            for (let sem = Math.max(1, calculatedSemester - 1); sem <= Math.min(config.maxSemesters, calculatedSemester + 1); sem++) {
+                options.push({
+                    value: sem,
+                    label: `Semester ${sem}${sem === calculatedSemester ? ' (Current)' : ''}`
+                });
+            }
+
+            return options;
+        }
     };
 
     const renderVerificationJourney = () => {
@@ -949,8 +1005,9 @@ const Register = () => {
                             )}
 
                             <div className="form-group">
-                                <label htmlFor="role">Select Role</label>
-                                <select id="role" name="role" required value={formData.role} onChange={handleChange}><option value="USER">Student</option></select>
+                                <label htmlFor="role">Select Role <i className="fas fa-lock text-green-400" title="Student Portal"></i></label>
+                                <select id="role" name="role" required value={formData.role} disabled className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff' }}><option value="USER">Student</option></select>
+                                <small style={{ color: '#34d399' }}>This is a student registration portal</small>
                             </div>
                             {formData.role === 'USER' && (
                                 <>
