@@ -434,6 +434,24 @@ const StudentDashboard = () => {
                                 <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500', letterSpacing: '2px' }}>{user?.aadharNumber || 'Not provided'}</p>
                             )}
                         </div>
+                        {user?.aadharCardImage && (
+                            <div style={{ marginTop: '1.5rem' }}>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Aadhar Card Photo</strong>
+                                <div style={{
+                                    maxWidth: '300px',
+                                    borderRadius: '12px',
+                                    overflow: 'hidden',
+                                    border: '1px solid rgba(255,255,255,0.1)'
+                                }}>
+                                    <img
+                                        src={user.aadharCardImage}
+                                        alt="Aadhar Card"
+                                        style={{ width: '100%', display: 'block' }}
+                                        onError={(e) => e.target.style.display = 'none'}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Registration Details */}
@@ -601,7 +619,11 @@ const StudentDashboard = () => {
                                     <input
                                         type="text"
                                         value={editedData.enrollmentNumber || ''}
-                                        onChange={(e) => handleFieldChange('enrollmentNumber', e.target.value)}
+                                        onChange={(e) => {
+                                            // ALLOW ONLY ALPHANUMERIC (Remove special chars like @)
+                                            const cleanValue = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                                            handleFieldChange('enrollmentNumber', cleanValue);
+                                        }}
                                         style={{
                                             width: '100%',
                                             background: '#fff',
@@ -613,7 +635,7 @@ const StudentDashboard = () => {
                                             outline: 'none',
                                             fontWeight: '600'
                                         }}
-                                        placeholder="Enter Enrollment Number"
+                                        placeholder="Enter Enrollment Number (No Special Chars)"
                                     />
                                 ) : (
                                     <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.enrollmentNumber || 'Not set'}</p>
