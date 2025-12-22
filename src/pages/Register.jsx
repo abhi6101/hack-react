@@ -554,32 +554,30 @@ const Register = () => {
         canvasRef.current.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0);
 
-        canvasRef.current.toBlob((blob) => {
-            if (blob) {
-                const selfieUrl = URL.createObjectURL(blob);
-                setSelfieImg(selfieUrl);
-                setFlash(true);
-                setTimeout(() => setFlash(false), 150);
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Selfie Captured Successfully. Moving to final step."));
-                stopCamera();
+        // Convert to Base64 (Data URL) for storage
+        const selfieUrl = canvasRef.current.toDataURL('image/jpeg', 0.8);
+        setSelfieImg(selfieUrl);
 
-                // TEMPORARY: Save verification data to localStorage (until backend is ready)
-                const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
-                const verificationData = {
-                    allStepsCompleted: true,
-                    scannedData: scannedData,
-                    aadharData: aadharData,
-                    selfieImg: selfieUrl,
-                    idCameraImg: idCameraImg,
-                    aadharCameraImg: aadharCameraImg,
-                    timestamp: new Date().toISOString()
-                };
-                localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
-                console.log('✅ Verification data saved to localStorage');
+        setFlash(true);
+        setTimeout(() => setFlash(false), 150);
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Selfie Captured Successfully. Moving to final step."));
+        stopCamera();
 
-                setStep(4);
-            }
-        }, 'image/jpeg');
+        // TEMPORARY: Save verification data to localStorage (until backend is ready)
+        const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
+        const verificationData = {
+            allStepsCompleted: true,
+            scannedData: scannedData,
+            aadharData: aadharData,
+            selfieImg: selfieUrl,
+            idCameraImg: idCameraImg,
+            aadharCameraImg: aadharCameraImg,
+            timestamp: new Date().toISOString()
+        };
+        localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+        console.log('✅ Verification data saved to localStorage');
+
+        setStep(4);
     };
 
     const startCamera = async () => {
