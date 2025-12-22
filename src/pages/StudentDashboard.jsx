@@ -8,7 +8,7 @@ const StudentDashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isEditing, setIsEditing] = useState(true); // Always editing by default
+    const [isEditing, setIsEditing] = useState(false); // Read-only mode
     const [editedData, setEditedData] = useState({});
     const [jobApplications, setJobApplications] = useState([]);
     const [interviews, setInterviews] = useState([]);
@@ -161,38 +161,10 @@ const StudentDashboard = () => {
                                 Welcome Back! 👋
                             </h1>
                             <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem', margin: 0 }}>
-                                {user?.username || 'Student'}
+                                {user?.fullName || user?.name || user?.username || 'Student'}
                             </p>
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                            <button
-                                onClick={handleSave}
-                                style={{
-                                    padding: '1rem 2rem',
-                                    background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    color: '#fff',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    transition: 'all 0.3s ease',
-                                    boxShadow: '0 4px 15px rgba(34, 197, 94, 0.4)'
-                                }}
-                                onMouseOver={(e) => {
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 6px 20px rgba(34, 197, 94, 0.6)';
-                                }}
-                                onMouseOut={(e) => {
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = '0 4px 15px rgba(34, 197, 94, 0.4)';
-                                }}
-                            >
-                                <i className="fas fa-save"></i> Save Changes
-                            </button>
                             <button
                                 onClick={handleLogout}
                                 style={{
@@ -579,7 +551,9 @@ const StudentDashboard = () => {
                                 border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
                                 <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Branch</strong>
-                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.branch || 'Not set'}</p>
+                                <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>
+                                    {(user?.branch === 'INTG' || user?.branch === 'intg') ? 'Integrated MCA' : (user?.branch || 'Not set')}
+                                </p>
                             </div>
                             <div style={{
                                 background: 'rgba(255, 255, 255, 0.05)',

@@ -126,8 +126,8 @@ const VerifyOTP = () => {
                 }
             } else {
                 setError(data.message || 'Invalid OTP. Please try again.');
-                setOtp(['', '', '', '', '', '']);
-                inputRefs.current[0]?.focus();
+                // Do NOT clear OTP immediately on error, let the user see what they entered
+                // setOtp(['', '', '', '', '', '']); 
             }
             setLoading(false);
         } catch (err) {
@@ -174,6 +174,15 @@ const VerifyOTP = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // If there is an error (Retry mode), clear inputs
+        if (error) {
+            setOtp(['', '', '', '', '', '']);
+            setError('');
+            inputRefs.current[0]?.focus();
+            return;
+        }
+
         const otpValue = otp.join('');
         if (otpValue.length === 6) {
             handleVerifyOTP(otpValue);
@@ -250,7 +259,11 @@ const VerifyOTP = () => {
                                         inputMode="numeric"
                                         maxLength="1"
                                         value={digit}
-                                        onChange={(e) => handleOtpChange(index, e.target.value)}
+                                        onChange={(e) => {
+                                            // Clear error if user types
+                                            if (error) setError('');
+                                            handleOtpChange(index, e.target.value);
+                                        }}
                                         onKeyDown={(e) => handleKeyDown(index, e)}
                                         onPaste={index === 0 ? handlePaste : undefined}
                                         disabled={loading}
@@ -259,7 +272,7 @@ const VerifyOTP = () => {
                                             height: '60px',
                                             fontSize: '1.5rem',
                                             textAlign: 'center',
-                                            border: '2px solid rgba(255,255,255,0.1)',
+                                            border: `2px solid ${error ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
                                             borderRadius: '8px',
                                             background: 'rgba(255,255,255,0.05)',
                                             color: '#fff',
@@ -267,11 +280,11 @@ const VerifyOTP = () => {
                                             transition: 'all 0.3s ease'
                                         }}
                                         onFocus={(e) => {
-                                            e.target.style.borderColor = '#667eea';
+                                            e.target.style.borderColor = error ? '#ef4444' : '#667eea';
                                             e.target.style.background = 'rgba(102, 126, 234, 0.1)';
                                         }}
                                         onBlur={(e) => {
-                                            e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+                                            e.target.style.borderColor = error ? '#ef4444' : 'rgba(255,255,255,0.1)';
                                             e.target.style.background = 'rgba(255,255,255,0.05)';
                                         }}
                                     />
@@ -323,12 +336,19 @@ const VerifyOTP = () => {
                         <button
                             type="submit"
                             className="btn btn-primary"
-                            disabled={loading || otp.some(d => !d)}
-                            style={{ width: '100%' }}
+                            disabled={loading}
+                            style={{
+                                width: '100%',
+                                background: error ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' : undefined
+                            }}
                         >
                             {loading ? (
                                 <>
                                     <i className="fas fa-spinner fa-spin"></i> Verifying...
+                                </>
+                            ) : error ? (
+                                <>
+                                    <i className="fas fa-redo"></i> Re-enter Code
                                 </>
                             ) : (
                                 <>
