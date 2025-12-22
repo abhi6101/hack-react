@@ -38,6 +38,19 @@ const Login = () => {
         }
     }, [loginMode]);
 
+    // Handle identifier input - only digits for student mode
+    const handleIdentifierChange = (e) => {
+        const value = e.target.value;
+        if (loginMode === 'student') {
+            // Only allow digits for Computer Code
+            const filtered = value.replace(/[^0-9]/g, '');
+            setIdentifier(filtered);
+        } else {
+            // Allow any characters for admin username
+            setIdentifier(value);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -225,7 +238,8 @@ const Login = () => {
                                     : 'Enter your admin username'}
                                 aria-label={loginMode === 'student' ? 'Computer Code' : 'Username'}
                                 value={identifier}
-                                onChange={(e) => setIdentifier(e.target.value)}
+                                onChange={handleIdentifierChange}
+                                inputMode={loginMode === 'student' ? 'numeric' : 'text'}
                             />
                         </div>
 
