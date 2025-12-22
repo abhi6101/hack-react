@@ -1348,15 +1348,22 @@ const Register = () => {
                 setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
                 return;
             }
+            // 4. Silent Scanning - OPTIMIZED FAST PATH
             if (!aadharNumber) {
-                setScanStatus("Scanning Aadhar...");
+                setScanStatus("Scanning Aadhar Number...");
                 setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
                 return;
             }
-            if (!dob || !gender) {
-                setScanStatus("Scanning Aadhar...");
-                setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
-                return;
+
+            // FAST TRACK: If Name & Aadhar Number match, proceed immediately!
+            // We skip strict DOB/Gender check to speed up scanning by 2x-3x.
+            if (!verifiedName) {
+                // If name doesn't match, we try to use other details to confirm it's at least a card
+                if (!dob || !gender) {
+                    setScanStatus("Align Aadhar Card...");
+                    setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
+                    return;
+                }
             }
 
             // 5. SUCCESS
@@ -1390,7 +1397,7 @@ const Register = () => {
     useEffect(() => {
         let interval;
         if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
-            interval = setInterval(attemptAutoCapture, 1500); // Faster scanning for better responsiveness
+            interval = setInterval(attemptAutoCapture, 800); // 800ms Interval (Faster Scanning)
         }
         return () => clearInterval(interval);
     }, [showCamera, verificationStage, isScanning]);
