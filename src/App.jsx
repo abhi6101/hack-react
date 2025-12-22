@@ -9,6 +9,9 @@ import Login from './pages/Login';
 import AdminLogin from './pages/AdminLogin';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
+import VerifyOTP from './pages/VerifyOTP';
+import ResetPassword from './pages/ResetPassword';
+import ResetSuccess from './pages/ResetSuccess';
 import Jobs from './pages/Jobs';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Interview from './pages/Interview';
@@ -33,7 +36,7 @@ import './styles/animations.css'; // Import animations
 function Layout({ children }) {
     const location = useLocation();
     const navigate = useNavigate(); // Add hook
-    const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding'];
+    const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success', '/account-recovery'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -115,6 +118,9 @@ function App() {
                     <Route path="/admin/login" element={<AdminLogin />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/verify-otp" element={<VerifyOTP />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/reset-success" element={<ResetSuccess />} />
                     <Route path="/verify-account" element={<VerifyAccount />} />
                     <Route path="/onboarding" element={<Onboarding />} />
                     <Route path="/jobs" element={<Jobs />} />
