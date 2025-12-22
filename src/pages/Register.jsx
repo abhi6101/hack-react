@@ -1415,6 +1415,9 @@ const Register = () => {
                 setScannedData(cleanedMatch);
                 setScanBuffer([]); stopCamera();
                 setVerificationStage('ID_VERIFY_DATA');
+
+                // NEW: Check for duplicate account immediately after ID Scan
+                checkVerificationStatus(cleanedMatch, finalBlob, 'ID', true);
             };
         } else if (type === 'AADHAR') {
 
