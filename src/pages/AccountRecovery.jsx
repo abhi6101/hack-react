@@ -115,26 +115,64 @@ const AccountRecovery = () => {
     };
 
     const extractAadharData = (text) => {
-        const aadharMatch = text.match(/\d{4}\s*\d{4}\s*\d{4}/);
-        const dobMatch = text.match(/(?:DOB|Date of Birth)[:\s]*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/i) ||
-            text.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
-        const genderMatch = text.match(/\b(Male|Female|MALE|FEMALE)\b/i);
+        // Aadhar Number: 12 digits (often in 4-4-4 format)
+        // Look for patterns like "5590 8885 4237" or "559088854237"
+        const aadharMatch = text.match(/\b\d{4}\s*\d{4}\s*\d{4}\b/) ||
+            text.match(/\b\d{12}\b/);
 
+        // DOB: Look for patterns like "23/03/2005" or "23-03-2005"
+        // Common patterns: "DOB : 23/03/2005" or "जन्म तिथि / DOB : 23/03/2005"
+        const dobMatch = text.match(/(?:DOB|Date of Birth|जन्म तिथि)[:\s\/]*((\d{2})[\\/\-](\d{2})[\\/\-](\d{4}))/i) ||
+            text.match(/\b(\d{2}[\\/\-]\d{2}[\\/\-]\d{4})\b/);
+
+        // Gender: Look for "Male", "Female", "पुरुष", "महिला"
+        const genderMatch = text.match(/\b(Male|Female|MALE|FEMALE|पुरुष|महिला)\b/i);
+
+        // Name extraction: Look for capitalized English name
+        // Typically appears after photo, before DOB
+        // Example: "Abhi Jain" or "ABHI JAIN"
         const lines = text.split('\n').filter(line => line.trim());
         let name = '';
-        for (const line of lines) {
-            if (line.length > 5 && line.length < 50 && /^[A-Z\s]+$/.test(line.trim())) {
-                if (!line.includes('GOVERNMENT') && !line.includes('INDIA') && !line.includes('MALE') && !line.includes('FEMALE')) {
-                    name = line.trim();
-                    break;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+
+            // Skip common header text
+            if (line.includes('GOVERNMENT') ||
+                line.includes('INDIA') ||
+                line.includes('भारत') ||
+                line.includes('सरकार') ||
+                line.includes('आधार') ||
+                line.includes('UIDAI')) {
+                continue;
+            }
+
+            // Look for name pattern: 2-4 words, mostly letters, 5-50 chars
+            if (line.length >= 5 && line.length <= 50) {
+                // English name pattern (e.g., "Abhi Jain", "ABHI JAIN")
+                if (/^[A-Z][a-z]+(\s+[A-Z][a-z]+)*$/i.test(line) ||
+                    /^[A-Z\s]+$/.test(line)) {
+
+                    // Avoid lines that are just gender or other keywords
+                    if (!line.match(/^(MALE|FEMALE|DOB|VID)$/i)) {
+                        name = line;
+                        break;
+                    }
                 }
             }
         }
 
+        // Clean up extracted data
+        const aadharNumber = aadharMatch ? aadharMatch[0].replace(/\s/g, '') : null;
+        const dob = dobMatch ? (dobMatch[1] || dobMatch[0]) : null;
+        const gender = genderMatch ? (genderMatch[1] === 'पुरुष' ? 'Male' :
+            genderMatch[1] === 'महिला' ? 'Female' :
+                genderMatch[1].charAt(0).toUpperCase() + genderMatch[1].slice(1).toLowerCase()) : null;
+
         return {
-            aadharNumber: aadharMatch ? aadharMatch[0].replace(/\s/g, '') : null,
-            dob: dobMatch ? dobMatch[1] : null,
-            gender: genderMatch ? genderMatch[1] : null,
+            aadharNumber,
+            dob,
+            gender,
             name: name || null
         };
     };
