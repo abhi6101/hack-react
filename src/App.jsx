@@ -12,6 +12,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import VerifyOTP from './pages/VerifyOTP';
 import ResetPassword from './pages/ResetPassword';
 import ResetSuccess from './pages/ResetSuccess';
+import AccountRecovery from './pages/AccountRecovery';
 import Jobs from './pages/Jobs';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Interview from './pages/Interview';
@@ -121,6 +122,7 @@ function App() {
                     <Route path="/verify-otp" element={<VerifyOTP />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/reset-success" element={<ResetSuccess />} />
+                    <Route path="/account-recovery" element={<AccountRecovery />} />
                     <Route path="/verify-account" element={<VerifyAccount />} />
                     <Route path="/onboarding" element={<Onboarding />} />
                     <Route path="/jobs" element={<Jobs />} />
