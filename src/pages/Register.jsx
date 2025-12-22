@@ -303,9 +303,63 @@ const Register = () => {
                                     </div>
                                 </div>
 
-                                <button className="btn btn-primary" style={{ width: '100%', padding: '12px', fontWeight: 'bold', fontSize: '1rem', background: '#4ade80', color: '#000', border: 'none' }} onClick={takeSelfie}>
-                                    Confirm Details & Continue <i className="fas fa-arrow-right"></i>
-                                </button>
+                                {/* Conditional Buttons based on data completeness */}
+                                {aadharData.name && aadharData.dob && aadharData.gender && aadharData.aadharNumber ? (
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <button
+                                            className="btn btn-secondary"
+                                            style={{
+                                                flex: '0 0 auto',
+                                                padding: '12px 20px',
+                                                fontWeight: 'bold',
+                                                fontSize: '0.9rem',
+                                                background: 'rgba(239, 68, 68, 0.2)',
+                                                color: '#ef4444',
+                                                border: '1px solid #ef4444',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer'
+                                            }}
+                                            onClick={() => {
+                                                setAadharData(null);
+                                                setAadharCameraImg(null);
+                                                setVerificationStage('AADHAR_AUTO_CAPTURE');
+                                                setScanStatus('Restarting Aadhar scan...');
+                                                setScanBuffer([]);
+                                            }}
+                                        >
+                                            <i className="fas fa-redo"></i> Rescan
+                                        </button>
+                                        <button
+                                            className="btn btn-primary"
+                                            style={{
+                                                flex: '1',
+                                                padding: '12px',
+                                                fontWeight: 'bold',
+                                                fontSize: '1rem',
+                                                background: '#4ade80',
+                                                color: '#000',
+                                                border: 'none',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer'
+                                            }}
+                                            onClick={takeSelfie}
+                                        >
+                                            Confirm & Continue <i className="fas fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div style={{
+                                        padding: '12px',
+                                        background: 'rgba(251, 191, 36, 0.1)',
+                                        border: '1px solid rgba(251, 191, 36, 0.3)',
+                                        borderRadius: '8px',
+                                        color: '#fbbf24',
+                                        fontSize: '0.9rem',
+                                        textAlign: 'center'
+                                    }}>
+                                        <i className="fas fa-exclamation-triangle"></i> Scanning in progress... Please wait for all details to be detected.
+                                    </div>
+                                )}
                             </div>
                         )}
 
