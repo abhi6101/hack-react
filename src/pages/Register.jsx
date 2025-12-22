@@ -942,11 +942,20 @@ const Register = () => {
                         // Fail-safe for known user
                         if (matchedName === "Detected Name" && (cleanOCR.includes("ABHI") || cleanOCR.includes("JAIN"))) matchedName = knownName || "ABHI JAIN";
 
-                        extracted = {
-                            name: matchedName,
-                            // Standardize: Remove spaces/dashes to get pure 12 digits
-                            aadharNumber: aadharNumMatch ? aadharNumMatch[0].replace(/\D/g, '') : "xxxx-xxxx-xxxx"
-                        };
+                        // STRICT NAME CHECK (Requested Feature)
+                        // If the name on Aadhar doesn't fuzzy-match the ID Card Name, REJECT the frame.
+                        if (matchedName === "Detected Name") {
+                            setScanStatus("⚠️ Name Mismatch! Show YOUR Aadhar Card");
+                            window.speechSynthesis.cancel(); // Stop overlap
+                            if (!scanStatus.includes("Mismatch")) window.speechSynthesis.speak(new SpeechSynthesisUtterance("Name mismatch. Show your own card."));
+                            matchFound = false; // REJECT FRAME
+                        } else {
+                            extracted = {
+                                name: matchedName,
+                                // Standardize: Remove spaces/dashes to get pure 12 digits
+                                aadharNumber: aadharNumMatch ? aadharNumMatch[0].replace(/\D/g, '') : "xxxx-xxxx-xxxx"
+                            };
+                        }
                     } else {
                         // Not enough confidence - show helpful message
                         setScanStatus("⚠️ Hold card steady... Looking for Aadhar details");
@@ -965,7 +974,9 @@ const Register = () => {
                         return;
                     }
                     setFlash(true); setTimeout(() => setFlash(false), 150);
-                    const targetFrames = isIdStage ? TARGET_SCANS : 2;
+
+                    // Updated to 6 frames for Aadhar as requested
+                    const targetFrames = isIdStage ? TARGET_SCANS : 6;
                     const newBuffer = [...scanBuffer, extracted];
                     setScanBuffer(newBuffer);
                     setScanStatus(`✅ Captured ${newBuffer.length} / ${targetFrames}`);
