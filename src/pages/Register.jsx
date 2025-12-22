@@ -64,7 +64,7 @@ const Register = () => {
     React.useEffect(() => {
         const fetchDepts = async () => {
             try {
-                const res = await fetch(`${API_BASE_URL} /public/departments`);
+                const res = await fetch(`${API_BASE_URL}/public/departments`);
                 if (res.ok) setDepartments(await res.json());
             } catch (e) {
                 console.error("Failed to load departments", e);
@@ -142,7 +142,7 @@ const Register = () => {
 
             const durationYears = courseConfig[formData.branch] || 4;
             const endYear = parseInt(formData.startYear) + durationYears;
-            const batchStr = `${formData.startYear} -${endYear} `;
+            const batchStr = `${formData.startYear}-${endYear}`;
 
             if (formData.batch !== batchStr) {
                 setFormData(prev => ({ ...prev, batch: batchStr }));
@@ -490,7 +490,7 @@ const Register = () => {
                 stopCamera();
 
                 // TEMPORARY: Save verification data to localStorage (until backend is ready)
-                const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint} `;
+                const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
                 const verificationData = {
                     allStepsCompleted: true,
                     scannedData: scannedData,
@@ -588,19 +588,19 @@ const Register = () => {
                 }
             };
 
-            const response = await fetch(`${API_BASE_URL} /auth/register`, {
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
                 method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registrationData),
             });
             const result = await response.json();
             if (response.ok) {
                 // Clean up localStorage verification data after successful registration
-                const localVerificationKey = `verification_${formData.computerCode}_${deviceFingerprint} `;
+                const localVerificationKey = `verification_${formData.computerCode}_${deviceFingerprint}`;
                 localStorage.removeItem(localVerificationKey);
                 console.log('✅ Verification data cleaned up from localStorage');
 
                 setSuccess(result.message || "Registration successful!");
-                setTimeout(() => navigate(`/ verify - account ? email = ${encodeURIComponent(formData.email)} `), 1500);
+                setTimeout(() => navigate(`/verify-account?email=${encodeURIComponent(formData.email)}`), 1500);
             } else {
                 setError(result.message || 'Registration failed.'); setLoading(false);
             }
