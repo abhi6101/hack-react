@@ -796,7 +796,7 @@ const handleSubmit = async (e) => {
 };
 
 const [scanBuffer, setScanBuffer] = useState([]);
-const TARGET_SCANS = 4;
+
 
 // SECURITY: Detect IPS Academy Blue Header & Logo Pattern
 const detectIPSHeader = (ctx, width, height) => {
@@ -1754,11 +1754,42 @@ return (
                     {success && <div className="alert alert-success" style={{ display: 'block' }}>{success}</div>}
                     <form id="registrationForm" onSubmit={handleSubmit}>
                         <div className="verification-summary" style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(74, 222, 128, 0.2)' }}>
-                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><i className="fas fa-shield-alt" style={{ color: '#4ade80' }}></i> Verified Identity Summary</h3>
-                            <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-                                {idCameraImg && (<div style={{ textAlign: 'center' }}><img src={idCameraImg} alt="ID Scan" style={{ width: '150px', height: '95px', borderRadius: '8px', objectFit: 'cover', border: '2px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.3)' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#4ade80', fontWeight: '600' }}>✓ College ID Card</p></div>)}
-                                {selfieImg && (<div style={{ textAlign: 'center' }}><img src={selfieImg} alt="Selfie" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.2)' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#aaa' }}>Live Selfie</p></div>)}
-                                {aadharCameraImg && (<div style={{ textAlign: 'center' }}><img src={aadharCameraImg} alt="Aadhar Scan" style={{ width: '120px', height: '75px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #555' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#aaa' }}>Aadhar Card</p></div>)}
+                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <i className="fas fa-shield-alt" style={{ color: '#4ade80' }}></i> Verified Identity Proofs
+                            </h3>
+
+                            {/* THE 3 PHOTOS DISPLAY */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '0.5rem' }}>
+
+                                {/* 1. ID Card */}
+                                {idCameraImg && (
+                                    <div style={{ textAlign: 'center' }}>
+                                        <div style={{ width: '100%', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '2px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.2)', marginBottom: '0.5rem' }}>
+                                            <img src={idCameraImg} alt="ID Scan" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        </div>
+                                        <p style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: '600' }}>✓ College ID</p>
+                                    </div>
+                                )}
+
+                                {/* 2. Live Selfie (Official) */}
+                                {selfieImg && (
+                                    <div style={{ textAlign: 'center' }}>
+                                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', border: '3px solid #60a5fa', margin: '0 auto 0.5rem auto', boxShadow: '0 4px 12px rgba(96, 165, 250, 0.3)' }}>
+                                            <img src={selfieImg} alt="Selfie" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }} />
+                                        </div>
+                                        <p style={{ fontSize: '0.75rem', color: '#fff', fontWeight: 'bold' }}>Official Profile</p>
+                                    </div>
+                                )}
+
+                                {/* 3. Aadhar Card */}
+                                {aadharCameraImg && (
+                                    <div style={{ textAlign: 'center' }}>
+                                        <div style={{ width: '100%', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #aaa', marginBottom: '0.5rem' }}>
+                                            <img src={aadharCameraImg} alt="Aadhar Scan" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        </div>
+                                        <p style={{ fontSize: '0.75rem', color: '#aaa' }}>Aadhar Card</p>
+                                    </div>
+                                )}
                             </div>
                             {scannedData && (
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.9rem', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
