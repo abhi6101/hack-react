@@ -284,12 +284,24 @@ const Register = () => {
                                     <span><i className="fas fa-check-circle"></i> VERIFIED</span>
                                     <span>98% Match</span>
                                 </div>
-                                <h3 style={{ margin: '0 0 5px 0', fontSize: '1.2rem', color: '#fff' }}>{aadharData.name}</h3>
-                                <div style={{ display: 'flex', gap: '15px', margin: '0 0 5px 0', fontSize: '0.9rem', color: '#ccc' }}>
-                                    <span>{aadharData.dob || 'DOB: N/A'}</span>
-                                    <span>{aadharData.gender || 'Gen: N/A'}</span>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '15px' }}>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>Name</div>
+                                        <div style={{ color: '#fff', fontSize: '1rem', fontWeight: '600' }}>{aadharData.name}</div>
+                                    </div>
+                                    <div>
+                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>DOB</div>
+                                        <div style={{ color: '#fff', fontSize: '0.95rem' }}>{aadharData.dob || 'N/A'}</div>
+                                    </div>
+                                    <div>
+                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>Gender</div>
+                                        <div style={{ color: '#fff', fontSize: '0.95rem' }}>{aadharData.gender || 'N/A'}</div>
+                                    </div>
+                                    <div style={{ gridColumn: '1 / -1', marginTop: '4px' }}>
+                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>Aadhar Number</div>
+                                        <div style={{ color: '#4ade80', fontSize: '1.2rem', fontWeight: 'bold', letterSpacing: '2px' }}>{aadharData.aadharNumber}</div>
+                                    </div>
                                 </div>
-                                <p style={{ margin: '0 0 15px 0', color: '#4ade80', fontSize: '1rem', letterSpacing: '1px', fontWeight: 'bold' }}>{aadharData.aadharNumber}</p>
 
                                 <button className="btn btn-primary" style={{ width: '100%', padding: '12px', fontWeight: 'bold', fontSize: '1rem', background: '#4ade80', color: '#000', border: 'none' }} onClick={takeSelfie}>
                                     Confirm Details & Continue <i className="fas fa-arrow-right"></i>
@@ -1051,8 +1063,11 @@ const Register = () => {
             // 2. Remove prefixes (Father, Mr, Shri, etc.) - more aggressive
             cleaned = cleaned.replace(/^(Father|Father's|Mr|Mrs|Ms|Shri|Smt|Late|Dr|Name|Course|Session|Institution)[\s:|-]*/gi, '').trim();
 
-            // 3. Remove the word "Father" if it appears anywhere (not just prefix)
+            // 3. Remove the word "Father" if it appears anywhere
             cleaned = cleaned.replace(/\bFather\b[\s:|-]*/gi, '').trim();
+
+            // 3.1 Remove common Aadhar/ID OCR garbage (Government, India, Gender, DOB)
+            cleaned = cleaned.replace(/\b(Government|India|Govt|Male|Female|DOB|Year|Birth|YOB)\b/gi, '').trim();
 
             // 4. Remove leading special characters and punctuation
             cleaned = cleaned.replace(/^[^A-Za-z]+/, '').trim();
