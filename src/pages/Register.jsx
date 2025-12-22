@@ -330,6 +330,13 @@ const Register = () => {
                                         <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>Aadhar Number</div>
                                         <div style={{ color: '#4ade80', fontSize: '1.2rem', fontWeight: 'bold', letterSpacing: '2px' }}>{aadharData.aadharNumber}</div>
                                     </div>
+                                    {/* Display Extracted Address */}
+                                    {aadharData.address && (
+                                        <div style={{ gridColumn: '1 / -1', marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '8px' }}>
+                                            <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '4px' }}>Permanent Address (From QR)</div>
+                                            <div style={{ color: '#ddd', fontSize: '0.85rem', lineHeight: '1.3' }}>{aadharData.address}</div>
+                                        </div>
+                                    )}
                                 </div>
 
 
@@ -788,6 +795,16 @@ const Register = () => {
                     let dob = code.data.match(/dob="([^"]+)"/)?.[1] || code.data.match(/yob="(\d+)"/)?.[1] || "";
                     let gender = code.data.match(/gender="([^"]+)"/)?.[1] || "";
 
+                    // Extract full address details
+                    let co = code.data.match(/co="([^"]+)"/)?.[1] || "";
+                    let loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
+                    let vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
+                    let dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
+                    let state = code.data.match(/state="([^"]+)"/)?.[1] || "";
+                    let pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
+
+                    const fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
+
                     // 2. NAME MATCH CHECK
                     const knownName = scannedData?.name || "";
                     let nameMatches = false;
@@ -808,7 +825,9 @@ const Register = () => {
                             name: name,
                             aadharNumber: uid,
                             dob: dob,
-                            gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender)
+                            gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender),
+                            address: fullAddress, // Add Address
+                            details: { co, dist, state, pc } // Store individual fields
                         };
                         setAadharData(secureAadhar);
 
