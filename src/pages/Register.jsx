@@ -1106,43 +1106,76 @@ const Register = () => {
             // NEW: Auto-check backend immediately (redirects if exists,                            // ---------------------------------------------------------
             // AADHAR CARD LOGIC
             // ---------------------------------------------------------
-            const cleanedText = cleanOCRName(text);
-            const idName = scannedData?.name?.toLowerCase();
-            const aadharNameCandidate = cleanedText.toLowerCase();
+            // 1. Granular Parsing Strategy: Split text into lines
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 2);
+            const idNameLower = scannedData?.name?.toLowerCase() || '';
+            const idNameParts = idNameLower.split(' ').filter(p => p.length > 2); // specific words
 
-            // 1. Strict Validation: Must have a name and some numbers
-            const hasNumbers = /\d{4}/.test(text);
-            const nameMatchScore = idName ? (aadharNameCandidate.includes(idName) || idName.includes(aadharNameCandidate)) : false;
+            // 2. smart-find the Name line (The line that overlaps most with the ID name)
+            let verifiedName = null;
+            let maxOverlap = 0;
 
-            // Extract DOB
-            const dobMatch = text.match(/(?:DOB|Date of Birth|Year of Birth|YOB)[:\s-]*(\d{2}[\/-]\d{2}[\/-]\d{4}|\d{4})/i);
+            for (const line of lines) {
+                const lowerLine = line.toLowerCase();
+                // Filter out obviously non-name lines
+                if (/(government|india|dob|male|female|yob|birth|aadhar|address|\d{4})/.test(lowerLine)) continue;
+
+                // Check overlap with ID Name
+                let overlap = 0;
+                idNameParts.forEach(part => {
+                    if (lowerLine.includes(part)) overlap++;
+                });
+
+                // If this line has significant overlap, it's likely the Name on the Aadhar
+                if (overlap > 0 && overlap >= maxOverlap) {
+                    maxOverlap = overlap;
+                    verifiedName = cleanOCRName(line); // Clean just this line
+                }
+            }
+
+            // Fallback: If no line matched well, but the ID name is present in the full text?
+            if (!verifiedName && text.toLowerCase().includes(idNameLower)) {
+                verifiedName = cleanOCRName(scannedData.name); // Trust the ID name if it matches
+            }
+
+            // 3. Extract Fields Sequentially
+            // Aadhar Number (12 digits, spaced or unspaced)
+            const aadharNumMatch = text.match(/\d{4}\s\d{4}\s\d{4}/) || text.match(/\d{12}/);
+            const aadharNumber = aadharNumMatch ? aadharNumMatch[0] : null;
+
+            // DOB (DD/MM/YYYY or YYYY) - Look for pattern anywhere
+            const dobMatch = text.match(/(\d{2}[\/-]\d{2}[\/-]\d{4})/);
             const dob = dobMatch ? dobMatch[1] : null;
 
-            // Extract Gender
+            // Gender
             const genderMatch = text.match(/\b(MALE|FEMALE|Transgender)\b/i);
             const gender = genderMatch ? genderMatch[0].toUpperCase() : null;
 
-            // Debugging Extraction
-            console.log("Aadhar Extraction Check:", { cleanedText, hasNumbers, nameMatchScore, dob, gender });
+            console.log("Aadhar Extraction Logic:", { verifiedName, aadharNumber, dob, gender });
 
-            // 2. CRITICAL CHECK: All 4 fields (Name, Number, DOB, Gender) must be present
-            // If any is missing, treat as "Poor Scan" so it retries automatically
-            if (!cleanedText || cleanedText.length < 3 || !hasNumbers || !nameMatchScore || !dob || !gender) {
-                setScanStatus("⚠️ Detail Missing (Name/DOB/Gender). Adjust Card...");
-                setScanBuffer(prev => {
-                    const newBuffer = [...prev.slice(-4), "Bad Scan"];
-                    return newBuffer;
-                });
-                setIsScanning(false);
-                return; // Loop continues
+            // 4. Strict Gatekeeping with Granular Feedback
+            if (!verifiedName) {
+                setScanStatus("⚠️ Searching for Name (Must match ID)...");
+                setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
+                return;
+            }
+            if (!aadharNumber) {
+                setScanStatus(`✅ Found ${verifiedName.split(' ')[0]}... Scan Aadhar No.`);
+                setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
+                return;
+            }
+            if (!dob || !gender) {
+                setScanStatus("✅ Identity Found. Finding DOB & Gender...");
+                setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
+                return;
             }
 
-            // 3. SUCCESSFUL EXTRACTION
+            // 5. SUCCESS
             const bestMatch = {
-                name: cleanedText,
+                name: verifiedName,
                 dob: dob,
                 gender: gender,
-                aadharNumber: text.match(/\d{4}\s\d{4}\s\d{4}/)?.[0] || text.match(/\d{12}/)?.[0] || "XXXX XXXX XXXX"
+                aadharNumber: aadharNumber
             };
 
             setAadharData(bestMatch);
