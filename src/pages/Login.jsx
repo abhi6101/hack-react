@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+    const [computerCode, setComputerCode] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -12,12 +12,12 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // Load remembered username on component mount
+    // Load remembered computer code on component mount
     useEffect(() => {
         const remembered = localStorage.getItem('rememberMe');
-        const savedUsername = localStorage.getItem('savedUsername');
-        if (remembered === 'true' && savedUsername) {
-            setUsername(savedUsername);
+        const savedComputerCode = localStorage.getItem('savedComputerCode');
+        if (remembered === 'true' && savedComputerCode) {
+            setComputerCode(savedComputerCode);
             setRememberMe(true);
         }
     }, []);
@@ -31,7 +31,7 @@ const Login = () => {
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ computerCode, password })
             });
 
             const data = await response.json();
@@ -49,10 +49,10 @@ const Login = () => {
                 // Handle Remember Me
                 if (rememberMe) {
                     localStorage.setItem('rememberMe', 'true');
-                    localStorage.setItem('savedUsername', username);
+                    localStorage.setItem('savedComputerCode', computerCode);
                 } else {
                     localStorage.removeItem('rememberMe');
-                    localStorage.removeItem('savedUsername');
+                    localStorage.removeItem('savedComputerCode');
                 }
 
                 // Backend returns "roles": ["ROLE_ADMIN", "ROLE_SUPER_ADMIN", etc.]
@@ -131,16 +131,16 @@ const Login = () => {
 
                     <form id="loginForm" onSubmit={handleSubmit}>
                         <div className="input-group">
-                            <label htmlFor="username">Username</label>
+                            <label htmlFor="computerCode">Computer Code (Student ID)</label>
                             <input
                                 type="text"
-                                id="username"
-                                name="username"
+                                id="computerCode"
+                                name="computerCode"
                                 required
-                                placeholder="Enter your username"
-                                aria-label="Username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="Enter your Computer Code (e.g., 59500)"
+                                aria-label="Computer Code"
+                                value={computerCode}
+                                onChange={(e) => setComputerCode(e.target.value)}
                             />
                         </div>
 
