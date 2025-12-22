@@ -4,7 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
 const Login = () => {
-    const [computerCode, setComputerCode] = useState('');
+    const [loginMode, setLoginMode] = useState('student'); // 'student' or 'admin'
+    const [identifier, setIdentifier] = useState(''); // Computer Code for students, Username for admins
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -12,15 +13,30 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // Load remembered computer code on component mount
+    // Load remembered credentials based on mode
     useEffect(() => {
-        const remembered = localStorage.getItem('rememberMe');
-        const savedComputerCode = localStorage.getItem('savedComputerCode');
-        if (remembered === 'true' && savedComputerCode) {
-            setComputerCode(savedComputerCode);
-            setRememberMe(true);
+        if (loginMode === 'student') {
+            const remembered = localStorage.getItem('rememberMe');
+            const savedComputerCode = localStorage.getItem('savedComputerCode');
+            if (remembered === 'true' && savedComputerCode) {
+                setIdentifier(savedComputerCode);
+                setRememberMe(true);
+            } else {
+                setIdentifier('');
+                setRememberMe(false);
+            }
+        } else {
+            const remembered = localStorage.getItem('adminRememberMe');
+            const savedUsername = localStorage.getItem('savedAdminUsername');
+            if (remembered === 'true' && savedUsername) {
+                setIdentifier(savedUsername);
+                setRememberMe(true);
+            } else {
+                setIdentifier('');
+                setRememberMe(false);
+            }
         }
-    }, []);
+    }, [loginMode]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,17 +44,22 @@ const Login = () => {
         setError('');
 
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            const endpoint = loginMode === 'student' ? '/auth/login' : '/auth/admin/login';
+            const payload = loginMode === 'student'
+                ? { computerCode: identifier, password }
+                : { username: identifier, password };
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ computerCode, password })
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 if (data.token) {
-                    localStorage.setItem('authToken', data.token); // Store JWT token
+                    localStorage.setItem('authToken', data.token);
                 } else {
                     setError('Login succeeded but no token received. Please contact support.');
                     setLoading(false);
@@ -47,21 +68,30 @@ const Login = () => {
                 if (data.username) localStorage.setItem('username', data.username);
 
                 // Handle Remember Me
-                if (rememberMe) {
-                    localStorage.setItem('rememberMe', 'true');
-                    localStorage.setItem('savedComputerCode', computerCode);
+                if (loginMode === 'student') {
+                    if (rememberMe) {
+                        localStorage.setItem('rememberMe', 'true');
+                        localStorage.setItem('savedComputerCode', identifier);
+                    } else {
+                        localStorage.removeItem('rememberMe');
+                        localStorage.removeItem('savedComputerCode');
+                    }
                 } else {
-                    localStorage.removeItem('rememberMe');
-                    localStorage.removeItem('savedComputerCode');
+                    if (rememberMe) {
+                        localStorage.setItem('adminRememberMe', 'true');
+                        localStorage.setItem('savedAdminUsername', identifier);
+                    } else {
+                        localStorage.removeItem('adminRememberMe');
+                        localStorage.removeItem('savedAdminUsername');
+                    }
                 }
 
-                // Backend returns "roles": ["ROLE_ADMIN", "ROLE_SUPER_ADMIN", etc.]
+                // Handle role-based navigation
                 const roles = data.roles || [];
                 const isSuperAdmin = roles.includes('ROLE_SUPER_ADMIN');
                 const isCompanyAdmin = roles.includes('ROLE_COMPANY_ADMIN');
                 const isDeptAdmin = roles.includes('ROLE_DEPT_ADMIN');
                 const isLegacyAdmin = roles.includes('ROLE_ADMIN');
-
                 const isAdmin = isSuperAdmin || isCompanyAdmin || isLegacyAdmin || isDeptAdmin;
 
                 if (data.companyName) {
@@ -77,7 +107,7 @@ const Login = () => {
                 }
 
                 if (isAdmin) {
-                    let role = 'ADMIN'; // Default
+                    let role = 'ADMIN';
                     if (isSuperAdmin) role = 'SUPER_ADMIN';
                     if (isCompanyAdmin) role = 'COMPANY_ADMIN';
                     if (isDeptAdmin) role = 'DEPT_ADMIN';
@@ -103,9 +133,6 @@ const Login = () => {
 
     return (
         <div className="login-body-wrapper">
-            {/* Note: login.css might target body, so we wrap it or ensure global styles are compatible. 
-                Using a wrapper div to approximate body styling if needed. */}
-
             <section className="login-section">
                 <div className="login-card surface-glow">
                     <Link to="/" style={{
@@ -122,7 +149,61 @@ const Login = () => {
                     }}>
                         <i className="fas fa-home"></i> Home
                     </Link>
+
                     <h1>Welcome Back</h1>
+
+                    {/* Login Mode Toggle */}
+                    <div style={{
+                        display: 'flex',
+                        gap: '0.5rem',
+                        marginBottom: '1.5rem',
+                        background: 'rgba(255,255,255,0.05)',
+                        padding: '0.3rem',
+                        borderRadius: '12px',
+                        border: '1px solid rgba(255,255,255,0.1)'
+                    }}>
+                        <button
+                            type="button"
+                            onClick={() => setLoginMode('student')}
+                            style={{
+                                flex: 1,
+                                padding: '0.75rem 1rem',
+                                border: 'none',
+                                borderRadius: '8px',
+                                background: loginMode === 'student'
+                                    ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                                    : 'transparent',
+                                color: '#fff',
+                                fontWeight: loginMode === 'student' ? 'bold' : 'normal',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                fontSize: '0.95rem'
+                            }}
+                        >
+                            <i className="fas fa-user-graduate"></i> Student
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setLoginMode('admin')}
+                            style={{
+                                flex: 1,
+                                padding: '0.75rem 1rem',
+                                border: 'none',
+                                borderRadius: '8px',
+                                background: loginMode === 'admin'
+                                    ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                                    : 'transparent',
+                                color: '#fff',
+                                fontWeight: loginMode === 'admin' ? 'bold' : 'normal',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                fontSize: '0.95rem'
+                            }}
+                        >
+                            <i className="fas fa-shield-alt"></i> Admin
+                        </button>
+                    </div>
+
                     <p className="server-wait-note">
                         ⏳ The server may take 30–60 seconds to start if it was idle. Please wait after clicking Login.
                     </p>
@@ -131,16 +212,20 @@ const Login = () => {
 
                     <form id="loginForm" onSubmit={handleSubmit}>
                         <div className="input-group">
-                            <label htmlFor="computerCode">Computer Code (Student ID)</label>
+                            <label htmlFor="identifier">
+                                {loginMode === 'student' ? 'Computer Code (Student ID)' : 'Username'}
+                            </label>
                             <input
                                 type="text"
-                                id="computerCode"
-                                name="computerCode"
+                                id="identifier"
+                                name="identifier"
                                 required
-                                placeholder="Enter your Computer Code (e.g., 59500)"
-                                aria-label="Computer Code"
-                                value={computerCode}
-                                onChange={(e) => setComputerCode(e.target.value)}
+                                placeholder={loginMode === 'student'
+                                    ? 'Enter your Computer Code (e.g., 59500)'
+                                    : 'Enter your admin username'}
+                                aria-label={loginMode === 'student' ? 'Computer Code' : 'Username'}
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
                             />
                         </div>
 
@@ -180,7 +265,7 @@ const Login = () => {
                         </div>
 
                         <button type="submit" id="loginButton" className="btn btn-primary" disabled={loading}>
-                            {loading ? 'Logging in...' : 'Login'}
+                            {loading ? 'Logging in...' : `Login as ${loginMode === 'student' ? 'Student' : 'Admin'}`}
                         </button>
                     </form>
                     <div className="login-footer">
