@@ -1081,6 +1081,7 @@ const Register = () => {
             setIdCameraImg(URL.createObjectURL(finalBlob));
             setScanBuffer([]); stopCamera();
             setVerificationStage('ID_VERIFY_DATA');
+        } else if (type === 'AADHAR') {
 
             // NEW: Auto-check backend immediately (redirects if exists,                            // ---------------------------------------------------------
             // AADHAR CARD LOGIC
@@ -1135,329 +1136,319 @@ const Register = () => {
             // NEW: Immediately run backend check
             checkVerificationStatus(bestMatch, finalBlob, 'AADHAR', true);
 
-        } catch (err) {
-            console.error("Aadhar OCR Error:", err);
-            setScanStatus("⚠️ OCR Error. Retrying...");
-            setIsScanning(false);
         }
-    });
-}
-        } catch (err) {
-    console.error("Capture Error:", err);
-    setIsScanning(false);
-}
     };
 
-useEffect(() => {
-    let interval;
-    if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
-        interval = setInterval(attemptAutoCapture, 2000);
-    }
-    return () => clearInterval(interval);
-}, [showCamera, verificationStage, isScanning]);
-
-// Cleanup: Only stop camera when we completely exit verification
-useEffect(() => {
-    if (step === 4) {
-        stopCamera();
-    }
-}, [step]);
-
-useEffect(() => {
-    if (!showCamera && !isScanning) {
-        if (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') {
-            setCameraMode('environment'); startCamera();
-        } else if (verificationStage === 'SELFIE') {
-            setCameraMode('user'); startCamera();
+    useEffect(() => {
+        let interval;
+        if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
+            interval = setInterval(attemptAutoCapture, 2000);
         }
-    }
-}, [verificationStage]);
+        return () => clearInterval(interval);
+    }, [showCamera, verificationStage, isScanning]);
 
-// Auto-Selfie Logic REMOVED/NOT NEEDED - We capture on button click now
+    // Cleanup: Only stop camera when we completely exit verification
+    useEffect(() => {
+        if (step === 4) {
+            stopCamera();
+        }
+    }, [step]);
 
-useEffect(() => {
-    if (step === 4 && scannedData) {
-        // Standardize username to @first_last format
-        const cleanName = scannedData.name.toLowerCase().trim().replace(/[^a-z ]/g, '');
-        const generatedUsername = "@" + cleanName.replace(/\s+/g, "_");
+    useEffect(() => {
+        if (!showCamera && !isScanning) {
+            if (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') {
+                setCameraMode('environment'); startCamera();
+            } else if (verificationStage === 'SELFIE') {
+                setCameraMode('user'); startCamera();
+            }
+        }
+    }, [verificationStage]);
 
-        // Extract start year from session (e.g., "2023-2027" -> "2023")
-        const startYear = scannedData.session ? scannedData.session.split('-')[0].trim() : new Date().getFullYear().toString();
+    // Auto-Selfie Logic REMOVED/NOT NEEDED - We capture on button click now
 
-        // Re-map common branch abbreviations to codes if needed
-        let branchCode = scannedData.branch || 'IMCA';
-        if (['INTG', 'INTE', 'INTG.MCA', 'INTEGRATED'].some(k => branchCode.toUpperCase().includes(k))) branchCode = 'IMCA';
+    useEffect(() => {
+        if (step === 4 && scannedData) {
+            // Standardize username to @first_last format
+            const cleanName = scannedData.name.toLowerCase().trim().replace(/[^a-z ]/g, '');
+            const generatedUsername = "@" + cleanName.replace(/\s+/g, "_");
 
-        setFormData(prev => ({
-            ...prev,
-            fullName: scannedData.name,
-            computerCode: scannedData.code ? scannedData.code.toString().replace(/^0+/, '').trim() : '',
-            branch: branchCode,
-            username: generatedUsername,
-            startYear: startYear,
-            mobilePrimary: scannedData.mobilePrimary || '',
-            mobileSecondary: scannedData.mobileSecondary || '',
-            aadharNumber: aadharData?.aadharNumber || '',
-            role: 'USER'
-        }));
-    }
-}, [step, scannedData, aadharData]);
+            // Extract start year from session (e.g., "2023-2027" -> "2023")
+            const startYear = scannedData.session ? scannedData.session.split('-')[0].trim() : new Date().getFullYear().toString();
 
-return (
-    <main className="register-page-container">
-        <section id="register-form-card" className="register-card surface-glow">
-            {step < 4 ? (
-                renderVerificationJourney()
-            ) : (
-                <>
-                    <Link to="/" style={{ position: 'absolute', top: '1rem', left: '1rem', color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}><i className="fas fa-home"></i> Home</Link>
-                    <h1>Create Your Account</h1>
-                    <p className="subtitle">Join our portal to access exclusive job opportunities and resources.</p>
-                    {error && <div className="alert alert-error" style={{ display: 'block' }}>{error}</div>}
-                    {success && <div className="alert alert-success" style={{ display: 'block' }}>{success}</div>}
-                    <form id="registrationForm" onSubmit={handleSubmit}>
-                        <div className="verification-summary" style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(74, 222, 128, 0.2)' }}>
-                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><i className="fas fa-shield-alt" style={{ color: '#4ade80' }}></i> Verified Identity Summary</h3>
-                            <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-                                {idCameraImg && (<div style={{ textAlign: 'center' }}><img src={idCameraImg} alt="ID Scan" style={{ width: '150px', height: '95px', borderRadius: '8px', objectFit: 'cover', border: '2px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.3)' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#4ade80', fontWeight: '600' }}>✓ College ID Card</p></div>)}
-                                {selfieImg && (<div style={{ textAlign: 'center' }}><img src={selfieImg} alt="Selfie" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.2)' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#aaa' }}>Live Selfie</p></div>)}
-                                {aadharCameraImg && (<div style={{ textAlign: 'center' }}><img src={aadharCameraImg} alt="Aadhar Scan" style={{ width: '120px', height: '75px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #555' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#aaa' }}>Aadhar Card</p></div>)}
-                            </div>
-                            {scannedData && (
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.9rem', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
-                                    <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FULL NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.name}</div></div>
-                                    <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FATHER'S NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.fatherName}</div></div>
-                                    <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>INSTITITE</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.institution}</div></div>
-                                    <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>SESSION</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div></div>
-                                    <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>COURSE (BRANCH)</strong><div style={{ color: '#fff', fontWeight: '500', color: '#4ade80' }}>{scannedData.branch}</div></div>
-                                    {aadharData && (
-                                        <div>
-                                            <strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>AADHAR NUMBER</strong>
-                                            <div style={{ color: '#fff', fontWeight: '500', color: '#4ade80', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                {aadharData.aadharNumber}
+            // Re-map common branch abbreviations to codes if needed
+            let branchCode = scannedData.branch || 'IMCA';
+            if (['INTG', 'INTE', 'INTG.MCA', 'INTEGRATED'].some(k => branchCode.toUpperCase().includes(k))) branchCode = 'IMCA';
 
+            setFormData(prev => ({
+                ...prev,
+                fullName: scannedData.name,
+                computerCode: scannedData.code ? scannedData.code.toString().replace(/^0+/, '').trim() : '',
+                branch: branchCode,
+                username: generatedUsername,
+                startYear: startYear,
+                mobilePrimary: scannedData.mobilePrimary || '',
+                mobileSecondary: scannedData.mobileSecondary || '',
+                aadharNumber: aadharData?.aadharNumber || '',
+                role: 'USER'
+            }));
+        }
+    }, [step, scannedData, aadharData]);
+
+    return (
+        <main className="register-page-container">
+            <section id="register-form-card" className="register-card surface-glow">
+                {step < 4 ? (
+                    renderVerificationJourney()
+                ) : (
+                    <>
+                        <Link to="/" style={{ position: 'absolute', top: '1rem', left: '1rem', color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}><i className="fas fa-home"></i> Home</Link>
+                        <h1>Create Your Account</h1>
+                        <p className="subtitle">Join our portal to access exclusive job opportunities and resources.</p>
+                        {error && <div className="alert alert-error" style={{ display: 'block' }}>{error}</div>}
+                        {success && <div className="alert alert-success" style={{ display: 'block' }}>{success}</div>}
+                        <form id="registrationForm" onSubmit={handleSubmit}>
+                            <div className="verification-summary" style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(74, 222, 128, 0.2)' }}>
+                                <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><i className="fas fa-shield-alt" style={{ color: '#4ade80' }}></i> Verified Identity Summary</h3>
+                                <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                                    {idCameraImg && (<div style={{ textAlign: 'center' }}><img src={idCameraImg} alt="ID Scan" style={{ width: '150px', height: '95px', borderRadius: '8px', objectFit: 'cover', border: '2px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.3)' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#4ade80', fontWeight: '600' }}>✓ College ID Card</p></div>)}
+                                    {selfieImg && (<div style={{ textAlign: 'center' }}><img src={selfieImg} alt="Selfie" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.2)' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#aaa' }}>Live Selfie</p></div>)}
+                                    {aadharCameraImg && (<div style={{ textAlign: 'center' }}><img src={aadharCameraImg} alt="Aadhar Scan" style={{ width: '120px', height: '75px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #555' }} /><p style={{ fontSize: '0.75rem', marginTop: '8px', color: '#aaa' }}>Aadhar Card</p></div>)}
+                                </div>
+                                {scannedData && (
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.9rem', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
+                                        <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FULL NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.name}</div></div>
+                                        <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FATHER'S NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.fatherName}</div></div>
+                                        <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>INSTITITE</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.institution}</div></div>
+                                        <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>SESSION</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div></div>
+                                        <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>COURSE (BRANCH)</strong><div style={{ color: '#fff', fontWeight: '500', color: '#4ade80' }}>{scannedData.branch}</div></div>
+                                        {aadharData && (
+                                            <div>
+                                                <strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>AADHAR NUMBER</strong>
+                                                <div style={{ color: '#fff', fontWeight: '500', color: '#4ade80', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    {aadharData.aadharNumber}
+
+                                                </div>
                                             </div>
+                                        )}
+                                        <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span><span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span></div>
+                                            {location && (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span><span style={{ color: '#60a5fa', fontSize: '0.8rem' }}><i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}</span></div>)}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Verification Status:</span><span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-check-circle"></i> VERIFIED HUMAN</span></div>
                                         </div>
-                                    )}
-                                    <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span><span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span></div>
-                                        {location && (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span><span style={{ color: '#60a5fa', fontSize: '0.8rem' }}><i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}</span></div>)}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Verification Status:</span><span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-check-circle"></i> VERIFIED HUMAN</span></div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>
-                            <input type="text" id="fullName" name="fullName" value={formData.fullName} readOnly={true} className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
-                            <small style={{ color: '#34d399' }}>Verified from ID Card</small>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="username">Username <i className="fas fa-lock text-green-400" title="Auto-generated from verified name"></i></label>
-                            <input type="text" id="username" name="username" required placeholder="e.g., @yourusername" value={formData.username} readOnly={!!scannedData} className={scannedData ? "locked-field" : ""} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} onChange={handleChange} />
-                            <small style={{ color: scannedData ? '#34d399' : '#aaa' }}>{scannedData ? 'Auto-generated from verified name. Login with your Computer Code.' : 'Must start with \'@\', be lowercase, and have no spaces.'}</small>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email Address</label>
-                            <input type="email" id="email" name="email" required placeholder="your.email@example.com" value={formData.email} onChange={handleChange} />
-                        </div>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>
+                                <input type="text" id="fullName" name="fullName" value={formData.fullName} readOnly={true} className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
+                                <small style={{ color: '#34d399' }}>Verified from ID Card</small>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="username">Username <i className="fas fa-lock text-green-400" title="Auto-generated from verified name"></i></label>
+                                <input type="text" id="username" name="username" required placeholder="e.g., @yourusername" value={formData.username} readOnly={!!scannedData} className={scannedData ? "locked-field" : ""} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} onChange={handleChange} />
+                                <small style={{ color: scannedData ? '#34d399' : '#aaa' }}>{scannedData ? 'Auto-generated from verified name. Login with your Computer Code.' : 'Must start with \'@\', be lowercase, and have no spaces.'}</small>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email Address</label>
+                                <input type="email" id="email" name="email" required placeholder="your.email@example.com" value={formData.email} onChange={handleChange} />
+                            </div>
 
-                        {/* Dynamic Mobile Number Fields */}
-                        {scannedData?.mobileCount === 2 ? (
-                            // Case 1: Two mobile numbers found on ID card
-                            <>
-                                <div className="form-group">
-                                    <label htmlFor="mobilePrimary">Primary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
-                                    <input
-                                        type="tel"
-                                        id="mobilePrimary"
-                                        value={`+91 ${scannedData.mobilePrimary}`}
-                                        readOnly
-                                        className="locked-field"
-                                        style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
-                                    />
-                                    <small style={{ color: '#34d399' }}>✓ Verified from ID Card</small>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="mobileSecondary">Secondary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
-                                    <input
-                                        type="tel"
-                                        id="mobileSecondary"
-                                        value={`+91 ${scannedData.mobileSecondary}`}
-                                        readOnly
-                                        className="locked-field"
-                                        style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
-                                    />
-                                    <small style={{ color: '#34d399' }}>✓ Both numbers can receive OTP for login</small>
-                                </div>
-                            </>
-                        ) : scannedData?.mobileCount === 1 ? (
-                            // Case 2: One mobile number found on ID card
-                            <>
-                                <div className="form-group">
-                                    <label htmlFor="mobilePrimary">Primary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
-                                    <input
-                                        type="tel"
-                                        id="mobilePrimary"
-                                        value={`+91 ${scannedData.mobilePrimary}`}
-                                        readOnly
-                                        className="locked-field"
-                                        style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
-                                    />
-                                    <small style={{ color: '#34d399' }}>✓ Verified from ID Card</small>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="mobileSecondary">Secondary Mobile Number (Optional)</label>
-                                    <input
-                                        type="tel"
-                                        id="mobileSecondary"
-                                        name="mobileSecondary"
-                                        placeholder="Add another number if available"
-                                        value={formData.mobileSecondary || ''}
-                                        onChange={handleChange}
-                                        pattern="[6-9][0-9]{9}"
-                                        maxLength="10"
-                                    />
-                                    <small>You can add a second number for backup access</small>
-                                </div>
-                            </>
-                        ) : (
-                            // Case 3: No mobile numbers found (OCR failed)
-                            <>
-                                <div className="form-group">
-                                    <label htmlFor="mobilePrimary">Primary Mobile Number *</label>
-                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                        <span style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>+91</span>
+                            {/* Dynamic Mobile Number Fields */}
+                            {scannedData?.mobileCount === 2 ? (
+                                // Case 1: Two mobile numbers found on ID card
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="mobilePrimary">Primary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
                                         <input
                                             type="tel"
                                             id="mobilePrimary"
-                                            name="mobilePrimary"
-                                            required
-                                            placeholder="Enter 10-digit mobile number"
-                                            value={formData.mobilePrimary || ''}
-                                            onChange={handleChange}
-                                            pattern="[6-9][0-9]{9}"
-                                            maxLength="10"
-                                            style={{ flex: 1 }}
+                                            value={`+91 ${scannedData.mobilePrimary}`}
+                                            readOnly
+                                            className="locked-field"
+                                            style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
                                         />
+                                        <small style={{ color: '#34d399' }}>✓ Verified from ID Card</small>
                                     </div>
-                                    <small>⚠️ We couldn't detect mobile number from ID card. Please enter manually.</small>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="mobileSecondary">Secondary Mobile Number (Optional)</label>
-                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                        <span style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>+91</span>
+                                    <div className="form-group">
+                                        <label htmlFor="mobileSecondary">Secondary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
+                                        <input
+                                            type="tel"
+                                            id="mobileSecondary"
+                                            value={`+91 ${scannedData.mobileSecondary}`}
+                                            readOnly
+                                            className="locked-field"
+                                            style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
+                                        />
+                                        <small style={{ color: '#34d399' }}>✓ Both numbers can receive OTP for login</small>
+                                    </div>
+                                </>
+                            ) : scannedData?.mobileCount === 1 ? (
+                                // Case 2: One mobile number found on ID card
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="mobilePrimary">Primary Mobile Number <i className="fas fa-lock text-green-400" title="Extracted from ID Card"></i></label>
+                                        <input
+                                            type="tel"
+                                            id="mobilePrimary"
+                                            value={`+91 ${scannedData.mobilePrimary}`}
+                                            readOnly
+                                            className="locked-field"
+                                            style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
+                                        />
+                                        <small style={{ color: '#34d399' }}>✓ Verified from ID Card</small>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="mobileSecondary">Secondary Mobile Number (Optional)</label>
                                         <input
                                             type="tel"
                                             id="mobileSecondary"
                                             name="mobileSecondary"
-                                            placeholder="Add another number for backup"
+                                            placeholder="Add another number if available"
                                             value={formData.mobileSecondary || ''}
                                             onChange={handleChange}
                                             pattern="[6-9][0-9]{9}"
                                             maxLength="10"
-                                            style={{ flex: 1 }}
                                         />
+                                        <small>You can add a second number for backup access</small>
                                     </div>
-                                    <small>Optional, for backup access</small>
-                                </div>
-                            </>
-                        )}
+                                </>
+                            ) : (
+                                // Case 3: No mobile numbers found (OCR failed)
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="mobilePrimary">Primary Mobile Number *</label>
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <span style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>+91</span>
+                                            <input
+                                                type="tel"
+                                                id="mobilePrimary"
+                                                name="mobilePrimary"
+                                                required
+                                                placeholder="Enter 10-digit mobile number"
+                                                value={formData.mobilePrimary || ''}
+                                                onChange={handleChange}
+                                                pattern="[6-9][0-9]{9}"
+                                                maxLength="10"
+                                                style={{ flex: 1 }}
+                                            />
+                                        </div>
+                                        <small>⚠️ We couldn't detect mobile number from ID card. Please enter manually.</small>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="mobileSecondary">Secondary Mobile Number (Optional)</label>
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <span style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>+91</span>
+                                            <input
+                                                type="tel"
+                                                id="mobileSecondary"
+                                                name="mobileSecondary"
+                                                placeholder="Add another number for backup"
+                                                value={formData.mobileSecondary || ''}
+                                                onChange={handleChange}
+                                                pattern="[6-9][0-9]{9}"
+                                                maxLength="10"
+                                                style={{ flex: 1 }}
+                                            />
+                                        </div>
+                                        <small>Optional, for backup access</small>
+                                    </div>
+                                </>
+                            )}
 
-                        <div className="form-group">
-                            <label htmlFor="role">Select Role <i className="fas fa-lock text-green-400" title="Student Portal"></i></label>
-                            <select id="role" name="role" required value={formData.role} disabled className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff' }}><option value="USER">Student</option></select>
-                            <small style={{ color: '#34d399' }}>This is a student registration portal</small>
-                        </div>
-                        {formData.role === 'USER' && (
-                            <>
-                                <div className="form-group">
-                                    <label htmlFor="branch">Branch *</label>
-                                    <select id="branch" name="branch" required value={formData.branch} onChange={handleChange} disabled={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff' } : {}}>
-                                        <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Your Branch --</option>
-                                        {departments.map(d => (<option key={d.code} value={d.code} style={{ background: '#1e293b', color: '#fff' }}>{d.name} ({d.code})</option>))}
-                                    </select>
+                            <div className="form-group">
+                                <label htmlFor="role">Select Role <i className="fas fa-lock text-green-400" title="Student Portal"></i></label>
+                                <select id="role" name="role" required value={formData.role} disabled className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff' }}><option value="USER">Student</option></select>
+                                <small style={{ color: '#34d399' }}>This is a student registration portal</small>
+                            </div>
+                            {formData.role === 'USER' && (
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="branch">Branch *</label>
+                                        <select id="branch" name="branch" required value={formData.branch} onChange={handleChange} disabled={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff' } : {}}>
+                                            <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Your Branch --</option>
+                                            {departments.map(d => (<option key={d.code} value={d.code} style={{ background: '#1e293b', color: '#fff' }}>{d.name} ({d.code})</option>))}
+                                        </select>
+                                    </div>
+                                    {formData.branch && (
+                                        <>
+                                            <div className="form-group">
+                                                <label htmlFor="semester">Semester/Year *</label>
+                                                <select id="semester" name="semester" required value={formData.semester} onChange={handleChange}>
+                                                    <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Semester/Year --</option>
+                                                    {getSemesterOptions().map(opt => (<option key={opt.value} value={opt.value} style={{ background: '#1e293b', color: '#fff' }}>{opt.label}</option>))}
+                                                </select>
+                                            </div>
+                                            <div className="form-row" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                                                <div className="form-group" style={{ flex: 1 }}><label htmlFor="startYear">Admission Year *</label><select id="startYear" name="startYear" required value={formData.startYear} onChange={handleChange} disabled={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff', width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(52,211,153,0.3)' } : { background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%' }}>{Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i + 1).map(y => (<option key={y} value={y} style={{ background: '#1e293b' }}>{y}</option>))}</select></div>
+                                                <div className="form-group" style={{ flex: 1 }}><label>Batch Session</label><input type="text" readOnly value={formData.batch} style={{ background: 'rgba(255,255,255,0.05)', cursor: 'not-allowed', color: '#4ade80', fontWeight: 'bold' }} /></div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="enrollmentNumber">Enrollment Number *</label>
+                                                <input
+                                                    type="text"
+                                                    id="enrollmentNumber"
+                                                    name="enrollmentNumber"
+                                                    required
+                                                    placeholder="Enter your enrollment number"
+                                                    value={formData.enrollmentNumber}
+                                                    onChange={(e) => {
+                                                        // Enforce Alphanumeric Only and Uppercase
+                                                        const cleanVal = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                                                        setFormData(prev => ({ ...prev, enrollmentNumber: cleanVal }));
+                                                    }}
+                                                    style={{ textTransform: 'uppercase' }}
+                                                />
+                                                <small>Your official enrollment number from the institute</small>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="computerCode">Computer Code (Student ID) *</label>
+                                                <input type="text" id="computerCode" name="computerCode" required placeholder="e.g. 59500" value={formData.computerCode} onChange={handleChange} readOnly={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} />
+                                                <small>Your unique college ID/Roll Number.</small>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="aadharNumber">Aadhar Number <i className="fas fa-lock text-green-400" title="Verified from Aadhar Card"></i></label>
+                                                <input
+                                                    type="text"
+                                                    id="aadharNumber"
+                                                    name="aadharNumber"
+                                                    required
+                                                    placeholder="Scanned from Aadhar Card"
+                                                    value={formData.aadharNumber?.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
+                                                    readOnly
+                                                    className="locked-field"
+                                                    style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
+                                                />
+                                                <small style={{ color: '#34d399' }}>✓ Verified from Aadhar Card (Read-only)</small>
+                                            </div>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                            <div className="form-group">
+                                <label htmlFor="password">Password</label>
+                                <div className="password-wrapper">
+                                    <input type={showPassword ? "text" : "password"} id="password" name="password" required placeholder="Create a strong password" value={formData.password} onChange={handleChange} />
+                                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} selector`} onClick={() => setShowPassword(!showPassword)} style={{ cursor: 'pointer' }}></i>
                                 </div>
-                                {formData.branch && (
-                                    <>
-                                        <div className="form-group">
-                                            <label htmlFor="semester">Semester/Year *</label>
-                                            <select id="semester" name="semester" required value={formData.semester} onChange={handleChange}>
-                                                <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Semester/Year --</option>
-                                                {getSemesterOptions().map(opt => (<option key={opt.value} value={opt.value} style={{ background: '#1e293b', color: '#fff' }}>{opt.label}</option>))}
-                                            </select>
-                                        </div>
-                                        <div className="form-row" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                                            <div className="form-group" style={{ flex: 1 }}><label htmlFor="startYear">Admission Year *</label><select id="startYear" name="startYear" required value={formData.startYear} onChange={handleChange} disabled={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff', width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(52,211,153,0.3)' } : { background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%' }}>{Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i + 1).map(y => (<option key={y} value={y} style={{ background: '#1e293b' }}>{y}</option>))}</select></div>
-                                            <div className="form-group" style={{ flex: 1 }}><label>Batch Session</label><input type="text" readOnly value={formData.batch} style={{ background: 'rgba(255,255,255,0.05)', cursor: 'not-allowed', color: '#4ade80', fontWeight: 'bold' }} /></div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="enrollmentNumber">Enrollment Number *</label>
-                                            <input
-                                                type="text"
-                                                id="enrollmentNumber"
-                                                name="enrollmentNumber"
-                                                required
-                                                placeholder="Enter your enrollment number"
-                                                value={formData.enrollmentNumber}
-                                                onChange={(e) => {
-                                                    // Enforce Alphanumeric Only and Uppercase
-                                                    const cleanVal = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-                                                    setFormData(prev => ({ ...prev, enrollmentNumber: cleanVal }));
-                                                }}
-                                                style={{ textTransform: 'uppercase' }}
-                                            />
-                                            <small>Your official enrollment number from the institute</small>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="computerCode">Computer Code (Student ID) *</label>
-                                            <input type="text" id="computerCode" name="computerCode" required placeholder="e.g. 59500" value={formData.computerCode} onChange={handleChange} readOnly={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} />
-                                            <small>Your unique college ID/Roll Number.</small>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="aadharNumber">Aadhar Number <i className="fas fa-lock text-green-400" title="Verified from Aadhar Card"></i></label>
-                                            <input
-                                                type="text"
-                                                id="aadharNumber"
-                                                name="aadharNumber"
-                                                required
-                                                placeholder="Scanned from Aadhar Card"
-                                                value={formData.aadharNumber?.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ') || ''}
-                                                readOnly
-                                                className="locked-field"
-                                                style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }}
-                                            />
-                                            <small style={{ color: '#34d399' }}>✓ Verified from Aadhar Card (Read-only)</small>
-                                        </div>
-                                    </>
-                                )}
-                            </>
-                        )}
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <div className="password-wrapper">
-                                <input type={showPassword ? "text" : "password"} id="password" name="password" required placeholder="Create a strong password" value={formData.password} onChange={handleChange} />
-                                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} selector`} onClick={() => setShowPassword(!showPassword)} style={{ cursor: 'pointer' }}></i>
                             </div>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="confirmPassword">Confirm Password</label>
-                            <div className="password-wrapper">
-                                <input type={showConfirmPassword ? "text" : "password"} id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password" value={formData.confirmPassword} onChange={handleChange} />
-                                <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'} selector`} onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={{ cursor: 'pointer' }}></i>
+                            <div className="form-group">
+                                <label htmlFor="confirmPassword">Confirm Password</label>
+                                <div className="password-wrapper">
+                                    <input type={showConfirmPassword ? "text" : "password"} id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password" value={formData.confirmPassword} onChange={handleChange} />
+                                    <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'} selector`} onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={{ cursor: 'pointer' }}></i>
+                                </div>
                             </div>
-                        </div>
-                        <button type="submit" id="registerButton" className="btn btn-primary" disabled={loading}>
-                            {loading ? (<span className="spinner" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid white', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>) : (<span className="button-text">Register Now <i className="fas fa-user-plus"></i></span>)}
-                        </button>
-                    </form>
-                    <p className="form-footer-text">Already have an account? <Link to="/login">Login here</Link></p>
-                </>
-            )}
-        </section >
-    </main >
-);
+                            <button type="submit" id="registerButton" className="btn btn-primary" disabled={loading}>
+                                {loading ? (<span className="spinner" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid white', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>) : (<span className="button-text">Register Now <i className="fas fa-user-plus"></i></span>)}
+                            </button>
+                        </form>
+                        <p className="form-footer-text">Already have an account? <Link to="/login">Login here</Link></p>
+                    </>
+                )}
+            </section >
+        </main >
+    );
 };
 
 export default Register;
