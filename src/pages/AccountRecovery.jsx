@@ -21,6 +21,8 @@ const AccountRecovery = () => {
     const [cameraActive, setCameraActive] = useState(false);
     const [idScanAttempt, setIdScanAttempt] = useState(0);
     const [aadharScanAttempt, setAadharScanAttempt] = useState(0);
+    const [aadharCaptureCount, setAadharCaptureCount] = useState(0);
+    const [aadharCaptures, setAadharCaptures] = useState([]);
 
     // Scanned data
     const [idData, setIdData] = useState(null);
