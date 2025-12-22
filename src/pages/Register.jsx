@@ -875,15 +875,38 @@ const Register = () => {
                     }
                 } else if (isAadharStage) {
                     setScanStatus("Scanning Aadhar...");
-                    const aadharKeywords = ['government', 'india', 'uid', 'aadhar', 'dob', 'enroll', 'year', 'address', 'male', 'female', 'father', 'husband', 'income', 'vid'];
-                    const score = aadharKeywords.reduce((acc, kw) => lowerText.includes(kw) ? acc + 1 : acc, 0);
-                    // ENHANCED: Robust Aadhar Number Detection
-                    let cleanAadharText = text.replace(/O/g, '0').replace(/o/g, '0').replace(/S/g, '5').replace(/I/g, '1');
-                    const aadharNumMatch = cleanAadharText.match(/\d{4}[\s-]?\d{4}[\s-]?\d{4}/) || cleanAadharText.match(/\d{12}/);
 
+                    // Enhanced keyword list with more variations
+                    const aadharKeywords = [
+                        'government', 'india', 'uid', 'aadhar', 'aadhaar', 'uidai',
+                        'dob', 'enroll', 'year', 'address', 'male', 'female',
+                        'father', 'husband', 'income', 'vid', 'भारत', 'सरकार'
+                    ];
+
+                    const score = aadharKeywords.reduce((acc, kw) => lowerText.includes(kw) ? acc + 1 : acc, 0);
+
+                    // ENHANCED: More robust Aadhar Number Detection
+                    let cleanAadharText = text.replace(/O/g, '0').replace(/o/g, '0').replace(/S/g, '5').replace(/I/g, '1').replace(/l/g, '1');
+
+                    // Multiple patterns for Aadhar number
+                    const aadharPattern1 = cleanAadharText.match(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/);
+                    const aadharPattern2 = cleanAadharText.match(/\b\d{12}\b/);
+                    const aadharNumMatch = aadharPattern1 || aadharPattern2;
+
+                    console.log("Aadhar Detection:", {
+                        score,
+                        hasAadharNum: !!aadharNumMatch,
+                        keywords: aadharKeywords.filter(kw => lowerText.includes(kw)),
+                        textLength: text.length
+                    });
+
+                    // LOWERED THRESHOLD: Now triggers on Aadhar number alone OR any keyword
                     if (score >= 1 || aadharNumMatch || isAadharDetected) {
-                        matchFound = true; setScanStatus("Aadhar Verified!");
-                        const knownName = scannedData?.name || ""; let matchedName = "Detected Name";
+                        matchFound = true;
+                        setScanStatus("Aadhar Detected! Processing...");
+
+                        const knownName = scannedData?.name || "";
+                        let matchedName = "Detected Name";
 
                         // Resilient name matching - check if name exists anywhere in OCR block
                         const cleanOCR = text.toUpperCase().replace(/[^A-Z]/g, '');
@@ -904,6 +927,10 @@ const Register = () => {
                             // Standardize: Remove spaces/dashes to get pure 12 digits
                             aadharNumber: aadharNumMatch ? aadharNumMatch[0].replace(/\D/g, '') : "xxxx-xxxx-xxxx"
                         };
+                    } else {
+                        // Not enough confidence - show helpful message
+                        setScanStatus("⚠️ Hold card steady... Looking for Aadhar details");
+                        console.log("Aadhar not detected. Text preview:", text.substring(0, 100));
                     }
                 }
 
@@ -1332,7 +1359,7 @@ const Register = () => {
     useEffect(() => {
         let interval;
         if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
-            interval = setInterval(attemptAutoCapture, 2000);
+            interval = setInterval(attemptAutoCapture, 1500); // Faster scanning for better responsiveness
         }
         return () => clearInterval(interval);
     }, [showCamera, verificationStage, isScanning]);
