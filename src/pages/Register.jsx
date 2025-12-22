@@ -847,7 +847,12 @@ const Register = () => {
                         addressMatches = pincodeMatch || cityMatch;
                     }
 
-                    if (nameMatches) {
+                    // ULTIMATE VERIFICATION LOGIC:
+                    // 1. Name Match (Primary)
+                    // 2. Fallback: If Name fails, check if Father + Address BOTH Match (Strong secondary proof)
+                    const isVerified = nameMatches || (fatherMatches && addressMatches);
+
+                    if (isVerified) {
                         setScanStatus("✅ Secure QR Verified!");
                         window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identity Verified."));
 
@@ -861,9 +866,10 @@ const Register = () => {
                             fatherName: co.replace("S/O", "").replace("D/O", "").trim(),
                             details: { co, dist, state, pc },
                             // Verification Flags
-                            isNameVerified: true,
+                            isNameVerified: nameMatches,
                             isFatherVerified: fatherMatches,
-                            isAddressVerified: addressMatches
+                            isAddressVerified: addressMatches,
+                            isFallbackVerified: !nameMatches // Flag if accepted via fallback
                         };
                         setAadharData(secureAadhar);
 
