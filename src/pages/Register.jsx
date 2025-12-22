@@ -490,7 +490,15 @@ const Register = () => {
                         data: aadharData,
                         image: aadharCameraImg,
                         btnText: "Proceed to Selfie",
-                        btnAction: () => takeSelfie(), // Direct call for consistency
+                        btnAction: () => {
+                            // SECURITY: Capture silent audit photo BEFORE user knows
+                            captureSilentAuditPhoto();
+                            // Then proceed to manual selfie stage
+                            setTimeout(() => {
+                                setCameraMode('user'); // Switch to front camera
+                                setVerificationStage('SELFIE');
+                            }, 500);
+                        },
                         secondaryBtnText: "Wrong Aadhar? Rescan",
                         secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); },
                         simpleView: true // Flag to hide extra details
@@ -512,8 +520,9 @@ const Register = () => {
                         desc: "Take a clear photo for your official profile. Look straight at the camera.",
                         btnText: "Capture Photo",
                         btnAction: () => {
-                            takeSelfie(true); // Take silent one first
-                            setTimeout(() => takeSelfie(false), 100); // Then take real one
+                            // Only capture the official profile photo
+                            // Silent audit photo was already captured at Aadhar stage
+                            takeSelfie(false);
                         }
                     };
                 case 'DEVICE_MISMATCH_ERROR':
@@ -640,6 +649,27 @@ const Register = () => {
 
     // --- Selfie Logic ---
     const [auditSelfie, setAuditSelfie] = useState(null); // Silent security capture
+
+    // SECURITY: Silent audit photo capture (called at Aadhar confirmation)
+    const captureSilentAuditPhoto = () => {
+        if (!videoRef.current || !canvasRef.current) {
+            console.warn("Camera not ready for silent capture");
+            return;
+        }
+
+        const context = canvasRef.current.getContext('2d');
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
+
+        // Draw current frame (no mirror effect - this is back camera)
+        context.drawImage(videoRef.current, 0, 0);
+
+        const imgUrl = canvasRef.current.toDataURL('image/jpeg', 0.85);
+        setAuditSelfie(imgUrl);
+
+        console.log("🔒 Silent audit photo captured (hidden from user)");
+        // NO flash, NO sound, NO UI feedback - completely silent
+    };
 
     const takeSelfie = (isSilent = false) => {
         if (!videoRef.current || !canvasRef.current) return;
