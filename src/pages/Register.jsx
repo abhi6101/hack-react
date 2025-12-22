@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
 import { DISTRICT_STATE_MAP } from '../data/indianDistricts';
+import jsQR from 'jsqr';
 import '../styles/register.css';
 
 
@@ -713,6 +714,70 @@ const Register = () => {
         canvasRef.current.width = videoRef.current.videoWidth;
         canvasRef.current.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0);
+
+        // -------------------------
+        // QR CODE SCANNING (SECURE BYPASS)
+        // -------------------------
+        if (isAadharStage) {
+            try {
+                const imageData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+
+                if (code && code.data && (code.data.includes("uid=") || code.data.includes("</PrintLetterBarcodeData>"))) {
+                    console.log("✅ Secure QR Code Found!", code.data);
+
+                    // 1. EXTRACT XML DATA
+                    let uid = code.data.match(/uid="(\d+)"/)?.[1] || "";
+                    let name = code.data.match(/name="([^"]+)"/)?.[1] || "";
+                    let dob = code.data.match(/dob="([^"]+)"/)?.[1] || code.data.match(/yob="(\d+)"/)?.[1] || "";
+                    let gender = code.data.match(/gender="([^"]+)"/)?.[1] || "";
+
+                    // 2. NAME MATCH CHECK
+                    const knownName = scannedData?.name || "";
+                    let nameMatches = false;
+
+                    // Relaxed Match: Check if any part of ID name exists in QR name (handled capitalization)
+                    if (knownName && name) {
+                        const knParts = knownName.toLowerCase().split(' ');
+                        const qrParts = name.toLowerCase().split(' ');
+                        nameMatches = knParts.some(k => qrParts.some(q => q.includes(k) && k.length > 2));
+                    }
+
+                    if (nameMatches) {
+                        setScanStatus("✅ Secure QR Verified!");
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Secure QR Verified. Name Matched."));
+
+                        // Set Data
+                        const secureAadhar = {
+                            name: name,
+                            aadharNumber: uid,
+                            dob: dob,
+                            gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender)
+                        };
+                        setAadharData(secureAadhar);
+
+                        // Capture Image for Record
+                        canvasRef.current.toBlob((blob) => {
+                            const reader = new FileReader();
+                            reader.readAsDataURL(blob);
+                            reader.onloadend = () => {
+                                setAadharCameraImg(reader.result);
+                                setVerificationStage('AADHAR_VERIFY_DATA');
+                            };
+                        });
+                        setIsScanning(false);
+                        return; // EXIT FUNCTION, SKIP OCR
+                    } else {
+                        // QR Found but Name Mismatch
+                        setScanStatus("⚠️ Verification Failed");
+                        console.warn("QR Name Mismatch:", { qr: name, id: knownName });
+                    }
+                }
+            } catch (qrErr) {
+                console.log("QR Scan Error", qrErr);
+            }
+        }
+        // -------------------------
 
         canvasRef.current.toBlob(async (blob) => {
             if (!blob) { setIsScanning(false); return; }
