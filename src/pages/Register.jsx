@@ -282,7 +282,11 @@ const Register = () => {
                                     <span>98% Match</span>
                                 </div>
                                 <h3 style={{ margin: '0 0 5px 0', fontSize: '1.2rem', color: '#fff' }}>{aadharData.name}</h3>
-                                <p style={{ margin: '0 0 15px 0', color: '#ccc', fontSize: '1rem', letterSpacing: '1px' }}>{aadharData.aadharNumber}</p>
+                                <div style={{ display: 'flex', gap: '15px', margin: '0 0 5px 0', fontSize: '0.9rem', color: '#ccc' }}>
+                                    <span>{aadharData.dob || 'DOB: N/A'}</span>
+                                    <span>{aadharData.gender || 'Gen: N/A'}</span>
+                                </div>
+                                <p style={{ margin: '0 0 15px 0', color: '#4ade80', fontSize: '1rem', letterSpacing: '1px', fontWeight: 'bold' }}>{aadharData.aadharNumber}</p>
 
                                 <button className="btn btn-primary" style={{ width: '100%', padding: '12px', fontWeight: 'bold', fontSize: '1rem', background: '#4ade80', color: '#000', border: 'none' }} onClick={takeSelfie}>
                                     Confirm Details & Continue <i className="fas fa-arrow-right"></i>
@@ -393,6 +397,14 @@ const Register = () => {
 
                                 {/* 4. Name (ALWAYS SHOWN) */}
                                 <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Name:</strong> {content.data?.name}</p>
+
+                                {/* 4.2 DOB & Gender (Only for simpleView) */}
+                                {content.simpleView && (
+                                    <div style={{ display: 'flex', gap: '10px', margin: '0 0 0.4rem 0', fontSize: '0.8rem', color: '#ccc' }}>
+                                        <span><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>DOB:</strong> {content.data?.dob || 'N/A'}</span>
+                                        <span><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Gender:</strong> {content.data?.gender || 'N/A'}</span>
+                                    </div>
+                                )}
 
                                 {/* 4.5. Aadhar Number (Only for Aadhar Step) */}
                                 {content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Aadhar No:</strong> <span style={{ color: '#4ade80', letterSpacing: '1px' }}>{content.data?.aadharNumber}</span></p>}
@@ -1081,25 +1093,34 @@ const Register = () => {
             const hasNumbers = /\d{4}/.test(text);
             const nameMatchScore = idName ? (aadharNameCandidate.includes(idName) || idName.includes(aadharNameCandidate)) : false;
 
-            // Debugging Extraction
-            console.log("Aadhar Extraction Check:", { cleanedText, hasNumbers, nameMatchScore });
+            // Extract DOB
+            const dobMatch = text.match(/(?:DOB|Date of Birth|Year of Birth|YOB)[:\s-]*(\d{2}[\/-]\d{2}[\/-]\d{4}|\d{4})/i);
+            const dob = dobMatch ? dobMatch[1] : null;
 
-            // 2. CRITICAL CHECK: If we didn't find the name matching the ID OR No Numbers found
-            if (!cleanedText || cleanedText.length < 3 || !hasNumbers || !nameMatchScore) {
-                setScanStatus("⚠️ Poor Scan. Adjust Card. Retrying...");
+            // Extract Gender
+            const genderMatch = text.match(/\b(MALE|FEMALE|Transgender)\b/i);
+            const gender = genderMatch ? genderMatch[0].toUpperCase() : null;
+
+            // Debugging Extraction
+            console.log("Aadhar Extraction Check:", { cleanedText, hasNumbers, nameMatchScore, dob, gender });
+
+            // 2. CRITICAL CHECK: All 4 fields (Name, Number, DOB, Gender) must be present
+            // If any is missing, treat as "Poor Scan" so it retries automatically
+            if (!cleanedText || cleanedText.length < 3 || !hasNumbers || !nameMatchScore || !dob || !gender) {
+                setScanStatus("⚠️ Detail Missing (Name/DOB/Gender). Adjust Card...");
                 setScanBuffer(prev => {
-                    const newBuffer = [...prev.slice(-4), "Bad Scan"]; // Keep buffer but limited
+                    const newBuffer = [...prev.slice(-4), "Bad Scan"];
                     return newBuffer;
                 });
-                setIsScanning(false); // Validating complete for THIS frame, but loop continues via interval
-                return; // SKIP PROCEEDING, but interval will call attemptAutoCapture again
-            } // 3. SUCCESSFUL EXTRACTION
-            const addressBlock = text.split(/Address:|Addr:|To:/i)[1] || text.split(/\n/).slice(-3).join(', ');
+                setIsScanning(false);
+                return; // Loop continues
+            }
+
+            // 3. SUCCESSFUL EXTRACTION
             const bestMatch = {
                 name: cleanedText,
-                nameScore: 100, // We validated match above
-                fatherName: "Not Detected",
-                address: cleanAddress(addressBlock), // Use our smart cleaner
+                dob: dob,
+                gender: gender,
                 aadharNumber: text.match(/\d{4}\s\d{4}\s\d{4}/)?.[0] || text.match(/\d{12}/)?.[0] || "XXXX XXXX XXXX"
             };
 
