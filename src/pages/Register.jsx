@@ -853,7 +853,7 @@ const Register = () => {
                     setScanStatus(`Scanned ${newBuffer.length}/${targetFrames}`);
 
                     if (newBuffer.length >= targetFrames) {
-                        finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR');
+                        finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR', text);
                         // Crucial: Unlock scanning after deep verification is initiated
                         setTimeout(() => setIsScanning(false), 500);
                     } else {
@@ -959,7 +959,7 @@ const Register = () => {
         }
     };
 
-    const finalizeDeepVerification = (buffer, finalBlob, type) => {
+    const finalizeDeepVerification = (buffer, finalBlob, type, text) => {
         const cleanAddress = (rawAddr) => {
             if (!rawAddr) return "Not Detected";
             let addr = rawAddr.trim();
