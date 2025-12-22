@@ -1163,49 +1163,132 @@ const Register = () => {
             // 1. Granular Parsing Strategy: Split text into lines
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 2);
             const idNameLower = scannedData?.name?.toLowerCase() || '';
-            const idNameParts = idNameLower.split(' ').filter(p => p.length > 2); // specific words
+            const idNameParts = idNameLower.split(' ').filter(p => p.length > 2);
 
-            // 2. smart-find the Name line (The line that overlaps most with the ID name)
+            // 2. Enhanced Name Matching with Fuzzy Logic
             let verifiedName = null;
             let maxOverlap = 0;
+            let bestNameLine = null;
 
             for (const line of lines) {
                 const lowerLine = line.toLowerCase();
-                // Filter out obviously non-name lines
-                if (/(government|india|dob|male|female|yob|birth|aadhar|address|\d{4})/.test(lowerLine)) continue;
+
+                // Enhanced filtering - exclude lines with these patterns
+                if (/(government|india|dob|male|female|yob|birth|aadhar|aadhaar|uid|address|pin|state|district|\d{4}\s*\d{4}|\d{6,})/.test(lowerLine)) continue;
+
+                // Skip very short lines (likely noise)
+                if (line.length < 5) continue;
 
                 // Check overlap with ID Name
                 let overlap = 0;
+                let partialMatches = 0;
+
                 idNameParts.forEach(part => {
-                    if (lowerLine.includes(part)) overlap++;
+                    if (lowerLine.includes(part)) {
+                        overlap++;
+                    } else {
+                        // Check for partial match (fuzzy matching for OCR errors)
+                        const partChars = part.split('');
+                        let matchCount = 0;
+                        partChars.forEach(char => {
+                            if (lowerLine.includes(char)) matchCount++;
+                        });
+                        if (matchCount / part.length > 0.7) partialMatches++;
+                    }
                 });
 
-                // If this line has significant overlap, it's likely the Name on the Aadhar
-                if (overlap > 0 && overlap >= maxOverlap) {
-                    maxOverlap = overlap;
-                    verifiedName = cleanOCRName(line); // Clean just this line
+                const totalScore = overlap + (partialMatches * 0.5);
+
+                // If this line has significant overlap, it's likely the Name
+                if (totalScore > 0 && totalScore >= maxOverlap) {
+                    maxOverlap = totalScore;
+                    bestNameLine = line;
                 }
             }
 
-            // Fallback: If no line matched well, but the ID name is present in the full text?
-            if (!verifiedName && text.toLowerCase().includes(idNameLower)) {
-                verifiedName = cleanOCRName(scannedData.name); // Trust the ID name if it matches
+            if (bestNameLine) {
+                verifiedName = cleanOCRName(bestNameLine);
             }
 
-            // 3. Extract Fields Sequentially
-            // Aadhar Number (12 digits, spaced or unspaced)
-            const aadharNumMatch = text.match(/\d{4}\s\d{4}\s\d{4}/) || text.match(/\d{12}/);
-            const aadharNumber = aadharNumMatch ? aadharNumMatch[0] : null;
+            // Fallback: If no line matched well, but the ID name is present in the full text
+            if (!verifiedName && text.toLowerCase().includes(idNameLower)) {
+                verifiedName = cleanOCRName(scannedData.name);
+            }
 
-            // DOB (DD/MM/YYYY or YYYY) - Look for pattern anywhere
-            const dobMatch = text.match(/(\d{2}[\/-]\d{2}[\/-]\d{4})/);
-            const dob = dobMatch ? dobMatch[1] : null;
+            // 3. Enhanced Field Extraction with Multiple Patterns
 
-            // Gender
-            const genderMatch = text.match(/\b(MALE|FEMALE|Transgender)\b/i);
-            const gender = genderMatch ? genderMatch[0].toUpperCase() : null;
+            // Aadhar Number - Enhanced validation with multiple patterns
+            let aadharNumber = null;
 
-            console.log("Aadhar Extraction Logic:", { verifiedName, aadharNumber, dob, gender });
+            // Pattern 1: Standard format with spaces (XXXX XXXX XXXX)
+            const aadharPattern1 = text.match(/\b\d{4}\s+\d{4}\s+\d{4}\b/);
+            // Pattern 2: Without spaces (12 consecutive digits)
+            const aadharPattern2 = text.match(/\b\d{12}\b/);
+            // Pattern 3: With hyphens or other separators
+            const aadharPattern3 = text.match(/\b\d{4}[-\s]\d{4}[-\s]\d{4}\b/);
+
+            if (aadharPattern1) {
+                aadharNumber = aadharPattern1[0];
+            } else if (aadharPattern3) {
+                aadharNumber = aadharPattern3[0].replace(/[-]/g, ' ');
+            } else if (aadharPattern2) {
+                // Format as XXXX XXXX XXXX
+                const num = aadharPattern2[0];
+                aadharNumber = `${num.slice(0, 4)} ${num.slice(4, 8)} ${num.slice(8, 12)}`;
+            }
+
+            // DOB - Enhanced extraction with multiple date formats
+            let dob = null;
+
+            // Pattern 1: DD/MM/YYYY or DD-MM-YYYY
+            const dobPattern1 = text.match(/\b(\d{2}[\/\-]\d{2}[\/\-]\d{4})\b/);
+            // Pattern 2: DD.MM.YYYY
+            const dobPattern2 = text.match(/\b(\d{2}\.\d{2}\.\d{4})\b/);
+            // Pattern 3: YYYY (Year only - common in old Aadhar cards)
+            const dobPattern3 = text.match(/\b(19\d{2}|20\d{2})\b/);
+            // Pattern 4: With text prefix like "DOB:" or "Birth:"
+            const dobPattern4 = text.match(/(?:DOB|Birth|YOB)[:\s]*(\d{2}[\/\-\.]\d{2}[\/\-\.]\d{4})/i);
+
+            if (dobPattern4) {
+                dob = dobPattern4[1].replace(/\./g, '/').replace(/-/g, '/');
+            } else if (dobPattern1) {
+                dob = dobPattern1[1].replace(/-/g, '/');
+            } else if (dobPattern2) {
+                dob = dobPattern2[1].replace(/\./g, '/');
+            } else if (dobPattern3 && !aadharNumber?.includes(dobPattern3[1])) {
+                // Only use year if it's not part of Aadhar number
+                dob = dobPattern3[1];
+            }
+
+            // Gender - Enhanced detection with common OCR mistakes
+            let gender = null;
+
+            // Pattern 1: Direct match
+            const genderPattern1 = text.match(/\b(MALE|FEMALE|M|F|Transgender|Trans)\b/i);
+            // Pattern 2: With common OCR errors (WALE -> MALE, FEMLE -> FEMALE)
+            const genderPattern2 = text.match(/\b(M[A-Z]LE|FEM[A-Z]LE|W[A-Z]LE)\b/i);
+            // Pattern 3: With prefix
+            const genderPattern3 = text.match(/(?:Gender|Sex)[:\s]*(MALE|FEMALE|M|F)/i);
+
+            if (genderPattern3) {
+                const g = genderPattern3[1].toUpperCase();
+                gender = g === 'M' ? 'MALE' : g === 'F' ? 'FEMALE' : g;
+            } else if (genderPattern1) {
+                const g = genderPattern1[0].toUpperCase();
+                gender = g === 'M' ? 'MALE' : g === 'F' ? 'FEMALE' : g;
+            } else if (genderPattern2) {
+                const g = genderPattern2[0].toUpperCase();
+                gender = g.includes('FEM') ? 'FEMALE' : 'MALE';
+            }
+
+            console.log("Aadhar Extraction Logic:", {
+                verifiedName,
+                aadharNumber,
+                dob,
+                gender,
+                nameScore: maxOverlap,
+                linesProcessed: lines.length
+            });
 
             // 4. Strict Gatekeeping with Granular Feedback
             if (!verifiedName) {
