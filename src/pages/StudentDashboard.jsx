@@ -147,22 +147,41 @@ const StudentDashboard = () => {
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                        <div>
-                            <h1 style={{
-                                fontSize: '2.5rem',
-                                color: '#fff',
-                                margin: 0,
-                                marginBottom: '0.5rem',
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                fontWeight: '700'
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                            {/* Profile Picture */}
+                            <div style={{
+                                width: '80px',
+                                height: '80px',
+                                borderRadius: '50%',
+                                overflow: 'hidden',
+                                border: '3px solid #667eea',
+                                boxShadow: '0 0 20px rgba(102, 126, 234, 0.5)',
+                                background: '#1a1a2e',
+                                flexShrink: 0
                             }}>
-                                Welcome Back! 👋
-                            </h1>
-                            <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem', margin: 0 }}>
-                                {user?.fullName || user?.name || user?.username || 'Student'}
-                            </p>
+                                <img
+                                    src={user?.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.fullName || user?.username || 'User')}&background=667eea&color=fff`}
+                                    alt="Profile"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            </div>
+                            <div>
+                                <h1 style={{
+                                    fontSize: '2.5rem',
+                                    color: '#fff',
+                                    margin: 0,
+                                    marginBottom: '0.5rem',
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    fontWeight: '700'
+                                }}>
+                                    Welcome Back! 👋
+                                </h1>
+                                <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem', margin: 0 }}>
+                                    {user?.fullName || user?.name || user?.username || 'Student'}
+                                </p>
+                            </div>
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                             <button
@@ -331,6 +350,25 @@ const StudentDashboard = () => {
                                 )}
                             </div>
                         </div>
+                        {user?.idCardImage && (
+                            <div style={{ marginTop: '1.5rem' }}>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>College ID Card</strong>
+                                <div style={{
+                                    maxWidth: '300px',
+                                    borderRadius: '12px',
+                                    overflow: 'hidden',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+                                }}>
+                                    <img
+                                        src={user.idCardImage}
+                                        alt="College ID Card"
+                                        style={{ width: '100%', display: 'block' }}
+                                        onError={(e) => e.target.style.display = 'none'}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Aadhar Card Details */}
