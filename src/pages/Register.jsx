@@ -1237,7 +1237,7 @@ const Register = () => {
                 fullName: scannedData.name,
                 computerCode: scannedData.code ? scannedData.code.toString().replace(/^0+/, '').trim() : '',
                 branch: branchCode,
-                username: generatedUsername,
+                username: scannedData.code ? scannedData.code.toString().replace(/^0+/, '').trim() : '',
                 startYear: startYear,
                 mobilePrimary: scannedData.mobilePrimary || '',
                 mobileSecondary: scannedData.mobileSecondary || '',
@@ -1303,11 +1303,7 @@ const Register = () => {
                                 <input type="text" id="fullName" name="fullName" value={formData.fullName} readOnly={true} className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
                                 <small style={{ color: '#34d399' }}>Verified from ID Card</small>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="username">Username <i className="fas fa-lock text-green-400" title="Auto-generated from verified name"></i></label>
-                                <input type="text" id="username" name="username" required placeholder="e.g., @yourusername" value={formData.username} readOnly={!!scannedData} className={scannedData ? "locked-field" : ""} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} onChange={handleChange} />
-                                <small style={{ color: scannedData ? '#34d399' : '#aaa' }}>{scannedData ? 'Auto-generated from verified name. Login with your Computer Code.' : 'Must start with \'@\', be lowercase, and have no spaces.'}</small>
-                            </div>
+
                             <div className="form-group">
                                 <label htmlFor="email">Email Address</label>
                                 <input type="email" id="email" name="email" required placeholder="your.email@example.com" value={formData.email} onChange={handleChange} />
@@ -1463,7 +1459,7 @@ const Register = () => {
                                             <div className="form-group">
                                                 <label htmlFor="computerCode">Computer Code (Student ID) *</label>
                                                 <input type="text" id="computerCode" name="computerCode" required placeholder="e.g. 59500" value={formData.computerCode} onChange={handleChange} readOnly={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} />
-                                                <small>Your unique college ID/Roll Number.</small>
+                                                <small>Your unique college ID/Roll Number. This will be your Login ID.</small>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="aadharNumber">Aadhar Number <i className="fas fa-lock text-green-400" title="Verified from Aadhar Card"></i></label>
