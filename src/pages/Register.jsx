@@ -1263,8 +1263,11 @@ const checkVerificationStatus = async (cleanedMatch, finalBlob, checkType = 'ID'
         const rawCode = checkType === 'ID' ? cleanedMatch.code : scannedData?.code;
         const cleanedCode = rawCode ? rawCode.toString().replace(/^0+/, '').trim() : '';
 
+        // Convert to number for backend (database expects number type)
+        const computerCodeNumber = cleanedCode ? parseInt(cleanedCode, 10) : null;
+
         const payload = {
-            computerCode: cleanedCode,
+            computerCode: computerCodeNumber,
             deviceFingerprint: deviceFingerprint,
             ipAddress: location?.lat || 'unknown',
             location: location
