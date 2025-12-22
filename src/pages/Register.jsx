@@ -422,10 +422,14 @@ const Register = () => {
                     };
                 case 'AADHAR_AUTO_CAPTURE':
                     return {
-                        title: "Step 2: Aadhar Verification",
-                        desc: "Scan your Aadhar Card. We will match it against your College ID.",
+                        title: "Step 2: Scan Aadhar QR Code",
+                        desc: "Point camera at the QR Code on your Aadhar (or Front Side).",
                         btnText: "Start Aadhar Scan",
-                        btnAction: () => { setCameraMode('environment'); startCamera(); }
+                        btnAction: () => {
+                            setCameraMode('environment');
+                            startCamera();
+                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Please scan the QR code on your Aadhar card."));
+                        }
                     };
                 case 'AADHAR_VERIFY_DATA':
                     return {
