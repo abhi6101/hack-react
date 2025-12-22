@@ -19,6 +19,8 @@ const AccountRecovery = () => {
     const [isScanning, setIsScanning] = useState(false);
     const [scanStatus, setScanStatus] = useState('');
     const [cameraActive, setCameraActive] = useState(false);
+    const [idScanAttempt, setIdScanAttempt] = useState(0);
+    const [aadharScanAttempt, setAadharScanAttempt] = useState(0);
 
     // Scanned data
     const [idData, setIdData] = useState(null);
@@ -140,6 +142,7 @@ const AccountRecovery = () => {
     const handleStartIDScan = async () => {
         setStage('ID_SCAN');
         setError('');
+        setIdScanAttempt(0); // Reset counter
         await startCamera();
         setTimeout(() => {
             attemptIDScan();
@@ -149,12 +152,13 @@ const AccountRecovery = () => {
     const attemptIDScan = async () => {
         if (!cameraActive) return;
 
+        setIdScanAttempt(prev => prev + 1);
         setIsScanning(true);
-        setScanStatus('Scanning ID Card...');
+        setScanStatus(`Scanning ID Card... (Attempt ${idScanAttempt + 1})`);
 
         const imageData = captureFrame();
         if (!imageData) {
-            setScanStatus('Failed to capture. Retrying...');
+            setScanStatus(`Failed to capture. Retrying... (Attempt ${idScanAttempt + 1})`);
             setTimeout(attemptIDScan, 2000);
             return;
         }
@@ -167,7 +171,7 @@ const AccountRecovery = () => {
                 computerCode,
                 image: imageData
             });
-            setScanStatus('ID Card Scanned Successfully!');
+            setScanStatus(`✓ ID Card Scanned Successfully! (Attempt ${idScanAttempt + 1})`);
             setIsScanning(false);
 
             // Auto-proceed to Aadhar scan
@@ -175,7 +179,7 @@ const AccountRecovery = () => {
                 handleStartAadharScan();
             }, 1500);
         } else {
-            setScanStatus('ID Card not clear. Retrying...');
+            setScanStatus(`ID Card not clear. Retrying... (Attempt ${idScanAttempt + 1})`);
             setTimeout(attemptIDScan, 2000);
         }
     };
@@ -183,6 +187,7 @@ const AccountRecovery = () => {
     const handleStartAadharScan = async () => {
         setStage('AADHAR_SCAN');
         setScanStatus('');
+        setAadharScanAttempt(0); // Reset counter
         if (!cameraActive) {
             await startCamera();
         }
@@ -194,12 +199,13 @@ const AccountRecovery = () => {
     const attemptAadharScan = async () => {
         if (!cameraActive) return;
 
+        setAadharScanAttempt(prev => prev + 1);
         setIsScanning(true);
-        setScanStatus('Scanning Aadhar...');
+        setScanStatus(`Scanning Aadhar... (Attempt ${aadharScanAttempt + 1})`);
 
         const imageData = captureFrame();
         if (!imageData) {
-            setScanStatus('Failed to capture. Retrying...');
+            setScanStatus(`Failed to capture. Retrying... (Attempt ${aadharScanAttempt + 1})`);
             setTimeout(attemptAadharScan, 2000);
             return;
         }
@@ -207,12 +213,19 @@ const AccountRecovery = () => {
         const text = await performOCR(imageData);
         const extracted = extractAadharData(text);
 
+        // Show what was found
+        const foundItems = [];
+        if (extracted.aadharNumber) foundItems.push('Aadhar#');
+        if (extracted.dob) foundItems.push('DOB');
+        if (extracted.gender) foundItems.push('Gender');
+        if (extracted.name) foundItems.push('Name');
+
         if (extracted.aadharNumber && extracted.dob && extracted.gender) {
             setAadharData({
                 ...extracted,
                 image: imageData
             });
-            setScanStatus('Aadhar Scanned Successfully!');
+            setScanStatus(`✓ Aadhar Scanned Successfully! Found: ${foundItems.join(', ')} (Attempt ${aadharScanAttempt + 1})`);
             setIsScanning(false);
 
             // Auto-proceed to selfie
@@ -220,7 +233,12 @@ const AccountRecovery = () => {
                 handleCaptureSelfie();
             }, 1500);
         } else {
-            setScanStatus('Aadhar not clear. Retrying...');
+            const missing = [];
+            if (!extracted.aadharNumber) missing.push('Aadhar#');
+            if (!extracted.dob) missing.push('DOB');
+            if (!extracted.gender) missing.push('Gender');
+
+            setScanStatus(`Aadhar not clear. Missing: ${missing.join(', ')}. Retrying... (Attempt ${aadharScanAttempt + 1})`);
             setTimeout(attemptAadharScan, 2000);
         }
     };
