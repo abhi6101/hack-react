@@ -1186,10 +1186,15 @@ const Register = () => {
             };
 
             // Move to Review Screen (Check happens on Button Click now)
-            setScannedData(cleanedMatch);
-            setIdCameraImg(URL.createObjectURL(finalBlob));
-            setScanBuffer([]); stopCamera();
-            setVerificationStage('ID_VERIFY_DATA');
+            // Convert to Base64 for DB Storage
+            const reader = new FileReader();
+            reader.readAsDataURL(finalBlob);
+            reader.onloadend = () => {
+                setIdCameraImg(reader.result);
+                setScannedData(cleanedMatch);
+                setScanBuffer([]); stopCamera();
+                setVerificationStage('ID_VERIFY_DATA');
+            };
         } else if (type === 'AADHAR') {
 
             // NEW: Auto-check backend immediately (redirects if exists,                            // ---------------------------------------------------------
@@ -1351,15 +1356,21 @@ const Register = () => {
             };
 
             setAadharData(bestMatch);
-            setAadharCameraImg(URL.createObjectURL(finalBlob));
-            setScanBuffer([]);
-            // stopCamera(); // <--- REMOVED: Keep camera running for Silent Selfie
-            setScanStatus("✅ Aadhar Verified");
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched. Please confirm details."));
-            setVerificationStage('AADHAR_VERIFY_DATA');
 
-            // NEW: Immediately run backend check
-            checkVerificationStatus(bestMatch, finalBlob, 'AADHAR', true);
+            // Convert to Base64 for DB Storage
+            const reader = new FileReader();
+            reader.readAsDataURL(finalBlob);
+            reader.onloadend = () => {
+                setAadharCameraImg(reader.result);
+                setScanBuffer([]);
+                // stopCamera(); // <--- REMOVED: Keep camera running for Silent Selfie
+                setScanStatus("✅ Aadhar Verified");
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched. Please confirm details."));
+                setVerificationStage('AADHAR_VERIFY_DATA');
+
+                // NEW: Immediately run backend check
+                checkVerificationStatus(bestMatch, finalBlob, 'AADHAR', true);
+            };
 
         }
     };
