@@ -278,7 +278,10 @@ const Register = () => {
                             <div style={{
                                 position: 'absolute', bottom: '0', left: '0', width: '100%',
                                 background: 'linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6))',
-                                padding: '20px 15px', backdropFilter: 'blur(4px)', zIndex: 30, textAlign: 'left', borderTop: '1px solid #4ade80'
+                                padding: '20px 15px', backdropFilter: 'blur(4px)', zIndex: 30, textAlign: 'left',
+                                borderTop: '1px solid #4ade80',
+                                maxHeight: '80vh',
+                                overflowY: 'auto'
                             }}>
                                 <div style={{ color: '#4ade80', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '5px', display: 'flex', justifyContent: 'space-between' }}>
                                     <span><i className="fas fa-check-circle"></i> VERIFIED</span>
@@ -305,7 +308,7 @@ const Register = () => {
 
                                 {/* Conditional Buttons based on data completeness */}
                                 {aadharData.name && aadharData.dob && aadharData.gender && aadharData.aadharNumber ? (
-                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                    <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
                                         <button
                                             className="btn btn-secondary"
                                             style={{
