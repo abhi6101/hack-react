@@ -945,10 +945,9 @@ const Register = () => {
                         // STRICT NAME CHECK (Requested Feature)
                         // If the name on Aadhar doesn't fuzzy-match the ID Card Name, REJECT the frame.
                         if (matchedName === "Detected Name") {
-                            setScanStatus("⚠️ Name Mismatch! Show YOUR Aadhar Card");
-                            window.speechSynthesis.cancel(); // Stop overlap
-                            if (!scanStatus.includes("Mismatch")) window.speechSynthesis.speak(new SpeechSynthesisUtterance("Name mismatch. Show your own card."));
-                            matchFound = false; // REJECT FRAME
+                            // Security: Obscure the reason for rejection so users can't game the system
+                            setScanStatus("⚠️ Align Card / Adjust Lighting");
+                            matchFound = false;
                         } else {
                             extracted = {
                                 name: matchedName,
