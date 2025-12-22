@@ -241,6 +241,19 @@ const Register = () => {
                             </div>
                         )}
 
+                        {/* QR CODE RETICLE (Guide) - Only for Aadhar Auto Capture */}
+                        {verificationStage === 'AADHAR_AUTO_CAPTURE' && (
+                            <div style={{
+                                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                                width: '200px', height: '200px',
+                                border: '2px dashed #4ade80', borderRadius: '12px',
+                                boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)', // Dim outside area
+                                pointerEvents: 'none', zIndex: 15
+                            }}>
+                                <div style={{ position: 'absolute', top: '-25px', width: '100%', textAlign: 'center', color: '#4ade80', fontWeight: 'bold', fontSize: '0.9rem' }}>ALIGN QR CODE</div>
+                            </div>
+                        )}
+
                         <div style={{ position: 'absolute', top: '20px', left: '0', width: '100%', textAlign: 'center', pointerEvents: 'none', zIndex: 10 }}>
                             <span style={{
                                 background: 'rgba(0, 0, 0, 0.8)', padding: '8px 20px', borderRadius: '30px', color: '#fff',
@@ -248,7 +261,7 @@ const Register = () => {
                                 textTransform: 'uppercase', boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
                             }}>
                                 {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" :
-                                    (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR CARD" :
+                                    (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR QR" :
                                         (verificationStage === 'AADHAR_VERIFY_DATA' ? "IDENTITY MATCHED" : "FACE VERIFICATION"))}
                             </span>
                         </div>
