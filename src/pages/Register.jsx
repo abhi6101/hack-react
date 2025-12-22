@@ -256,20 +256,32 @@ const Register = () => {
                         {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
                             <div style={{
                                 position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)',
-                                background: 'rgba(0,0,0,0.85)', padding: '8px 18px', borderRadius: '30px',
-                                display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20,
-                                border: `1px solid ${scanStatus.includes('⚠️') ? '#ef4444' : (scanStatus.includes('Reading') ? '#00d4ff' : '#4ade80')} `,
-                                boxShadow: '0 4px 15px rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', width: 'max-content'
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', zIndex: 20, width: '100%'
                             }}>
-                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80', animation: 'pulse 1.5s infinite' }}></div>
-                                <span style={{
-                                    color: '#fff', fontSize: '0.85rem', fontWeight: '600', letterSpacing: '0.5px',
-                                    display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap'
+                                {/* MAIN STATUS PILL */}
+                                <div style={{
+                                    background: 'rgba(0,0,0,0.85)', padding: '10px 24px', borderRadius: '30px',
+                                    border: `1px solid ${scanStatus.includes('⚠️') ? '#ef4444' : (scanStatus.includes('Reading') ? '#00d4ff' : '#4ade80')} `,
+                                    boxShadow: '0 4px 15px rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
+                                    display: 'flex', alignItems: 'center', gap: '10px'
                                 }}>
-                                    <i className={`fas ${scanStatus.includes('Reading') ? 'fa-brain animate-pulse' : (scanStatus.includes('⚠️') ? 'fa-exclamation-triangle' : 'fa-check-circle')} `}
-                                        style={{ color: scanStatus.includes('Reading') ? '#00d4ff' : (scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80') }}></i>
-                                    {scanStatus} {scanBuffer.length > 0 && scanBuffer.length < TARGET_SCANS && `(${scanBuffer.length + 1} / ${TARGET_SCANS})`}
-                                </span>
+                                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80', animation: 'pulse 1.5s infinite' }}></div>
+                                    <span style={{ color: '#fff', fontSize: '1rem', fontWeight: '600' }}>
+                                        {scanStatus}
+                                    </span>
+                                </div>
+
+                                {/* BIG COUNT INDICATOR - INSTANT MESSAGE STYLE */}
+                                {scanBuffer.length > 0 && scanBuffer.length < 5 && (
+                                    <div className="animate-bounce" style={{
+                                        background: 'rgba(74, 222, 128, 0.9)', color: '#000',
+                                        padding: '8px 20px', borderRadius: '20px', fontWeight: 'bold', fontSize: '1.1rem',
+                                        marginTop: '5px', boxShadow: '0 0 15px rgba(74,222,128,0.6)',
+                                        display: 'flex', alignItems: 'center', gap: '8px'
+                                    }}>
+                                        <i className="fas fa-camera"></i> Scanned {scanBuffer.length} Time{scanBuffer.length > 1 ? 's' : ''}
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -956,7 +968,7 @@ const Register = () => {
                     const targetFrames = isIdStage ? TARGET_SCANS : 2;
                     const newBuffer = [...scanBuffer, extracted];
                     setScanBuffer(newBuffer);
-                    setScanStatus(`Scanned ${newBuffer.length}/${targetFrames}`);
+                    setScanStatus(`✅ Captured ${newBuffer.length} / ${targetFrames}`);
 
                     if (newBuffer.length >= targetFrames) {
                         finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR', text);
