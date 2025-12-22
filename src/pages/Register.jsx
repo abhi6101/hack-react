@@ -23,6 +23,8 @@ const Register = () => {
         mobilePrimary: '',
         mobileSecondary: '',
         aadharNumber: '',
+        dob: '',
+        gender: '',
         password: '',
         confirmPassword: ''
     });
@@ -575,6 +577,8 @@ const Register = () => {
                 mobileSource: scannedData?.mobileCount > 0 ? 'ID_CARD_AUTO' : 'MANUAL_ENTRY',
 
                 // Verified Identity Data (from Aadhar)
+                dob: formData.dob,
+                gender: formData.gender,
 
 
                 // Verification Metadata
@@ -1189,6 +1193,8 @@ const Register = () => {
                 mobilePrimary: scannedData.mobilePrimary || '',
                 mobileSecondary: scannedData.mobileSecondary || '',
                 aadharNumber: aadharData?.aadharNumber || '',
+                dob: aadharData?.dob || '',
+                gender: aadharData?.gender || '',
                 role: 'USER'
             }));
         }
@@ -1227,6 +1233,10 @@ const Register = () => {
                                                 <div style={{ fontWeight: '500', color: '#4ade80', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                     {aadharData.aadharNumber}
 
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '15px', marginTop: '4px', fontSize: '0.8rem', color: '#ccc' }}>
+                                                    <span><strong>DOB:</strong> {aadharData.dob || 'N/A'}</span>
+                                                    <span><strong>Gender:</strong> {aadharData.gender || 'N/A'}</span>
                                                 </div>
                                             </div>
                                         )}
@@ -1422,6 +1432,18 @@ const Register = () => {
                                                 <small style={{ color: '#34d399' }}>✓ Verified from Aadhar Card (Read-only)</small>
                                             </div>
                                         </>
+                                    )}
+                                    {formData.dob && (
+                                        <div className="form-row" style={{ display: 'flex', gap: '1rem' }}>
+                                            <div className="form-group" style={{ flex: 1 }}>
+                                                <label>Date of Birth <i className="fas fa-lock text-green-400"></i></label>
+                                                <input type="text" value={formData.dob} readOnly className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
+                                            </div>
+                                            <div className="form-group" style={{ flex: 1 }}>
+                                                <label>Gender <i className="fas fa-lock text-green-400"></i></label>
+                                                <input type="text" value={formData.gender} readOnly className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
+                                            </div>
+                                        </div>
                                     )}
                                 </>
                             )}
