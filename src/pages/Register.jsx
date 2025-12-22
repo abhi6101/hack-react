@@ -652,6 +652,11 @@ const Register = () => {
                 dob: formData.dob,
                 gender: formData.gender,
 
+                // Image Mapping for Backend (CRITICAL FIX)
+                idCardImage: idCameraImg,
+                aadharCardImage: aadharCameraImg,
+                profilePictureUrl: selfieImg,
+
 
                 // Verification Metadata
                 verificationData: {
