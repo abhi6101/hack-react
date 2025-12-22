@@ -1355,6 +1355,20 @@ const Register = () => {
                 return;
             }
 
+            // SMART FIX: Force ID Card Name if partial match found (Fixes garbage text like 'i FT ATAT')
+            if (scannedData?.name && text) {
+                const idNameParts = scannedData.name.split(' ');
+                // Check if "Abhi" or "Jain" exists in Aadhar text
+                const isPartFound = idNameParts.some(part =>
+                    part.length > 2 && text.toLowerCase().includes(part.toLowerCase())
+                );
+
+                if (isPartFound) {
+                    console.log("Smart Fix: Overriding Aadhar name with ID Name", scannedData.name);
+                    verifiedName = scannedData.name;
+                }
+            }
+
             // FAST TRACK: If Name & Aadhar Number match, proceed immediately!
             // We skip strict DOB/Gender check to speed up scanning by 2x-3x.
             if (!verifiedName) {
