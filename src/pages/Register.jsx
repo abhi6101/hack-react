@@ -704,6 +704,45 @@ const Register = () => {
     const [scanBuffer, setScanBuffer] = useState([]);
     const TARGET_SCANS = 4;
 
+    // SECURITY: Detect IPS Academy Blue Header & Logo Pattern
+    const detectIPSHeader = (ctx, width, height) => {
+        try {
+            // Check top 25% of the card (where the blue header is)
+            const headerHeight = Math.floor(height * 0.25);
+            const imageData = ctx.getImageData(0, 0, width, headerHeight);
+            const data = imageData.data;
+            let bluePixelCount = 0;
+            let whitePixelCount = 0; // For logo/text
+
+            // Iterate through pixels
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+
+                // Standard IPS Blue is roughly R:20-60, G:40-80, B:100-180
+                // Relaxed range: Blue must be significantly higher than Red
+                if (b > r + 30 && b > g + 10 && b > 60) {
+                    bluePixelCount++;
+                }
+                // Check for White/Bright logo elements
+                if (r > 180 && g > 180 && b > 180) {
+                    whitePixelCount++;
+                }
+            }
+
+            const totalPixels = data.length / 4;
+            const blueRatio = bluePixelCount / totalPixels;
+
+            // Require at least 15% of the header to be "IPS Blue"
+            // This filters out black/white copies or random other cards
+            return blueRatio > 0.15;
+        } catch (e) {
+            console.error("Header check failed", e);
+            return false; // Fail safe
+        }
+    };
+
     const attemptAutoCapture = async () => {
         const isIdStage = verificationStage === 'ID_AUTO_CAPTURE';
         const isAadharStage = verificationStage === 'AADHAR_AUTO_CAPTURE';
@@ -885,6 +924,23 @@ const Register = () => {
                         setScanStatus(isIdStage ? "AI: Waiting for IPS ID..." : "AI: Waiting for Aadhar...");
                     }, 4000);
                     setScanBuffer([]); setIsScanning(false); return;
+                }
+
+                // SECURITY: IPS Academy Logo/Header Check (Phase 1.5)
+                if (isIdStage && matchFound) {
+                    const isRealIPS = detectIPSHeader(context, canvasRef.current.width, canvasRef.current.height);
+                    if (!isRealIPS) {
+                        console.warn("Real IPS Header NOT Detected");
+                        setScanStatus("⚠️ Warning: IPS Logo not detected");
+                        // Optional: Reject frame?
+                        // For now, we allow it but warn, or require more confident text match
+                        // Let's make it strict:
+                        setScanStatus("⚠️ Security Check: Missing IPS Blue Header");
+                        // scanBuffer = []; // Reset buffer?
+                        // Match continues but trust score lowers?
+                        // Let's REJECT to stop fake black/white prints.
+                        matchFound = false;
+                    }
                 }
 
                 // 2. DOCUMENT PROCESSING
