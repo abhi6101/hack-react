@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
 import { DISTRICT_STATE_MAP } from '../data/indianDistricts';
+import '../styles/register.css';
 
 
 const TARGET_SCANS = 15; // Increased scan count for better accuracy
