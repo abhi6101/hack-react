@@ -908,7 +908,7 @@ const Register = () => {
                     // LOWERED THRESHOLD: Now triggers on Aadhar number alone OR any keyword
                     if (score >= 1 || aadharNumMatch || isAadharDetected) {
                         matchFound = true;
-                        setScanStatus("Aadhar Detected! Processing...");
+                        setScanStatus("Scanning Aadhar...");
 
                         const knownName = scannedData?.name || "";
                         let matchedName = "Detected Name";
@@ -1322,19 +1322,19 @@ const Register = () => {
                 linesProcessed: lines.length
             });
 
-            // 4. Strict Gatekeeping with Granular Feedback
+            // 4. Silent Scanning - No granular feedback to prevent manipulation
             if (!verifiedName) {
-                setScanStatus("⚠️ Searching for Name (Must match ID)...");
+                setScanStatus("Scanning Aadhar...");
                 setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
                 return;
             }
             if (!aadharNumber) {
-                setScanStatus(`✅ Found ${verifiedName.split(' ')[0]}... Scan Aadhar No.`);
+                setScanStatus("Scanning Aadhar...");
                 setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
                 return;
             }
             if (!dob || !gender) {
-                setScanStatus("✅ Identity Found. Finding DOB & Gender...");
+                setScanStatus("Scanning Aadhar...");
                 setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
                 return;
             }
