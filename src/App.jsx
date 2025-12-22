@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import ProfileUpdateModal from './components/ProfileUpdateModal';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import AdminLogin from './pages/AdminLogin';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import Jobs from './pages/Jobs';
@@ -32,7 +33,7 @@ import './styles/animations.css'; // Import animations
 function Layout({ children }) {
     const location = useLocation();
     const navigate = useNavigate(); // Add hook
-    const hideNavbarRoutes = ['/login', '/register', '/admin', '/onboarding'];
+    const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -111,6 +112,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/admin/login" element={<AdminLogin />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/verify-account" element={<VerifyAccount />} />
