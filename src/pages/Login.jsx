@@ -57,12 +57,12 @@ const Login = () => {
         setError('');
 
         try {
-            const endpoint = loginMode === 'student' ? '/auth/login' : '/auth/admin/login';
+            // Use unified login endpoint for both student and admin
             const payload = loginMode === 'student'
                 ? { computerCode: identifier, password }
                 : { username: identifier, password };
 
-            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
