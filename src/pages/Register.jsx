@@ -306,21 +306,23 @@ const Register = () => {
                                     </div>
                                 </div>
 
+
                                 {/* Conditional Buttons based on data completeness */}
                                 {aadharData.name && aadharData.dob && aadharData.gender && aadharData.aadharNumber ? (
-                                    <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                                    <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
                                         <button
                                             className="btn btn-secondary"
                                             style={{
-                                                flex: '0 0 auto',
-                                                padding: '12px 20px',
+                                                width: '100px',
+                                                padding: '12px 8px',
                                                 fontWeight: 'bold',
-                                                fontSize: '0.9rem',
+                                                fontSize: '0.85rem',
                                                 background: 'rgba(239, 68, 68, 0.2)',
                                                 color: '#ef4444',
                                                 border: '1px solid #ef4444',
                                                 borderRadius: '8px',
-                                                cursor: 'pointer'
+                                                cursor: 'pointer',
+                                                whiteSpace: 'nowrap'
                                             }}
                                             onClick={() => {
                                                 setAadharData(null);
@@ -338,7 +340,7 @@ const Register = () => {
                                                 flex: '1',
                                                 padding: '12px',
                                                 fontWeight: 'bold',
-                                                fontSize: '1rem',
+                                                fontSize: '0.95rem',
                                                 background: '#4ade80',
                                                 color: '#000',
                                                 border: 'none',
