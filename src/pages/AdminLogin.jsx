@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
 const AdminLogin = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -12,12 +12,12 @@ const AdminLogin = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // Load remembered email on component mount
+    // Load remembered username on component mount
     useEffect(() => {
         const remembered = localStorage.getItem('adminRememberMe');
-        const savedEmail = localStorage.getItem('savedAdminEmail');
-        if (remembered === 'true' && savedEmail) {
-            setEmail(savedEmail);
+        const savedUsername = localStorage.getItem('savedAdminUsername');
+        if (remembered === 'true' && savedUsername) {
+            setUsername(savedUsername);
             setRememberMe(true);
         }
     }, []);
@@ -31,7 +31,7 @@ const AdminLogin = () => {
             const response = await fetch(`${API_BASE_URL}/auth/admin/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ username, password })
             });
 
             const data = await response.json();
@@ -45,15 +45,14 @@ const AdminLogin = () => {
                     return;
                 }
                 if (data.username) localStorage.setItem('username', data.username);
-                if (data.email) localStorage.setItem('adminEmail', data.email);
 
                 // Handle Remember Me
                 if (rememberMe) {
                     localStorage.setItem('adminRememberMe', 'true');
-                    localStorage.setItem('savedAdminEmail', email);
+                    localStorage.setItem('savedAdminUsername', username);
                 } else {
                     localStorage.removeItem('adminRememberMe');
-                    localStorage.removeItem('savedAdminEmail');
+                    localStorage.removeItem('savedAdminUsername');
                 }
 
                 // Backend returns "roles": ["ROLE_ADMIN", "ROLE_SUPER_ADMIN", etc.]
@@ -150,16 +149,16 @@ const AdminLogin = () => {
 
                     <form id="adminLoginForm" onSubmit={handleSubmit}>
                         <div className="input-group">
-                            <label htmlFor="email">Email Address</label>
+                            <label htmlFor="username">Username</label>
                             <input
-                                type="email"
-                                id="email"
-                                name="email"
+                                type="text"
+                                id="username"
+                                name="username"
                                 required
-                                placeholder="Enter your admin email"
-                                aria-label="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your admin username"
+                                aria-label="Username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
 
