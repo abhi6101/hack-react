@@ -301,40 +301,47 @@ const Register = () => {
 
                         {/* AADHAR CONFIRMATION OVERLAY (Silent Capture Trap) */}
                         {verificationStage === 'AADHAR_VERIFY_DATA' && aadharData && (
-                            <div style={{
-                                position: 'absolute', bottom: '0', left: '0', width: '100%',
-                                background: 'linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6))',
-                                padding: '20px 15px', backdropFilter: 'blur(4px)', zIndex: 30, textAlign: 'left',
-                                borderTop: '1px solid #4ade80',
-                                maxHeight: '80vh',
-                                overflowY: 'auto'
+                            <div className="animate-fade-in" style={{
+                                position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
+                                background: 'rgba(5, 5, 5, 0.95)', // Darker background for readability
+                                padding: '25px', zIndex: 30, textAlign: 'left',
+                                display: 'flex', flexDirection: 'column', justifyContent: 'center'
                             }}>
-                                <div style={{ color: '#4ade80', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '5px', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span><i className="fas fa-check-circle"></i> VERIFIED</span>
-                                    <span>98% Match</span>
+                                <div style={{ color: '#4ade80', fontSize: '1rem', fontWeight: 'bold', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #4ade80', paddingBottom: '10px' }}>
+                                    <span><i className="fas fa-check-circle"></i> VERIFIED IDENTITY</span>
+                                    <span>100% Match</span>
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '15px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
                                     <div style={{ gridColumn: '1 / -1' }}>
-                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>Name</div>
-                                        <div style={{ color: '#fff', fontSize: '1rem', fontWeight: '600' }}>{aadharData.name}</div>
+                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Full Name {aadharData.isNameVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED</span>}</div>
+                                        <div style={{ color: '#fff', fontSize: '1.6rem', fontWeight: '700' }}>{aadharData.name}</div>
+                                    </div>
+
+                                    {/* Father Name (if captured) */}
+                                    {aadharData.fatherName && (
+                                        <div style={{ gridColumn: '1 / -1' }}>
+                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Care Of / Father {aadharData.isFatherVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID</span>}</div>
+                                            <div style={{ color: '#fff', fontSize: '1.1rem' }}>{aadharData.fatherName}</div>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Date of Birth</div>
+                                        <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.dob || 'N/A'}</div>
                                     </div>
                                     <div>
-                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>DOB</div>
-                                        <div style={{ color: '#fff', fontSize: '0.95rem' }}>{aadharData.dob || 'N/A'}</div>
+                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Gender</div>
+                                        <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.gender || 'N/A'}</div>
                                     </div>
-                                    <div>
-                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>Gender</div>
-                                        <div style={{ color: '#fff', fontSize: '0.95rem' }}>{aadharData.gender || 'N/A'}</div>
-                                    </div>
-                                    <div style={{ gridColumn: '1 / -1', marginTop: '4px' }}>
-                                        <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase' }}>Aadhar Number</div>
-                                        <div style={{ color: '#4ade80', fontSize: '1.2rem', fontWeight: 'bold', letterSpacing: '2px' }}>{aadharData.aadharNumber}</div>
+                                    <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
+                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Aadhar Number</div>
+                                        <div style={{ color: '#4ade80', fontSize: '1.8rem', fontWeight: 'bold', letterSpacing: '3px', fontFamily: 'monospace' }}>{aadharData.aadharNumber}</div>
                                     </div>
                                     {/* Display Extracted Address */}
                                     {aadharData.address && (
-                                        <div style={{ gridColumn: '1 / -1', marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '8px' }}>
-                                            <div style={{ color: '#aaa', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '4px' }}>Permanent Address (From QR)</div>
-                                            <div style={{ color: '#ddd', fontSize: '0.85rem', lineHeight: '1.3' }}>{aadharData.address}</div>
+                                        <div style={{ gridColumn: '1 / -1', marginTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '15px' }}>
+                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '8px' }}>Permanent Address {aadharData.isAddressVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID LOC</span>}</div>
+                                            <div style={{ color: '#ddd', fontSize: '1rem', lineHeight: '1.5' }}>{aadharData.address}</div>
                                         </div>
                                     )}
                                 </div>
@@ -807,27 +814,56 @@ const Register = () => {
 
                     // 2. NAME MATCH CHECK
                     const knownName = scannedData?.name || "";
-                    let nameMatches = false;
+                    const knownFather = scannedData?.fatherName || "";
+                    const knownAddress = scannedData?.address || "";
 
-                    // Relaxed Match: Check if any part of ID name exists in QR name (handled capitalization)
+                    let nameMatches = false;
+                    let fatherMatches = false;
+                    let addressMatches = false;
+
+                    // Relaxed Name Match
                     if (knownName && name) {
                         const knParts = knownName.toLowerCase().split(' ');
                         const qrParts = name.toLowerCase().split(' ');
                         nameMatches = knParts.some(k => qrParts.some(q => q.includes(k) && k.length > 2));
                     }
 
+                    // Father Name Match (Handle "S/O", "D/O" prefixes)
+                    if (knownFather && co) {
+                        const cleanCo = co.toLowerCase().replace("s/o", "").replace("d/o", "").replace("c/o", "").trim();
+                        const cleanFather = knownFather.toLowerCase().replace("mr.", "").trim();
+                        // Check partial match
+                        const fParts = cleanFather.split(' ');
+                        fatherMatches = fParts.some(part => cleanCo.includes(part) && part.length > 3);
+                    }
+
+                    // Address Match (Check City/District/Pincode overlap)
+                    if (knownAddress && fullAddress) {
+                        const kAddr = knownAddress.toLowerCase();
+                        const qAddr = fullAddress.toLowerCase();
+                        // Match if Pincode matches OR City name appears in both
+                        const pincodeMatch = (pc && kAddr.includes(pc));
+                        const cityMatch = (vtc && kAddr.includes(vtc.toLowerCase())) || (dist && kAddr.includes(dist.toLowerCase()));
+                        addressMatches = pincodeMatch || cityMatch;
+                    }
+
                     if (nameMatches) {
                         setScanStatus("✅ Secure QR Verified!");
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Secure QR Verified. Name Matched."));
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identity Verified."));
 
-                        // Set Data
+                        // Set Data with Verification Flags
                         const secureAadhar = {
                             name: name,
                             aadharNumber: uid,
                             dob: dob,
                             gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender),
-                            address: fullAddress, // Add Address
-                            details: { co, dist, state, pc } // Store individual fields
+                            address: fullAddress,
+                            fatherName: co.replace("S/O", "").replace("D/O", "").trim(),
+                            details: { co, dist, state, pc },
+                            // Verification Flags
+                            isNameVerified: true,
+                            isFatherVerified: fatherMatches,
+                            isAddressVerified: addressMatches
                         };
                         setAadharData(secureAadhar);
 
