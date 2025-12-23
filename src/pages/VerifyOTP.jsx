@@ -123,12 +123,9 @@ const VerifyOTP = () => {
                     // User has complete data → Simple password reset
                     sessionStorage.setItem('userData', JSON.stringify(data.userData));
                     navigate('/reset-password');
-                } else if (data.route === 'FULL_VERIFICATION') {
-                    // User needs full verification → Account recovery flow
-                    sessionStorage.setItem('userData', JSON.stringify(data.userData));
-                    navigate('/account-recovery');
                 } else {
-                    setError('Unexpected response from server. Please try again.');
+                    // Old user or error - show message
+                    setError(data.message || 'Your account needs to be updated. Please create a new account.');
                 }
             } else {
                 setError(data.message || 'Invalid OTP. Please try again.');
