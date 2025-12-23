@@ -849,8 +849,15 @@ const Register = () => {
                 }
             };
 
+            // Prepare headers (include Auth token if this is a secure update)
+            const headers = { "Content-Type": "application/json" };
+            if (navLocation.state?.token) {
+                headers["Authorization"] = `Bearer ${navLocation.state.token}`;
+            }
+
             const response = await fetch(`${API_BASE_URL}/auth/register`, {
-                method: "POST", headers: { "Content-Type": "application/json" },
+                method: "POST",
+                headers: headers,
                 body: JSON.stringify(registrationData),
             });
             const result = await response.json();

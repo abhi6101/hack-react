@@ -98,13 +98,18 @@ const ResetPassword = () => {
                 sessionStorage.removeItem('recoveryToken');
                 sessionStorage.removeItem('userData');
 
-                // Check profile completeness
-                if (data.status === "PROFILE_INCOMPLETE" || !data.computerCode || !data.aadharNumber) {
+                // Determine profile status from userData (saved during VerifyOTP)
+                // If computerCode is missing, it's an Old User (Incomplete)
+                const isLegacyUser = !userData.computerCode;
+
+                if (isLegacyUser) {
                     // OLD USER - Profile incomplete, needs to complete registration
+                    // Pass the NEW TOKEN to allow secure update
                     navigate('/reset-success', {
                         state: {
                             profileIncomplete: true,
                             email: email,
+                            token: data.token, // SECURITY CHECK TOKEN
                             message: "Password reset successful! Please complete registration to login."
                         }
                     });
@@ -113,8 +118,9 @@ const ResetPassword = () => {
                     navigate('/reset-success', {
                         state: {
                             profileIncomplete: false,
-                            computerCode: data.computerCode,
-                            name: data.name || userData.name,
+                            computerCode: userData.computerCode,
+                            name: userData.name || userData.existingData?.name,
+                            // No token needed for new user success page usually, but good to have
                             message: "Password reset successful! You can now login."
                         }
                     });

@@ -5,13 +5,13 @@ import '../styles/login.css';
 const ResetSuccess = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { profileIncomplete, computerCode, name, email, message } = location.state || {};
+    const { profileIncomplete, computerCode, name, email, message, token } = location.state || {};
 
     useEffect(() => {
         // Auto-redirect after 5 seconds
         const timer = setTimeout(() => {
             if (profileIncomplete) {
-                navigate('/register', { state: { isUpdate: true, email } });
+                navigate('/register', { state: { isUpdate: true, email, token } });
             } else {
                 navigate('/login');
             }
@@ -131,7 +131,7 @@ const ResetSuccess = () => {
                     {profileIncomplete ? (
                         <Link
                             to="/register"
-                            state={{ isUpdate: true, email }}
+                            state={{ isUpdate: true, email, token }}
                             className="btn btn-primary"
                             style={{ display: 'inline-block', textDecoration: 'none', background: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)' }}
                         >
