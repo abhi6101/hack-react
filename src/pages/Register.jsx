@@ -248,7 +248,12 @@ const Register = () => {
     // Auto-rescan for incomplete ID scans
     useEffect(() => {
         if (verificationStage === 'ID_VERIFY_DATA' && scannedData) {
-            const isIdScanComplete = scannedData.name && scannedData.code && scannedData.institution;
+            // Use the SAME check as renderStageContent
+            const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
+                scannedData?.fatherName &&
+                scannedData?.code &&
+                scannedData?.branch &&
+                scannedData?.mobileCount > 0;
 
             if (!isIdScanComplete) {
                 console.log("Incomplete scan detected - auto-rescanning in 2 seconds...");
