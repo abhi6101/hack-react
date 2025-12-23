@@ -1,6 +1,6 @@
 ﻿import API_BASE_URL from '../config';
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
 import { DISTRICT_STATE_MAP } from '../data/indianDistricts';
 import jsQR from 'jsqr';
@@ -11,6 +11,8 @@ const TARGET_SCANS = 15; // Increased scan count for better accuracy
 
 const Register = () => {
     const navigate = useNavigate();
+    const navLocation = useLocation();
+    const isUpdate = navLocation.state?.isUpdate; // Check if this is an account update (Old User)
     const [formData, setFormData] = useState({
         username: '',
         fullName: '', // Added for verified name
@@ -127,6 +129,13 @@ const Register = () => {
             }
         };
     }, []);
+
+    // NEW PRE-FILL LOGIC:
+    useEffect(() => {
+        if (navLocation.state?.email) {
+            setFormData(prev => ({ ...prev, email: navLocation.state.email }));
+        }
+    }, [navLocation.state]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -851,8 +860,16 @@ const Register = () => {
                 localStorage.removeItem(localVerificationKey);
                 console.log('✅ Verification data cleaned up from localStorage');
 
-                setSuccess(result.message || "Registration successful!");
-                setTimeout(() => navigate(`/verify-account?email=${encodeURIComponent(formData.email)}`), 1500);
+                setSuccess(result.message || (isUpdate ? "Account updated successfully!" : "Registration successful!"));
+
+                if (isUpdate) {
+                    // OLD USER UPDATE: Skip email verification (already done via forgot password)
+                    // Redirect directly to login after short delay
+                    setTimeout(() => navigate('/login'), 2000);
+                } else {
+                    // NEW USER: Redirect to email verification
+                    setTimeout(() => navigate(`/verify-account?email=${encodeURIComponent(formData.email)}`), 1500);
+                }
             } else {
                 setError(result.message || 'Registration failed.'); setLoading(false);
             }
