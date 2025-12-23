@@ -85,7 +85,8 @@ const Register = () => {
     const [flash, setFlash] = useState(false); // Flash Effect State
     const [errorFlash, setErrorFlash] = useState(false); // Red Alert State
     const [scanStatus, setScanStatus] = useState("Align Document"); // Feedback State
-    const [isLowLight, setIsLowLight] = useState(false); // Screen Flash State
+    const [isLowLight, setIsLowLight] = useState(false); // Auto-detected low light
+    const [manualFlash, setManualFlash] = useState(false); // User-forced flash
 
     // --- Geolocation Capture (Forensic Trail) ---
     const captureLocation = () => {
@@ -227,22 +228,41 @@ const Register = () => {
 
     const renderVerificationJourney = () => {
         if (showCamera) {
+            const isFlashActive = isLowLight || manualFlash;
+
             return (
                 <div className="animate-fade-in text-center">
                     {/* FULL SCREEN FLASH (Ring Light) */}
-                    {isLowLight && (
+                    {isFlashActive && (
                         <div style={{
                             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
                             background: '#ffffff', zIndex: 40, pointerEvents: 'none'
                         }}></div>
                     )}
 
-                    <h2 className="mb-4" style={{
-                        textAlign: 'center',
-                        position: 'relative', zIndex: 50,
-                        color: isLowLight ? '#000' : '#fff',
-                        fontWeight: 'bold'
-                    }}>Live Scan</h2>
+                    <div style={{ position: 'relative', zIndex: 50, marginBottom: '1rem' }}>
+                        <h2 style={{
+                            textAlign: 'center', margin: 0,
+                            color: isFlashActive ? '#000' : '#fff',
+                            fontWeight: 'bold', textShadow: isFlashActive ? 'none' : '0 2px 4px rgba(0,0,0,0.5)'
+                        }}>Live Scan</h2>
+
+                        {/* Manual Flash Button */}
+                        <button
+                            onClick={() => setManualFlash(!manualFlash)}
+                            style={{
+                                position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)',
+                                background: manualFlash ? '#fbbf24' : 'rgba(255,255,255,0.1)',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                color: manualFlash ? '#000' : '#fff',
+                                borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                            title="Toggle Screen Flash"
+                        >
+                            <i className={`fas ${manualFlash ? 'fa-bolt' : 'fa-lightbulb'}`}></i>
+                        </button>
+                    </div>
 
                     <div style={{
                         position: 'relative', zIndex: 50, // Lift above flash
@@ -250,7 +270,7 @@ const Register = () => {
                         borderRadius: '12px', overflow: 'hidden',
                         border: '2px solid #667eea',
                         background: '#000',
-                        boxShadow: isLowLight ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
+                        boxShadow: isFlashActive ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
                     }}>
                         <video
                             ref={videoRef}
@@ -303,7 +323,7 @@ const Register = () => {
                             <div style={{
                                 position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                                 width: '260px', height: '260px',
-                                boxShadow: `0 0 0 9999px ${isLowLight ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`, // Auto-Flash: White screen if dark
+                                boxShadow: `0 0 0 9999px ${isFlashActive ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`, // Auto-Flash: White screen if dark
                                 pointerEvents: 'none', zIndex: 15,
                                 borderRadius: '20px'
                             }}>
