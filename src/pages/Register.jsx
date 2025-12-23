@@ -238,12 +238,12 @@ const Register = () => {
                         <div style={{
                             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                             width: '100vw', height: '100vh', inset: 0,
-                            background: '#ffffff', zIndex: 9998, pointerEvents: 'none'
+                            background: '#ffffff', zIndex: 1000, pointerEvents: 'none'
                         }}></div>,
                         document.body
                     )}
 
-                    <div style={{ position: 'relative', zIndex: 99999, marginBottom: '1rem' }}>
+                    <div style={{ position: 'relative', zIndex: 10001, isolation: 'isolate', marginBottom: '1rem' }}>
                         <h2 style={{
                             textAlign: 'center', margin: 0,
                             color: isFlashActive ? '#000' : '#fff',
@@ -268,7 +268,7 @@ const Register = () => {
                     </div>
 
                     <div style={{
-                        position: 'relative', zIndex: 99999, // Lift above flash
+                        position: 'relative', zIndex: 10001, isolation: 'isolate', // Create new stacking context
                         width: '100%', maxWidth: '400px', margin: '0 auto',
                         borderRadius: '12px', overflow: 'hidden',
                         border: '2px solid #667eea',
