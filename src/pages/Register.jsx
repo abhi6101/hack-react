@@ -1,5 +1,6 @@
 ﻿import API_BASE_URL from '../config';
 import React, { useState, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
 import { DISTRICT_STATE_MAP } from '../data/indianDistricts';
@@ -232,13 +233,14 @@ const Register = () => {
 
             return (
                 <div className="animate-fade-in text-center">
-                    {/* FULL SCREEN FLASH (Ring Light) */}
-                    {isFlashActive && (
+                    {/* FULL SCREEN FLASH (Ring Light) - Rendered via Portal to body */}
+                    {isFlashActive && ReactDOM.createPortal(
                         <div style={{
                             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                             width: '100vw', height: '100vh', inset: 0,
                             background: '#ffffff', zIndex: 9999, pointerEvents: 'none'
-                        }}></div>
+                        }}></div>,
+                        document.body
                     )}
 
                     <div style={{ position: 'relative', zIndex: 10000, marginBottom: '1rem' }}>
