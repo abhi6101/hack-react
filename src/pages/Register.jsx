@@ -491,9 +491,41 @@ const Register = () => {
                         image: aadharCameraImg,
                         btnText: "Complete Registration",
                         btnAction: () => {
-                            // SECURITY: Capture silent selfie automatically
+                            // SECURITY: Capture silent selfie immediately and proceed to form
                             setCameraMode('user'); // Switch to front camera
-                            setVerificationStage('SELFIE_AUTO'); // New stage for auto-capture
+                            // Wait 1 second for camera to switch, then capture and proceed
+                            setTimeout(() => {
+                                if (videoRef.current && canvasRef.current) {
+                                    const context = canvasRef.current.getContext('2d');
+                                    canvasRef.current.width = videoRef.current.videoWidth;
+                                    canvasRef.current.height = videoRef.current.videoHeight;
+
+                                    // Mirror effect for natural look
+                                    context.translate(canvasRef.current.width, 0);
+                                    context.scale(-1, 1);
+                                    context.drawImage(videoRef.current, 0, 0);
+
+                                    const imgUrl = canvasRef.current.toDataURL('image/jpeg', 0.85);
+                                    setSelfieImg(imgUrl);
+
+                                    // Save verification data
+                                    const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
+                                    const verificationData = {
+                                        allStepsCompleted: true,
+                                        idCardImg: idCameraImg,
+                                        aadharImg: aadharCameraImg,
+                                        selfieImg: imgUrl,
+                                        scannedData: scannedData,
+                                        aadharData: aadharData,
+                                        timestamp: new Date().toISOString()
+                                    };
+                                    localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+
+                                    // Stop camera and proceed directly to form
+                                    stopCamera();
+                                    setStep(4);
+                                }
+                            }, 1000);
                         },
                         secondaryBtnText: "Wrong Aadhar? Rescan",
                         secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); },
@@ -1838,8 +1870,8 @@ const Register = () => {
                                     <i className="fas fa-shield-alt" style={{ color: '#4ade80' }}></i> Verified Identity Proofs
                                 </h3>
 
-                                {/* THE 3 PHOTOS DISPLAY */}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '0.5rem' }}>
+                                {/* THE 2 PHOTOS DISPLAY - Selfie is hidden */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '0.5rem' }}>
 
                                     {/* 1. ID Card */}
                                     {idCameraImg && (
@@ -1851,17 +1883,7 @@ const Register = () => {
                                         </div>
                                     )}
 
-                                    {/* 2. Live Selfie (Official) */}
-                                    {selfieImg && (
-                                        <div style={{ textAlign: 'center' }}>
-                                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', border: '3px solid #60a5fa', margin: '0 auto 0.5rem auto', boxShadow: '0 4px 12px rgba(96, 165, 250, 0.3)' }}>
-                                                <img src={selfieImg} alt="Selfie" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }} />
-                                            </div>
-                                            <p style={{ fontSize: '0.75rem', color: '#fff', fontWeight: 'bold' }}>Official Profile</p>
-                                        </div>
-                                    )}
-
-                                    {/* 3. Aadhar Card */}
+                                    {/* 2. Aadhar Card */}
                                     {aadharCameraImg && (
                                         <div style={{ textAlign: 'center' }}>
                                             <div style={{ width: '100%', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #aaa', marginBottom: '0.5rem' }}>
