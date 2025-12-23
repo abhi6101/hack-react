@@ -443,6 +443,22 @@ const StudentDashboard = () => {
                             ) : (
                                 <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500', letterSpacing: '2px' }}>{user?.aadharNumber || 'Not provided'}</p>
                             )}
+
+                        </div>
+
+                        {/* NEW: Address Display */}
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            padding: '1.25rem',
+                            marginTop: '1rem',
+                            borderRadius: '12px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            maxWidth: '400px'
+                        }}>
+                            <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Address</strong>
+                            <p style={{ color: '#fff', fontSize: '1rem', margin: 0, fontWeight: '500', lineHeight: '1.5' }}>
+                                {user?.address || 'Not provided'}
+                            </p>
                         </div>
                         {user?.aadharCardImage && (
                             <div style={{ marginTop: '1.5rem' }}>
