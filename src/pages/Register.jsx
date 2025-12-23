@@ -243,6 +243,26 @@ const Register = () => {
         }
     }, [formData.branch, formData.startYear]);
 
+    // Auto-rescan for incomplete ID scans
+    useEffect(() => {
+        if (verificationStage === 'ID_VERIFY_DATA' && scannedData) {
+            const isIdScanComplete = scannedData.name && scannedData.code && scannedData.institution;
+
+            if (!isIdScanComplete) {
+                // Incomplete scan detected - auto-rescan after 2 seconds
+                const timer = setTimeout(() => {
+                    setScannedData(null);
+                    setIdCameraImg(null);
+                    setVerificationStage('ID_AUTO_CAPTURE');
+                    setScanStatus('Auto-restarting scan...');
+                    setScanBuffer([]);
+                }, 2000);
+
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [verificationStage, scannedData]);
+
     const getSemesterOptions = () => {
         const branchCode = formData.branch;
         const admissionYear = parseInt(formData.startYear) || new Date().getFullYear();
@@ -742,7 +762,7 @@ const Register = () => {
                         title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
                         desc: isIdScanComplete
                             ? "All details captured successfully. Proceed to Aadhar verification."
-                            : "Some details (like Mobile Number or Father's Name) were not detected clearly. please rescan.",
+                            : "Some details were not detected clearly. Auto-rescanning in 2 seconds...",
                         isReview: true,
                         data: scannedData,
                         image: idCameraImg,
