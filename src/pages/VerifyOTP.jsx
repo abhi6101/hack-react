@@ -127,6 +127,11 @@ const VerifyOTP = () => {
                     // Old user or error - show message
                     setError(data.message || 'Your account needs to be updated. Please create a new account.');
                 }
+            } else if (response.status === 410 && data.accountDeleted) {
+                // Old account was deleted - redirect to registration
+                sessionStorage.clear(); // Clear all session data
+                alert(data.message || 'Your old account has been removed. Please register again.');
+                navigate('/register');
             } else {
                 setError(data.message || 'Invalid OTP. Please try again.');
                 // Do NOT clear OTP immediately on error, let the user see what they entered
