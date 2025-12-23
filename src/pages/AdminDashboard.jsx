@@ -751,6 +751,11 @@ const AdminDashboard = () => {
             payload.allowedDepartments = userForm.allowedDepartments.join(',');
         }
 
+        // Debug logging
+        console.log('Updating user:', editingUser ? editingUser.id : 'NEW');
+        console.log('Payload being sent:', payload);
+        console.log('Password included?', 'password' in payload);
+
         try {
             const res = await fetch(endpoint, {
                 method,
@@ -759,6 +764,7 @@ const AdminDashboard = () => {
             });
 
             if (res.ok) {
+                console.log('✅ User update successful');
                 setMessage({ text: editingUser ? 'User updated!' : 'User created!', type: 'success' });
                 loadUsers();
                 setUserForm({
@@ -773,9 +779,12 @@ const AdminDashboard = () => {
                 setEditingUser(null);
             } else {
                 const error = await res.text();
+                console.error('❌ Backend error:', error);
+                console.error('Status code:', res.status);
                 setMessage({ text: error, type: 'error' });
             }
         } catch (err) {
+            console.error('❌ Network error:', err);
             setMessage({ text: 'Failed to save user', type: 'error' });
         }
         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
