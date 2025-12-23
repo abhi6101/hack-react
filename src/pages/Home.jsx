@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import GlassCard from '../components/ui/GlassCard';
 import '../styles/index.css';
 
 const Home = () => {
@@ -147,30 +148,30 @@ const Home = () => {
 
                 <div className="hub-grid">
                     <a href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" className="hub-card-link">
-                        <div className="hub-card surface-glow">
+                        <GlassCard className="hub-card">
                             <i className="fas fa-flask"></i>
                             <h3>Web Security Academy</h3>
                             <p>The definitive free resource for learning web application security from the creators of Burp Suite.</p>
                             <span className="hub-link">Explore Platform <i className="fas fa-arrow-right"></i></span>
-                        </div>
+                        </GlassCard>
                     </a>
 
                     <a href="https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37" target="_blank" rel="noopener noreferrer" className="hub-card-link">
-                        <div className="hub-card surface-glow">
+                        <GlassCard className="hub-card">
                             <i className="fab fa-js-square"></i>
                             <h3>Chai aur JavaScript</h3>
                             <p>Deep dive into JavaScript with Hitesh Choudhary. Perfect for mastering modern web development.</p>
                             <span className="hub-link">Watch Now <i className="fas fa-arrow-right"></i></span>
-                        </div>
+                        </GlassCard>
                     </a>
 
                     <a href="https://www.hackthebox.com/" target="_blank" rel="noopener noreferrer" className="hub-card-link">
-                        <div className="hub-card surface-glow">
+                        <GlassCard className="hub-card">
                             <i className="fas fa-cube"></i>
                             <h3>Hack The Box</h3>
                             <p>Challenge your abilities with real-world lab scenarios and compete with a global community.</p>
                             <span className="hub-link">Explore Platform <i className="fas fa-arrow-right"></i></span>
-                        </div>
+                        </GlassCard>
                     </a>
                 </div>
             </section>
@@ -189,27 +190,27 @@ const Home = () => {
             <section className="testimonials">
                 <h2>Success Stories</h2>
                 <div className="testimonial-cards">
-                    <div className="testimonial-card surface-glow">
+                    <GlassCard className="testimonial-card">
                         <p>"The resume builder and mock interviews were game-changers! Landed my dream job at a top tech company..."</p>
                         <div className="testimonial-author">
                             <img src="/images/i-priya.jpg" alt="Priya Sharma" />
                             <div className="author-info"><h4>Priya Sharma</h4><p>Software Engineer at Google</p></div>
                         </div>
-                    </div>
-                    <div className="testimonial-card surface-glow">
+                    </GlassCard>
+                    <GlassCard className="testimonial-card">
                         <p>"I went from zero calls to 5 job offers in 2 months. The interview prep resources are pure gold."</p>
                         <div className="testimonial-author">
                             <img src="/images/i-rahul.jpg" alt="Rahul Verma" />
                             <div className="author-info"><h4>Rahul Verma</h4><p>Data Analyst at Amazon</p></div>
                         </div>
-                    </div>
-                    <div className="testimonial-card surface-glow">
+                    </GlassCard>
+                    <GlassCard className="testimonial-card">
                         <p>"Personalized career guidance helped me transition into a higher-paying role. Highly recommended!"</p>
                         <div className="testimonial-author">
                             <img src="/images/i-neha.jpg" alt="Neha Patel" />
                             <div className="author-info"><h4>Neha Patel</h4><p>Product Manager at Microsoft</p></div>
                         </div>
-                    </div>
+                    </GlassCard>
                 </div>
             </section>
 

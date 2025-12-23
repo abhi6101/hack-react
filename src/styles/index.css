@@ -12,6 +12,15 @@
     --text-secondary: #9CA3AF;
     --font-family: 'Inter', sans-serif;
     --font-body: 'Inter', sans-serif;
+
+    /* --- Premium UI System Variables --- */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-highlight: rgba(255, 255, 255, 0.15);
+    --neon-pink: #f72585;
+    --neon-blue: #4cc9f0;
+    --premium-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    --card-hover-transform: translateY(-5px) scale(1.02);
 }
 
 * {
