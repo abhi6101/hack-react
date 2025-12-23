@@ -192,7 +192,7 @@ const AdminLogin = () => {
                                 />
                                 <span>Remember Me</span>
                             </label>
-                            <Link to="/forgot-password" style={{ color: 'var(--primary)', textDecoration: 'none' }}>
+                            <Link to="/forgot-password" state={{ fromAdmin: true }} style={{ color: 'var(--primary)', textDecoration: 'none' }}>
                                 Forgot Password?
                             </Link>
                         </div>

@@ -1,6 +1,6 @@
 import API_BASE_URL from '../config';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/login.css';
 
 const ForgotPassword = () => {
@@ -9,6 +9,7 @@ const ForgotPassword = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,6 +38,14 @@ const ForgotPassword = () => {
                 setSuccess('OTP sent to your email! Redirecting...');
                 // Store email in sessionStorage for next step
                 sessionStorage.setItem('recoveryEmail', email);
+
+                // check if coming from Admin login
+                if (location.state?.fromAdmin) {
+                    sessionStorage.setItem('isAdminRecovery', 'true');
+                } else {
+                    sessionStorage.removeItem('isAdminRecovery');
+                }
+
                 // Redirect to OTP verification page after 2 seconds
                 setTimeout(() => {
                     navigate('/verify-otp');

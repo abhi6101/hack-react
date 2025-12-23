@@ -65,7 +65,10 @@ const VerifyOTP = () => {
 
         // Auto-submit when all 6 digits entered
         if (newOtp.every(digit => digit !== '') && index === 5) {
-            handleVerifyOTP(newOtp.join(''));
+            const isAdmin = sessionStorage.getItem('isAdminRecovery') === 'true';
+            if (!isAdmin) {
+                handleVerifyOTP(newOtp.join(''));
+            }
         }
     };
 
@@ -88,7 +91,10 @@ const VerifyOTP = () => {
 
         // Auto-submit if complete
         if (pastedData.length === 6) {
-            handleVerifyOTP(pastedData);
+            const isAdmin = sessionStorage.getItem('isAdminRecovery') === 'true';
+            if (!isAdmin) {
+                handleVerifyOTP(pastedData);
+            }
         }
     };
 
