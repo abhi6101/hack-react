@@ -98,13 +98,27 @@ const ResetPassword = () => {
                 sessionStorage.removeItem('recoveryToken');
                 sessionStorage.removeItem('userData');
 
-                // Redirect to success page
-                navigate('/reset-success', {
-                    state: {
-                        computerCode: userData.computerCode,
-                        name: userData.name
-                    }
-                });
+                // Check profile completeness
+                if (data.status === "PROFILE_INCOMPLETE" || !data.computerCode || !data.aadharNumber) {
+                    // OLD USER - Profile incomplete, needs to complete registration
+                    navigate('/reset-success', {
+                        state: {
+                            profileIncomplete: true,
+                            email: email,
+                            message: "Password reset successful! Please complete registration to login."
+                        }
+                    });
+                } else {
+                    // NEW USER - Profile complete, can login immediately
+                    navigate('/reset-success', {
+                        state: {
+                            profileIncomplete: false,
+                            computerCode: data.computerCode,
+                            name: data.name || userData.name,
+                            message: "Password reset successful! You can now login."
+                        }
+                    });
+                }
             } else {
                 setError(data.message || 'Failed to reset password. Please try again.');
             }
