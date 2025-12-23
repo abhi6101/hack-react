@@ -1,22 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import API_BASE_URL from './config';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import ProfileUpdateModal from './components/ProfileUpdateModal';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import AdminLogin from './pages/AdminLogin';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import VerifyOTP from './pages/VerifyOTP';
-import ResetPassword from './pages/ResetPassword';
-import ResetSuccess from './pages/ResetSuccess';
-import Jobs from './pages/Jobs';
-import ResumeBuilder from './pages/ResumeBuilder';
-import Interview from './pages/Interview';
-import Papers from './pages/Papers';
-import Quiz from './pages/Quiz';
+
 import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import Onboarding from './pages/Onboarding';
@@ -29,13 +11,14 @@ import BlogPost from './pages/BlogPost';
 import Gallery from './pages/Gallery';
 import Videos from './pages/Videos';
 import Contact from './pages/Contact';
+import VerifyAccount from './pages/VerifyAccount';
 import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
 
 function Layout({ children }) {
     const location = useLocation();
     const navigate = useNavigate(); // Add hook
-    const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success'];
+    const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success', '/verify-account'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -120,6 +103,7 @@ function App() {
                     <Route path="/verify-otp" element={<VerifyOTP />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/reset-success" element={<ResetSuccess />} />
+                    <Route path="/verify-account" element={<VerifyAccount />} />
                     <Route path="/onboarding" element={<Onboarding />} />
                     <Route path="/jobs" element={<Jobs />} />
                     <Route path="/resume" element={<ResumeAnalysis />} />
