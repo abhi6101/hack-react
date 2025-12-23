@@ -349,28 +349,28 @@ const Register = () => {
                         document.body
                     )}
 
-                    {/* Information Panels - Always visible, styling adapts to flash state */}
-                    {ReactDOM.createPortal(
+                    {/* Information Panels - Only visible when flash is OFF (black screen) */}
+                    {!isFlashActive && ReactDOM.createPortal(
                         <>
                             {/* Left Panel - Instructions */}
                             <div style={{
                                 position: 'fixed', left: '20px', top: '50%', transform: 'translateY(-50%)',
                                 zIndex: 9999, maxWidth: '250px',
-                                background: isFlashActive ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.1)',
+                                background: 'rgba(255,255,255,0.1)',
                                 padding: '20px', borderRadius: '12px',
-                                border: isFlashActive ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.2)',
+                                border: '1px solid rgba(255,255,255,0.2)',
                                 backdropFilter: 'blur(10px)'
                             }}>
                                 <h3 style={{
                                     margin: '0 0 15px 0', fontSize: '1.1rem',
-                                    color: isFlashActive ? '#000' : '#fff',
+                                    color: '#fff',
                                     fontWeight: 'bold'
                                 }}>
                                     📋 Instructions
                                 </h3>
                                 <ul style={{
                                     margin: 0, paddingLeft: '20px',
-                                    color: isFlashActive ? '#333' : '#ddd',
+                                    color: '#ddd',
                                     fontSize: '0.9rem', lineHeight: '1.6'
                                 }}>
                                     <li>Hold document steady</li>
@@ -380,39 +380,36 @@ const Register = () => {
                                 </ul>
                             </div>
 
-                            {/* Right Panel - Status */}
+                            {/* Right Panel - Tips */}
                             <div style={{
                                 position: 'fixed', right: '20px', top: '50%', transform: 'translateY(-50%)',
                                 zIndex: 9999, maxWidth: '250px',
-                                background: isFlashActive ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.1)',
+                                background: 'rgba(255,255,255,0.1)',
                                 padding: '20px', borderRadius: '12px',
-                                border: isFlashActive ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.2)',
+                                border: '1px solid rgba(255,255,255,0.2)',
                                 backdropFilter: 'blur(10px)'
                             }}>
                                 <h3 style={{
                                     margin: '0 0 15px 0', fontSize: '1.1rem',
-                                    color: isFlashActive ? '#000' : '#fff',
+                                    color: '#fff',
                                     fontWeight: 'bold'
                                 }}>
-                                    {isFlashActive ? '⚡ Flash Active' : '💡 Tips'}
+                                    💡 Tips
                                 </h3>
                                 <p style={{
                                     margin: '0 0 10px 0',
-                                    color: isFlashActive ? '#333' : '#ddd',
+                                    color: '#ddd',
                                     fontSize: '0.9rem', lineHeight: '1.6'
                                 }}>
-                                    {isFlashActive
-                                        ? 'Screen flash is illuminating your document for better visibility.'
-                                        : 'Use the flash button to brighten the screen in low light conditions.'
-                                    }
+                                    Use the flash button to brighten the screen in low light conditions.
                                 </p>
                                 <div style={{
                                     padding: '10px',
-                                    background: isFlashActive ? 'rgba(251, 191, 36, 0.2)' : 'rgba(251, 191, 36, 0.15)',
+                                    background: 'rgba(251, 191, 36, 0.15)',
                                     borderRadius: '8px',
-                                    border: isFlashActive ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid rgba(251, 191, 36, 0.2)',
+                                    border: '1px solid rgba(251, 191, 36, 0.2)',
                                     fontSize: '0.85rem',
-                                    color: isFlashActive ? '#000' : '#fbbf24'
+                                    color: '#fbbf24'
                                 }}>
                                     💡 Tip: Click ⚡ to toggle flash
                                 </div>
@@ -1438,6 +1435,10 @@ const Register = () => {
                                 isFallbackVerified: !nameMatches // Flag if accepted via fallback
                             };
                             setAadharData(secureAadhar);
+
+                            // Auto-disable flash after successful scan
+                            setManualFlash(false);
+                            setIsLowLight(false);
 
                             // Capture Image for Record
                             canvasRef.current.toBlob((blob) => {
