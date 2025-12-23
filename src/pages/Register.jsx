@@ -88,6 +88,81 @@ const Register = () => {
     const [scanStatus, setScanStatus] = useState("Align Document"); // Feedback State
     const [isLowLight, setIsLowLight] = useState(false); // Auto-detected low light
     const [manualFlash, setManualFlash] = useState(false); // User-forced flash
+    const [qrDetected, setQrDetected] = useState(false); // QR code detected in frame
+    const [qrGuidance, setQrGuidance] = useState(""); // Position guidance ("Move closer", etc.)
+
+
+    // --- Audio Feedback Functions ---
+    const playBeep = () => {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800; // Hz
+            oscillator.type = 'sine';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        } catch (e) {
+            console.log("Audio not supported");
+        }
+    };
+
+    const playSuccessSound = () => {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 1200;
+            oscillator.type = 'sine';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+
+            // Second tone
+            const osc2 = audioContext.createOscillator();
+            osc2.connect(gainNode);
+            osc2.frequency.value = 1600;
+            osc2.type = 'sine';
+            osc2.start(audioContext.currentTime + 0.1);
+            osc2.stop(audioContext.currentTime + 0.3);
+        } catch (e) {
+            console.log("Audio not supported");
+        }
+    };
+
+    const playErrorSound = () => {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 400;
+            oscillator.type = 'sawtooth';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        } catch (e) {
+            console.log("Audio not supported");
+        }
+    };
 
     // --- Geolocation Capture (Forensic Trail) ---
     const captureLocation = () => {
@@ -411,17 +486,79 @@ const Register = () => {
                                 <div style={{
                                     position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                                     width: '260px', height: '260px',
-                                    boxShadow: `0 0 0 9999px ${isFlashActive ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`, // Auto-Flash: White screen if dark
+                                    boxShadow: `0 0 0 9999px ${isFlashActive ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`,
                                     pointerEvents: 'none', zIndex: 15,
-                                    borderRadius: '20px'
+                                    borderRadius: '20px',
+                                    transition: 'all 0.3s ease'
                                 }}>
-                                    {/* Modern Viewfinder Corners */}
-                                    <div style={{ position: 'absolute', top: 0, left: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderTopLeftRadius: '16px' }}></div>
-                                    <div style={{ position: 'absolute', top: 0, right: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderTopRightRadius: '16px' }}></div>
-                                    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderBottomLeftRadius: '16px' }}></div>
-                                    <div style={{ position: 'absolute', bottom: 0, right: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderBottomRightRadius: '16px' }}></div>
+                                    {/* Animated Scanning Line */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '3px',
+                                        background: qrDetected
+                                            ? 'linear-gradient(90deg, transparent, #4ade80, transparent)'
+                                            : 'linear-gradient(90deg, transparent, #667eea, transparent)',
+                                        animation: 'scan 2s ease-in-out infinite',
+                                        boxShadow: qrDetected ? '0 0 10px #4ade80' : '0 0 10px #667eea',
+                                        top: '50%'
+                                    }} />
 
-                                    <div style={{ position: 'absolute', top: '-40px', width: '100%', textAlign: 'center', color: '#4ade80', fontWeight: 'bold', fontSize: '1rem', textShadow: '0 2px 4px black' }}>SCAN AADHAR QR</div>
+                                    {/* Modern Viewfinder Corners - Dynamic Color */}
+                                    <div style={{
+                                        position: 'absolute', top: 0, left: 0, width: '40px', height: '40px',
+                                        borderTop: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderLeft: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderTopLeftRadius: '16px',
+                                        transition: 'border-color 0.3s ease'
+                                    }}></div>
+                                    <div style={{
+                                        position: 'absolute', top: 0, right: 0, width: '40px', height: '40px',
+                                        borderTop: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderRight: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderTopRightRadius: '16px',
+                                        transition: 'border-color 0.3s ease'
+                                    }}></div>
+                                    <div style={{
+                                        position: 'absolute', bottom: 0, left: 0, width: '40px', height: '40px',
+                                        borderBottom: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderLeft: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderBottomLeftRadius: '16px',
+                                        transition: 'border-color 0.3s ease'
+                                    }}></div>
+                                    <div style={{
+                                        position: 'absolute', bottom: 0, right: 0, width: '40px', height: '40px',
+                                        borderBottom: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderRight: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
+                                        borderBottomRightRadius: '16px',
+                                        transition: 'border-color 0.3s ease'
+                                    }}></div>
+
+                                    {/* Title */}
+                                    <div style={{
+                                        position: 'absolute', top: '-40px', width: '100%', textAlign: 'center',
+                                        color: qrDetected ? '#4ade80' : '#667eea',
+                                        fontWeight: 'bold', fontSize: '1rem',
+                                        textShadow: '0 2px 4px black',
+                                        transition: 'color 0.3s ease'
+                                    }}>
+                                        {qrDetected ? '✓ QR DETECTED' : 'SCAN AADHAR QR'}
+                                    </div>
+
+                                    {/* Position Guidance */}
+                                    {qrGuidance && (
+                                        <div style={{
+                                            position: 'absolute', bottom: '-50px', width: '100%', textAlign: 'center',
+                                            color: qrGuidance.includes('❌') ? '#ef4444' : (qrGuidance.includes('✓') ? '#4ade80' : '#fbbf24'),
+                                            fontWeight: '600', fontSize: '0.9rem',
+                                            textShadow: '0 2px 4px black',
+                                            background: 'rgba(0,0,0,0.5)',
+                                            padding: '5px 10px',
+                                            borderRadius: '8px'
+                                        }}>
+                                            {qrGuidance}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -1168,105 +1305,170 @@ const Register = () => {
                 const imageData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
                 const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
 
-                if (code && code.data && (code.data.includes("uid=") || code.data.includes("</PrintLetterBarcodeData>"))) {
-                    console.log("✅ Secure QR Code Found!", code.data);
+                // QR CODE DETECTED (any QR)
+                if (code && code.data) {
+                    setQrDetected(true);
 
-                    // 1. EXTRACT XML DATA
-                    let uid = code.data.match(/uid="(\d+)"/)?.[1] || "";
-                    let name = code.data.match(/name="([^"]+)"/)?.[1] || "";
-                    let dob = code.data.match(/dob="([^"]+)"/)?.[1] || code.data.match(/yob="(\d+)"/)?.[1] || "";
-                    let gender = code.data.match(/gender="([^"]+)"/)?.[1] || "";
+                    // Check QR size and position for guidance
+                    const qrWidth = Math.abs(code.location.bottomRightCorner.x - code.location.topLeftCorner.x);
+                    const qrHeight = Math.abs(code.location.bottomRightCorner.y - code.location.topLeftCorner.y);
+                    const qrCenterX = (code.location.topLeftCorner.x + code.location.bottomRightCorner.x) / 2;
+                    const qrCenterY = (code.location.topLeftCorner.y + code.location.bottomRightCorner.y) / 2;
+                    const frameCenterX = canvasRef.current.width / 2;
+                    const frameCenterY = canvasRef.current.height / 2;
 
-                    // Extract full address details
-                    let co = code.data.match(/co="([^"]+)"/)?.[1] || "";
-                    let loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
-                    let vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
-                    let dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
-                    let state = code.data.match(/state="([^"]+)"/)?.[1] || "";
-                    let pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
+                    const distance = Math.sqrt(
+                        Math.pow(qrCenterX - frameCenterX, 2) +
+                        Math.pow(qrCenterY - frameCenterY, 2)
+                    );
 
-                    const fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
-
-                    // 2. NAME MATCH CHECK
-                    const knownName = scannedData?.name || "";
-                    const knownFather = scannedData?.fatherName || "";
-                    const knownAddress = scannedData?.address || "";
-
-                    let nameMatches = false;
-                    let fatherMatches = false;
-                    let addressMatches = false;
-
-                    // Relaxed Name Match
-                    if (knownName && name) {
-                        const knParts = knownName.toLowerCase().split(' ');
-                        const qrParts = name.toLowerCase().split(' ');
-                        nameMatches = knParts.some(k => qrParts.some(q => q.includes(k) && k.length > 2));
-                    }
-
-                    // Father Name Match (Handle "S/O", "D/O" prefixes)
-                    if (knownFather && co) {
-                        const cleanCo = co.toLowerCase().replace("s/o", "").replace("d/o", "").replace("c/o", "").trim();
-                        const cleanFather = knownFather.toLowerCase().replace("mr.", "").trim();
-                        // Check partial match
-                        const fParts = cleanFather.split(' ');
-                        fatherMatches = fParts.some(part => cleanCo.includes(part) && part.length > 3);
-                    }
-
-                    // Address Match (Check City/District/Pincode overlap)
-                    if (knownAddress && fullAddress) {
-                        const kAddr = knownAddress.toLowerCase();
-                        const qAddr = fullAddress.toLowerCase();
-                        // Match if Pincode matches OR City name appears in both
-                        const pincodeMatch = (pc && kAddr.includes(pc));
-                        const cityMatch = (vtc && kAddr.includes(vtc.toLowerCase())) || (dist && kAddr.includes(dist.toLowerCase()));
-                        addressMatches = pincodeMatch || cityMatch;
-                    }
-
-                    // ULTIMATE VERIFICATION LOGIC:
-                    // 1. Name Match (Primary)
-                    // 2. Fallback: If Name fails, check if Father + Address BOTH Match (Strong secondary proof)
-                    const isVerified = nameMatches || (fatherMatches && addressMatches);
-
-                    if (isVerified) {
-                        setScanStatus("✅ Secure QR Verified!");
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identity Verified."));
-
-                        // Set Data with Verification Flags
-                        const secureAadhar = {
-                            name: name,
-                            aadharNumber: uid,
-                            dob: dob,
-                            gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender),
-                            address: fullAddress,
-                            fatherName: co.replace("S/O", "").replace("D/O", "").trim(),
-                            details: { co, dist, state, pc },
-                            // Verification Flags
-                            isNameVerified: nameMatches,
-                            isFatherVerified: fatherMatches,
-                            isAddressVerified: addressMatches,
-                            isFallbackVerified: !nameMatches // Flag if accepted via fallback
-                        };
-                        setAadharData(secureAadhar);
-
-                        // Capture Image for Record
-                        canvasRef.current.toBlob((blob) => {
-                            const reader = new FileReader();
-                            reader.readAsDataURL(blob);
-                            reader.onloadend = () => {
-                                setAadharCameraImg(reader.result);
-                                setVerificationStage('AADHAR_VERIFY_DATA');
-                            };
-                        });
-                        setIsScanning(false);
-                        return; // EXIT FUNCTION, SKIP OCR
+                    // Position guidance
+                    if (qrWidth < 100 || qrHeight < 100) {
+                        setQrGuidance("📱 Move closer");
+                    } else if (qrWidth > 300 || qrHeight > 300) {
+                        setQrGuidance("📱 Move farther");
+                    } else if (distance > 80) {
+                        setQrGuidance("🎯 Center QR code");
                     } else {
-                        // QR Found but Name Mismatch
-                        setScanStatus("⚠️ Verification Failed");
-                        console.warn("QR Name Mismatch:", { qr: name, id: knownName });
+                        setQrGuidance("✓ Perfect! Hold steady");
                     }
+
+                    // Check brightness in QR area
+                    try {
+                        const qrAreaData = context.getImageData(
+                            code.location.topLeftCorner.x,
+                            code.location.topLeftCorner.y,
+                            qrWidth,
+                            qrHeight
+                        );
+                        let totalBrightness = 0;
+                        for (let i = 0; i < qrAreaData.data.length; i += 16) {
+                            totalBrightness += (qrAreaData.data[i] + qrAreaData.data[i + 1] + qrAreaData.data[i + 2]) / 3;
+                        }
+                        const avgQrBrightness = totalBrightness / (qrAreaData.data.length / 16);
+
+                        // Auto-suggest flash if QR area is dark
+                        if (avgQrBrightness < 50 && !isFlashActive) {
+                            setQrGuidance("⚡ Turn on flash for better scan");
+                            setIsLowLight(true);
+                        }
+                    } catch (e) { }
+
+                    // Play beep when QR detected
+                    playBeep();
+
+                    // VALIDATE IF IT'S AADHAR QR
+                    if (code.data.includes("uid=") || code.data.includes("</PrintLetterBarcodeData>")) {
+                        console.log("✅ Secure QR Code Found!", code.data);
+                        playSuccessSound(); // Success sound for valid Aadhar QR
+
+                        // 1. EXTRACT XML DATA
+                        let uid = code.data.match(/uid="(\d+)"/)?.[1] || "";
+                        let name = code.data.match(/name="([^"]+)"/)?.[1] || "";
+                        let dob = code.data.match(/dob="([^"]+)"/)?.[1] || code.data.match(/yob="(\d+)"/)?.[1] || "";
+                        let gender = code.data.match(/gender="([^"]+)"/)?.[1] || "";
+
+                        // Extract full address details
+                        let co = code.data.match(/co="([^"]+)"/)?.[1] || "";
+                        let loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
+                        let vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
+                        let dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
+                        let state = code.data.match(/state="([^"]+)"/)?.[1] || "";
+                        let pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
+
+                        const fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
+
+                        // 2. NAME MATCH CHECK
+                        const knownName = scannedData?.name || "";
+                        const knownFather = scannedData?.fatherName || "";
+                        const knownAddress = scannedData?.address || "";
+
+                        let nameMatches = false;
+                        let fatherMatches = false;
+                        let addressMatches = false;
+
+                        // Relaxed Name Match
+                        if (knownName && name) {
+                            const knParts = knownName.toLowerCase().split(' ');
+                            const qrParts = name.toLowerCase().split(' ');
+                            nameMatches = knParts.some(k => qrParts.some(q => q.includes(k) && k.length > 2));
+                        }
+
+                        // Father Name Match (Handle "S/O", "D/O" prefixes)
+                        if (knownFather && co) {
+                            const cleanCo = co.toLowerCase().replace("s/o", "").replace("d/o", "").replace("c/o", "").trim();
+                            const cleanFather = knownFather.toLowerCase().replace("mr.", "").trim();
+                            // Check partial match
+                            const fParts = cleanFather.split(' ');
+                            fatherMatches = fParts.some(part => cleanCo.includes(part) && part.length > 3);
+                        }
+
+                        // Address Match (Check City/District/Pincode overlap)
+                        if (knownAddress && fullAddress) {
+                            const kAddr = knownAddress.toLowerCase();
+                            const qAddr = fullAddress.toLowerCase();
+                            // Match if Pincode matches OR City name appears in both
+                            const pincodeMatch = (pc && kAddr.includes(pc));
+                            const cityMatch = (vtc && kAddr.includes(vtc.toLowerCase())) || (dist && kAddr.includes(dist.toLowerCase()));
+                            addressMatches = pincodeMatch || cityMatch;
+                        }
+
+                        // ULTIMATE VERIFICATION LOGIC:
+                        // 1. Name Match (Primary)
+                        // 2. Fallback: If Name fails, check if Father + Address BOTH Match (Strong secondary proof)
+                        const isVerified = nameMatches || (fatherMatches && addressMatches);
+
+                        if (isVerified) {
+                            setScanStatus("✅ Secure QR Verified!");
+                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identity Verified."));
+
+                            // Set Data with Verification Flags
+                            const secureAadhar = {
+                                name: name,
+                                aadharNumber: uid,
+                                dob: dob,
+                                gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender),
+                                address: fullAddress,
+                                fatherName: co.replace("S/O", "").replace("D/O", "").trim(),
+                                details: { co, dist, state, pc },
+                                // Verification Flags
+                                isNameVerified: nameMatches,
+                                isFatherVerified: fatherMatches,
+                                isAddressVerified: addressMatches,
+                                isFallbackVerified: !nameMatches // Flag if accepted via fallback
+                            };
+                            setAadharData(secureAadhar);
+
+                            // Capture Image for Record
+                            canvasRef.current.toBlob((blob) => {
+                                const reader = new FileReader();
+                                reader.readAsDataURL(blob);
+                                reader.onloadend = () => {
+                                    setAadharCameraImg(reader.result);
+                                    setVerificationStage('AADHAR_VERIFY_DATA');
+                                };
+                            });
+                            setIsScanning(false);
+                            return; // EXIT FUNCTION, SKIP OCR
+                        } else {
+                            // QR Found but Name Mismatch
+                            setScanStatus("⚠️ Verification Failed");
+                            console.warn("QR Name Mismatch:", { qr: name, id: knownName });
+                        }
+                    } else {
+                        // QR detected but NOT Aadhar QR
+                        setQrGuidance("❌ Wrong QR! Show Aadhar card");
+                        playErrorSound();
+                        setQrDetected(false);
+                    }
+                } else {
+                    // No QR detected
+                    setQrDetected(false);
+                    setQrGuidance("");
                 }
             } catch (qrErr) {
                 console.log("QR Scan Error", qrErr);
+                setQrDetected(false);
             }
         }
         // -------------------------

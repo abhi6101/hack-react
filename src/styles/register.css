@@ -347,3 +347,15 @@ button.is-loading .spinner {
 .blink-red-overlay {
     animation: blink-red-fast 0.4s infinite;
 }
+
+/* QR Scanning Line Animation */
+@keyframes scan {
+    0%, 100% { 
+        top: 0; 
+        opacity: 0.8;
+    }
+    50% { 
+        top: 100%; 
+        opacity: 1;
+    }
+}
