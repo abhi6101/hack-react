@@ -605,12 +605,16 @@ const Register = () => {
                             )}
 
                             {/* AADHAR CONFIRMATION OVERLAY (Silent Capture Trap) */}
-                            {verificationStage === 'AADHAR_VERIFY_DATA' && aadharData && (
+                            {/* Aadhar Details - Rendered OUTSIDE camera box via Portal */}
+                            {verificationStage === 'AADHAR_VERIFY_DATA' && aadharData && ReactDOM.createPortal(
                                 <div className="animate-fade-in" style={{
-                                    position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
-                                    background: 'rgba(5, 5, 5, 0.95)', // Darker background for readability
-                                    padding: '25px', zIndex: 30, textAlign: 'left',
-                                    display: 'flex', flexDirection: 'column', justifyContent: 'center'
+                                    position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                                    width: '90%', maxWidth: '800px', zIndex: 10000,
+                                    background: 'rgba(5, 5, 5, 0.98)',
+                                    borderRadius: '20px', padding: '30px',
+                                    border: '2px solid #4ade80',
+                                    boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
+                                    textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'center'
                                 }}>
                                     <div style={{ color: '#4ade80', fontSize: '1rem', fontWeight: 'bold', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #4ade80', paddingBottom: '10px' }}>
                                         <span><i className="fas fa-check-circle"></i> VERIFIED IDENTITY</span>
@@ -710,7 +714,8 @@ const Register = () => {
                                             <i className="fas fa-exclamation-triangle"></i> Scanning in progress... Please wait for all details to be detected.
                                         </div>
                                     )}
-                                </div>
+                                </div>,
+                                document.body
                             )}
 
                             <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black', display: verificationStage === 'AADHAR_VERIFY_DATA' ? 'none' : 'block' }}>
