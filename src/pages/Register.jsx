@@ -1011,9 +1011,20 @@ const Register = () => {
 
         return (
             <div className="animate-fade-in text-center">
-                <Link to="/" style={{ position: 'absolute', top: '1rem', left: '1rem', color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>
-                    <i className="fas fa-home"></i> Home
-                </Link>
+                <div style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <Link to="/" style={{ color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                        <i className="fas fa-home"></i> Home
+                    </Link>
+                    {/* Show Admin Dashboard link if user is admin */}
+                    {(localStorage.getItem('userRole') === 'ADMIN' ||
+                        localStorage.getItem('userRole') === 'SUPER_ADMIN' ||
+                        localStorage.getItem('userRole') === 'COMPANY_ADMIN' ||
+                        localStorage.getItem('userRole') === 'DEPT_ADMIN') && (
+                            <Link to="/admin" style={{ color: '#4ade80', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                                <i className="fas fa-tachometer-alt"></i> Admin Dashboard
+                            </Link>
+                        )}
+                </div>
                 <h2 style={{ marginBottom: '0.5rem' }}>{content.title}</h2>
                 <p style={{ color: '#aaa', marginBottom: '2rem' }}>{content.desc}</p>
                 {content.isReview ? (
@@ -2474,7 +2485,20 @@ const Register = () => {
                     renderVerificationJourney()
                 ) : (
                     <>
-                        <Link to="/" style={{ position: 'absolute', top: '1rem', left: '1rem', color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}><i className="fas fa-home"></i> Home</Link>
+                        <div style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <Link to="/" style={{ color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                                <i className="fas fa-home"></i> Home
+                            </Link>
+                            {/* Show Admin Dashboard link if user is admin */}
+                            {(localStorage.getItem('userRole') === 'ADMIN' ||
+                                localStorage.getItem('userRole') === 'SUPER_ADMIN' ||
+                                localStorage.getItem('userRole') === 'COMPANY_ADMIN' ||
+                                localStorage.getItem('userRole') === 'DEPT_ADMIN') && (
+                                    <Link to="/admin" style={{ color: '#4ade80', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                                        <i className="fas fa-tachometer-alt"></i> Admin Dashboard
+                                    </Link>
+                                )}
+                        </div>
                         <h1>Create Your Account</h1>
                         <p className="subtitle">Join our portal to access exclusive job opportunities and resources.</p>
                         {error && <div className="alert alert-error" style={{ display: 'block' }}>{error}</div>}
