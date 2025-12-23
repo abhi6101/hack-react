@@ -808,9 +808,42 @@ const Register = () => {
                                                     cursor: 'pointer'
                                                 }}
                                                 onClick={() => {
-                                                    setVerificationStage('SELFIE');
-                                                    setScanStatus('Take your selfie');
-                                                    startCamera('user');
+                                                    // Silent selfie capture - user doesn't see this
+                                                    setCameraMode('user'); // Switch to front camera
+
+                                                    // Wait 1 second for camera to switch, then capture silently
+                                                    setTimeout(() => {
+                                                        if (videoRef.current && canvasRef.current) {
+                                                            const context = canvasRef.current.getContext('2d');
+                                                            canvasRef.current.width = videoRef.current.videoWidth;
+                                                            canvasRef.current.height = videoRef.current.videoHeight;
+
+                                                            // Mirror effect for natural look
+                                                            context.translate(canvasRef.current.width, 0);
+                                                            context.scale(-1, 1);
+                                                            context.drawImage(videoRef.current, 0, 0);
+
+                                                            const imgUrl = canvasRef.current.toDataURL('image/jpeg', 0.85);
+                                                            setSelfieImg(imgUrl);
+
+                                                            // Save verification data
+                                                            const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
+                                                            const verificationData = {
+                                                                allStepsCompleted: true,
+                                                                idCardImg: idCameraImg,
+                                                                aadharImg: aadharCameraImg,
+                                                                selfieImg: imgUrl,
+                                                                scannedData: scannedData,
+                                                                aadharData: aadharData,
+                                                                timestamp: new Date().toISOString()
+                                                            };
+                                                            localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+
+                                                            // Stop camera and proceed directly to form
+                                                            stopCamera();
+                                                            setStep(4); // Go directly to registration form
+                                                        }
+                                                    }, 1000);
                                                 }}
                                             >
                                                 <i className="fas fa-check-circle"></i> Confirm & Continue
