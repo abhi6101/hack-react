@@ -238,266 +238,281 @@ const Register = () => {
                         <div style={{
                             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                             width: '100vw', height: '100vh', inset: 0,
-                            background: '#ffffff', zIndex: 1000, pointerEvents: 'none'
+                            background: '#ffffff', zIndex: 9998, pointerEvents: 'none'
                         }}></div>,
                         document.body
                     )}
 
-                    <div style={{ position: 'relative', zIndex: 10001, isolation: 'isolate', marginBottom: '1rem' }}>
-                        <h2 style={{
-                            textAlign: 'center', margin: 0,
-                            color: isFlashActive ? '#000' : '#fff',
-                            fontWeight: 'bold', textShadow: isFlashActive ? 'none' : '0 2px 4px rgba(0,0,0,0.5)'
-                        }}>Live Scan</h2>
 
-                        {/* Manual Flash Button */}
-                        <button
-                            onClick={() => setManualFlash(!manualFlash)}
-                            style={{
-                                position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)',
-                                background: manualFlash ? '#fbbf24' : 'rgba(255,255,255,0.1)',
-                                border: '1px solid rgba(255,255,255,0.2)',
-                                color: manualFlash ? '#000' : '#fff',
-                                borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center'
-                            }}
-                            title="Toggle Screen Flash"
-                        >
-                            <i className={`fas ${manualFlash ? 'fa-bolt' : 'fa-lightbulb'}`}></i>
-                        </button>
-                    </div>
+                    {/* Camera UI - Also rendered via Portal to ensure it's above flash */}
+                    {ReactDOM.createPortal(
+                        <>
+                            <div style={{ position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)', zIndex: 9999, marginBottom: '1rem' }}>
+                                <h2 style={{
+                                    textAlign: 'center', margin: 0,
+                                    color: isFlashActive ? '#000' : '#fff',
+                                    fontWeight: 'bold', textShadow: isFlashActive ? 'none' : '0 2px 4px rgba(0,0,0,0.5)'
+                                }}>Live Scan</h2>
 
-                    <div style={{
-                        position: 'relative', zIndex: 10001, isolation: 'isolate', // Create new stacking context
-                        width: '100%', maxWidth: '400px', margin: '0 auto',
-                        borderRadius: '12px', overflow: 'hidden',
-                        border: '2px solid #667eea',
-                        background: '#000',
-                        boxShadow: isFlashActive ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
-                    }}>
-                        <video
-                            ref={videoRef}
-                            style={{
-                                width: '100%',
-                                display: selfieImg ? 'none' : 'block', // Hide video if previewing
-                                transform: cameraMode === 'user' ? 'scaleX(-1)' : 'none' // Mirror only for selfie
-                            }}
-                            autoPlay
-                            playsInline
-                            muted
-                        ></video>
+                                {/* Manual Flash Button */}
+                                <button
+                                    onClick={() => setManualFlash(!manualFlash)}
+                                    style={{
+                                        position: 'absolute', right: '-50px', top: '50%', transform: 'translateY(-50%)',
+                                        background: manualFlash ? '#fbbf24' : 'rgba(255,255,255,0.1)',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        color: manualFlash ? '#000' : '#fff',
+                                        borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                    }}
+                                    title="Toggle Screen Flash"
+                                >
+                                    <i className={`fas ${manualFlash ? 'fa-bolt' : 'fa-lightbulb'}`}></i>
+                                </button>
+                            </div>
+                        </>,
+                        document.body
+                    )}
 
-                        {/* Selfie Preview Image */}
-                        {selfieImg && (
-                            <img
-                                src={selfieImg}
-                                alt="Selfie Preview"
+
+
+
+                    {/* Video Container - Also rendered via Portal */}
+                    {ReactDOM.createPortal(
+                        <div style={{
+                            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                            zIndex: 9999, // Above flash
+                            width: '100%', maxWidth: '400px',
+                            borderRadius: '12px', overflow: 'hidden',
+                            border: '2px solid #667eea',
+                            background: '#000',
+                            boxShadow: isFlashActive ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
+                        }}>
+                            <video
+                                ref={videoRef}
                                 style={{
                                     width: '100%',
-                                    display: 'block',
-                                    transform: 'scaleX(-1)' // Keep consistency
+                                    display: selfieImg ? 'none' : 'block', // Hide video if previewing
+                                    transform: cameraMode === 'user' ? 'scaleX(-1)' : 'none' // Mirror only for selfie
                                 }}
-                            />
-                        )}
+                                autoPlay
+                                playsInline
+                                muted
+                            ></video>
 
-                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                            {/* Selfie Preview Image */}
+                            {selfieImg && (
+                                <img
+                                    src={selfieImg}
+                                    alt="Selfie Preview"
+                                    style={{
+                                        width: '100%',
+                                        display: 'block',
+                                        transform: 'scaleX(-1)' // Keep consistency
+                                    }}
+                                />
+                            )}
 
-                        {flash && (
-                            <div className="animate-fade-out" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: '#fff', zIndex: 10, opacity: 0.8 }}></div>
-                        )}
+                            <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
 
-                        {errorFlash && (
-                            <div className="blink-red-overlay" style={{
-                                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 100,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(220, 38, 38, 0.5)'
-                            }}>
-                                <div style={{ textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.8)', padding: '25px', borderRadius: '20px', border: '2px solid #ef4444', backdropFilter: 'blur(8px)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-                                    <i className="fas fa-id-card-alt" style={{ fontSize: '5rem', marginBottom: '15px' }}></i>
-                                    <h2 style={{ fontSize: '2rem', fontWeight: '900', margin: 0 }}>WRONG DOCUMENT</h2>
-                                    <p style={{ margin: '10px 0 0', fontWeight: 'bold', color: '#ffc1c1', fontSize: '1.2rem' }}>
-                                        {verificationStage === 'AADHAR_AUTO_CAPTURE' ? "Please show your AADHAR CARD" : "Please show your COLLEGE ID"}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
+                            {flash && (
+                                <div className="animate-fade-out" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: '#fff', zIndex: 10, opacity: 0.8 }}></div>
+                            )}
 
-                        {/* QR CODE RETICLE (Guide) - Only for Aadhar Auto Capture */}
-                        {verificationStage === 'AADHAR_AUTO_CAPTURE' && (
-                            <div style={{
-                                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                                width: '260px', height: '260px',
-                                boxShadow: `0 0 0 9999px ${isFlashActive ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`, // Auto-Flash: White screen if dark
-                                pointerEvents: 'none', zIndex: 15,
-                                borderRadius: '20px'
-                            }}>
-                                {/* Modern Viewfinder Corners */}
-                                <div style={{ position: 'absolute', top: 0, left: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderTopLeftRadius: '16px' }}></div>
-                                <div style={{ position: 'absolute', top: 0, right: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderTopRightRadius: '16px' }}></div>
-                                <div style={{ position: 'absolute', bottom: 0, left: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderBottomLeftRadius: '16px' }}></div>
-                                <div style={{ position: 'absolute', bottom: 0, right: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderBottomRightRadius: '16px' }}></div>
-
-                                <div style={{ position: 'absolute', top: '-40px', width: '100%', textAlign: 'center', color: '#4ade80', fontWeight: 'bold', fontSize: '1rem', textShadow: '0 2px 4px black' }}>SCAN AADHAR QR</div>
-                            </div>
-                        )}
-
-                        <div style={{ position: 'absolute', top: '20px', left: '0', width: '100%', textAlign: 'center', pointerEvents: 'none', zIndex: 10 }}>
-                            <span style={{
-                                background: 'rgba(0, 0, 0, 0.8)', padding: '8px 20px', borderRadius: '30px', color: '#fff',
-                                fontWeight: '800', fontSize: '1.2rem', letterSpacing: '1px', border: '2px solid rgba(255, 255, 255, 0.2)',
-                                textTransform: 'uppercase', boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
-                            }}>
-                                {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" :
-                                    (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR QR" :
-                                        (verificationStage === 'AADHAR_VERIFY_DATA' ? "IDENTITY MATCHED" : "PHOTO CAPTURE"))}
-                            </span>
-                        </div>
-
-                        {/* Unified AI Status Monitor - Only show during Scanning phases */}
-                        {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
-                            <div style={{
-                                position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', zIndex: 20, width: '100%'
-                            }}>
-                                {/* MAIN STATUS PILL */}
-                                <div style={{
-                                    background: 'rgba(0,0,0,0.85)', padding: '10px 24px', borderRadius: '30px',
-                                    border: `1px solid ${scanStatus.includes('⚠️') ? '#ef4444' : (scanStatus.includes('Reading') ? '#00d4ff' : '#4ade80')} `,
-                                    boxShadow: '0 4px 15px rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
-                                    display: 'flex', alignItems: 'center', gap: '10px'
+                            {errorFlash && (
+                                <div className="blink-red-overlay" style={{
+                                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 100,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(220, 38, 38, 0.5)'
                                 }}>
-                                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80', animation: 'pulse 1.5s infinite' }}></div>
-                                    <span style={{ color: '#fff', fontSize: '1rem', fontWeight: '600' }}>
-                                        {scanStatus}
-                                    </span>
-                                </div>
-
-                                {/* BIG COUNT INDICATOR - INSTANT MESSAGE STYLE */}
-                                {scanBuffer.length > 0 && scanBuffer.length < 5 && (
-                                    <div className="animate-bounce" style={{
-                                        background: 'rgba(74, 222, 128, 0.9)', color: '#000',
-                                        padding: '8px 20px', borderRadius: '20px', fontWeight: 'bold', fontSize: '1.1rem',
-                                        marginTop: '5px', boxShadow: '0 0 15px rgba(74,222,128,0.6)',
-                                        display: 'flex', alignItems: 'center', gap: '8px'
-                                    }}>
-                                        <i className="fas fa-camera"></i> Scanned {scanBuffer.length} Time{scanBuffer.length > 1 ? 's' : ''}
+                                    <div style={{ textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.8)', padding: '25px', borderRadius: '20px', border: '2px solid #ef4444', backdropFilter: 'blur(8px)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+                                        <i className="fas fa-id-card-alt" style={{ fontSize: '5rem', marginBottom: '15px' }}></i>
+                                        <h2 style={{ fontSize: '2rem', fontWeight: '900', margin: 0 }}>WRONG DOCUMENT</h2>
+                                        <p style={{ margin: '10px 0 0', fontWeight: 'bold', color: '#ffc1c1', fontSize: '1.2rem' }}>
+                                            {verificationStage === 'AADHAR_AUTO_CAPTURE' ? "Please show your AADHAR CARD" : "Please show your COLLEGE ID"}
+                                        </p>
                                     </div>
-                                )}
+                                </div>
+                            )}
+
+                            {/* QR CODE RETICLE (Guide) - Only for Aadhar Auto Capture */}
+                            {verificationStage === 'AADHAR_AUTO_CAPTURE' && (
+                                <div style={{
+                                    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                                    width: '260px', height: '260px',
+                                    boxShadow: `0 0 0 9999px ${isFlashActive ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`, // Auto-Flash: White screen if dark
+                                    pointerEvents: 'none', zIndex: 15,
+                                    borderRadius: '20px'
+                                }}>
+                                    {/* Modern Viewfinder Corners */}
+                                    <div style={{ position: 'absolute', top: 0, left: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderTopLeftRadius: '16px' }}></div>
+                                    <div style={{ position: 'absolute', top: 0, right: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderTopRightRadius: '16px' }}></div>
+                                    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderBottomLeftRadius: '16px' }}></div>
+                                    <div style={{ position: 'absolute', bottom: 0, right: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderBottomRightRadius: '16px' }}></div>
+
+                                    <div style={{ position: 'absolute', top: '-40px', width: '100%', textAlign: 'center', color: '#4ade80', fontWeight: 'bold', fontSize: '1rem', textShadow: '0 2px 4px black' }}>SCAN AADHAR QR</div>
+                                </div>
+                            )}
+
+                            <div style={{ position: 'absolute', top: '20px', left: '0', width: '100%', textAlign: 'center', pointerEvents: 'none', zIndex: 10 }}>
+                                <span style={{
+                                    background: 'rgba(0, 0, 0, 0.8)', padding: '8px 20px', borderRadius: '30px', color: '#fff',
+                                    fontWeight: '800', fontSize: '1.2rem', letterSpacing: '1px', border: '2px solid rgba(255, 255, 255, 0.2)',
+                                    textTransform: 'uppercase', boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
+                                }}>
+                                    {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" :
+                                        (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR QR" :
+                                            (verificationStage === 'AADHAR_VERIFY_DATA' ? "IDENTITY MATCHED" : "PHOTO CAPTURE"))}
+                                </span>
                             </div>
-                        )}
 
-                        {/* AADHAR CONFIRMATION OVERLAY (Silent Capture Trap) */}
-                        {verificationStage === 'AADHAR_VERIFY_DATA' && aadharData && (
-                            <div className="animate-fade-in" style={{
-                                position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
-                                background: 'rgba(5, 5, 5, 0.95)', // Darker background for readability
-                                padding: '25px', zIndex: 30, textAlign: 'left',
-                                display: 'flex', flexDirection: 'column', justifyContent: 'center'
-                            }}>
-                                <div style={{ color: '#4ade80', fontSize: '1rem', fontWeight: 'bold', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #4ade80', paddingBottom: '10px' }}>
-                                    <span><i className="fas fa-check-circle"></i> VERIFIED IDENTITY</span>
-                                    <span>100% Match</span>
-                                </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
-                                    <div style={{ gridColumn: '1 / -1' }}>
-                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Full Name {aadharData.isNameVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED</span>}</div>
-                                        <div style={{ color: '#fff', fontSize: '1.6rem', fontWeight: '700' }}>{aadharData.name}</div>
-                                    </div>
-
-                                    {/* Father Name (if captured) */}
-                                    {aadharData.fatherName && (
-                                        <div style={{ gridColumn: '1 / -1' }}>
-                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Care Of / Father {aadharData.isFatherVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID</span>}</div>
-                                            <div style={{ color: '#fff', fontSize: '1.1rem' }}>{aadharData.fatherName}</div>
-                                        </div>
-                                    )}
-
-                                    <div>
-                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Date of Birth</div>
-                                        <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.dob || 'N/A'}</div>
-                                    </div>
-                                    <div>
-                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Gender</div>
-                                        <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.gender || 'N/A'}</div>
-                                    </div>
-                                    <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
-                                        <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Aadhar Number</div>
-                                        <div style={{ color: '#4ade80', fontSize: '1.8rem', fontWeight: 'bold', letterSpacing: '3px', fontFamily: 'monospace' }}>{aadharData.aadharNumber}</div>
-                                    </div>
-                                    {/* Display Extracted Address */}
-                                    {aadharData.address && (
-                                        <div style={{ gridColumn: '1 / -1', marginTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '15px' }}>
-                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '8px' }}>Permanent Address {aadharData.isAddressVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID LOC</span>}</div>
-                                            <div style={{ color: '#ddd', fontSize: '1rem', lineHeight: '1.5' }}>{aadharData.address}</div>
-                                        </div>
-                                    )}
-                                </div>
-
-
-                                {/* Conditional Buttons based on data completeness */}
-                                {aadharData.name && aadharData.dob && aadharData.gender && aadharData.aadharNumber ? (
-                                    <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
-                                        <button
-                                            className="btn btn-secondary"
-                                            style={{
-                                                width: '100px',
-                                                padding: '12px 8px',
-                                                fontWeight: 'bold',
-                                                fontSize: '0.85rem',
-                                                background: 'rgba(239, 68, 68, 0.2)',
-                                                color: '#ef4444',
-                                                border: '1px solid #ef4444',
-                                                borderRadius: '8px',
-                                                cursor: 'pointer',
-                                                whiteSpace: 'nowrap'
-                                            }}
-                                            onClick={() => {
-                                                setAadharData(null);
-                                                setAadharCameraImg(null);
-                                                setVerificationStage('AADHAR_AUTO_CAPTURE');
-                                                setScanStatus('Restarting Aadhar scan...');
-                                                setScanBuffer([]);
-                                            }}
-                                        >
-                                            <i className="fas fa-redo"></i> Rescan
-                                        </button>
-                                        <button
-                                            className="btn btn-primary"
-                                            style={{
-                                                flex: '1',
-                                                padding: '12px',
-                                                fontWeight: 'bold',
-                                                fontSize: '0.95rem',
-                                                background: '#4ade80',
-                                                color: '#000',
-                                                border: 'none',
-                                                borderRadius: '8px',
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={takeSelfie}
-                                        >
-                                            Confirm & Continue <i className="fas fa-arrow-right"></i>
-                                        </button>
-                                    </div>
-                                ) : (
+                            {/* Unified AI Status Monitor - Only show during Scanning phases */}
+                            {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
+                                <div style={{
+                                    position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)',
+                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', zIndex: 20, width: '100%'
+                                }}>
+                                    {/* MAIN STATUS PILL */}
                                     <div style={{
-                                        padding: '12px',
-                                        background: 'rgba(251, 191, 36, 0.1)',
-                                        border: '1px solid rgba(251, 191, 36, 0.3)',
-                                        borderRadius: '8px',
-                                        color: '#fbbf24',
-                                        fontSize: '0.9rem',
-                                        textAlign: 'center'
+                                        background: 'rgba(0,0,0,0.85)', padding: '10px 24px', borderRadius: '30px',
+                                        border: `1px solid ${scanStatus.includes('⚠️') ? '#ef4444' : (scanStatus.includes('Reading') ? '#00d4ff' : '#4ade80')} `,
+                                        boxShadow: '0 4px 15px rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
+                                        display: 'flex', alignItems: 'center', gap: '10px'
                                     }}>
-                                        <i className="fas fa-exclamation-triangle"></i> Scanning in progress... Please wait for all details to be detected.
+                                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: scanStatus.includes('⚠️') ? '#ef4444' : '#4ade80', animation: 'pulse 1.5s infinite' }}></div>
+                                        <span style={{ color: '#fff', fontSize: '1rem', fontWeight: '600' }}>
+                                            {scanStatus}
+                                        </span>
                                     </div>
-                                )}
-                            </div>
-                        )}
 
-                        <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black', display: verificationStage === 'AADHAR_VERIFY_DATA' ? 'none' : 'block' }}>
-                            {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
-                        </div>
-                    </div>
+                                    {/* BIG COUNT INDICATOR - INSTANT MESSAGE STYLE */}
+                                    {scanBuffer.length > 0 && scanBuffer.length < 5 && (
+                                        <div className="animate-bounce" style={{
+                                            background: 'rgba(74, 222, 128, 0.9)', color: '#000',
+                                            padding: '8px 20px', borderRadius: '20px', fontWeight: 'bold', fontSize: '1.1rem',
+                                            marginTop: '5px', boxShadow: '0 0 15px rgba(74,222,128,0.6)',
+                                            display: 'flex', alignItems: 'center', gap: '8px'
+                                        }}>
+                                            <i className="fas fa-camera"></i> Scanned {scanBuffer.length} Time{scanBuffer.length > 1 ? 's' : ''}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* AADHAR CONFIRMATION OVERLAY (Silent Capture Trap) */}
+                            {verificationStage === 'AADHAR_VERIFY_DATA' && aadharData && (
+                                <div className="animate-fade-in" style={{
+                                    position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
+                                    background: 'rgba(5, 5, 5, 0.95)', // Darker background for readability
+                                    padding: '25px', zIndex: 30, textAlign: 'left',
+                                    display: 'flex', flexDirection: 'column', justifyContent: 'center'
+                                }}>
+                                    <div style={{ color: '#4ade80', fontSize: '1rem', fontWeight: 'bold', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #4ade80', paddingBottom: '10px' }}>
+                                        <span><i className="fas fa-check-circle"></i> VERIFIED IDENTITY</span>
+                                        <span>100% Match</span>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+                                        <div style={{ gridColumn: '1 / -1' }}>
+                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Full Name {aadharData.isNameVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED</span>}</div>
+                                            <div style={{ color: '#fff', fontSize: '1.6rem', fontWeight: '700' }}>{aadharData.name}</div>
+                                        </div>
+
+                                        {/* Father Name (if captured) */}
+                                        {aadharData.fatherName && (
+                                            <div style={{ gridColumn: '1 / -1' }}>
+                                                <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Care Of / Father {aadharData.isFatherVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID</span>}</div>
+                                                <div style={{ color: '#fff', fontSize: '1.1rem' }}>{aadharData.fatherName}</div>
+                                            </div>
+                                        )}
+
+                                        <div>
+                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Date of Birth</div>
+                                            <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.dob || 'N/A'}</div>
+                                        </div>
+                                        <div>
+                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Gender</div>
+                                            <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.gender || 'N/A'}</div>
+                                        </div>
+                                        <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
+                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Aadhar Number</div>
+                                            <div style={{ color: '#4ade80', fontSize: '1.8rem', fontWeight: 'bold', letterSpacing: '3px', fontFamily: 'monospace' }}>{aadharData.aadharNumber}</div>
+                                        </div>
+                                        {/* Display Extracted Address */}
+                                        {aadharData.address && (
+                                            <div style={{ gridColumn: '1 / -1', marginTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '15px' }}>
+                                                <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '8px' }}>Permanent Address {aadharData.isAddressVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID LOC</span>}</div>
+                                                <div style={{ color: '#ddd', fontSize: '1rem', lineHeight: '1.5' }}>{aadharData.address}</div>
+                                            </div>
+                                        )}
+                                    </div>
+
+
+                                    {/* Conditional Buttons based on data completeness */}
+                                    {aadharData.name && aadharData.dob && aadharData.gender && aadharData.aadharNumber ? (
+                                        <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                                            <button
+                                                className="btn btn-secondary"
+                                                style={{
+                                                    width: '100px',
+                                                    padding: '12px 8px',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.85rem',
+                                                    background: 'rgba(239, 68, 68, 0.2)',
+                                                    color: '#ef4444',
+                                                    border: '1px solid #ef4444',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    whiteSpace: 'nowrap'
+                                                }}
+                                                onClick={() => {
+                                                    setAadharData(null);
+                                                    setAadharCameraImg(null);
+                                                    setVerificationStage('AADHAR_AUTO_CAPTURE');
+                                                    setScanStatus('Restarting Aadhar scan...');
+                                                    setScanBuffer([]);
+                                                }}
+                                            >
+                                                <i className="fas fa-redo"></i> Rescan
+                                            </button>
+                                            <button
+                                                className="btn btn-primary"
+                                                style={{
+                                                    flex: '1',
+                                                    padding: '12px',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.95rem',
+                                                    background: '#4ade80',
+                                                    color: '#000',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer'
+                                                }}
+                                                onClick={takeSelfie}
+                                            >
+                                                Confirm & Continue <i className="fas fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div style={{
+                                            padding: '12px',
+                                            background: 'rgba(251, 191, 36, 0.1)',
+                                            border: '1px solid rgba(251, 191, 36, 0.3)',
+                                            borderRadius: '8px',
+                                            color: '#fbbf24',
+                                            fontSize: '0.9rem',
+                                            textAlign: 'center'
+                                        }}>
+                                            <i className="fas fa-exclamation-triangle"></i> Scanning in progress... Please wait for all details to be detected.
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black', display: verificationStage === 'AADHAR_VERIFY_DATA' ? 'none' : 'block' }}>
+                                {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
+                            </div>
+                        </div>,
+                        document.body
+                    )}
                 </div>
             );
         }
