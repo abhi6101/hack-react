@@ -1,53 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import GlassCard from '../components/ui/GlassCard';
+import useScrollAnimation from '../hooks/useScrollAnimation';
 import '../styles/index.css';
+import '../styles/home.css';
+
+const GALLERY_IMAGES = [
+    "/images/4E9A7129-copy.jpg",
+    "/images/lab1.jpg",
+    "/images/Group-photo-1-copy-4.jpg",
+    "/images/fair.jpg",
+    "/images/DSCF2122-copy.jpg"
+];
 
 const Home = () => {
     const [user, setUser] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const navigate = useNavigate();
 
-    const galleryImages = [
-        "/images/4E9A7129-copy.jpg",
-        "/images/lab1.jpg",
-        "/images/Group-photo-1-copy-4.jpg",
-        "/images/fair.jpg",
-        "/images/DSCF2122-copy.jpg"
-    ];
+    // Custom Hook for Scroll Animations
+    useScrollAnimation();
 
     const nextSlide = () => {
-        setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
+        setCurrentImageIndex((prev) => (prev + 1) % GALLERY_IMAGES.length);
     };
 
     const prevSlide = () => {
-        setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+        setCurrentImageIndex((prev) => (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length);
     };
-
-    const navigate = useNavigate();
 
     // Auto-Slideshow Effect
     useEffect(() => {
-        const interval = setInterval(nextSlide, 5000); // 5 seconds
+        const interval = setInterval(nextSlide, 5000);
         return () => clearInterval(interval);
     }, []);
 
-    // Scroll Animation Observer
     useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
-
-        return () => observer.disconnect();
-    }, []);
-
-    useEffect(() => {
-        // Check for logged in user using individual keys set by Login.jsx
         const storedUsername = localStorage.getItem('username');
         const storedRole = localStorage.getItem('userRole');
         const token = localStorage.getItem('authToken');
@@ -57,12 +45,6 @@ const Home = () => {
                 username: storedUsername,
                 role: storedRole || 'User'
             });
-        } else {
-            // Inconsistent state: Username but no token -> Clear it
-            if (storedUsername) {
-                localStorage.removeItem('username');
-                localStorage.removeItem('userRole');
-            }
         }
     }, []);
 
@@ -76,7 +58,7 @@ const Home = () => {
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
-                    <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
+                    <h1 id="heroHeading" className="hero-heading-block">
                         Launch Your Career with Ease!
                     </h1>
                     {user && (
@@ -104,8 +86,7 @@ const Home = () => {
                 </div>
             </section>
 
-
-            {/* NEW: Learning Roadmap Section (Learnext Inspired) */}
+            {/* NEW: Learning Roadmap Section */}
             <section className="roadmap-section animate-on-scroll">
                 <h2>Your Path to Success</h2>
                 <p className="subtitle">Follow our proven 4-step roadmap to land your dream job.</p>
@@ -217,47 +198,27 @@ const Home = () => {
             {/* Gallery Section */}
             <section className="gallery">
                 <h2>Moments & Memories</h2>
-                <div className="slideshow-container" style={{ position: 'relative', overflow: 'hidden', height: '500px', borderRadius: '16px' }}>
-
+                <div className="gallery-container">
                     {/* Active Image */}
-                    <div className="mySlides fade" style={{ display: 'block', height: '100%', width: '100%' }}>
+                    <div className="gallery-slide fade">
                         <img
-                            src={galleryImages[currentImageIndex]}
+                            src={GALLERY_IMAGES[currentImageIndex]}
                             alt={`Moments & Memories ${currentImageIndex + 1}`}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            className="gallery-image"
                         />
                     </div>
 
                     {/* Navigation Arrows */}
-                    <a className="prev" onClick={prevSlide} style={{
-                        cursor: 'pointer', position: 'absolute', top: '50%', width: 'auto', padding: '16px', marginTop: '-22px',
-                        color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.6s ease', borderRadius: '0 3px 3px 0',
-                        userSelect: 'none', left: '0', background: 'rgba(0,0,0,0.3)'
-                    }}>&#10094;</a>
-
-                    <a className="next" onClick={nextSlide} style={{
-                        cursor: 'pointer', position: 'absolute', top: '50%', width: 'auto', padding: '16px', marginTop: '-22px',
-                        color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.6s ease', borderRadius: '3px 0 0 3px',
-                        userSelect: 'none', right: '0', background: 'rgba(0,0,0,0.3)'
-                    }}>&#10095;</a>
+                    <a className="gallery-nav gallery-prev" onClick={prevSlide}>&#10094;</a>
+                    <a className="gallery-nav gallery-next" onClick={nextSlide}>&#10095;</a>
                 </div>
 
                 {/* Dots */}
-                <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                    {galleryImages.map((_, idx) => (
+                <div className="gallery-dots-container">
+                    {GALLERY_IMAGES.map((_, idx) => (
                         <span
                             key={idx}
-                            className="dot"
-                            style={{
-                                cursor: 'pointer',
-                                height: '12px',
-                                width: '12px',
-                                margin: '0 6px',
-                                backgroundColor: idx === currentImageIndex ? 'var(--primary)' : 'rgba(255,255,255,0.3)',
-                                borderRadius: '50%',
-                                display: 'inline-block',
-                                transition: 'background-color 0.3s'
-                            }}
+                            className={`gallery-dot ${idx === currentImageIndex ? 'active' : ''}`}
                             onClick={() => setCurrentImageIndex(idx)}
                         ></span>
                     ))}
@@ -302,9 +263,9 @@ const Home = () => {
             </section>
 
             {/* Contact Teaser Section */}
-            <section className="contact-teaser" style={{ textAlign: 'center', background: 'var(--surface-bg)' }}>
+            <section className="contact-teaser-section">
                 <h2>Ready to Start Your Journey?</h2>
-                <p className="subtitle" style={{ maxWidth: '600px', margin: '0 auto 2rem' }}>
+                <p className="subtitle contact-teaser-subtitle">
                     Have questions or need assistance? Our team is here to help you every step of the way.
                 </p>
                 <Link to="/contact" className="btn btn-primary">
