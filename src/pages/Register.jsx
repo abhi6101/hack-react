@@ -229,13 +229,28 @@ const Register = () => {
         if (showCamera) {
             return (
                 <div className="animate-fade-in text-center">
-                    <h2 className="mb-4" style={{ textAlign: 'center' }}>Live Scan</h2>
+                    {/* FULL SCREEN FLASH (Ring Light) */}
+                    {isLowLight && (
+                        <div style={{
+                            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+                            background: '#ffffff', zIndex: 40, pointerEvents: 'none'
+                        }}></div>
+                    )}
+
+                    <h2 className="mb-4" style={{
+                        textAlign: 'center',
+                        position: 'relative', zIndex: 50,
+                        color: isLowLight ? '#000' : '#fff',
+                        fontWeight: 'bold'
+                    }}>Live Scan</h2>
+
                     <div style={{
-                        position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto',
+                        position: 'relative', zIndex: 50, // Lift above flash
+                        width: '100%', maxWidth: '400px', margin: '0 auto',
                         borderRadius: '12px', overflow: 'hidden',
-                        border: isLowLight ? '20px solid #ffffff' : '2px solid #667eea', // Ring Light Effect
+                        border: '2px solid #667eea',
                         background: '#000',
-                        transition: 'border 0.3s ease'
+                        boxShadow: isLowLight ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
                     }}>
                         <video
                             ref={videoRef}
