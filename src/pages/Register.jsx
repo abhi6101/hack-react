@@ -807,9 +807,13 @@ const Register = () => {
                                                     borderRadius: '8px',
                                                     cursor: 'pointer'
                                                 }}
-                                                onClick={takeSelfie}
+                                                onClick={() => {
+                                                    setVerificationStage('SELFIE');
+                                                    setScanStatus('Take your selfie');
+                                                    startCamera('user');
+                                                }}
                                             >
-                                                Confirm & Continue <i className="fas fa-arrow-right"></i>
+                                                <i className="fas fa-check-circle"></i> Confirm & Continue
                                             </button>
                                         </div>
                                     ) : (
