@@ -235,7 +235,7 @@ const Register = () => {
                             style={{
                                 width: '100%',
                                 display: selfieImg ? 'none' : 'block', // Hide video if previewing
-                                transform: 'scaleX(-1)' // Mirror effect for user feel
+                                transform: cameraMode === 'user' ? 'scaleX(-1)' : 'none' // Mirror only for selfie
                             }}
                             autoPlay
                             playsInline
@@ -593,54 +593,116 @@ const Register = () => {
                 <p style={{ color: '#aaa', marginBottom: '2rem' }}>{content.desc}</p>
                 {content.isReview ? (
                     <div style={{ maxWidth: '500px', margin: '0 auto' }}>
-                        <div style={{ display: 'flex', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'left' }}>
-                            <img src={content.image} alt="Scanned Doc" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #444' }} />
-                            <div style={{ fontSize: '0.9rem', width: '100%' }}>
-                                {/* 1. Institution (Hidden in simpleView) */}
-                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Institution:</strong> <span style={{ color: '#fff' }}>{content.data?.institution}</span></p>}
+                        <div style={{
+                            background: 'rgba(20, 20, 30, 0.6)',
+                            backdropFilter: 'blur(10px)',
+                            borderRadius: '16px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            marginBottom: '1.5rem',
+                            overflow: 'hidden',
+                            textAlign: 'left'
+                        }}>
+                            {/* Header Section with Image */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '1.25rem',
+                                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                background: 'rgba(255,255,255,0.02)'
+                            }}>
+                                <img src={content.image} alt="Scanned Doc" style={{
+                                    width: '70px',
+                                    height: '70px',
+                                    objectFit: 'cover',
+                                    borderRadius: '12px',
+                                    border: '2px solid rgba(255,255,255,0.1)',
+                                    boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+                                }} />
+                                <div style={{ marginLeft: '1rem', flex: 1 }}>
+                                    <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#fff', letterSpacing: '0.5px' }}>{content.data?.name || "Detected User"}</h3>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.4rem' }}>
+                                        <span style={{
+                                            fontSize: '0.7rem',
+                                            background: 'rgba(74, 222, 128, 0.15)',
+                                            color: '#4ade80',
+                                            padding: '4px 10px',
+                                            borderRadius: '20px',
+                                            fontWeight: '600',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '4px',
+                                            border: '1px solid rgba(74, 222, 128, 0.2)'
+                                        }}>
+                                            <i className="fas fa-check-circle"></i> IDENTITY MATCHED
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-                                {/* 2. Session (Hidden in simpleView) */}
-                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Session:</strong> <span style={{ color: '#f59e0b' }}>{content.data?.session}</span></p>}
+                            {/* Details Grid */}
+                            <div style={{
+                                padding: '1.25rem',
+                                display: 'grid',
+                                gridTemplateColumns: '1fr 1fr',
+                                gap: '1.25rem 1rem'
+                            }}>
+                                {/* Institution (ID Card Only) */}
+                                {!content.simpleView && (
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Institution</div>
+                                        <div style={{ color: '#fff', fontSize: '0.95rem' }}>{content.data?.institution}</div>
+                                    </div>
+                                )}
 
-                                {/* 3. Computer Code (Hidden in simpleView) */}
-                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Computer Code:</strong> <span style={{ color: '#4ade80' }}>{content.data?.code}</span></p>}
+                                {/* Father's Name */}
+                                {content.data?.fatherName && (
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Care Of / Father</div>
+                                        <div style={{ color: '#e2e8f0', fontSize: '1rem', fontWeight: '500' }}>: {content.data?.fatherName}</div>
+                                    </div>
+                                )}
 
-                                {/* 4. Name (ALWAYS SHOWN) */}
-                                <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}> Name:</strong> {content.data?.name}</p>
-
-                                {/* 4.2 DOB & Gender (Only for simpleView) */}
-                                {
-                                    content.simpleView && (
-                                        <div style={{ display: 'flex', gap: '10px', margin: '0 0 0.4rem 0', fontSize: '0.8rem', color: '#ccc' }}>
-                                            <span><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>DOB:</strong> {content.data?.dob || 'N/A'}</span>
-                                            <span><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Gender:</strong> {content.data?.gender || 'N/A'}</span>
+                                {/* Aadhar Number Highlight */}
+                                {content.data?.aadharNumber && (
+                                    <div style={{ gridColumn: '1 / -1', margin: '0.5rem 0' }}>
+                                        <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Aadhar Number</div>
+                                        <div style={{ fontFamily: 'monospace', fontSize: '1.4rem', color: '#4ade80', letterSpacing: '1px', fontWeight: 'bold' }}>
+                                            {content.data?.aadharNumber}
                                         </div>
-                                    )
-                                }
+                                    </div>
+                                )}
 
-                                {/* 4.5. Aadhar Number (Only for Aadhar Step) */}
-                                {content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Aadhar No:</strong> <span style={{ color: '#4ade80', letterSpacing: '1px' }}>{content.data?.aadharNumber}</span></p>}
+                                {/* DOB & Gender */}
+                                <div>
+                                    <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Date of Birth</div>
+                                    <div style={{ color: '#fff', fontSize: '1rem' }}>{content.data?.dob || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Gender</div>
+                                    <div style={{ color: '#fff', fontSize: '1rem' }}>{content.data?.gender || 'N/A'}</div>
+                                </div>
 
-                                {/* 5. Father (Hidden in simpleView) */}
-                                {!content.simpleView && content.data?.fatherName && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}> Father:</strong> {content.data?.fatherName}</p>}
+                                {/* Address (Full Width) */}
+                                {!content.simpleView && content.data?.address && (
+                                    <div style={{ gridColumn: '1 / -1', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Address</div>
+                                        <div style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.4' }}>{content.data?.address}</div>
+                                    </div>
+                                )}
 
-                                {/* 6. Course (Hidden in simpleView) */}
-                                {!content.simpleView && <p style={{ margin: '0 0 0.4rem 0' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Course:</strong> <span style={{ color: '#60a5fa' }}>{content.data?.branch}</span></p>}
-
-                                {/* 7. Contact (Hidden in simpleView) */}
-                                {
-                                    !content.simpleView && (content.data?.mobileCount > 0 ? (
-                                        <div style={{ margin: '0 0 0.4rem 0' }}>
-                                            <strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Contact:</strong> <span style={{ color: '#4ade80' }}>+91 {content.data?.mobilePrimary}</span>
-                                            {content.data?.mobileSecondary && <span style={{ color: '#4ade80', marginLeft: '0.5rem' }}>, +91 {content.data?.mobileSecondary}</span>}
+                                {/* Computer Code & Course (ID Card Only) */}
+                                {!content.simpleView && (
+                                    <>
+                                        <div>
+                                            <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Computer Code</div>
+                                            <div style={{ color: '#4ade80', fontWeight: 'bold' }}>{content.data?.code}</div>
                                         </div>
-                                    ) : (
-                                        <p style={{ margin: '0 0 0.4rem 0', color: '#fbbf24', fontSize: '0.75rem' }}><i className="fas fa-exclamation-triangle"></i> Contact not detected</p>
-                                    ))
-                                }
-
-                                {/* 8. Address (Hidden in simpleView) */}
-                                {!content.simpleView && content.data?.address && <div style={{ marginTop: '4px' }}><strong style={{ color: '#aaa', fontSize: '0.75rem' }}>Address:</strong> <div style={{ color: '#ddd', fontSize: '0.8rem', lineHeight: '1.2' }}>{content.data?.address}</div></div>}
+                                        <div>
+                                            <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Course</div>
+                                            <div style={{ color: '#60a5fa' }}>{content.data?.branch}</div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                         {
