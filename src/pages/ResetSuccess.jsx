@@ -43,13 +43,13 @@ const ResetSuccess = () => {
                     </div>
 
                     <h1 style={{ marginBottom: '1rem', color: profileIncomplete ? '#fbbf24' : '#4ade80' }}>
-                        {profileIncomplete ? '⚠️ Old User - Registration Incomplete' : '✅ New User - Registration Complete!'}
+                        {profileIncomplete ? 'Complete Registration to Use Website' : 'Password Reset Successful'}
                     </h1>
 
                     <p style={{ color: '#aaa', marginBottom: '2rem', fontSize: '1rem' }}>
                         {profileIncomplete
-                            ? 'You are an OLD USER. Your password has been reset, but you need to complete registration to access the new system.'
-                            : 'You are a NEW USER. Your registration is complete and you can login immediately!'}
+                            ? 'Your password has been set, but you must complete registration to access the dashboard.'
+                            : 'Your password has been updated successfully.'}
                     </p>
 
                     {profileIncomplete ? (
@@ -63,7 +63,7 @@ const ResetSuccess = () => {
                             textAlign: 'left'
                         }}>
                             <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', color: '#fbbf24' }}>
-                                <i className="fas fa-clipboard-check"></i> Complete Registration to Continue
+                                <i className="fas fa-exclamation-circle"></i> Action Required
                             </h3>
                             <p style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '1rem' }}>
                                 As an <strong style={{ color: '#fbbf24' }}>OLD USER</strong>, you need to complete these verification steps:
@@ -87,18 +87,14 @@ const ResetSuccess = () => {
                         // NEW USER - Profile Complete
                         computerCode && (
                             <div style={{
-                                background: 'rgba(74, 222, 128, 0.1)',
-                                border: '1px solid rgba(74, 222, 128, 0.3)',
+                                background: 'rgba(255,255,255,0.05)',
                                 padding: '1.5rem',
                                 borderRadius: '12px',
                                 marginBottom: '2rem'
                             }}>
-                                <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', color: '#4ade80' }}>
-                                    <i className="fas fa-check-circle"></i> NEW USER - Ready to Login!
+                                <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>
+                                    <i className="fas fa-key"></i> Your Login Credentials
                                 </h3>
-                                <p style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '1rem' }}>
-                                    Congratulations! As a <strong style={{ color: '#4ade80' }}>NEW USER</strong>, your registration is complete. Use these credentials to login:
-                                </p>
                                 <div style={{ textAlign: 'left', maxWidth: '300px', margin: '0 auto' }}>
                                     {name && (
                                         <p style={{ margin: '0.5rem 0', color: '#aaa', fontSize: '0.9rem' }}>
@@ -106,15 +102,12 @@ const ResetSuccess = () => {
                                         </p>
                                     )}
                                     <p style={{ margin: '0.5rem 0', color: '#aaa', fontSize: '0.9rem' }}>
-                                        <strong>Computer Code:</strong> <span style={{ color: '#4ade80', fontSize: '1.1rem', fontWeight: 'bold' }}>{computerCode}</span>
+                                        <strong>Computer Code:</strong> <span style={{ color: '#4ade80', fontSize: '1.1rem' }}>{computerCode}</span>
                                     </p>
                                     <p style={{ margin: '0.5rem 0', color: '#aaa', fontSize: '0.9rem' }}>
                                         <strong>Password:</strong> <span style={{ color: '#fff' }}>[Your new password]</span>
                                     </p>
                                 </div>
-                                <p style={{ color: '#4ade80', fontSize: '0.85rem', marginTop: '1rem', marginBottom: 0, textAlign: 'center' }}>
-                                    <i className="fas fa-info-circle"></i> You can login immediately with your Computer Code!
-                                </p>
                             </div>
                         )
                     )}
