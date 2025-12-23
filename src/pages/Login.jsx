@@ -57,10 +57,16 @@ const Login = () => {
         setError('');
 
         try {
+            console.log('🔐 Login attempt - Mode:', loginMode);
+            console.log('Identifier:', identifier);
+            console.log('Password length:', password.length);
+
             // Use unified login endpoint for both student and admin
             const payload = loginMode === 'student'
                 ? { computerCode: identifier, password }
                 : { username: identifier, password };
+
+            console.log('Payload being sent:', { ...payload, password: '***' });
 
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
@@ -69,6 +75,8 @@ const Login = () => {
             });
 
             const data = await response.json();
+            console.log('Response status:', response.status);
+            console.log('Response data:', data);
 
             if (response.ok) {
                 // Store token
