@@ -251,13 +251,19 @@ const Register = () => {
             const isIdScanComplete = scannedData.name && scannedData.code && scannedData.institution;
 
             if (!isIdScanComplete) {
+                console.log("Incomplete scan detected - auto-rescanning in 2 seconds...");
                 // Incomplete scan detected - auto-rescan after 2 seconds
                 const timer = setTimeout(() => {
+                    console.log("Auto-rescan triggered!");
                     setScannedData(null);
                     setIdCameraImg(null);
                     setVerificationStage('ID_AUTO_CAPTURE');
                     setScanStatus('Auto-restarting scan...');
                     setScanBuffer([]);
+
+                    // Restart camera
+                    setCameraMode('environment');
+                    startCamera('environment');
                 }, 2000);
 
                 return () => clearTimeout(timer);
