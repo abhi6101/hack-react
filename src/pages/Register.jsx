@@ -27,6 +27,7 @@ const Register = () => {
         aadharNumber: '',
         dob: '',
         gender: '',
+        address: '', // Aadhar address
         password: '',
         confirmPassword: ''
     });
@@ -1847,6 +1848,7 @@ const Register = () => {
                 aadharNumber: aadharData?.aadharNumber || '',
                 dob: aadharData?.dob || '',
                 gender: aadharData?.gender || '',
+                address: aadharData?.address || '', // Aadhar address (more accurate than ID card)
                 role: 'USER'
             }));
         }
