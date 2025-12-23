@@ -280,12 +280,18 @@ const Register = () => {
                         {verificationStage === 'AADHAR_AUTO_CAPTURE' && (
                             <div style={{
                                 position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                                width: '200px', height: '200px',
-                                border: '2px dashed #4ade80', borderRadius: '12px',
-                                boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)', // Dim outside area
-                                pointerEvents: 'none', zIndex: 15
+                                width: '260px', height: '260px',
+                                boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.95)', // Virtually hide outer area
+                                pointerEvents: 'none', zIndex: 15,
+                                borderRadius: '20px'
                             }}>
-                                <div style={{ position: 'absolute', top: '-25px', width: '100%', textAlign: 'center', color: '#4ade80', fontWeight: 'bold', fontSize: '0.9rem' }}>ALIGN QR CODE</div>
+                                {/* Modern Viewfinder Corners */}
+                                <div style={{ position: 'absolute', top: 0, left: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderTopLeftRadius: '16px' }}></div>
+                                <div style={{ position: 'absolute', top: 0, right: 0, width: '40px', height: '40px', borderTop: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderTopRightRadius: '16px' }}></div>
+                                <div style={{ position: 'absolute', bottom: 0, left: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderLeft: '4px solid #4ade80', borderBottomLeftRadius: '16px' }}></div>
+                                <div style={{ position: 'absolute', bottom: 0, right: 0, width: '40px', height: '40px', borderBottom: '4px solid #4ade80', borderRight: '4px solid #4ade80', borderBottomRightRadius: '16px' }}></div>
+
+                                <div style={{ position: 'absolute', top: '-40px', width: '100%', textAlign: 'center', color: '#4ade80', fontWeight: 'bold', fontSize: '1rem', textShadow: '0 2px 4px black' }}>SCAN AADHAR QR</div>
                             </div>
                         )}
 
