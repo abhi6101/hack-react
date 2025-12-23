@@ -730,9 +730,15 @@ const AdminDashboard = () => {
         const payload = {
             username: userForm.username,
             email: userForm.email,
-            password: userForm.password,
             role: userForm.role
         };
+
+        // Only include password if:
+        // 1. Creating new user (editingUser is null), OR
+        // 2. Editing user AND password field is not empty
+        if (!editingUser || (editingUser && userForm.password.trim() !== '')) {
+            payload.password = userForm.password;
+        }
 
         // Add role-specific fields
         if (userForm.role === 'DEPT_ADMIN' && userForm.adminBranch) {
