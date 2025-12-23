@@ -1376,8 +1376,8 @@ const Register = () => {
                     // Redirect directly to login after short delay
                     setTimeout(() => navigate('/login'), 2000);
                 } else {
-                    // NEW USER: Redirect to email verification
-                    setTimeout(() => navigate(`/verify-account?email=${encodeURIComponent(formData.email)}`), 1500);
+                    // NEW USER: Redirect to login (email verification sent automatically)
+                    setTimeout(() => navigate('/login'), 1500);
                 }
             } else {
                 setError(result.message || 'Registration failed.'); setLoading(false);
