@@ -12,7 +12,6 @@ import ForgotPassword from './pages/ForgotPassword';
 import VerifyOTP from './pages/VerifyOTP';
 import ResetPassword from './pages/ResetPassword';
 import ResetSuccess from './pages/ResetSuccess';
-import AccountRecovery from './pages/AccountRecovery';
 import Jobs from './pages/Jobs';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Interview from './pages/Interview';
@@ -30,14 +29,13 @@ import BlogPost from './pages/BlogPost';
 import Gallery from './pages/Gallery';
 import Videos from './pages/Videos';
 import Contact from './pages/Contact';
-import VerifyAccount from './pages/VerifyAccount';
 import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
 
 function Layout({ children }) {
     const location = useLocation();
     const navigate = useNavigate(); // Add hook
-    const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success', '/account-recovery'];
+    const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -122,8 +120,6 @@ function App() {
                     <Route path="/verify-otp" element={<VerifyOTP />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/reset-success" element={<ResetSuccess />} />
-                    <Route path="/account-recovery" element={<AccountRecovery />} />
-                    <Route path="/verify-account" element={<VerifyAccount />} />
                     <Route path="/onboarding" element={<Onboarding />} />
                     <Route path="/jobs" element={<Jobs />} />
                     <Route path="/resume" element={<ResumeAnalysis />} />
@@ -141,7 +137,6 @@ function App() {
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/videos" element={<Videos />} />
                     <Route path="/contact" element={<Contact />} />
-                    <Route path="/verify-account" element={<VerifyAccount />} />
                 </Routes>
             </Layout>
         </Router>
