@@ -274,20 +274,30 @@ const Register = () => {
                         document.body
                     )}
 
-                    {/* Information Panels - Shown in white space when flash is active */}
-                    {isFlashActive && ReactDOM.createPortal(
+                    {/* Information Panels - Always visible, styling adapts to flash state */}
+                    {ReactDOM.createPortal(
                         <>
                             {/* Left Panel - Instructions */}
                             <div style={{
                                 position: 'fixed', left: '20px', top: '50%', transform: 'translateY(-50%)',
                                 zIndex: 9999, maxWidth: '250px',
-                                background: 'rgba(0,0,0,0.05)', padding: '20px', borderRadius: '12px',
-                                border: '1px solid rgba(0,0,0,0.1)'
+                                background: isFlashActive ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.1)',
+                                padding: '20px', borderRadius: '12px',
+                                border: isFlashActive ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.2)',
+                                backdropFilter: 'blur(10px)'
                             }}>
-                                <h3 style={{ margin: '0 0 15px 0', fontSize: '1.1rem', color: '#000', fontWeight: 'bold' }}>
+                                <h3 style={{
+                                    margin: '0 0 15px 0', fontSize: '1.1rem',
+                                    color: isFlashActive ? '#000' : '#fff',
+                                    fontWeight: 'bold'
+                                }}>
                                     📋 Instructions
                                 </h3>
-                                <ul style={{ margin: 0, paddingLeft: '20px', color: '#333', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                                <ul style={{
+                                    margin: 0, paddingLeft: '20px',
+                                    color: isFlashActive ? '#333' : '#ddd',
+                                    fontSize: '0.9rem', lineHeight: '1.6'
+                                }}>
                                     <li>Hold document steady</li>
                                     <li>Ensure good lighting</li>
                                     <li>Align within frame</li>
@@ -299,19 +309,35 @@ const Register = () => {
                             <div style={{
                                 position: 'fixed', right: '20px', top: '50%', transform: 'translateY(-50%)',
                                 zIndex: 9999, maxWidth: '250px',
-                                background: 'rgba(0,0,0,0.05)', padding: '20px', borderRadius: '12px',
-                                border: '1px solid rgba(0,0,0,0.1)'
+                                background: isFlashActive ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.1)',
+                                padding: '20px', borderRadius: '12px',
+                                border: isFlashActive ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.2)',
+                                backdropFilter: 'blur(10px)'
                             }}>
-                                <h3 style={{ margin: '0 0 15px 0', fontSize: '1.1rem', color: '#000', fontWeight: 'bold' }}>
-                                    ⚡ Flash Active
+                                <h3 style={{
+                                    margin: '0 0 15px 0', fontSize: '1.1rem',
+                                    color: isFlashActive ? '#000' : '#fff',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {isFlashActive ? '⚡ Flash Active' : '💡 Tips'}
                                 </h3>
-                                <p style={{ margin: '0 0 10px 0', color: '#333', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                                    Screen flash is illuminating your document for better visibility.
+                                <p style={{
+                                    margin: '0 0 10px 0',
+                                    color: isFlashActive ? '#333' : '#ddd',
+                                    fontSize: '0.9rem', lineHeight: '1.6'
+                                }}>
+                                    {isFlashActive
+                                        ? 'Screen flash is illuminating your document for better visibility.'
+                                        : 'Use the flash button to brighten the screen in low light conditions.'
+                                    }
                                 </p>
                                 <div style={{
-                                    padding: '10px', background: 'rgba(251, 191, 36, 0.2)',
-                                    borderRadius: '8px', border: '1px solid rgba(251, 191, 36, 0.3)',
-                                    fontSize: '0.85rem', color: '#000'
+                                    padding: '10px',
+                                    background: isFlashActive ? 'rgba(251, 191, 36, 0.2)' : 'rgba(251, 191, 36, 0.15)',
+                                    borderRadius: '8px',
+                                    border: isFlashActive ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid rgba(251, 191, 36, 0.2)',
+                                    fontSize: '0.85rem',
+                                    color: isFlashActive ? '#000' : '#fbbf24'
                                 }}>
                                     💡 Tip: Click ⚡ to toggle flash
                                 </div>
