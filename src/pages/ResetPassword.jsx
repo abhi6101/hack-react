@@ -100,7 +100,9 @@ const ResetPassword = () => {
 
                 // Determine profile status from userData (saved during VerifyOTP)
                 // If computerCode is missing, it's an Old User (Incomplete)
-                const isLegacyUser = !userData.computerCode;
+                // EXCEPTION: Admins don't have computerCode but don't need migration
+                const isLegacyUser = !userData.computerCode &&
+                    (!userData.role || !userData.role.includes('ADMIN'));
 
                 if (isLegacyUser) {
                     // OLD USER - Profile incomplete, needs to complete registration
