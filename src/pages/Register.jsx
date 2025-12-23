@@ -14,6 +14,7 @@ const Register = () => {
     const [formData, setFormData] = useState({
         username: '',
         fullName: '', // Added for verified name
+        fatherName: '', // Father's name from Aadhar
         email: '',
         role: 'USER', // Default to USER
         branch: '',
@@ -1839,6 +1840,7 @@ const Register = () => {
             setFormData(prev => ({
                 ...prev,
                 fullName: scannedData.name,
+                fatherName: aadharData?.fatherName || scannedData.fatherName || '', // Prioritize Aadhar father name
                 computerCode: scannedData.code ? scannedData.code.toString().replace(/^0+/, '').trim() : '',
                 branch: branchCode,
                 username: scannedData.code ? scannedData.code.toString().replace(/^0+/, '').trim() : '',
