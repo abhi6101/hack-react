@@ -8,7 +8,7 @@ import jsQR from 'jsqr';
 import '../styles/register.css';
 
 
-const TARGET_SCANS = 10; // Optimized scan count for speed/accuracy
+const TARGET_SCANS = 5; // Reduced for faster capture
 
 const Register = () => {
     const navigate = useNavigate();
