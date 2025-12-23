@@ -7,7 +7,7 @@ import jsQR from 'jsqr';
 import '../styles/register.css';
 
 
-const TARGET_SCANS = 15; // Increased scan count for better accuracy
+const TARGET_SCANS = 10; // Optimized scan count for speed/accuracy
 
 const Register = () => {
     const navigate = useNavigate();
@@ -85,6 +85,7 @@ const Register = () => {
     const [flash, setFlash] = useState(false); // Flash Effect State
     const [errorFlash, setErrorFlash] = useState(false); // Red Alert State
     const [scanStatus, setScanStatus] = useState("Align Document"); // Feedback State
+    const [isLowLight, setIsLowLight] = useState(false); // Screen Flash State
 
     // --- Geolocation Capture (Forensic Trail) ---
     const captureLocation = () => {
@@ -229,7 +230,13 @@ const Register = () => {
             return (
                 <div className="animate-fade-in text-center">
                     <h2 className="mb-4" style={{ textAlign: 'center' }}>Live Scan</h2>
-                    <div style={{ position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', border: '2px solid #667eea', background: '#000' }}>
+                    <div style={{
+                        position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto',
+                        borderRadius: '12px', overflow: 'hidden',
+                        border: isLowLight ? '20px solid #ffffff' : '2px solid #667eea', // Ring Light Effect
+                        background: '#000',
+                        transition: 'border 0.3s ease'
+                    }}>
                         <video
                             ref={videoRef}
                             style={{
@@ -281,7 +288,7 @@ const Register = () => {
                             <div style={{
                                 position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                                 width: '260px', height: '260px',
-                                boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.95)', // Virtually hide outer area
+                                boxShadow: `0 0 0 9999px ${isLowLight ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`, // Auto-Flash: White screen if dark
                                 pointerEvents: 'none', zIndex: 15,
                                 borderRadius: '20px'
                             }}>
@@ -1009,6 +1016,24 @@ const Register = () => {
         canvasRef.current.width = videoRef.current.videoWidth;
         canvasRef.current.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0);
+
+        // LIGHTING CHECK (Screen Flash Feature)
+        try {
+            const centerX = Math.floor(canvasRef.current.width / 2);
+            const centerY = Math.floor(canvasRef.current.height / 2);
+            const pData = context.getImageData(centerX - 25, centerY - 25, 50, 50).data;
+            let totalBrightness = 0;
+            const sample = pData.length / 4;
+
+            for (let i = 0; i < pData.length; i += 16) {
+                const r = pData[i];
+                const g = pData[i + 1];
+                const b = pData[i + 2];
+                totalBrightness += (r + g + b) / 3;
+            }
+            const avgBrightness = totalBrightness / (sample / 4);
+            setIsLowLight(avgBrightness < 60);
+        } catch (err) { }
 
         // -------------------------
         // QR CODE SCANNING (SECURE BYPASS)
