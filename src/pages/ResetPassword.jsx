@@ -77,6 +77,12 @@ const ResetPassword = () => {
 
         setLoading(true);
 
+        console.log('🔐 Password Reset - Starting...');
+        console.log('Email:', email);
+        console.log('Token present:', !!token);
+        console.log('New password length:', newPassword.length);
+        console.log('Password strength:', passwordStrength);
+
         try {
             const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
                 method: 'POST',
@@ -90,9 +96,12 @@ const ResetPassword = () => {
                 })
             });
 
+            console.log('Response status:', response.status);
             const data = await response.json();
+            console.log('Response data:', data);
 
             if (response.ok) {
+                console.log('✅ Password reset successful!');
                 // Clear session storage
                 sessionStorage.removeItem('recoveryEmail');
                 sessionStorage.removeItem('recoveryToken');
@@ -128,11 +137,12 @@ const ResetPassword = () => {
                     });
                 }
             } else {
+                console.error('❌ Password reset failed:', data.message);
                 setError(data.message || 'Failed to reset password. Please try again.');
             }
             setLoading(false);
         } catch (err) {
-            console.error('Reset password error:', err);
+            console.error('❌ Reset password error:', err);
             setError('Network error. Please try again.');
             setLoading(false);
         }
