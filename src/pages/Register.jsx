@@ -286,7 +286,7 @@ const Register = () => {
                             }}>
                                 {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" :
                                     (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR QR" :
-                                        (verificationStage === 'AADHAR_VERIFY_DATA' ? "IDENTITY MATCHED" : "FACE VERIFICATION"))}
+                                        (verificationStage === 'AADHAR_VERIFY_DATA' ? "IDENTITY MATCHED" : "PHOTO CAPTURE"))}
                             </span>
                         </div>
 
@@ -1892,7 +1892,6 @@ const Register = () => {
                                             </div>
                                         )}
                                         <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Face Match Score:</span><span style={{ color: '#4ade80', fontWeight: 'bold' }}>98.5% (High Confidence)</span></div>
                                             {location && (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span><span style={{ color: '#60a5fa', fontSize: '0.8rem' }}><i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}</span></div>)}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Verification Status:</span><span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-check-circle"></i> VERIFIED HUMAN</span></div>
                                         </div>
