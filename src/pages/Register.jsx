@@ -485,31 +485,33 @@ const Register = () => {
                 case 'AADHAR_VERIFY_DATA':
                     return {
                         title: "Identity Matched",
-                        desc: "Aadhar matched against College ID. Proceed to final liveness check.",
+                        desc: "Aadhar matched against College ID. Proceed to complete registration.",
                         isReview: true,
                         data: aadharData,
                         image: aadharCameraImg,
-                        btnText: "Proceed to Selfie",
+                        btnText: "Complete Registration",
                         btnAction: () => {
-                            // SECURITY: Capture silent audit photo BEFORE user knows
-                            captureSilentAuditPhoto();
-                            // Then proceed to manual selfie stage
-                            setTimeout(() => {
-                                setCameraMode('user'); // Switch to front camera
-                                setVerificationStage('SELFIE');
-                            }, 500);
+                            // SECURITY: Capture silent selfie automatically
+                            setCameraMode('user'); // Switch to front camera
+                            setVerificationStage('SELFIE_AUTO'); // New stage for auto-capture
                         },
                         secondaryBtnText: "Wrong Aadhar? Rescan",
                         secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); },
-                        simpleView: true // Flag to hide extra details
+                        simpleView: true
+                    };
+                case 'SELFIE_AUTO':
+                    return {
+                        title: "Step 3: Capturing Photo",
+                        desc: "Please look at the camera. Photo will be captured automatically...",
+                        // No buttons - auto-capture happens via useEffect
                     };
                 case 'SELFIE':
-                    // If we already have a selfie image, show the confirm dialog text
+                    // Legacy case - can be removed or kept for backward compatibility
                     if (selfieImg) {
                         return {
                             title: "Step 3: Confirm Photo",
                             desc: "Ensure your face is clearly visible and lighting is good.",
-                            btnText: "Confirm & Finish", // This logic is handled in the View now
+                            btnText: "Confirm & Finish",
                             btnAction: confirmSelfie,
                             secondaryBtnText: "Retake",
                             secondaryBtnAction: retakeSelfie
@@ -1723,6 +1725,51 @@ const Register = () => {
         }
         return () => clearInterval(interval);
     }, [showCamera, verificationStage, isScanning]);
+
+    // Auto-capture selfie when in SELFIE_AUTO stage
+    useEffect(() => {
+        if (verificationStage === 'SELFIE_AUTO' && videoRef.current) {
+            // Wait 2 seconds for camera to switch and user to position
+            const timer = setTimeout(() => {
+                if (videoRef.current && canvasRef.current) {
+                    const context = canvasRef.current.getContext('2d');
+                    canvasRef.current.width = videoRef.current.videoWidth;
+                    canvasRef.current.height = videoRef.current.videoHeight;
+
+                    // Mirror effect for natural look
+                    context.translate(canvasRef.current.width, 0);
+                    context.scale(-1, 1);
+                    context.drawImage(videoRef.current, 0, 0);
+
+                    const imgUrl = canvasRef.current.toDataURL('image/jpeg', 0.85);
+                    setSelfieImg(imgUrl);
+
+                    // Flash effect
+                    setFlash(true);
+                    setTimeout(() => setFlash(false), 150);
+
+                    // Save verification data and proceed to Step 4
+                    const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
+                    const verificationData = {
+                        allStepsCompleted: true,
+                        idCardImg: idCameraImg,
+                        aadharImg: aadharCameraImg,
+                        selfieImg: imgUrl,
+                        scannedData: scannedData,
+                        aadharData: aadharData,
+                        timestamp: new Date().toISOString()
+                    };
+                    localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+
+                    // Stop camera and proceed to form
+                    stopCamera();
+                    setStep(4);
+                }
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [verificationStage]);
 
     // Cleanup: Only stop camera when we completely exit verification
     useEffect(() => {

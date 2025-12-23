@@ -1,4 +1,3 @@
-import * as faceapi from 'face-api.js';
 import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,13 +12,6 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
-    // NEW: Face Verification State
-    const [showFaceCheck, setShowFaceCheck] = useState(false);
-    const [faceCheckStatus, setFaceCheckStatus] = useState("Initializing AI...");
-    const [tempAuthData, setTempAuthData] = useState(null);
-    const videoRef = React.useRef(null);
-    const canvasRef = React.useRef(null); // This was in the instruction but not used in the provided logic, keeping it for completeness.
 
     // Load remembered credentials based on mode
     useEffect(() => {
@@ -59,144 +51,6 @@ const Login = () => {
         }
     };
 
-    const startFaceVerification = async (authData) => {
-        setTempAuthData(authData);
-        setShowFaceCheck(true);
-        setFaceCheckStatus("Loading AI Models...");
-
-        try {
-            // Load Models from CDN (Official Repo)
-            const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
-            await Promise.all([
-                faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-                faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-                faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
-            ]);
-
-            setFaceCheckStatus("Starting Camera...");
-            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-            }
-        } catch (err) {
-            console.error(err);
-            setFaceCheckStatus("Error loading AI. Skipping...");
-            setTimeout(() => finalizeLogin(authData), 2000);
-        }
-    };
-
-    const handleVideoPlay = async () => {
-        if (!videoRef.current || !tempAuthData) return;
-
-        setFaceCheckStatus("Scanning Face...");
-        const video = videoRef.current;
-
-        // Loop/Interval for detection
-        const interval = setInterval(async () => {
-            if (!videoRef.current) return;
-
-            // 1. Detect Live Face
-            const detection = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
-
-            if (detection) {
-                setFaceCheckStatus("Face Detected. Verifying...");
-
-                // 2. Load Reference Image (Profile Pic)
-                // Note: In real app, we need to fetch the image blob. 
-                // For now, if no profile pic, we skip.
-                if (!tempAuthData.profilePictureUrl) {
-                    clearInterval(interval);
-                    setFaceCheckStatus("No Reference Photo. Logging in...");
-                    setTimeout(() => finalizeLogin(tempAuthData), 1000);
-                    return;
-                }
-
-                // Verify Logic (Conceptual - needs proper image fetching)
-                // const refImg = await faceapi.fetchImage(tempAuthData.profilePictureUrl);
-                // const refDetection = await faceapi.detectSingleFace(refImg)...
-
-                // SIMULATION FOR DEMO:
-                // If a face is clearly seen, we assume it's the user for now 
-                // (Since we can't easily cross-origin fetch the profile pic without backend proxy)
-                clearInterval(interval);
-                setFaceCheckStatus("✅ Face Verified!");
-                setTimeout(() => finalizeLogin(tempAuthData), 1000);
-            }
-        }, 1000);
-    };
-
-    const finalizeLogin = (data) => {
-        // Stop Camera
-        if (videoRef.current && videoRef.current.srcObject) {
-            videoRef.current.srcObject.getTracks().forEach(t => t.stop());
-        }
-        setShowFaceCheck(false); // Hide the overlay
-
-        // Original Success Logic
-        if (data.token) {
-            localStorage.setItem('authToken', data.token);
-        } else {
-            setError('Login succeeded but no token received. Please contact support.');
-            setLoading(false);
-            return;
-        }
-        if (data.username) localStorage.setItem('username', data.username);
-
-        // Handle Remember Me
-        if (loginMode === 'student') {
-            if (rememberMe) {
-                localStorage.setItem('rememberMe', 'true');
-                localStorage.setItem('savedComputerCode', identifier);
-            } else {
-                localStorage.removeItem('rememberMe');
-                localStorage.removeItem('savedComputerCode');
-            }
-        } else {
-            if (rememberMe) {
-                localStorage.setItem('adminRememberMe', 'true');
-                localStorage.setItem('savedAdminUsername', identifier);
-            } else {
-                localStorage.removeItem('adminRememberMe');
-                localStorage.removeItem('savedAdminUsername');
-            }
-        }
-
-        // Handle role-based navigation
-        const roles = data.roles || [];
-        const isSuperAdmin = roles.includes('ROLE_SUPER_ADMIN');
-        const isCompanyAdmin = roles.includes('ROLE_COMPANY_ADMIN');
-        const isDeptAdmin = roles.includes('ROLE_DEPT_ADMIN');
-        const isLegacyAdmin = roles.includes('ROLE_ADMIN');
-        const isAdmin = isSuperAdmin || isCompanyAdmin || isLegacyAdmin || isDeptAdmin;
-
-        if (data.companyName) {
-            localStorage.setItem('companyName', data.companyName);
-        } else {
-            localStorage.removeItem('companyName');
-        }
-
-        if (data.branch) {
-            localStorage.setItem('adminBranch', data.branch);
-        } else {
-            localStorage.removeItem('adminBranch');
-        }
-
-        if (isAdmin) {
-            let role = 'ADMIN';
-            if (isSuperAdmin) role = 'SUPER_ADMIN';
-            if (isCompanyAdmin) role = 'COMPANY_ADMIN';
-            if (isDeptAdmin) role = 'DEPT_ADMIN';
-
-            localStorage.setItem('userRole', role);
-            localStorage.setItem('isAdmin', 'true');
-            navigate('/admin');
-        } else {
-            localStorage.setItem('userRole', 'USER');
-            navigate('/');
-        }
-        setLoading(false);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -208,7 +62,7 @@ const Login = () => {
                 ? { computerCode: identifier, password }
                 : { username: identifier, password };
 
-            const response = await fetch(`${API_BASE_URL} /auth/login`, {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -217,13 +71,69 @@ const Login = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // SUCCESS: Trigger Face Check instead of immediate login
-                if (loginMode === 'student') {
-                    setLoading(false); // Stop loading indicator while face check is active
-                    startFaceVerification(data);
+                // Store token
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
                 } else {
-                    finalizeLogin(data);
+                    setError('Login succeeded but no token received. Please contact support.');
+                    setLoading(false);
+                    return;
                 }
+                if (data.username) localStorage.setItem('username', data.username);
+
+                // Handle Remember Me
+                if (loginMode === 'student') {
+                    if (rememberMe) {
+                        localStorage.setItem('rememberMe', 'true');
+                        localStorage.setItem('savedComputerCode', identifier);
+                    } else {
+                        localStorage.removeItem('rememberMe');
+                        localStorage.removeItem('savedComputerCode');
+                    }
+                } else {
+                    if (rememberMe) {
+                        localStorage.setItem('adminRememberMe', 'true');
+                        localStorage.setItem('savedAdminUsername', identifier);
+                    } else {
+                        localStorage.removeItem('adminRememberMe');
+                        localStorage.removeItem('savedAdminUsername');
+                    }
+                }
+
+                // Handle role-based navigation
+                const roles = data.roles || [];
+                const isSuperAdmin = roles.includes('ROLE_SUPER_ADMIN');
+                const isCompanyAdmin = roles.includes('ROLE_COMPANY_ADMIN');
+                const isDeptAdmin = roles.includes('ROLE_DEPT_ADMIN');
+                const isLegacyAdmin = roles.includes('ROLE_ADMIN');
+                const isAdmin = isSuperAdmin || isCompanyAdmin || isLegacyAdmin || isDeptAdmin;
+
+                if (data.companyName) {
+                    localStorage.setItem('companyName', data.companyName);
+                } else {
+                    localStorage.removeItem('companyName');
+                }
+
+                if (data.branch) {
+                    localStorage.setItem('adminBranch', data.branch);
+                } else {
+                    localStorage.removeItem('adminBranch');
+                }
+
+                if (isAdmin) {
+                    let role = 'ADMIN';
+                    if (isSuperAdmin) role = 'SUPER_ADMIN';
+                    if (isCompanyAdmin) role = 'COMPANY_ADMIN';
+                    if (isDeptAdmin) role = 'DEPT_ADMIN';
+
+                    localStorage.setItem('userRole', role);
+                    localStorage.setItem('isAdmin', 'true');
+                    navigate('/admin');
+                } else {
+                    localStorage.setItem('userRole', 'USER');
+                    navigate('/');
+                }
+                setLoading(false);
             } else {
                 setError(data.message || 'Login failed. Please check your credentials.');
                 setLoading(false);
@@ -237,31 +147,6 @@ const Login = () => {
 
     return (
         <div className="login-body-wrapper">
-            {/* FACE VERIFICATION OVERLAY */}
-            {showFaceCheck && (
-                <div style={{
-                    position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-                    background: 'rgba(0,0,0,0.95)', zIndex: 9999,
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-                }}>
-                    <h2 style={{ color: '#fff', marginBottom: '20px' }}>Biometric Verification</h2>
-                    <div style={{
-                        width: '300px', height: '300px', borderRadius: '50%', overflow: 'hidden',
-                        border: '4px solid #667eea', position: 'relative'
-                    }}>
-                        <video
-                            ref={videoRef}
-                            autoPlay muted
-                            onPlay={handleVideoPlay}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                    </div>
-                    <p style={{ color: '#4ade80', fontSize: '1.2rem', marginTop: '20px', fontWeight: 'bold' }}>
-                        {faceCheckStatus}
-                    </p>
-                </div>
-            )}
-
             <section className="login-section">
                 <div className="login-card surface-glow">
                     <Link to="/" style={{
