@@ -672,15 +672,19 @@ const Register = () => {
                                     </div>
                                 )}
 
-                                {/* DOB & Gender */}
-                                <div>
-                                    <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Date of Birth</div>
-                                    <div style={{ color: '#fff', fontSize: '1rem' }}>{content.data?.dob || 'N/A'}</div>
-                                </div>
-                                <div>
-                                    <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Gender</div>
-                                    <div style={{ color: '#fff', fontSize: '1rem' }}>{content.data?.gender || 'N/A'}</div>
-                                </div>
+                                {/* DOB & Gender - Only for Aadhar Step */}
+                                {content.simpleView && (
+                                    <>
+                                        <div>
+                                            <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Date of Birth</div>
+                                            <div style={{ color: '#fff', fontSize: '1rem' }}>{content.data?.dob || 'N/A'}</div>
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Gender</div>
+                                            <div style={{ color: '#fff', fontSize: '1rem' }}>{content.data?.gender || 'N/A'}</div>
+                                        </div>
+                                    </>
+                                )}
 
                                 {/* Address (Full Width) */}
                                 {!content.simpleView && content.data?.address && (
