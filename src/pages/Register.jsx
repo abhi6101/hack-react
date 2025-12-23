@@ -90,6 +90,8 @@ const Register = () => {
     const [manualFlash, setManualFlash] = useState(false); // User-forced flash
     const [qrDetected, setQrDetected] = useState(false); // QR code detected in frame
     const [qrGuidance, setQrGuidance] = useState(""); // Position guidance ("Move closer", etc.)
+    const [qrPhotos, setQrPhotos] = useState([]); // Captured QR photos for scanning
+    const [qrPhotoCount, setQrPhotoCount] = useState(0); // Number of photos captured
 
 
     // --- Audio Feedback Functions ---
@@ -262,6 +264,84 @@ const Register = () => {
             }
         }
     }, [verificationStage, scannedData]);
+
+    // Process captured QR photos
+    useEffect(() => {
+        if (qrPhotos.length > 0 && verificationStage === 'AADHAR_AUTO_CAPTURE' && !aadharData) {
+            const processPhotos = async () => {
+                for (let i = 0; i < qrPhotos.length; i++) {
+                    try {
+                        setScanStatus(`Scanning photo ${i + 1}/${qrPhotos.length}...`);
+
+                        // Convert base64 to image
+                        const img = new Image();
+                        img.src = qrPhotos[i];
+                        await new Promise(resolve => img.onload = resolve);
+
+                        // Create canvas and get image data
+                        const tempCanvas = document.createElement('canvas');
+                        tempCanvas.width = img.width;
+                        tempCanvas.height = img.height;
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCtx.drawImage(img, 0, 0);
+
+                        const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "attemptBoth" });
+
+                        if (code && code.data && (code.data.includes("uid=") || code.data.includes("</PrintLetterBarcodeData>"))) {
+                            // Extract all details
+                            const uid = code.data.match(/uid="(\d+)"/)?.[1] || "";
+                            const name = code.data.match(/name="([^"]+)"/)?.[1] || "";
+                            const dob = code.data.match(/dob="([^"]+)"/)?.[1] || code.data.match(/yob="(\d+)"/)?.[1] || "";
+                            const gender = code.data.match(/gender="([^"]+)"/)?.[1] || "";
+                            const co = code.data.match(/co="([^"]+)"/)?.[1] || "";
+                            const loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
+                            const vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
+                            const dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
+                            const state = code.data.match(/state="([^"]+)"/)?.[1] || "";
+                            const pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
+
+                            // Check if we have complete details
+                            if (uid && name && (dob || gender)) {
+                                const fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
+
+                                const aadharInfo = {
+                                    name, aadharNumber: uid, dob,
+                                    gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender),
+                                    address: fullAddress,
+                                    fatherName: co.replace("S/O", "").replace("D/O", "").trim(),
+                                    details: { co, dist, state, pc }
+                                };
+
+                                setAadharData(aadharInfo);
+                                setManualFlash(false);
+                                setIsLowLight(false);
+                                setVerificationStage('AADHAR_VERIFY_DATA');
+                                playSuccessSound();
+                                setScanStatus("✅ Aadhar scanned successfully!");
+
+                                // Clear photos
+                                setQrPhotos([]);
+                                setQrPhotoCount(0);
+                                break; // Stop processing
+                            }
+                        }
+                    } catch (err) {
+                        console.log(`Error scanning photo ${i + 1}:`, err);
+                    }
+                }
+
+                // If no complete data found, reset and try again
+                if (!aadharData && qrPhotos.length >= 5) {
+                    setScanStatus("No complete data found. Please try again...");
+                    setQrPhotos([]);
+                    setQrPhotoCount(0);
+                }
+            };
+
+            processPhotos();
+        }
+    }, [qrPhotos, verificationStage, aadharData]);
 
     const getSemesterOptions = () => {
         const branchCode = formData.branch;
@@ -1353,6 +1433,15 @@ const Register = () => {
                         setQrGuidance("🎯 Center QR code");
                     } else {
                         setQrGuidance("✓ Perfect! Hold steady");
+
+                        // QR is well-positioned - capture photo for scanning
+                        if (qrPhotoCount < 5) {
+                            const photoData = canvasRef.current.toDataURL('image/jpeg', 0.95);
+                            setQrPhotos(prev => [...prev, photoData]);
+                            setQrPhotoCount(prev => prev + 1);
+                            setScanStatus(`Capturing photo ${qrPhotoCount + 1}/5...`);
+                            playBeep();
+                        }
                     }
 
                     // Check brightness in QR area
