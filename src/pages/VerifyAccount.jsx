@@ -22,13 +22,21 @@ const VerifyAccount = () => {
     const handleCodeChange = (e) => {
         const val = e.target.value.replace(/\D/g, '').substring(0, 6);
         setVerificationCode(val);
+
+        // Auto-submit when 6 digits are entered
+        if (val.length === 6) {
+            performVerification(val);
+        }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const performVerification = async (codeToVerify) => {
         setMessage({ text: '', type: '' });
 
-        if (!identifier || !verificationCode || verificationCode.length !== 6) {
+        if (!identifier || !codeToVerify || codeToVerify.length !== 6) {
+            if (!identifier) {
+                // If checking auto-submit but identifier is empty, just return (don't error yet, user might be typing email)
+                return;
+            }
             setMessage({ text: "Please enter a valid identifier and 6-digit code.", type: "error" });
             return;
         }
@@ -39,7 +47,7 @@ const VerifyAccount = () => {
             const response = await fetch(`${API_BASE_URL}/auth/verify-code`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ identifier, code: verificationCode })
+                body: JSON.stringify({ identifier, code: codeToVerify })
             });
 
             const result = await response.json();
@@ -58,6 +66,11 @@ const VerifyAccount = () => {
             setMessage({ text: "A network error occurred. Please try again.", type: "error" });
             setIsLoading(false);
         }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        performVerification(verificationCode);
     };
 
     return (
