@@ -2709,6 +2709,7 @@ const Register = () => {
                                                         setFormData(prev => ({ ...prev, enrollmentNumber: cleanVal }));
                                                     }}
                                                     style={{ textTransform: 'uppercase' }}
+                                                    autoComplete="off"
                                                 />
                                                 <small>Your official enrollment number from the institute</small>
                                             </div>
@@ -2720,7 +2721,7 @@ const Register = () => {
                             )}
                             <div className="form-group">
                                 <label htmlFor="email">Email Address</label>
-                                <input type="email" id="email" name="email" required placeholder="your.email@example.com" value={formData.email} onChange={handleChange} />
+                                <input type="email" id="email" name="email" required placeholder="your.email@example.com" value={formData.email} onChange={handleChange} autoComplete="off" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Password</label>
