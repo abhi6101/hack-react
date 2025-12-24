@@ -77,14 +77,16 @@ const Home = () => {
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
-                    <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                        <TextType
-                            text="Launch Your Career with Ease!"
-                            speed={80}
-                            delay={500}
-                            cursor={true}
-                        />
-                    </h1>
+                    {!user && (
+                        <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
+                            <TextType
+                                text="Launch Your Career with Ease!"
+                                speed={80}
+                                delay={500}
+                                cursor={true}
+                            />
+                        </h1>
+                    )}
                     {user && (
                         <div id="userWelcome" className="surface-glow">
                             <h2>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
