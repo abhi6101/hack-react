@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import GlassCard from '../components/ui/GlassCard';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 import '../styles/index.css';
 import '../styles/home.css';
-import '../styles/reactbits-effects.css';
 
 const GALLERY_IMAGES = [
     "/images/4E9A7129-copy.jpg",
@@ -17,31 +16,10 @@ const GALLERY_IMAGES = [
 const Home = () => {
     const [user, setUser] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [decryptComplete, setDecryptComplete] = useState(false);
     const navigate = useNavigate();
-    const spotlightRefs = useRef([]);
 
     // Custom Hook for Scroll Animations
     useScrollAnimation();
-
-    // Decrypt text animation on mount
-    useEffect(() => {
-        const timer = setTimeout(() => setDecryptComplete(true), 100);
-        return () => clearTimeout(timer);
-    }, []);
-
-    // Spotlight effect for cards
-    const handleMouseMove = (e, index) => {
-        const card = spotlightRefs.current[index];
-        if (!card) return;
-
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-        card.style.setProperty('--mouse-x', `${x}%`);
-        card.style.setProperty('--mouse-y', `${y}%`);
-    };
 
     const nextSlide = () => {
         setCurrentImageIndex((prev) => (prev + 1) % GALLERY_IMAGES.length);
@@ -77,41 +55,31 @@ const Home = () => {
 
     return (
         <main>
-            {/* Aurora Background Effect */}
-            <div className="aurora-bg"></div>
-            <div className="grid-motion-bg"></div>
-
             {/* Hero Section */}
             <section className="hero">
-                <div className="hero-content stagger-children">
-                    <h1 id="heroHeading" className={`hero-heading-block gradient-text-animated ${decryptComplete ? 'decrypt-text' : ''}`}>
-                        {"Launch Your Career with Ease!".split('').map((char, i) => (
-                            <span key={i} style={{ animationDelay: `${i * 0.03}s` }}>
-                                {char === ' ' ? '\u00A0' : char}
-                            </span>
-                        ))}
+                <div className="hero-content">
+                    <h1 id="heroHeading" className="hero-heading-block">
+                        Launch Your Career with Ease!
                     </h1>
                     {user && (
-                        <div id="userWelcome" className="fluid-glass spotlight-card blur-in"
-                            ref={el => spotlightRefs.current[0] = el}
-                            onMouseMove={(e) => handleMouseMove(e, 0)}>
+                        <div id="userWelcome" className="surface-glow">
                             <h2>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
                             <p>Account type: <span id="displayRole">{user.role}</span></p>
                         </div>
                     )}
-                    <p id="heroSubtitle" className="blur-in" style={{ animationDelay: '0.3s' }}>Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.</p>
-                    <div className="cta-btns scale-in" style={{ animationDelay: '0.5s' }}>
+                    <p id="heroSubtitle">Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.</p>
+                    <div className="cta-btns">
                         {localStorage.getItem('authToken') ? (
                             <>
-                                <Link to="/jobs" className="shiny-btn magnet-element">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
-                                <button onClick={handleLogout} className="shiny-btn magnet-element" style={{ background: 'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)' }}>
+                                <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
+                                <button onClick={handleLogout} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
                                     Logout
                                 </button>
                             </>
                         ) : (
                             <>
-                                <Link to="/register" id="registerBtn" className="shiny-btn magnet-element">Register Now</Link>
-                                <Link to="/login" className="shiny-btn magnet-element">Login</Link>
+                                <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
+                                <Link to="/login" className="btn btn-outline">Login</Link>
                             </>
                         )}
                     </div>
@@ -161,9 +129,7 @@ const Home = () => {
 
                 <div className="hub-grid">
                     <a href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" className="hub-card-link">
-                        <GlassCard className="hub-card fluid-glass spotlight-card electric-border glare-effect"
-                            ref={el => spotlightRefs.current[1] = el}
-                            onMouseMove={(e) => handleMouseMove(e, 1)}>
+                        <GlassCard className="hub-card">
                             <i className="fas fa-flask"></i>
                             <h3>Web Security Academy</h3>
                             <p>The definitive free resource for learning web application security from the creators of Burp Suite.</p>
@@ -172,9 +138,7 @@ const Home = () => {
                     </a>
 
                     <a href="https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37" target="_blank" rel="noopener noreferrer" className="hub-card-link">
-                        <GlassCard className="hub-card fluid-glass spotlight-card electric-border glare-effect"
-                            ref={el => spotlightRefs.current[2] = el}
-                            onMouseMove={(e) => handleMouseMove(e, 2)}>
+                        <GlassCard className="hub-card">
                             <i className="fab fa-js-square"></i>
                             <h3>Chai aur JavaScript</h3>
                             <p>Deep dive into JavaScript with Hitesh Choudhary. Perfect for mastering modern web development.</p>
@@ -183,9 +147,7 @@ const Home = () => {
                     </a>
 
                     <a href="https://www.hackthebox.com/" target="_blank" rel="noopener noreferrer" className="hub-card-link">
-                        <GlassCard className="hub-card fluid-glass spotlight-card electric-border glare-effect"
-                            ref={el => spotlightRefs.current[3] = el}
-                            onMouseMove={(e) => handleMouseMove(e, 3)}>
+                        <GlassCard className="hub-card">
                             <i className="fas fa-cube"></i>
                             <h3>Hack The Box</h3>
                             <p>Challenge your abilities with real-world lab scenarios and compete with a global community.</p>
