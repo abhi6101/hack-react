@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import CountUp from '../components/CountUp';
 import TextType from '../components/TextType';
 import LogoLoop from '../components/LogoLoop';
-import AnimatedBackground from '../components/AnimatedBackground';
 import '../styles/index.css';
 
 const Home = () => {
@@ -76,9 +75,6 @@ const Home = () => {
 
     return (
         <main>
-            {/* Animated Background - Gradient Orbs */}
-            <AnimatedBackground />
-
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
