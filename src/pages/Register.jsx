@@ -505,7 +505,7 @@ const Register = () => {
                                     color: '#fff',
                                     fontWeight: 'bold'
                                 }}>
-                                    💡 Tips
+                                    💡
                                 </h3>
                                 <p style={{
                                     margin: '0 0 10px 0',
