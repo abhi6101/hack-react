@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import CountUp from '../components/CountUp';
 import '../styles/index.css';
 
 const Home = () => {
@@ -178,10 +179,22 @@ const Home = () => {
             {/* Stats Section */}
             <section className="stats">
                 <div className="stats-container">
-                    <div className="stat-item"><h3>500+</h3><p>Companies Hiring</p></div>
-                    <div className="stat-item"><h3>10,000+</h3><p>Successful Placements</p></div>
-                    <div className="stat-item"><h3>95%</h3><p>Placement Rate</p></div>
-                    <div className="stat-item"><h3>50+</h3><p>Career Resources</p></div>
+                    <div className="stat-item">
+                        <h3><CountUp end={500} suffix="+" duration={2500} /></h3>
+                        <p>Companies Hiring</p>
+                    </div>
+                    <div className="stat-item">
+                        <h3><CountUp end={10000} suffix="+" duration={2500} /></h3>
+                        <p>Successful Placements</p>
+                    </div>
+                    <div className="stat-item">
+                        <h3><CountUp end={95} suffix="%" duration={2500} /></h3>
+                        <p>Placement Rate</p>
+                    </div>
+                    <div className="stat-item">
+                        <h3><CountUp end={50} suffix="+" duration={2500} /></h3>
+                        <p>Career Resources</p>
+                    </div>
                 </div>
             </section>
 
