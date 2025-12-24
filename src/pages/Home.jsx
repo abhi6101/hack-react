@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/index.css';
+import '../styles/home-interactive.css';
 
 const Home = () => {
     const [user, setUser] = useState(null);
