@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InterviewRoundsForm from '../components/InterviewRoundsForm';
+import ShinyText from '../components/ShinyText';
 import API_BASE_URL from '../config';
 import '../styles/admin.css';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
@@ -1083,7 +1084,7 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            {loadingProfiles ? <div className="loading-indicator">Loading profiles...</div> : (
+            {loadingProfiles ? <div className="loading-indicator"><ShinyText text="Loading profiles..." /></div> : (
                 <div className="table-container">
                     <table className="data-table">
                         <thead>
@@ -1194,7 +1195,7 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            {loadingActivity ? <div className="loading-indicator">Loading activity...</div> : (
+            {loadingActivity ? <div className="loading-indicator"><ShinyText text="Loading activity..." /></div> : (
                 <div className="table-container">
                     <table className="data-table">
                         <thead>
@@ -1287,7 +1288,7 @@ const AdminDashboard = () => {
                             <div className="company-stats-section" style={{ marginBottom: '2.5rem' }}>
                                 <h2 style={{ marginBottom: '1.5rem' }}>Company Performance</h2>
                                 {loadingStats ? (
-                                    <div className="loading-indicator">Loading company statistics...</div>
+                                    <div className="loading-indicator"><ShinyText text="Loading company statistics..." /></div>
                                 ) : (
                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                                         {companyStats.length === 0 ? <p>No company data available.</p> : companyStats.map((stat, index) => (
@@ -1591,7 +1592,7 @@ const AdminDashboard = () => {
                                     </button>
                                 )}
                             </div>
-                            {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
+                            {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator"><ShinyText text="Loading jobs..." /></div>}
                             {!loadingJobs && (
                                 <div className="table-responsive">
                                     {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
@@ -1801,7 +1802,7 @@ const AdminDashboard = () => {
                             <div className="card-header">
                                 <h3><i className="fas fa-users"></i> Registered Users</h3>
                             </div>
-                            {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
+                            {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator"><ShinyText text="Loading users..." /></div>}
                             {!loadingUsers && (
                                 <div className="table-responsive">
                                     {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
