@@ -1,7 +1,6 @@
 import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import ShinyText from '../components/ShinyText';
 import '../styles/login.css';
 
 const Login = () => {
@@ -289,7 +288,7 @@ const Login = () => {
                         </div>
 
                         <button type="submit" id="loginButton" className="btn btn-primary" disabled={loading}>
-                            {loading ? <ShinyText text="Logging in..." className="bright" /> : `Login as ${loginMode === 'student' ? 'Student' : 'Admin'} `}
+                            {loading ? 'Logging in...' : `Login as ${loginMode === 'student' ? 'Student' : 'Admin'} `}
                         </button>
                     </form>
                     <div className="login-footer">
