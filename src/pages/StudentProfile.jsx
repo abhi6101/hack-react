@@ -2,7 +2,6 @@ import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfilePictureUpload from '../components/ProfilePictureUpload';
-import ShinyText from '../components/ShinyText';
 import { getProfilePicture } from '../utils/avatar';
 import '../styles/profile.css';
 import '../styles/profile-picture.css';
@@ -87,7 +86,7 @@ const StudentProfile = () => {
         }
     };
 
-    if (loading) return <div className="loading"><ShinyText text="Loading..." className="bright" /></div>;
+    if (loading) return <div className="loading">Loading...</div>;
 
     return (
         <main className="profile-page">

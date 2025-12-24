@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // ProfileUpdateModal import removed
-import ShinyText from '../components/ShinyText';
 import API_BASE_URL from '../config';
 import '../styles/dashboard.css';
 
@@ -121,7 +120,7 @@ const StudentDashboard = () => {
         setLoading(false);
     };
 
-    if (loading) return <div className="loading"><i className="fas fa-spinner fa-spin"></i> <ShinyText text="Loading..." className="bright" /></div>;
+    if (loading) return <div className="loading"><i className="fas fa-spinner fa-spin"></i> Loading...</div>;
 
     return (
         <div style={{
