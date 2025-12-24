@@ -76,36 +76,134 @@
 /* Light Theme Styles */
 [data-theme="light"] {
     --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --text-primary: #1a1a1a;
-    --text-secondary: #4a5568;
-    --surface-bg: rgba(255, 255, 255, 0.8);
-    --border-color: rgba(0, 0, 0, 0.1);
-    --primary: #667eea;
-    --accent: #f093fb;
-    --primary-glow: rgba(102, 126, 234, 0.4);
+    --bg-secondary: #f0f4f8;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --surface-bg: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(100, 116, 139, 0.2);
+    --primary: #6366f1;
+    --accent: #ec4899;
+    --primary-glow: rgba(99, 102, 241, 0.3);
+    --neon-blue: #3b82f6;
+    --neon-purple: #8b5cf6;
+    --neon-pink: #ec4899;
 }
 
 [data-theme="light"] body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 50%, #ddd6fe 100%);
     color: var(--text-primary);
 }
 
 [data-theme="light"] .hero {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(240, 147, 251, 0.1) 100%);
+    background: linear-gradient(135deg,
+            rgba(99, 102, 241, 0.08) 0%,
+            rgba(236, 72, 153, 0.08) 50%,
+            rgba(139, 92, 246, 0.08) 100%);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
 }
 
 [data-theme="light"] .theme-toggler {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
 }
 
 [data-theme="light"] .theme-toggler:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
 }
 
 [data-theme="light"] .theme-toggler-track {
+    background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);
+}
+
+/* Light mode - Better card styling */
+[data-theme="light"] .surface-glow {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="light"] .btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+[data-theme="light"] .btn-outline {
+    border-color: #6366f1;
+    color: #6366f1;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="light"] .btn-outline:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+}
+
+/* Light mode - Stats section */
+[data-theme="light"] .stats {
+    background: linear-gradient(135deg,
+            rgba(99, 102, 241, 0.05) 0%,
+            rgba(236, 72, 153, 0.05) 100%);
+}
+
+[data-theme="light"] .stat-item h3 {
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Light mode - Logo loop */
+[data-theme="light"] .logo-loop-container {
     background: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .logo-wrapper {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: rgba(99, 102, 241, 0.15);
+}
+
+[data-theme="light"] .logo-wrapper:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="light"] .logo-wrapper img {
+    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(229deg) brightness(104%) contrast(97%);
+}
+
+/* Light mode - Testimonials */
+[data-theme="light"] .testimonials {
+    background: linear-gradient(135deg,
+            rgba(139, 92, 246, 0.05) 0%,
+            rgba(236, 72, 153, 0.05) 100%);
+}
+
+/* Light mode - Text colors */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3 {
+    color: #1e293b;
+}
+
+[data-theme="light"] p {
+    color: #475569;
+}
+
+/* Light mode - Links */
+[data-theme="light"] a {
+    color: #6366f1;
+}
+
+[data-theme="light"] a:hover {
+    color: #8b5cf6;
 }
 
 /* Responsive */
