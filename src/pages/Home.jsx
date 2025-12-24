@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CountUp from '../components/CountUp';
-import TextType from '../components/TextType';
 import '../styles/index.css';
 
 const Home = () => {
@@ -78,12 +77,7 @@ const Home = () => {
             <section className="hero">
                 <div className="hero-content">
                     <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                        <TextType
-                            text="Launch Your Career with Ease!"
-                            speed={80}
-                            delay={500}
-                            cursor={true}
-                        />
+                        Launch Your Career with Ease!
                     </h1>
                     {user && (
                         <div id="userWelcome" className="surface-glow">
