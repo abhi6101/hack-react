@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CountUp from '../components/CountUp';
 import TextType from '../components/TextType';
-import LogoLoop from '../components/LogoLoop';
 import '../styles/index.css';
 
 const Home = () => {
@@ -205,14 +204,6 @@ const Home = () => {
                         <p>Career Resources</p>
                     </div>
                 </div>
-            </section>
-
-            {/* Companies Logo Loop */}
-            <section className="companies-section">
-                <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: 'var(--text-primary)' }}>
-                    Trusted by Top Companies
-                </h2>
-                <LogoLoop />
             </section>
 
             {/* Testimonials Section */}
