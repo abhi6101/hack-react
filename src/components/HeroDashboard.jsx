@@ -18,8 +18,8 @@ const HeroDashboard = ({ user, onLogout }) => {
                 <div className="dashboard-greeting">
                     {greeting} 👋
                 </div>
-                <h2 className="dashboard-username">
-                    {user.username}
+                <h2 className="dashboard-username" style={{ textTransform: 'capitalize' }}>
+                    {user.name || user.username}
                 </h2>
                 <div className="dashboard-role-badge">
                     <span className="status-dot"></span>

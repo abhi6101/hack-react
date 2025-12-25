@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 import Typewriter from '../components/Typewriter';
 import HeroDashboard from '../components/HeroDashboard';
 import '../styles/index.css';
@@ -53,17 +54,38 @@ const Home = () => {
         const storedUsername = localStorage.getItem('username');
         const storedRole = localStorage.getItem('userRole');
         const token = localStorage.getItem('authToken');
+        const storedName = localStorage.getItem('userFullName');
 
         if (storedUsername && token) {
             setUser({
-                username: storedUsername,
+                username: storedUsername, // Keep ID for reference
+                name: storedName || storedUsername, // Use Name if available
                 role: storedRole || 'User'
             });
+
+            // If name is not stored, fetch it
+            if (!storedName) {
+                fetch(`${API_BASE_URL}/student-profile`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                    .then(res => {
+                        if (res.ok) return res.json();
+                        throw new Error('Profile fetch failed');
+                    })
+                    .then(data => {
+                        if (data.fullName) {
+                            localStorage.setItem('userFullName', data.fullName);
+                            setUser(prev => ({ ...prev, name: data.fullName }));
+                        }
+                    })
+                    .catch(err => console.log("Background profile fetch:", err.message));
+            }
         } else {
             // Inconsistent state: Username but no token -> Clear it
             if (storedUsername) {
                 localStorage.removeItem('username');
                 localStorage.removeItem('userRole');
+                localStorage.removeItem('userFullName');
             }
         }
     }, []);
