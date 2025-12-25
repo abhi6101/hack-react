@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Typewriter from '../components/Typewriter';
+import HeroDashboard from '../components/HeroDashboard';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
 
@@ -80,28 +81,16 @@ const Home = () => {
                     <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
                         <Typewriter text="Launch Your Career with Ease!" delay={70} />
                     </h1>
-                    {user && (
-                        <div id="userWelcome" className="surface-glow">
-                            <h2>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
-                            <p>Account type: <span id="displayRole">{user.role}</span></p>
+                    <p id="heroSubtitle">Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.</p>
+
+                    {user ? (
+                        <HeroDashboard user={user} onLogout={handleLogout} />
+                    ) : (
+                        <div className="cta-btns">
+                            <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
+                            <Link to="/login" className="btn btn-outline">Login</Link>
                         </div>
                     )}
-                    <p id="heroSubtitle">Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.</p>
-                    <div className="cta-btns">
-                        {localStorage.getItem('authToken') ? (
-                            <>
-                                <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
-                                <button onClick={handleLogout} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
-                                    Logout
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
-                                <Link to="/login" className="btn btn-outline">Login</Link>
-                            </>
-                        )}
-                    </div>
                 </div>
             </section>
 
