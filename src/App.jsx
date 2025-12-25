@@ -33,6 +33,9 @@ import Contact from './pages/Contact';
 import VerifyAccount from './pages/VerifyAccount';
 import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
+import { ToastProvider } from './components/Toast';
+import './styles/interaction.css';
+
 
 function Layout({ children }) {
     const location = useLocation();
@@ -111,38 +114,40 @@ function App() {
     }, []);
 
     return (
-        <Router>
-            <Layout>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/admin/login" element={<AdminLogin />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/verify-otp" element={<VerifyOTP />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="/reset-success" element={<ResetSuccess />} />
-                    <Route path="/verify-account" element={<VerifyAccount />} />
-                    <Route path="/onboarding" element={<Onboarding />} />
-                    <Route path="/jobs" element={<Jobs />} />
-                    <Route path="/resume" element={<ResumeAnalysis />} />
-                    <Route path="/resume-builder" element={<ResumeBuilder />} />
-                    <Route path="/interview" element={<Interview />} />
-                    <Route path="/papers" element={<Papers />} />
-                    <Route path="/quiz" element={<Quiz />} />
-                    <Route path="/admin" element={<AdminDashboard />} />
-                    <Route path="/dashboard" element={<StudentDashboard />} />
-                    <Route path="/profile" element={<StudentProfile />} />
-                    <Route path="/courses" element={<Courses />} />
-                    <Route path="/courses/:slug" element={<CourseDetail />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/blog/:slug" element={<BlogPost />} />
-                    <Route path="/gallery" element={<Gallery />} />
-                    <Route path="/videos" element={<Videos />} />
-                    <Route path="/contact" element={<Contact />} />
-                </Routes>
-            </Layout>
-        </Router>
+        <ToastProvider>
+            <Router>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/admin/login" element={<AdminLogin />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/verify-otp" element={<VerifyOTP />} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
+                        <Route path="/reset-success" element={<ResetSuccess />} />
+                        <Route path="/verify-account" element={<VerifyAccount />} />
+                        <Route path="/onboarding" element={<Onboarding />} />
+                        <Route path="/jobs" element={<Jobs />} />
+                        <Route path="/resume" element={<ResumeAnalysis />} />
+                        <Route path="/resume-builder" element={<ResumeBuilder />} />
+                        <Route path="/interview" element={<Interview />} />
+                        <Route path="/papers" element={<Papers />} />
+                        <Route path="/quiz" element={<Quiz />} />
+                        <Route path="/admin" element={<AdminDashboard />} />
+                        <Route path="/dashboard" element={<StudentDashboard />} />
+                        <Route path="/profile" element={<StudentProfile />} />
+                        <Route path="/courses" element={<Courses />} />
+                        <Route path="/courses/:slug" element={<CourseDetail />} />
+                        <Route path="/blog" element={<Blog />} />
+                        <Route path="/blog/:slug" element={<BlogPost />} />
+                        <Route path="/gallery" element={<Gallery />} />
+                        <Route path="/videos" element={<Videos />} />
+                        <Route path="/contact" element={<Contact />} />
+                    </Routes>
+                </Layout>
+            </Router>
+        </ToastProvider>
     );
 }
 

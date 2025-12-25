@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
 
@@ -77,7 +78,7 @@ const Home = () => {
             <section className="hero">
                 <div className="hero-content">
                     <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                        Launch Your Career with Ease!
+                        <Typewriter text="Launch Your Career with Ease!" delay={70} />
                     </h1>
                     {user && (
                         <div id="userWelcome" className="surface-glow">

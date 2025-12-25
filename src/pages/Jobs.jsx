@@ -2,6 +2,7 @@ import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/jobs.css';
+import '../styles/skeleton.css';
 
 const Jobs = () => {
     const [allJobs, setAllJobs] = useState([]);
