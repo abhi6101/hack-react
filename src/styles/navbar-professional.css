@@ -2,30 +2,34 @@
 
 /* ===== GLASSMORPHISM & STICKY NAVBAR ===== */
 .navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
-    background: rgba(15, 23, 41, 0.85);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
-    padding: 1.2rem 5%;
+    background: transparent;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    border-bottom: 1px solid transparent;
+    padding: 1.5rem 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 2rem;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
 }
 
 /* ===== SCROLLED STATE ===== */
 .navbar.scrolled {
-    background: rgba(10, 15, 30, 0.95);
+    background: rgba(15, 23, 41, 0.85);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
     padding: 0.9rem 5%;
     box-shadow:
         0 4px 24px rgba(0, 0, 0, 0.3),
         0 0 40px rgba(99, 102, 241, 0.1);
-    border-bottom-color: rgba(99, 102, 241, 0.3);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 /* ===== LOGO DESIGN ===== */
