@@ -2,10 +2,14 @@ import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAlert } from '../components/CustomAlert';
+import { useToast } from '../components/CustomToast';
 import '../styles/jobs.css';
 import '../styles/skeleton.css';
 
 const Jobs = () => {
+    const { showAlert } = useAlert();
+    const { showToast } = useToast();
     const [allJobs, setAllJobs] = useState([]);
     const [filteredJobs, setFilteredJobs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -86,9 +90,15 @@ const Jobs = () => {
             });
             if (response.status === 401) {
                 console.warn("Unauthorized access (401). Token might be invalid or expired.");
-                alert("Your session has expired or is invalid. Please log in again.");
+                showAlert({
+                    title: 'Session Expired',
+                    message: 'Your session has expired or is invalid. Please log in again.',
+                    type: 'warning',
+                    actions: [
+                        { label: 'Login', primary: true, onClick: () => { localStorage.clear(); navigate('/login'); } }
+                    ]
+                });
                 localStorage.clear();
-                window.location.href = '/login';
                 return;
             }
             if (!response.ok) throw new Error('Failed to fetch jobs');
@@ -165,7 +175,10 @@ const Jobs = () => {
 
     const openApplyModal = (job) => {
         if (appliedJobIds.has(job.id)) {
-            alert("You have already applied for this job.");
+            showToast({
+                message: 'You have already applied for this job.',
+                type: 'info'
+            });
             return;
         }
 
@@ -214,9 +227,13 @@ const Jobs = () => {
                 throw new Error('Failed to submit application');
             }
 
-            alert(`Application for "${selectedJob.title}" submitted successfully! You will receive a confirmation email shortly.`);
+            showToast({
+                message: `Application for "${selectedJob.title}" submitted successfully! You will receive a confirmation email shortly.`,
+                type: 'success'
+            });
             setShowModal(false);
             setSubmitting(false);
+            fetchAppliedJobs(token); // Refresh applied jobs list
 
             // Reset form
             setApplicationData({
@@ -230,7 +247,10 @@ const Jobs = () => {
 
         } catch (error) {
             console.error('Error submitting application:', error);
-            alert('Failed to submit application. Please try again later.');
+            showToast({
+                message: 'Failed to submit application. Please try again later.',
+                type: 'error'
+            });
             setSubmitting(false);
         }
     };
@@ -326,7 +346,7 @@ const Jobs = () => {
                                         </span>
                                     </div>
                                     <div className="job-actions">
-                                        <button className="btn btn-outline" onClick={() => alert("Details page implementation pending")}>
+                                        <button className="btn btn-outline" onClick={() => showToast({ message: 'Details page coming soon!', type: 'info' })}>
                                             <i className="fas fa-eye"></i> View Details
                                         </button>
                                         {appliedJobIds.has(job.id) ? (
