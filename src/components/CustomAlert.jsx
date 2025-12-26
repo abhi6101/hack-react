@@ -60,135 +60,230 @@ export const AlertProvider = ({ children }) => {
                             left: 0,
                             right: 0,
                             bottom: 0,
-                            background: 'rgba(0, 0, 0, 0.8)',
-                            backdropFilter: 'blur(10px)',
+                            background: 'rgba(0, 0, 0, 0.85)',
+                            backdropFilter: 'blur(15px)',
+                            WebkitBackdropFilter: 'blur(15px)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            zIndex: 10000
+                            zIndex: 10000,
+                            padding: '1rem'
                         }}
                         onClick={hideAlert}
                     >
                         <motion.div
-                            initial={{ scale: 0.8, y: 50 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.8, y: 50 }}
-                            transition={{ type: 'spring', damping: 25 }}
+                            initial={{ scale: 0.7, y: 100, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.7, y: 100, opacity: 0 }}
+                            transition={{
+                                type: 'spring',
+                                damping: 20,
+                                stiffness: 300
+                            }}
                             onClick={(e) => e.stopPropagation()}
                             style={{
-                                background: 'rgba(10, 10, 20, 0.95)',
-                                backdropFilter: 'blur(20px)',
-                                border: `1px solid ${getColor(alert.type)}40`,
-                                borderRadius: '24px',
-                                padding: '3rem',
-                                maxWidth: '500px',
-                                width: '90%',
+                                background: 'linear-gradient(135deg, rgba(10, 10, 20, 0.98) 0%, rgba(20, 20, 35, 0.98) 100%)',
+                                backdropFilter: 'blur(30px)',
+                                WebkitBackdropFilter: 'blur(30px)',
+                                border: `2px solid ${getColor(alert.type)}60`,
+                                borderRadius: '28px',
+                                padding: '3.5rem 3rem',
+                                maxWidth: '550px',
+                                width: '100%',
                                 textAlign: 'center',
-                                boxShadow: `0 20px 60px ${getColor(alert.type)}40`
+                                boxShadow: `
+                                    0 30px 90px ${getColor(alert.type)}30,
+                                    0 0 0 1px rgba(255, 255, 255, 0.05),
+                                    inset 0 1px 0 rgba(255, 255, 255, 0.1)
+                                `,
+                                position: 'relative',
+                                overflow: 'hidden'
                             }}
                         >
+                            {/* Animated gradient background */}
                             <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: 0.2, type: 'spring' }}
+                                animate={{
+                                    background: [
+                                        `radial-gradient(circle at 20% 50%, ${getColor(alert.type)}15 0%, transparent 50%)`,
+                                        `radial-gradient(circle at 80% 50%, ${getColor(alert.type)}15 0%, transparent 50%)`,
+                                        `radial-gradient(circle at 20% 50%, ${getColor(alert.type)}15 0%, transparent 50%)`
+                                    ]
+                                }}
+                                transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
                                 style={{
-                                    width: '80px',
-                                    height: '80px',
-                                    margin: '0 auto 1.5rem',
-                                    background: `linear-gradient(135deg, ${getColor(alert.type)} 0%, ${getColor(alert.type)}dd 100%)`,
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    pointerEvents: 'none'
+                                }}
+                            />
+
+                            {/* Icon with glow */}
+                            <motion.div
+                                initial={{ scale: 0, rotate: -180 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{
+                                    delay: 0.2,
+                                    type: 'spring',
+                                    stiffness: 200,
+                                    damping: 15
+                                }}
+                                style={{
+                                    width: '100px',
+                                    height: '100px',
+                                    margin: '0 auto 2rem',
+                                    background: `linear-gradient(135deg, ${getColor(alert.type)} 0%, ${getColor(alert.type)}cc 100%)`,
                                     borderRadius: '50%',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '2.5rem'
+                                    fontSize: '3rem',
+                                    boxShadow: `
+                                        0 10px 40px ${getColor(alert.type)}50,
+                                        0 0 0 8px ${getColor(alert.type)}20,
+                                        inset 0 2px 0 rgba(255, 255, 255, 0.3)
+                                    `,
+                                    position: 'relative',
+                                    zIndex: 1
                                 }}
                             >
-                                {getIcon(alert.type)}
+                                <motion.div
+                                    animate={{ rotate: [0, 10, -10, 0] }}
+                                    transition={{ duration: 0.5, delay: 0.5 }}
+                                >
+                                    {getIcon(alert.type)}
+                                </motion.div>
+
+                                {/* Pulse ring */}
+                                <motion.div
+                                    animate={{
+                                        scale: [1, 1.5, 1],
+                                        opacity: [0.5, 0, 0.5]
+                                    }}
+                                    transition={{
+                                        duration: 2,
+                                        repeat: Infinity,
+                                        ease: 'easeInOut'
+                                    }}
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%',
+                                        border: `3px solid ${getColor(alert.type)}`,
+                                        borderRadius: '50%'
+                                    }}
+                                />
                             </motion.div>
 
+                            {/* Title */}
                             {alert.title && (
-                                <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'white' }}>
+                                <motion.h2
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    style={{
+                                        fontSize: '2.2rem',
+                                        marginBottom: '1.2rem',
+                                        color: 'white',
+                                        fontWeight: 700,
+                                        letterSpacing: '-0.02em',
+                                        position: 'relative',
+                                        zIndex: 1
+                                    }}
+                                >
                                     {alert.title}
-                                </h2>
+                                </motion.h2>
                             )}
 
-                            <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: 1.6 }}>
+                            {/* Message */}
+                            <motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                style={{
+                                    fontSize: '1.15rem',
+                                    color: 'rgba(255, 255, 255, 0.75)',
+                                    marginBottom: '2.5rem',
+                                    lineHeight: 1.7,
+                                    position: 'relative',
+                                    zIndex: 1
+                                }}
+                            >
                                 {alert.message}
-                            </p>
+                            </motion.p>
 
-                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            {/* Action buttons */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 }}
+                                style={{
+                                    display: 'flex',
+                                    gap: '1rem',
+                                    justifyContent: 'center',
+                                    flexWrap: 'wrap',
+                                    position: 'relative',
+                                    zIndex: 1
+                                }}
+                            >
                                 {alert.actions.length > 0 ? (
                                     alert.actions.map((action, index) => (
-                                        <button
+                                        <motion.button
                                             key={index}
+                                            whileHover={{ scale: 1.05, y: -2 }}
+                                            whileTap={{ scale: 0.95 }}
                                             onClick={() => {
                                                 action.onClick?.();
                                                 hideAlert();
                                             }}
                                             style={{
-                                                padding: '1rem 2rem',
+                                                padding: '1.1rem 2.5rem',
                                                 background: action.primary
                                                     ? `linear-gradient(135deg, ${getColor(alert.type)} 0%, ${getColor(alert.type)}dd 100%)`
-                                                    : 'transparent',
-                                                color: action.primary ? 'white' : 'var(--text-secondary)',
-                                                border: action.primary ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
+                                                    : 'rgba(255, 255, 255, 0.05)',
+                                                color: action.primary ? 'white' : 'rgba(255, 255, 255, 0.9)',
+                                                border: action.primary ? 'none' : '1.5px solid rgba(255, 255, 255, 0.15)',
                                                 borderRadius: '50px',
                                                 fontWeight: 600,
-                                                fontSize: '1.1rem',
+                                                fontSize: '1.05rem',
                                                 cursor: 'pointer',
                                                 transition: 'all 0.3s ease',
-                                                boxShadow: action.primary ? `0 10px 30px ${getColor(alert.type)}40` : 'none'
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                if (action.primary) {
-                                                    e.target.style.transform = 'translateY(-3px)';
-                                                    e.target.style.boxShadow = `0 15px 40px ${getColor(alert.type)}60`;
-                                                } else {
-                                                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-                                                    e.target.style.color = 'white';
-                                                }
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                if (action.primary) {
-                                                    e.target.style.transform = 'translateY(0)';
-                                                    e.target.style.boxShadow = `0 10px 30px ${getColor(alert.type)}40`;
-                                                } else {
-                                                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                                                    e.target.style.color = 'var(--text-secondary)';
-                                                }
+                                                boxShadow: action.primary
+                                                    ? `0 10px 30px ${getColor(alert.type)}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
+                                                    : 'none',
+                                                backdropFilter: 'blur(10px)',
+                                                WebkitBackdropFilter: 'blur(10px)',
+                                                letterSpacing: '0.02em'
                                             }}
                                         >
                                             {action.label}
-                                        </button>
+                                        </motion.button>
                                     ))
                                 ) : (
-                                    <button
+                                    <motion.button
+                                        whileHover={{ scale: 1.05, y: -2 }}
+                                        whileTap={{ scale: 0.95 }}
                                         onClick={hideAlert}
                                         style={{
-                                            padding: '1rem 2rem',
+                                            padding: '1.1rem 2.5rem',
                                             background: `linear-gradient(135deg, ${getColor(alert.type)} 0%, ${getColor(alert.type)}dd 100%)`,
                                             color: 'white',
                                             border: 'none',
                                             borderRadius: '50px',
                                             fontWeight: 600,
-                                            fontSize: '1.1rem',
+                                            fontSize: '1.05rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s ease',
-                                            boxShadow: `0 10px 30px ${getColor(alert.type)}40`
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.transform = 'translateY(-3px)';
-                                            e.target.style.boxShadow = `0 15px 40px ${getColor(alert.type)}60`;
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.boxShadow = `0 10px 30px ${getColor(alert.type)}40`;
+                                            boxShadow: `0 10px 30px ${getColor(alert.type)}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
+                                            letterSpacing: '0.02em'
                                         }}
                                     >
                                         OK
-                                    </button>
+                                    </motion.button>
                                 )}
-                            </div>
+                            </motion.div>
                         </motion.div>
                     </motion.div>
                 )}
