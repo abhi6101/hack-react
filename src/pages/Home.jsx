@@ -1,8 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import API_BASE_URL from '../config';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
+
+// Animation Variants
+const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2
+        }
+    }
+};
+
+const scaleHover = {
+    hover: {
+        y: -5,
+        scale: 1.02,
+        backgroundColor: "rgba(255, 255, 255, 0.03)",
+        transition: { type: "spring", stiffness: 300 }
+    }
+};
 
 const Home = () => {
     const [user, setUser] = useState(null);
@@ -30,21 +57,6 @@ const Home = () => {
     useEffect(() => {
         const interval = setInterval(nextSlide, 5000); // 5 seconds
         return () => clearInterval(interval);
-    }, []);
-
-    // Scroll Animation Observer
-    useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
-
-        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
@@ -76,18 +88,30 @@ const Home = () => {
         <main>
             {/* Hero Section */}
             <section className="hero">
-                <div className="hero-content">
-                    <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                        <Typewriter text="Launch Your Career with Ease!" delay={70} />
-                    </h1>
+                <motion.div
+                    className="hero-content"
+                    initial="hidden"
+                    animate="visible"
+                    variants={staggerContainer}
+                >
+                    <motion.div variants={fadeInUp}>
+                        <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
+                            <Typewriter text="Launch Your Career with Ease!" delay={70} />
+                        </h1>
+                    </motion.div>
+
                     {user && (
-                        <div id="userWelcome" className="surface-glow">
+                        <motion.div id="userWelcome" className="surface-glow" variants={fadeInUp}>
                             <h2>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
                             <p>Account type: <span id="displayRole">{user.role}</span></p>
-                        </div>
+                        </motion.div>
                     )}
-                    <p id="heroSubtitle">Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.</p>
-                    <div className="cta-btns">
+
+                    <motion.p id="heroSubtitle" variants={fadeInUp}>
+                        Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
+                    </motion.p>
+
+                    <motion.div className="cta-btns" variants={fadeInUp}>
                         {localStorage.getItem('authToken') ? (
                             <>
                                 <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
@@ -101,81 +125,105 @@ const Home = () => {
                                 <Link to="/login" className="btn btn-outline">Login</Link>
                             </>
                         )}
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </section>
 
 
             {/* NEW: Learning Roadmap Section (Learnext Inspired) */}
-            <section className="roadmap-section animate-on-scroll">
-                <h2>Your Path to Success</h2>
-                <p className="subtitle">Follow our proven 4-step roadmap to land your dream job.</p>
+            <motion.section
+                className="roadmap-section"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={staggerContainer}
+            >
+                <motion.h2 variants={fadeInUp}>Your Path to Success</motion.h2>
+                <motion.p className="subtitle" variants={fadeInUp}>Follow our proven 4-step roadmap to land your dream job.</motion.p>
                 <div className="roadmap-container">
-                    <div className="roadmap-step">
+                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
                         <div className="step-icon"><i className="fas fa-laptop-code"></i></div>
                         <div className="step-content">
                             <h3>1. Learn Skills</h3>
                             <p>Master trending tech with our structured courses.</p>
                         </div>
-                    </div>
-                    <div className="roadmap-step">
+                    </motion.div>
+
+                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
                         <div className="step-icon"><i className="fas fa-hammer"></i></div>
                         <div className="step-content">
                             <h3>2. Build Projects</h3>
                             <p>Apply knowledge by building real-world applications.</p>
                         </div>
-                    </div>
-                    <div className="roadmap-step">
+                    </motion.div>
+
+                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
                         <div className="step-icon"><i className="fas fa-file-signature"></i></div>
                         <div className="step-content">
                             <h3>3. Perfect Resume</h3>
                             <p>Craft a resume that passes ATS scanners.</p>
                         </div>
-                    </div>
-                    <div className="roadmap-step">
+                    </motion.div>
+
+                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
                         <div className="step-icon"><i className="fas fa-rocket"></i></div>
                         <div className="step-content">
                             <h3>4. Get Hired</h3>
                             <p>Ace the interview and launch your career.</p>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Learning Hub Section */}
-            <section className="learning-hub-section animate-on-scroll">
-                <h2>Start Your Learning Journey</h2>
-                <p className="subtitle">Hand-picked resources to build your skills and prepare you for the industry.</p>
+            <motion.section
+                className="learning-hub-section"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={staggerContainer}
+            >
+                <motion.h2 variants={fadeInUp}>Start Your Learning Journey</motion.h2>
+                <motion.p className="subtitle" variants={fadeInUp}>Hand-picked resources to build your skills and prepare you for the industry.</motion.p>
 
                 <div className="hub-grid">
-                    <a href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" className="hub-card-link">
+                    <motion.a
+                        href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" className="hub-card-link"
+                        variants={fadeInUp} whileHover={scaleHover.hover}
+                    >
                         <div className="hub-card surface-glow">
                             <i className="fas fa-flask"></i>
                             <h3>Web Security Academy</h3>
                             <p>The definitive free resource for learning web application security from the creators of Burp Suite.</p>
                             <span className="hub-link">Explore Platform <i className="fas fa-arrow-right"></i></span>
                         </div>
-                    </a>
+                    </motion.a>
 
-                    <a href="https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37" target="_blank" rel="noopener noreferrer" className="hub-card-link">
+                    <motion.a
+                        href="https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37" target="_blank" rel="noopener noreferrer" className="hub-card-link"
+                        variants={fadeInUp} whileHover={scaleHover.hover}
+                    >
                         <div className="hub-card surface-glow">
                             <i className="fab fa-js-square"></i>
                             <h3>Chai aur JavaScript</h3>
                             <p>Deep dive into JavaScript with Hitesh Choudhary. Perfect for mastering modern web development.</p>
                             <span className="hub-link">Watch Now <i className="fas fa-arrow-right"></i></span>
                         </div>
-                    </a>
+                    </motion.a>
 
-                    <a href="https://www.hackthebox.com/" target="_blank" rel="noopener noreferrer" className="hub-card-link">
+                    <motion.a
+                        href="https://www.hackthebox.com/" target="_blank" rel="noopener noreferrer" className="hub-card-link"
+                        variants={fadeInUp} whileHover={scaleHover.hover}
+                    >
                         <div className="hub-card surface-glow">
                             <i className="fas fa-cube"></i>
                             <h3>Hack The Box</h3>
                             <p>Challenge your abilities with real-world lab scenarios and compete with a global community.</p>
                             <span className="hub-link">Explore Platform <i className="fas fa-arrow-right"></i></span>
                         </div>
-                    </a>
+                    </motion.a>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Stats Section */}
             <section className="stats">
@@ -188,32 +236,38 @@ const Home = () => {
             </section>
 
             {/* Testimonials Section */}
-            <section className="testimonials">
-                <h2>Success Stories</h2>
+            <motion.section
+                className="testimonials"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={staggerContainer}
+            >
+                <motion.h2 variants={fadeInUp}>Success Stories</motion.h2>
                 <div className="testimonial-cards">
-                    <div className="testimonial-card surface-glow">
+                    <motion.div className="testimonial-card surface-glow" variants={fadeInUp} whileHover={{ y: -5 }}>
                         <p>"The resume builder and mock interviews were game-changers! Landed my dream job at a top tech company..."</p>
                         <div className="testimonial-author">
                             <img src="/images/i-priya.jpg" alt="Priya Sharma" />
                             <div className="author-info"><h4>Priya Sharma</h4><p>Software Engineer at Google</p></div>
                         </div>
-                    </div>
-                    <div className="testimonial-card surface-glow">
+                    </motion.div>
+                    <motion.div className="testimonial-card surface-glow" variants={fadeInUp} whileHover={{ y: -5 }}>
                         <p>"I went from zero calls to 5 job offers in 2 months. The interview prep resources are pure gold."</p>
                         <div className="testimonial-author">
                             <img src="/images/i-rahul.jpg" alt="Rahul Verma" />
                             <div className="author-info"><h4>Rahul Verma</h4><p>Data Analyst at Amazon</p></div>
                         </div>
-                    </div>
-                    <div className="testimonial-card surface-glow">
+                    </motion.div>
+                    <motion.div className="testimonial-card surface-glow" variants={fadeInUp} whileHover={{ y: -5 }}>
                         <p>"Personalized career guidance helped me transition into a higher-paying role. Highly recommended!"</p>
                         <div className="testimonial-author">
                             <img src="/images/i-neha.jpg" alt="Neha Patel" />
                             <div className="author-info"><h4>Neha Patel</h4><p>Product Manager at Microsoft</p></div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Gallery Section */}
             <section className="gallery">

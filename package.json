@@ -16,6 +16,7 @@
     "vite": "^5.1.0"
   },
   "dependencies": {
+    "framer-motion": "^12.23.26",
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",
     "jsqr": "^1.4.0",
