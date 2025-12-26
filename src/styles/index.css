@@ -600,7 +600,7 @@ section {
 }
 
 .gallery {
-    background: var(--surface-bg);
+    background: transparent;
 }
 
 .gallery .slideshow-container {
