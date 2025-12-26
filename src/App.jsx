@@ -35,12 +35,11 @@ import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
 import { ToastProvider } from './components/Toast';
 import './styles/interaction.css';
-import Lenis from 'lenis';
+import Lenis from '@studio-freight/lenis';
 import CustomCursor from './components/CustomCursor';
 import StarBackground from './components/StarBackground';
 import { AlertProvider } from './components/CustomAlert';
 import { ToastProvider as CustomToastProvider } from './components/CustomToast';
-
 
 
 function Layout({ children }) {
@@ -49,43 +48,6 @@ function Layout({ children }) {
     const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success', '/verify-account'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
-
-    // Check if student needs to update profile
-    // DISABLED: Iron Dome Guard - All data now collected during registration
-    // Users no longer need to complete onboarding form after registration
-    /*
-    useEffect(() => {
-        const checkProfileStatus = async () => {
-            const token = localStorage.getItem('authToken');
-            const userRole = localStorage.getItem('userRole');
-
-            // Only check for students (USER role)
-            if (token && userRole === 'USER') {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/auth/profile-status`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.needsUpdate) {
-                            // IRON DOME GUARD: Force redirect to Onboarding
-                            if (location.pathname !== '/onboarding' && location.pathname !== '/resume-builder') {
-                                navigate('/onboarding');
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error checking profile status:', error);
-                }
-            }
-        };
-
-        checkProfileStatus();
-    }, [location.pathname, navigate]);
-    */
 
     const handleProfileUpdate = () => {
         setShowProfileModal(false);
@@ -97,13 +59,6 @@ function Layout({ children }) {
             {showNavbar && <Navbar />}
             {children}
             {showNavbar && <Footer />}
-            {/* DISABLED: Profile completion modal - all data collected during registration
-            <ProfileUpdateModal
-                isOpen={showProfileModal}
-                onClose={() => setShowProfileModal(false)}
-                onUpdate={handleProfileUpdate}
-            />
-            */}
         </>
     );
 }
@@ -119,12 +74,8 @@ function App() {
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
             smooth: true,
-            mouseMultiplier: 1,
             smoothTouch: false,
-            touchMultiplier: 2,
         });
 
         function raf(time) {
