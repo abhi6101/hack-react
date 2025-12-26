@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../components/CustomAlert';
 import '../styles/gallery.css';
 import API_BASE_URL from '../config';
 
 const Gallery = () => {
+    const navigate = useNavigate();
+    const { showAlert } = useAlert();
     const [galleryItems, setGalleryItems] = useState([]);
     const [activeCategory, setActiveCategory] = useState("all");
     const [selectedImage, setSelectedImage] = useState(null);
@@ -44,7 +48,15 @@ const Gallery = () => {
 
         const token = localStorage.getItem('authToken');
         if (!token) {
-            alert('Please login to upload photos.');
+            showAlert({
+                title: 'Login Required',
+                message: 'Please login to upload photos.',
+                type: 'login',
+                actions: [
+                    { label: 'Login Now', primary: true, onClick: () => navigate('/login') },
+                    { label: 'Cancel', primary: false }
+                ]
+            });
             setUploadLoading(false);
             return;
         }

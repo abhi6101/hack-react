@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../components/CustomToast';
 import '../styles/quiz.css';
 import { quizData } from '../data/quizData';
 
@@ -18,6 +19,7 @@ const subjects = [
 
 const Quiz = () => {
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const [step, setStep] = useState('subject-selection'); // subject-selection, quiz, quiz-results
     const [currentSubject, setCurrentSubject] = useState(null);
     const [questions, setQuestions] = useState([]);
@@ -54,7 +56,10 @@ const Quiz = () => {
     const handleStartQuiz = (subjectId) => {
         const subjectQuestions = quizData[subjectId] || [];
         if (subjectQuestions.length === 0) {
-            alert(`Sorry, no questions available for ${subjectId.toUpperCase()} yet!`);
+            showToast({
+                message: `Sorry, no questions available for ${subjectId.toUpperCase()} yet!`,
+                type: 'info'
+            });
             return;
         }
         setCurrentSubject(subjects.find(s => s.id === subjectId));
