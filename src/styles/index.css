@@ -308,7 +308,7 @@ section {
 
 /* --- 5. Features Sections --- */
 .features-section {
-    background: var(--dark-bg);
+    background: transparent;
 }
 
 .features {
@@ -352,7 +352,7 @@ section {
 
 .members-features-section {
     padding: 6rem 5%;
-    background: linear-gradient(180deg, var(--dark-bg) 0%, #1a1a2e 100%);
+    background: transparent;
 }
 
 .members-features-container .section-header {
@@ -423,7 +423,7 @@ section {
 /* --- 5b. Learning Hub & Journey Enhancements --- */
 .learning-hub-section {
     padding: 6rem 5%;
-    background: linear-gradient(180deg, var(--dark-bg) 0%, #10101a 100%);
+    background: transparent;
     position: relative;
     overflow: hidden;
 }
@@ -522,7 +522,7 @@ section {
 
 /* --- 6. Other Sections --- */
 .stats {
-    background: var(--surface-bg);
+    background: transparent;
 }
 
 .stats-container {
@@ -548,7 +548,7 @@ section {
 }
 
 .testimonials {
-    background: var(--dark-bg);
+    background: transparent;
 }
 
 .testimonial-cards {
@@ -614,7 +614,7 @@ section {
 
 /* --- 7. Companies / Partners Section (Static Grid) --- */
 .companies {
-    background: var(--dark-bg);
+    background: transparent;
 }
 
 .companies .subtitle {
@@ -677,7 +677,7 @@ section {
 
 /* --- 8. Footer --- */
 footer {
-    background: #060810;
+    background: transparent;
     padding: 5rem 5% 2rem;
     text-align: center;
     border-top: 1px solid var(--border-color);
