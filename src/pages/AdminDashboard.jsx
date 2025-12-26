@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InterviewRoundsForm from '../components/InterviewRoundsForm';
 import API_BASE_URL from '../config';
+import { useAlert } from '../components/CustomAlert';
+import { useToast } from '../components/CustomToast';
 import '../styles/admin.css';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
 
@@ -31,21 +33,24 @@ const ToggleSwitch = ({ checked, onChange, disabled }) => (
 
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
+    const { showAlert } = useAlert();
+    const { showToast } = useToast();
+
     // CSV Export Helper
     const downloadCSV = (data, filename) => {
         if (!data || data.length === 0) {
-            alert("No data to export");
+            showToast({ message: 'No data to export', type: 'info' });
             return;
         }
 
-        // dynamic headers based on first object keys
         const headers = Object.keys(data[0]);
         const csvContent = [
             headers.join(','),
             ...data.map(row => headers.map(fieldName => {
                 let value = row[fieldName];
                 if (value === null || value === undefined) value = '';
-                value = value.toString().replace(/"/g, '""'); // Escape quotes
+                value = value.toString().replace(/"/g, '""');
                 return `"${value}"`;
             }).join(','))
         ].join('\n');
@@ -60,12 +65,11 @@ const AdminDashboard = () => {
         document.body.removeChild(link);
     };
 
-    const navigate = useNavigate();
     const [jobs, setJobs] = useState([]);
     const [users, setUsers] = useState([]);
     const [loadingJobs, setLoadingJobs] = useState(true);
     const [loadingUsers, setLoadingUsers] = useState(true);
-    const [message, setMessage] = useState({ text: '', type: '' }); // type: 'success' | 'error'
+    const [message, setMessage] = useState({ text: '', type: '' });
     const [formData, setFormData] = useState({
         jobTitle: '',
         companyName: '',
@@ -87,9 +91,16 @@ const AdminDashboard = () => {
     // Helper function to handle 401 errors
     const handleUnauthorized = () => {
         console.error('🚫 Authentication failed - Token invalid or expired');
-        alert('Your session has expired. Please log in again.');
+        showAlert({
+            title: 'Session Expired',
+            message: 'Your session has expired. Please log in again.',
+            type: 'warning',
+            actions: [
+                { label: 'Login', primary: true, onClick: () => { localStorage.clear(); navigate('/login'); } }
+            ]
+        });
         localStorage.clear();
-        navigate('/login');
+        // Navigation handled by alert action to prevent immediate unmount/remount issues
     };
 
     // Derived states
@@ -235,8 +246,12 @@ const AdminDashboard = () => {
             a.click();
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
+            document.body.removeChild(a);
         } catch (err) {
-            alert(err.message);
+            showToast({
+                message: err.message || 'Failed to view resume',
+                type: 'error'
+            });
         }
     };
     const fetchInterviews = () => {
@@ -658,8 +673,15 @@ const AdminDashboard = () => {
     useEffect(() => {
         const allowedRoles = ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'];
         if (!token || !allowedRoles.includes(role)) {
-            alert('Access Denied. Admins only.');
-            navigate('/login');
+            showAlert({
+                title: 'Access Denied',
+                message: 'Access Denied. Admins only.',
+                type: 'error',
+                actions: [
+                    { label: 'Go to Login', primary: true, onClick: () => navigate('/login') },
+                    { label: 'Go Home', primary: false, onClick: () => navigate('/') }
+                ]
+            });
             return;
         }
         loadJobs();
@@ -836,7 +858,10 @@ const AdminDashboard = () => {
 
             loadJobs();
         } catch (error) {
-            alert(error.message);
+            showToast({
+                message: error.message || 'Failed to delete job',
+                type: 'error'
+            });
         }
     };
 
