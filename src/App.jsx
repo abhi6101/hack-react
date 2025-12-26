@@ -36,6 +36,7 @@ import './styles/animations.css'; // Import animations
 import { ToastProvider } from './components/Toast';
 import './styles/interaction.css';
 import Lenis from 'lenis';
+import CustomCursor from './components/CustomCursor';
 
 
 function Layout({ children }) {
@@ -104,6 +105,8 @@ function Layout({ children }) {
 }
 
 function App() {
+    const [isLoading, setIsLoading] = useState(true);
+
     // Start keep-alive service when app loads
     useEffect(() => {
         keepAliveService.start();
@@ -136,6 +139,7 @@ function App() {
 
     return (
         <ToastProvider>
+            <CustomCursor />
             <Router>
                 <Layout>
                     <Routes>
