@@ -59,10 +59,10 @@ const RoadmapScroll = () => {
                 zIndex: 10
             }}>
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    style={{ paddingLeft: '10vw', marginBottom: '4rem' }}
+                    style={{ textAlign: 'center', marginBottom: '4rem', maxWidth: '800px', margin: '0 auto 4rem' }}
                 >
                     <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
@@ -70,7 +70,7 @@ const RoadmapScroll = () => {
                     </p>
                 </motion.div>
 
-                <motion.div style={{ x, display: 'flex', gap: '60px', paddingLeft: '10vw' }}>
+                <motion.div style={{ x, display: 'flex', gap: '40px', paddingLeft: '5vw' }}>
                     {steps.map((step) => (
                         <motion.div
                             key={step.id}
@@ -78,18 +78,19 @@ const RoadmapScroll = () => {
                             whileHover={{ y: -15, scale: 1.02 }}
                             transition={{ duration: 0.4, ease: "easeOut" }}
                             style={{
-                                minWidth: '450px',
-                                height: '550px',
+                                minWidth: '400px',
+                                height: '500px',
                                 padding: '3rem',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'space-between',
                                 borderRadius: '32px',
                                 border: '1px solid var(--border-color)',
-                                background: 'var(--surface-bg)',
+                                background: 'transparent',
                                 position: 'relative',
                                 overflow: 'hidden',
-                                cursor: 'default'
+                                cursor: 'default',
+                                flexShrink: 0
                             }}
                         >
                             <div style={{
@@ -171,10 +172,10 @@ const LearningHubScroll = () => {
                 zIndex: 10
             }}>
                 <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
-                    style={{ paddingLeft: '10vw', marginBottom: '3rem' }}
+                    style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '800px', margin: '0 auto 3rem' }}
                 >
                     <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
@@ -182,7 +183,7 @@ const LearningHubScroll = () => {
                     </p>
                 </motion.div>
 
-                <motion.div style={{ x, display: 'flex', gap: '60px', paddingLeft: '10vw' }}>
+                <motion.div style={{ x, display: 'flex', gap: '40px', paddingLeft: '5vw' }}>
                     {resources.map((res, index) => (
                         <motion.a
                             href={res.link}
@@ -193,18 +194,19 @@ const LearningHubScroll = () => {
                             whileHover={{ y: -15, scale: 1.02 }}
                             transition={{ duration: 0.4 }}
                             style={{
-                                minWidth: '500px',
-                                height: '400px',
-                                padding: '3rem',
+                                minWidth: '400px',
+                                height: '500px',
+                                padding: '2.5rem',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'space-between',
-                                borderRadius: '32px',
+                                borderRadius: '24px',
                                 border: '1px solid var(--border-color)',
-                                background: 'var(--surface-bg)',
+                                background: 'transparent',
                                 textDecoration: 'none',
                                 color: 'inherit',
-                                position: 'relative'
+                                position: 'relative',
+                                flexShrink: 0
                             }}
                         >
                             <div>
