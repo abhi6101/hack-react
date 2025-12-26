@@ -31,6 +31,23 @@ const StarBackground = () => {
             });
         }
 
+        // Code Particle properties
+        const codeParticles = [];
+        const numCodeParticles = 40; // Fewer than stars
+        const symbols = ['{', '}', '</>', '&&', '||', '!=', ';', '[]', '()', '=>', '*'];
+
+        // Initialize code particles
+        for (let i = 0; i < numCodeParticles; i++) {
+            codeParticles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                text: symbols[Math.floor(Math.random() * symbols.length)],
+                size: Math.random() * 10 + 8, // 8px to 18px
+                alpha: Math.random() * 0.3 + 0.1, // Faint
+                velocity: Math.random() * 0.2 + 0.05
+            });
+        }
+
         // Animation Loop
         const render = () => {
             // Clear canvas
@@ -40,22 +57,34 @@ const StarBackground = () => {
             ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Draw Moving Circles (Stars)
+            // 2. Draw Moving Stars (Circles)
             stars.forEach(star => {
-                // Move star upwards
                 star.y -= star.velocity;
-
-                // Reset position if off screen (wrap around to bottom)
                 if (star.y < 0) {
                     star.y = canvas.height;
                     star.x = Math.random() * canvas.width;
                 }
-
-                // Draw circle
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
                 ctx.fill();
+            });
+
+            // 3. Draw Floating Code Particles
+            ctx.font = '12px "Courier New", monospace';
+            ctx.textAlign = 'center';
+            codeParticles.forEach(p => {
+                p.y -= p.velocity;
+                if (p.y < 0) {
+                    p.y = canvas.height;
+                    p.x = Math.random() * canvas.width;
+                    p.text = symbols[Math.floor(Math.random() * symbols.length)]; // Randomize on reset
+                }
+
+                // Draw Symbol
+                ctx.fillStyle = `rgba(14, 165, 233, ${p.alpha})`; // Cyan tinted symbols
+                ctx.font = `${p.size}px monospace`;
+                ctx.fillText(p.text, p.x, p.y);
             });
 
             animationFrameId = requestAnimationFrame(render);

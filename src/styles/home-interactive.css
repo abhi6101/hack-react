@@ -325,3 +325,51 @@ main {
         transform: translateY(-5px) scale(1.02);
     }
 }
+
+/* === NEW: Hacker/Coder Attractions === */
+
+/* 1. Glitch Text Effect for Headings */
+@keyframes glitch-skew {
+    0% {
+        transform: skew(0deg);
+    }
+
+    20% {
+        transform: skew(-2deg);
+    }
+
+    40% {
+        transform: skew(2deg);
+    }
+
+    60% {
+        transform: skew(-1deg);
+    }
+
+    80% {
+        transform: skew(1deg);
+    }
+
+    100% {
+        transform: skew(0deg);
+    }
+}
+
+.glitch-hover {
+    position: relative;
+    display: inline-block;
+}
+
+.glitch-hover:hover {
+    animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+    color: var(--primary);
+    text-shadow: 2px 2px var(--accent), -2px -2px var(--primary);
+}
+
+/* 2. Terminal Cursor Blink for Inputs/Text */
+.terminal-cursor::after {
+    content: '_';
+    animation: blink 1s step-end infinite;
+    color: var(--primary);
+    margin-left: 2px;
+}

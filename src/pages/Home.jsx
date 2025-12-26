@@ -64,7 +64,7 @@ const RoadmapScroll = () => {
                     transition={{ duration: 0.6 }}
                     style={{ textAlign: 'center', marginBottom: '4rem', maxWidth: '800px', margin: '0 auto 4rem' }}
                 >
-                    <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
+                    <h2 className="glitch-hover" style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
                         Scroll to explore our proven 4-step roadmap.
                     </p>
@@ -177,7 +177,7 @@ const LearningHubScroll = () => {
                     transition={{ duration: 0.8 }}
                     style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '800px', margin: '0 auto 3rem' }}
                 >
-                    <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
+                    <h2 className="glitch-hover" style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
                         Hand-picked resources to build your skills and prepare you for the industry.
                     </p>
@@ -475,7 +475,7 @@ const Home = () => {
 
             {/* Contact Teaser Section */}
             <section className="contact-teaser" style={{ textAlign: 'center', background: 'transparent' }}>
-                <h2>Ready to Start Your Journey?</h2>
+                <h2 className="glitch-hover">Ready to Start Your Journey?</h2>
                 <p className="subtitle" style={{ maxWidth: '600px', margin: '0 auto 2rem' }}>
                     Have questions or need assistance? Our team is here to help you every step of the way.
                 </p>
