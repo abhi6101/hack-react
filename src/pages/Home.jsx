@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Spline from '@splinetool/react-spline';
 import API_BASE_URL from '../config';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
@@ -349,19 +350,18 @@ const Home = () => {
                     <FeatureCard icon="fas fa-rocket" title="Career Roadmap" desc="Get a clear, actionable plan for internships and projects." color="#ef4444" />
                 </div>
 
-                {/* Right: Animated Robot */}
-                <motion.div
+                {/* Right: Spline 3D Robot */}
+                <div
                     className="feature-robot"
-                    animate={{ y: [-15, 15, -15], rotate: [0, 2, -2, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    style={{ flex: '1', display: 'flex', justifyContent: 'center', minWidth: '300px' }}
+                    style={{ flex: '1', display: 'flex', justifyContent: 'center', minWidth: '300px', height: '500px', position: 'relative' }}
                 >
-                    <img
-                        src="https://cdn3d.iconscout.com/3d/premium/thumb/robot-5650119-4707689.png"
-                        alt="3D Robot Assistant"
-                        style={{ maxWidth: '100%', maxHeight: '550px', filter: 'drop-shadow(0 0 40px rgba(14, 165, 233, 0.4))' }}
-                    />
-                </motion.div>
+                    <Spline scene="https://prod.spline.design/8b9b5100-4168-4401-8f66-2d5ab24026fb/scene.splinecode" />
+
+                    {/* Fallback if Spline fails or is loading (optional, but good UX) */}
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="loader"></div>
+                    </div>
+                </div>
             </section>
 
             {/* Horizontal Scrolling Roadmap (Lenis Style) */}
