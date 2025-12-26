@@ -35,6 +35,7 @@ import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
 import { ToastProvider } from './components/Toast';
 import './styles/interaction.css';
+import Lenis from 'lenis';
 
 
 function Layout({ children }) {
@@ -107,9 +108,29 @@ function App() {
     useEffect(() => {
         keepAliveService.start();
 
+        // Initialize Lenis for smooth scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
         // Cleanup on unmount
         return () => {
             keepAliveService.stop();
+            lenis.destroy();
         };
     }, []);
 
