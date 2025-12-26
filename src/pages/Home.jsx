@@ -224,13 +224,13 @@ const LearningHubScroll = () => {
                             whileHover={{ y: -15, scale: 1.02 }}
                             transition={{ duration: 0.4 }}
                             style={{
-                                minWidth: '400px',
-                                height: '500px',
-                                padding: '2.5rem',
+                                minWidth: '320px',
+                                height: '400px',
+                                padding: '2rem',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'space-between',
-                                borderRadius: '24px',
+                                borderRadius: '20px',
                                 border: '1px solid var(--border-color)',
                                 background: 'transparent',
                                 textDecoration: 'none',
@@ -240,11 +240,11 @@ const LearningHubScroll = () => {
                             }}
                         >
                             <div>
-                                <i className={res.icon} style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1.5rem' }}></i>
-                                <h3 style={{ fontSize: '2.2rem', marginBottom: '1rem', fontWeight: 700 }}>{res.title}</h3>
-                                <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{res.desc}</p>
+                                <i className={res.icon} style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1.2rem' }}></i>
+                                <h3 style={{ fontSize: '1.8rem', marginBottom: '0.8rem', fontWeight: 700 }}>{res.title}</h3>
+                                <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{res.desc}</p>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', fontWeight: 600, color: 'var(--primary)', fontSize: '1.2rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', fontWeight: 600, color: 'var(--primary)', fontSize: '1.1rem' }}>
                                 {res.cta} <i className="fas fa-arrow-right" style={{ marginLeft: '10px' }}></i>
                             </div>
                         </motion.a>
