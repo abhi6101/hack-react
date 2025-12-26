@@ -56,7 +56,6 @@ const RoadmapScroll = () => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 overflow: 'hidden',
-                background: 'var(--dark-bg)',
                 zIndex: 10
             }}>
                 <motion.div
