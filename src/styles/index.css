@@ -2,14 +2,36 @@
 
 /* --- 1. Root Variables & Global Styles --- */
 :root {
-    --dark-bg: #030305;
-    --surface-bg: #0E0E12;
-    --border-color: rgba(255, 255, 255, 0.06);
-    --primary: #4361ee;
-    --primary-glow: rgba(67, 97, 238, 0.5);
-    --accent: #7209b7;
-    --text-primary: #F8F9FA;
-    --text-secondary: #9CA3AF;
+    /* --- NEW THEME: Deep Navy & Electric Cyan --- */
+    --dark-bg: #0B1120;
+    /* Deep Navy Blue Background */
+    --surface-bg: #151F32;
+    /* Lighter Navy for Cards */
+    --border-color: rgba(56, 189, 248, 0.1);
+    /* Subtle Cyan Border */
+
+    --primary: #0EA5E9;
+    /* Electric Cyan (Sky 500) */
+    --primary-glow: rgba(14, 165, 233, 0.4);
+
+    --accent: #3B82F6;
+    /* Royal Blue */
+    --accent-glow: rgba(59, 130, 246, 0.4);
+
+    --text-primary: #F0F9FF;
+    /* Crisp White/Blue-white */
+    --text-secondary: #94A3B8;
+    /* Cool Grey */
+
+    --neon-pink: #0EA5E9;
+    /* REPLACED Pink with Cyan for consistency */
+    --neon-blue: #3B82F6;
+    /* Modern Blue */
+
+    --glass-bg: rgba(11, 17, 32, 0.7);
+    --glass-border: rgba(56, 189, 248, 0.1);
+
+    --card-hover-bg: #1E293B;
     --font-family: 'Inter', sans-serif;
     --font-body: 'Inter', sans-serif;
 }
