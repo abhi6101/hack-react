@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-// import Spline from '@splinetool/react-spline';
+import Spline from '@splinetool/react-spline';
 import API_BASE_URL from '../config';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
@@ -380,24 +380,18 @@ const Home = () => {
                     <FeatureCard icon="fas fa-rocket" title="Career Roadmap" desc="Get a clear, actionable plan for internships and projects." color="#ef4444" />
                 </div>
 
-                {/* Right: Animated Robot (Fallback for invalid Spline URL) */}
-                {/* To use Spline: Uncomment the import above and the component below, and provide a valid 'scene.splinecode' URL from Spline > Export > Code */}
-                {/* <div className="feature-robot" style={{ height: '500px' }}>
-                    <Spline scene="YOUR_VALID_SPLINE_URL_HERE" />
-                </div> */}
-
-                <motion.div
+                {/* Right: Spline 3D Robot */}
+                <div
                     className="feature-robot"
-                    animate={{ y: [-15, 15, -15], rotate: [0, 2, -2, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    style={{ flex: '1', display: 'flex', justifyContent: 'center', minWidth: '300px' }}
+                    style={{ flex: '1', display: 'flex', justifyContent: 'center', minWidth: '300px', height: '500px', position: 'relative' }}
                 >
-                    <img
-                        src="https://cdn3d.iconscout.com/3d/premium/thumb/robot-5650119-4707689.png"
-                        alt="3D Robot Assistant"
-                        style={{ maxWidth: '100%', maxHeight: '550px', filter: 'drop-shadow(0 0 40px rgba(14, 165, 233, 0.4))' }}
-                    />
-                </motion.div>
+                    <Spline scene="https://prod.spline.design/8cfb6748-f3dd-44dd-89fb-f46c7ab4186e/scene.splinecode" />
+
+                    {/* Fallback Loader */}
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="loader"></div>
+                    </div>
+                </div>
             </section>
 
             {/* Horizontal Scrolling Roadmap (Lenis Style) */}
