@@ -18,16 +18,16 @@ const StarBackground = () => {
 
         // Star properties
         const stars = [];
-        const numStars = 200; // Increased density for better effect
+        const numStars = 250;
 
         // Initialize stars
         for (let i = 0; i < numStars; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 1.2, // Subtle variance
-                alpha: Math.random() * 0.8 + 0.2, // Twinkle variance
-                velocity: Math.random() * 0.2 + 0.05 // Very slow drift
+                radius: Math.random() * 1.5, // Distinct circles
+                alpha: Math.random() * 0.7 + 0.3,
+                velocity: Math.random() * 0.4 + 0.1 // Consistent upward drift
             });
         }
 
@@ -36,30 +36,22 @@ const StarBackground = () => {
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw Background Gradient (Subtle Red/Dark mix like the reference)
-            // Creating a "Vignette" feel
-            const gradient = ctx.createRadialGradient(
-                canvas.width / 2, canvas.height / 2, 0,
-                canvas.width / 2, canvas.height / 2, canvas.width
-            );
-            gradient.addColorStop(0, '#0a0a0a'); // Dark center
-            gradient.addColorStop(1, '#000000'); // Pure black edges
-
-            ctx.fillStyle = gradient;
+            // 1. PURE BLACK BACKGROUND
+            ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw Stars
+            // 2. Draw Moving Circles (Stars)
             stars.forEach(star => {
-                // Move star upwards slowly
+                // Move star upwards
                 star.y -= star.velocity;
 
-                // Reset position if off screen
+                // Reset position if off screen (wrap around to bottom)
                 if (star.y < 0) {
                     star.y = canvas.height;
                     star.x = Math.random() * canvas.width;
                 }
 
-                // Draw star
+                // Draw circle
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;

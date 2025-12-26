@@ -45,8 +45,6 @@
 body {
     background-color: transparent;
     /* Changed from var(--dark-bg) to allow StarBackground */
-    background-image:
-        linear-gradient(180deg, rgba(67, 97, 238, 0.05) 0%, rgba(3, 3, 5, 0) 50%);
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.6;
