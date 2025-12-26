@@ -6,10 +6,12 @@
     --dark-bg: #000000;
     /* Pure Black */
     /* Deep Navy Blue Background */
-    --surface-bg: rgba(0, 0, 0, 0.5);
-    /* Neutral Black Glass for Cards (No Blue Tint) */
+    --surface-bg: transparent;
+    /* Pure Transparent - Text floats in void */
+
     /* Lighter Navy for Cards */
-    --border-color: rgba(56, 189, 248, 0.2);
+    --border-color: transparent;
+    /* No Outline */
     /* Subtle Cyan Border */
 
     --primary: #0EA5E9;
@@ -137,10 +139,7 @@ section {
 
 .surface-glow {
     background: var(--surface-bg);
-    backdrop-filter: blur(12px);
-    /* Glass blur */
-    -webkit-backdrop-filter: blur(12px);
-    /* Safari support */
+    /* Removed backdrop-filter to ensure crystal clear transparency */
     border-radius: 16px;
     position: relative;
     transition: transform 0.3s ease, background 0.3s ease;
