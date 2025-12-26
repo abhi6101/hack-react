@@ -72,19 +72,26 @@ const RoadmapScroll = () => {
 
                 <motion.div style={{ x, display: 'flex', gap: '60px', paddingLeft: '10vw' }}>
                     {steps.map((step) => (
-                        <div key={step.id} className="surface-glow" style={{
-                            minWidth: '450px',
-                            height: '550px',
-                            padding: '3rem',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            borderRadius: '32px',
-                            border: '1px solid var(--border-color)',
-                            background: 'var(--surface-bg)',
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}>
+                        <motion.div
+                            key={step.id}
+                            className="surface-glow"
+                            whileHover={{ y: -15, scale: 1.02 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            style={{
+                                minWidth: '450px',
+                                height: '550px',
+                                padding: '3rem',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                borderRadius: '32px',
+                                border: '1px solid var(--border-color)',
+                                background: 'var(--surface-bg)',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                cursor: 'default'
+                            }}
+                        >
                             <div style={{
                                 position: 'absolute',
                                 top: '-20px',
@@ -98,7 +105,7 @@ const RoadmapScroll = () => {
                                 0{step.id}
                             </div>
 
-                            <div style={{ zIndex: 2 }}>
+                            <div style={{ zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                                 <div style={{
                                     width: '80px',
                                     height: '80px',
@@ -114,13 +121,7 @@ const RoadmapScroll = () => {
                                 <h3 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', fontWeight: 700 }}>{step.title}</h3>
                                 <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.desc}</p>
                             </div>
-
-                            <div style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid var(--border-color)' }}>
-                                <span style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '1.1rem', cursor: 'pointer' }}>
-                                    Learn More <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
-                                </span>
-                            </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </motion.div>
             </div>
