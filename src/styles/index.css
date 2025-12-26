@@ -199,6 +199,26 @@ section {
     box-shadow: none !important;
 }
 
+/* Force transparency on all hero content children to eliminate black boxes */
+.hero *,
+.hero-content *,
+#heroHeading *,
+#userWelcome *,
+#heroSubtitle *,
+.typewriter-text {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    /* Remove shadows to be safe */
+}
+
+/* Specific restoration for gradient text */
+#heroHeading,
+.typewriter-text {
+    background-color: transparent !important;
+    /* Maintain gradient via original rules (background-image) */
+}
+
 .hero::before,
 .hero::after {
     display: none !important;
