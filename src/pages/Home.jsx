@@ -285,6 +285,7 @@ const Home = () => {
                     initial="hidden"
                     animate="visible"
                     variants={staggerContainer}
+                    style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                 >
                     <motion.div variants={fadeInUp}>
                         <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
@@ -293,7 +294,18 @@ const Home = () => {
                     </motion.div>
 
                     {user && (
-                        <motion.div id="userWelcome" className="surface-glow" variants={fadeInUp}>
+                        <motion.div
+                            id="userWelcome"
+                            variants={fadeInUp}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                boxShadow: 'none',
+                                padding: 0,
+                                textAlign: 'center',
+                                marginTop: '2rem'
+                            }}
+                        >
                             <h2>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
                             <p>Account type: <span id="displayRole">{user.role}</span></p>
                         </motion.div>
