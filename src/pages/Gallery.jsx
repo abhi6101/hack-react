@@ -132,13 +132,43 @@ const Gallery = () => {
     return (
         <main>
             <section className="gallery-page">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <div>
-                        <h1>Moments & Memories</h1>
-                        <p className="subtitle">A collection of moments from our campus life, events, and sessions.</p>
+                <div className="gallery-header" style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'end',
+                    flexWrap: 'wrap',
+                    gap: '1.5rem',
+                    marginBottom: '2rem',
+                    paddingBottom: '2rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                    <div style={{ maxWidth: '600px' }}>
+                        <h1 style={{
+                            fontSize: '3rem',
+                            marginBottom: '0.5rem',
+                            background: 'linear-gradient(135deg, #fff 0%, var(--primary) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            textShadow: '0 0 30px rgba(67, 97, 238, 0.2)'
+                        }}>Moments & Memories</h1>
+                        <p className="subtitle" style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>
+                            A collection of moments from our campus life, events, and sessions.
+                        </p>
                     </div>
-                    <button className="btn btn-primary" onClick={() => setShowUploadModal(true)}>
-                        <i className="fas fa-camera"></i> Share Photo
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setShowUploadModal(true)}
+                        style={{
+                            padding: '0.8rem 1.5rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            width: 'auto',
+                            borderRadius: '12px',
+                            boxShadow: '0 4px 15px rgba(67, 97, 238, 0.4)'
+                        }}
+                    >
+                        <i className="fas fa-camera"></i> <span>Share Photo</span>
                     </button>
                 </div>
 
