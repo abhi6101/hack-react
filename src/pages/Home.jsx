@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import API_BASE_URL from '../config';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
@@ -53,37 +52,17 @@ const Home = () => {
         const storedUsername = localStorage.getItem('username');
         const storedRole = localStorage.getItem('userRole');
         const token = localStorage.getItem('authToken');
-        const storedName = localStorage.getItem('userFullName');
 
         if (storedUsername && token) {
             setUser({
                 username: storedUsername,
-                name: storedName || storedUsername,
                 role: storedRole || 'User'
             });
-
-            // If we don't have the full name stored, try to fetch it
-            if (!storedName) {
-                fetch(`${API_BASE_URL}/student-profile`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.fullName || data.full_name) {
-                            const fullName = data.fullName || data.full_name;
-                            localStorage.setItem('userFullName', fullName);
-                            // Update state to trigger re-render with new name
-                            setUser(prev => ({ ...prev, name: fullName }));
-                        }
-                    })
-                    .catch(err => console.error("Could not fetch profile name", err));
-            }
         } else {
             // Inconsistent state: Username but no token -> Clear it
             if (storedUsername) {
                 localStorage.removeItem('username');
                 localStorage.removeItem('userRole');
-                localStorage.removeItem('userFullName');
             }
         }
     }, []);
@@ -103,7 +82,7 @@ const Home = () => {
                     </h1>
                     {user && (
                         <div id="userWelcome" className="surface-glow">
-                            <h2>Welcome, <span id="displayUsername" style={{ textTransform: 'capitalize' }}>{user.name || user.username}</span>!</h2>
+                            <h2>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
                             <p>Account type: <span id="displayRole">{user.role}</span></p>
                         </div>
                     )}
