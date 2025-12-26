@@ -61,6 +61,41 @@ const FeatureCard = ({ icon, title, desc, color }) => (
     </motion.div>
 );
 
+const AnimatedHandBackground = () => {
+    const { scrollYProgress } = useScroll();
+    const y = useTransform(scrollYProgress, [0, 1], ['100%', '-20%']);
+    const rotate = useTransform(scrollYProgress, [0, 1], [0, 45]);
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+    return (
+        <motion.div
+            style={{
+                position: 'fixed',
+                bottom: 0,
+                right: '5%',
+                width: '600px',
+                height: '800px',
+                zIndex: -1,
+                pointerEvents: 'none',
+                y,
+                rotate,
+                opacity
+            }}
+        >
+            <img
+                src="/images/wireframe-hand.png"
+                alt="Futuristic Hand"
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 0 30px rgba(255, 0, 80, 0.3)) hue-rotate(-20deg)'
+                }}
+            />
+        </motion.div>
+    );
+};
+
 const RoadmapScroll = () => {
     const targetRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -311,6 +346,7 @@ const Home = () => {
 
     return (
         <main>
+            <AnimatedHandBackground />
             {/* Hero Section */}
             <section className="hero">
                 <motion.div
