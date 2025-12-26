@@ -1,102 +1,385 @@
 /* === CONTACT PAGE: PRO-LEVEL STYLESHEET === */
 
 /* --- 1. Root Variables & Global Styles --- */
-:root {
-    --dark-bg: #0A0A10; --surface-bg: #111119; --border-color: rgba(255, 255, 255, 0.1);
-    --primary: #00d4ff; --primary-glow: rgba(0, 212, 255, 0.5); --accent: #ff477b;
-    --text-primary: #ECEFF1; --text-secondary: #90A4AE; --font-family: 'Poppins', sans-serif;
+/* :root block removed to inherit global transparency from index.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: var(--dark-bg); color: var(--text-primary); font-family: var(--font-family); line-height: 1.7; overflow-x: hidden; }
-a { color: var(--primary); text-decoration: none; transition: color 0.3s ease; }
-a:hover { color: white; }
+
+body {
+    background-color: transparent;
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: white;
+}
 
 /* --- 2. Navigation --- */
-nav { padding: 1rem 5%; background: rgba(10, 10, 16, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
-nav:first-of-type { display: flex; justify-content: space-between; align-items: center; }
-nav:last-of-type { position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; }
-.logo { font-size: 1.8rem; font-weight: 800; }
-.logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
-nav ul { display: flex; list-style: none; gap: 1rem; align-items: center; overflow-x: auto; padding-bottom: 0.5rem; }
-nav:last-of-type a { color: var(--text-secondary); padding: 0.5rem 1rem; border-radius: 8px; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; transition: all 0.3s ease; }
-nav:last-of-type a:hover { color: var(--text-primary); background-color: var(--surface-bg); }
-nav:last-of-type a.active { color: var(--primary); background: var(--surface-bg); font-weight: 600; }
+nav {
+    padding: 1rem 5%;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid var(--border-color);
+}
+
+nav:first-of-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav:last-of-type {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.logo span {
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+    align-items: center;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+nav:last-of-type a {
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+nav:last-of-type a:hover {
+    color: var(--text-primary);
+    background-color: var(--surface-bg);
+}
+
+nav:last-of-type a.active {
+    color: var(--primary);
+    background: var(--surface-bg);
+    font-weight: 600;
+}
 
 /* --- 3. Buttons & Surface Glow --- */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; }
-.btn-primary { background: var(--primary); color: #000; box-shadow: 0 0 25px var(--primary-glow); }
-.btn-primary:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 0 40px var(--primary-glow); }
-.surface-glow { background: var(--surface-bg); border-radius: 16px; position: relative; }
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 0 25px var(--primary-glow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 0 40px var(--primary-glow);
+}
+
+.surface-glow {
+    background: var(--surface-bg);
+    border-radius: 16px;
+    position: relative;
+}
+
 .surface-glow::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: inherit; padding: 1px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: 1px;
     background: conic-gradient(from var(--angle), transparent 20%, var(--primary), var(--accent), transparent 80%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-    animation: spin 5s linear infinite paused; opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: spin 5s linear infinite paused;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
 }
-.surface-glow:hover::before { animation-play-state: running; opacity: 1; }
-@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
-@keyframes spin { to { --angle: 360deg; } }
+
+.surface-glow:hover::before {
+    animation-play-state: running;
+    opacity: 1;
+}
+
+@property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes spin {
+    to {
+        --angle: 360deg;
+    }
+}
 
 /* === CONTACT-SPECIFIC STYLES START HERE === */
 
 /* --- 4. Hero Section --- */
-.hero { min-height: 50vh; padding: 6rem 2rem; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; }
-.hero::before, .hero::after { content: ''; position: absolute; z-index: 0; filter: blur(120px); will-change: transform; border-radius: 50%; }
-.hero::before { width: 40vw; height: 40vw; background: radial-gradient(circle, var(--primary) 0%, transparent 60%); top: 10%; left: 10%; animation: drift-1 20s infinite alternate ease-in-out; }
-.hero::after { width: 30vw; height: 30vw; background: radial-gradient(circle, var(--accent) 0%, transparent 60%); bottom: 10%; right: 10%; animation: drift-2 25s infinite alternate ease-in-out; }
-@keyframes drift-1 { from { transform: translate(-50px, -50px) rotate(0deg); } to { transform: translate(50px, 50px) rotate(90deg); } }
-@keyframes drift-2 { from { transform: translate(50px, 50px) rotate(0deg); } to { transform: translate(-50px, -50px) rotate(-90deg); } }
-.hero-content { position: relative; z-index: 1; }
-.hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); background: linear-gradient(90deg, #fff, #b0c4de); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
-.hero .subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+.hero {
+    min-height: 50vh;
+    padding: 6rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+    display: none !important;
+}
+
+.hero::before {
+    display: none !important;
+}
+
+.hero::after {
+    display: none !important;
+}
+
+@keyframes drift-1 {
+    from {
+        transform: translate(-50px, -50px) rotate(0deg);
+    }
+
+    to {
+        transform: translate(50px, 50px) rotate(90deg);
+    }
+}
+
+@keyframes drift-2 {
+    from {
+        transform: translate(50px, 50px) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50px, -50px) rotate(-90deg);
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    background: linear-gradient(90deg, #fff, #b0c4de);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.hero .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
 
 /* --- 5. Main Layout & Contact Grid --- */
-.contact-page-container { max-width: 1200px; margin: 0 auto; padding: 4rem 5%; }
-.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
-.contact-card { padding: 2.5rem; transition: transform 0.4s ease; }
-.contact-card:hover { transform: translateY(-8px); }
-.contact-card h3 { font-size: 1.8rem; margin-bottom: 2rem; border-left: 4px solid var(--primary); padding-left: 1rem; }
+.contact-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 5%;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.contact-card {
+    padding: 2.5rem;
+    transition: transform 0.4s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-8px);
+}
+
+.contact-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--primary);
+    padding-left: 1rem;
+}
 
 /* --- 6. Contact Info Card --- */
-.contact-item { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.5rem; }
-.contact-item i { font-size: 1.5rem; color: var(--primary); margin-top: 0.25rem; }
-.contact-item h4 { font-size: 1.1rem; margin: 0 0 0.25rem 0; color: var(--text-primary); }
-.contact-item p, .contact-item a { font-size: 0.95rem; color: var(--text-secondary); }
-.social-links { display: flex; gap: 1rem; margin-top: 2rem; }
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-item i {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-top: 0.25rem;
+}
+
+.contact-item h4 {
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0;
+    color: var(--text-primary);
+}
+
+.contact-item p,
+.contact-item a {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
 .social-links a {
-    display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;
-    background: rgba(255,255,255,0.05); border-radius: 50%; font-size: 1.2rem; color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
     transition: all 0.3s ease;
 }
-.social-links a:hover { background: var(--primary); color: var(--dark-bg); transform: scale(1.1); }
+
+.social-links a:hover {
+    background: var(--primary);
+    color: var(--dark-bg);
+    transform: scale(1.1);
+}
 
 /* --- 7. Contact Form Card --- */
-form { display: flex; flex-direction: column; gap: 1.5rem; }
-.form-group label { display: block; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
-.form-group input, .form-group textarea, .form-group select {
-    width: 100%; padding: 0.9rem 1rem; background: rgba(0,0,0,0.2);
-    border: 1px solid var(--border-color); color: var(--text-primary);
-    border-radius: 8px; font-size: 1rem; font-family: var(--font-family);
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow);
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
 }
+
 .form-group select {
-    -webkit-appearance: none; appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2390A4AE' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.8em;
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.8em;
 }
-.form-group textarea { resize: vertical; }
-.form-group .btn-primary { width: 100%; padding: 0.9rem; }
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group .btn-primary {
+    width: 100%;
+    padding: 0.9rem;
+}
 
 /* --- 8. Map Section --- */
-.map-section { margin-top: 3rem; border-radius: 16px; overflow: hidden; padding: 0.5rem; }
-.map-section iframe { width: 100%; height: 450px; border: 0; border-radius: 12px; }
+.map-section {
+    margin-top: 3rem;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 0.5rem;
+}
+
+.map-section iframe {
+    width: 100%;
+    height: 450px;
+    border: 0;
+    border-radius: 12px;
+}
 
 /* Responsive Adjustments */
 @media(max-width: 768px) {
-    .contact-grid { grid-template-columns: 1fr; }
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
 }
