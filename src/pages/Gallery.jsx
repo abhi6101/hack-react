@@ -205,64 +205,145 @@ const Gallery = () => {
 
             {/* Upload Modal */}
             {showUploadModal && (
-                <div className="modal" style={{ display: 'flex' }}>
-                    <div className="modal-content surface-glow" style={{ maxWidth: '500px', width: '90%', padding: '2rem', borderRadius: '15px' }}>
-                        <span className="close-modal" onClick={() => setShowUploadModal(false)} style={{ position: 'absolute', right: '20px', top: '10px', fontSize: '2rem', cursor: 'pointer' }}>&times;</span>
-                        <h2 style={{ marginBottom: '1.5rem' }}>Share Your Photo</h2>
+                <div className="modal" style={{ display: 'flex', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}>
+                    <div className="modal-content" style={{
+                        maxWidth: '500px',
+                        width: '90%',
+                        padding: '2.5rem',
+                        borderRadius: '24px',
+                        background: 'rgba(22, 22, 34, 0.95)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                    }}>
+                        <span className="close-modal" onClick={() => setShowUploadModal(false)} style={{ position: 'absolute', right: '25px', top: '25px', fontSize: '1.5rem', cursor: 'pointer', color: 'rgba(255,255,255,0.5)', transition: 'color 0.3s' }}>&times;</span>
+                        <h2 style={{
+                            marginBottom: '2rem',
+                            fontSize: '2rem',
+                            textAlign: 'center',
+                            background: 'linear-gradient(135deg, #fff 0%, var(--primary) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}>Share Your Photo</h2>
 
                         {message.text && (
-                            <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '1rem', padding: '10px', borderRadius: '5px', background: message.type === 'success' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)', color: message.type === 'success' ? '#22c55e' : '#ef4444' }}>
+                            <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '1.5rem', padding: '1rem', borderRadius: '12px', background: message.type === 'success' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)', border: `1px solid ${message.type === 'success' ? '#22c55e' : '#ef4444'}`, color: message.type === 'success' ? '#fff' : '#fff' }}>
                                 {message.text}
                             </div>
                         )}
 
                         <form onSubmit={handleUploadSubmit}>
-                            <div className="form-group" style={{ marginBottom: '1rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Title</label>
+                            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.8rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Title</label>
                                 <input
                                     type="text"
                                     className="form-control"
                                     required
                                     value={formData.title}
                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        borderRadius: '12px',
+                                        padding: '1rem',
+                                        color: '#fff',
+                                        width: '100%'
+                                    }}
+                                    placeholder="e.g., Annual Tech Fest 2024"
                                 />
                             </div>
-                            <div className="form-group" style={{ marginBottom: '1rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Category</label>
-                                <select
-                                    className="form-control"
-                                    value={formData.type}
-                                    onChange={e => setFormData({ ...formData, type: e.target.value })}
-                                >
-                                    <option value="campus">Campus</option>
-                                    <option value="lab">Lab</option>
-                                    <option value="function">Function</option>
-                                    <option value="farewell">Farewell</option>
-                                    <option value="class">Class</option>
-                                    <option value="other">Other</option>
-                                </select>
+                            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.8rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Category</label>
+                                <div style={{ position: 'relative' }}>
+                                    <select
+                                        className="form-control"
+                                        value={formData.type}
+                                        onChange={e => setFormData({ ...formData, type: e.target.value })}
+                                        style={{
+                                            background: 'rgba(255, 255, 255, 0.05)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '12px',
+                                            padding: '1rem',
+                                            color: '#fff',
+                                            width: '100%',
+                                            cursor: 'pointer',
+                                            appearance: 'none'
+                                        }}
+                                    >
+                                        <option value="campus" style={{ background: '#1a1a1a' }}>Campus</option>
+                                        <option value="lab" style={{ background: '#1a1a1a' }}>Lab</option>
+                                        <option value="function" style={{ background: '#1a1a1a' }}>Function</option>
+                                        <option value="farewell" style={{ background: '#1a1a1a' }}>Farewell</option>
+                                        <option value="class" style={{ background: '#1a1a1a' }}>Class</option>
+                                        <option value="other" style={{ background: '#1a1a1a' }}>Other</option>
+                                    </select>
+                                    <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'rgba(255,255,255,0.5)' }}></i>
+                                </div>
                             </div>
-                            <div className="form-group" style={{ marginBottom: '1rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Description</label>
+                            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.8rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Description</label>
                                 <textarea
                                     className="form-control"
                                     rows="3"
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        borderRadius: '12px',
+                                        padding: '1rem',
+                                        color: '#fff',
+                                        width: '100%',
+                                        resize: 'none'
+                                    }}
+                                    placeholder="Tell us about this moment..."
                                 ></textarea>
                             </div>
-                            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem' }}>Photo</label>
-                                <input
-                                    type="file"
-                                    className="form-control"
-                                    required
-                                    accept="image/*"
-                                    onChange={e => setFormData({ ...formData, image: e.target.files[0] })}
-                                />
+                            <div className="form-group" style={{ marginBottom: '2rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.8rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Photo</label>
+                                <label style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '10px',
+                                    width: '100%',
+                                    padding: '2rem',
+                                    borderRadius: '16px',
+                                    border: '2px dashed rgba(255, 255, 255, 0.1)',
+                                    background: 'rgba(255, 255, 255, 0.02)',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.borderColor = 'var(--primary)';
+                                        e.currentTarget.style.background = 'rgba(67, 97, 238, 0.05)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                                    }}
+                                >
+                                    <i className="fas fa-cloud-upload-alt" style={{ fontSize: '1.5rem', color: 'var(--primary)' }}></i>
+                                    <span style={{ color: formData.image ? 'var(--primary)' : 'rgba(255,255,255,0.6)' }}>
+                                        {formData.image ? formData.image.name : 'Click to Upload Photo'}
+                                    </span>
+                                    <input
+                                        type="file"
+                                        style={{ display: 'none' }}
+                                        required
+                                        accept="image/*"
+                                        onChange={e => setFormData({ ...formData, image: e.target.files[0] })}
+                                    />
+                                </label>
                             </div>
-                            <button type="submit" className="btn btn-primary" disabled={uploadLoading} style={{ width: '100%' }}>
-                                {uploadLoading ? 'Uploading...' : 'Submit for Review'}
+                            <button type="submit" className="btn btn-primary" disabled={uploadLoading} style={{
+                                width: '100%',
+                                padding: '1rem',
+                                borderRadius: '12px',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                boxShadow: '0 10px 30px -10px var(--primary)'
+                            }}>
+                                {uploadLoading ? 'Uploading...' : 'Submit Photo'}
                             </button>
                         </form>
                     </div>
