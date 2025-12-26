@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
 import API_BASE_URL from '../config';
+import '@splinetool/react-spline/css';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
@@ -31,6 +32,36 @@ const scaleHover = {
         transition: { type: "spring", stiffness: 300 }
     }
 };
+
+const FeatureCard = ({ icon, title, desc, color }) => (
+    <motion.div
+        className="glass-card"
+        whileHover={{ y: -10, boxShadow: `0 10px 30px -10px ${color}` }}
+        style={{
+            padding: '2rem',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'rgba(0, 0, 0, 0.3)',
+            backdropFilter: 'blur(10px)',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem'
+        }}
+    >
+        <div style={{
+            fontSize: '2.5rem',
+            color: color,
+            marginBottom: '0.5rem',
+            filter: `drop-shadow(0 0 10px ${color})`
+        }}>
+            <i className={icon}></i>
+        </div>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{title}</h3>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{desc}</p>
+    </motion.div>
+);
 
 const RoadmapScroll = () => {
     const targetRef = useRef(null);
@@ -514,35 +545,5 @@ const Home = () => {
         </main>
     );
 };
-
-const FeatureCard = ({ icon, title, desc, color }) => (
-    <motion.div
-        className="glass-card"
-        whileHover={{ y: -10, boxShadow: `0 10px 30px -10px ${color}` }}
-        style={{
-            padding: '2rem',
-            borderRadius: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            background: 'rgba(0, 0, 0, 0.3)', // Darker glass
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1rem'
-        }}
-    >
-        <div style={{
-            fontSize: '2.5rem',
-            color: color,
-            marginBottom: '0.5rem',
-            filter: `drop-shadow(0 0 10px ${color})`
-        }}>
-            <i className={icon}></i>
-        </div>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{title}</h3>
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{desc}</p>
-    </motion.div>
-);
 
 export default Home;
