@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import API_BASE_URL from '../config';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
@@ -29,6 +29,104 @@ const scaleHover = {
         backgroundColor: "rgba(255, 255, 255, 0.03)",
         transition: { type: "spring", stiffness: 300 }
     }
+};
+
+const RoadmapScroll = () => {
+    const targetRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+    });
+
+    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
+
+    const steps = [
+        { id: 1, title: "Learn Skills", desc: "Master trending tech with our structured courses.", icon: "fas fa-laptop-code" },
+        { id: 2, title: "Build Projects", desc: "Apply knowledge by building real-world applications.", icon: "fas fa-hammer" },
+        { id: 3, title: "Perfect Resume", desc: "Craft a resume that passes ATS scanners.", icon: "fas fa-file-signature" },
+        { id: 4, title: "Get Hired", desc: "Ace the interview and launch your career.", icon: "fas fa-rocket" }
+    ];
+
+    return (
+        <section ref={targetRef} style={{ height: "300vh", position: "relative" }}>
+            <div className="sticky-wrapper" style={{
+                position: "sticky",
+                top: 0,
+                height: "100vh",
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                background: 'var(--dark-bg)',
+                zIndex: 10
+            }}>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    style={{ paddingLeft: '10vw', marginBottom: '4rem' }}
+                >
+                    <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
+                    <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
+                        Scroll to explore our proven 4-step roadmap.
+                    </p>
+                </motion.div>
+
+                <motion.div style={{ x, display: 'flex', gap: '60px', paddingLeft: '10vw' }}>
+                    {steps.map((step) => (
+                        <div key={step.id} className="surface-glow" style={{
+                            minWidth: '450px',
+                            height: '550px',
+                            padding: '3rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            borderRadius: '32px',
+                            border: '1px solid var(--border-color)',
+                            background: 'var(--surface-bg)',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                position: 'absolute',
+                                top: '-20px',
+                                right: '-20px',
+                                fontSize: '12rem',
+                                fontWeight: 900,
+                                opacity: 0.05,
+                                lineHeight: 1,
+                                fontFamily: 'var(--font-heading)'
+                            }}>
+                                0{step.id}
+                            </div>
+
+                            <div style={{ zIndex: 2 }}>
+                                <div style={{
+                                    width: '80px',
+                                    height: '80px',
+                                    borderRadius: '20px',
+                                    background: 'rgba(14, 165, 233, 0.1)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: '2rem'
+                                }}>
+                                    <i className={`${step.icon}`} style={{ fontSize: '2.5rem', color: 'var(--primary)' }}></i>
+                                </div>
+                                <h3 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', fontWeight: 700 }}>{step.title}</h3>
+                                <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.desc}</p>
+                            </div>
+
+                            <div style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid var(--border-color)' }}>
+                                <span style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '1.1rem', cursor: 'pointer' }}>
+                                    Learn More <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                </motion.div>
+            </div>
+        </section>
+    );
 };
 
 const Home = () => {
@@ -130,50 +228,8 @@ const Home = () => {
             </section>
 
 
-            {/* NEW: Learning Roadmap Section (Learnext Inspired) */}
-            <motion.section
-                className="roadmap-section"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={staggerContainer}
-            >
-                <motion.h2 variants={fadeInUp}>Your Path to Success</motion.h2>
-                <motion.p className="subtitle" variants={fadeInUp}>Follow our proven 4-step roadmap to land your dream job.</motion.p>
-                <div className="roadmap-container">
-                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
-                        <div className="step-icon"><i className="fas fa-laptop-code"></i></div>
-                        <div className="step-content">
-                            <h3>1. Learn Skills</h3>
-                            <p>Master trending tech with our structured courses.</p>
-                        </div>
-                    </motion.div>
-
-                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
-                        <div className="step-icon"><i className="fas fa-hammer"></i></div>
-                        <div className="step-content">
-                            <h3>2. Build Projects</h3>
-                            <p>Apply knowledge by building real-world applications.</p>
-                        </div>
-                    </motion.div>
-
-                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
-                        <div className="step-icon"><i className="fas fa-file-signature"></i></div>
-                        <div className="step-content">
-                            <h3>3. Perfect Resume</h3>
-                            <p>Craft a resume that passes ATS scanners.</p>
-                        </div>
-                    </motion.div>
-
-                    <motion.div className="roadmap-step" variants={fadeInUp} whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
-                        <div className="step-icon"><i className="fas fa-rocket"></i></div>
-                        <div className="step-content">
-                            <h3>4. Get Hired</h3>
-                            <p>Ace the interview and launch your career.</p>
-                        </div>
-                    </motion.div>
-                </div>
-            </motion.section>
+            {/* Horizontal Scrolling Roadmap (Lenis Style) */}
+            <RoadmapScroll />
 
             {/* Learning Hub Section */}
             <motion.section
