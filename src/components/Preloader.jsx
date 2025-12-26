@@ -3,25 +3,39 @@ import '../styles/preloader.css';
 
 const Preloader = ({ onComplete }) => {
     const [exit, setExit] = useState(false);
+    const [count, setCount] = useState(0);
 
     useEffect(() => {
-        // Total duration matches the CSS animation + a small pause
-        // Animation timeline:
-        // 0s: Text starts filling
-        // 1.5s: Text full
-        // 2.0s: Slide up starts
+        // Counter Animation
+        const duration = 2000; // 2 seconds to reach 100
+        const steps = 100;
+        const intervalTime = duration / steps;
 
-        const timer = setTimeout(() => {
-            setExit(true);
+        const timer = setInterval(() => {
+            setCount((prev) => {
+                if (prev >= 100) {
+                    clearInterval(timer);
+                    return 100;
+                }
+                return prev + 1;
+            });
+        }, intervalTime);
 
-            // Wait for slide-up transition (0.8s) to finish before unmounting
+        // Exit Sequence
+        const exitTimer = setTimeout(() => {
+            setExit(true); // Trigger slide up
+
+            // Wait for CSS transition (0.8s) to finish
             setTimeout(() => {
                 if (onComplete) onComplete();
             }, 800);
 
-        }, 2200);
+        }, 2200); // Start exit slightly after counter reaches 100
 
-        return () => clearTimeout(timer);
+        return () => {
+            clearInterval(timer);
+            clearTimeout(exitTimer);
+        };
     }, [onComplete]);
 
     return (
@@ -30,9 +44,10 @@ const Preloader = ({ onComplete }) => {
                 <h1 className="preloader-text reveal-text">
                     Hack-2-Hired
                 </h1>
-                <div className="loading-bar">
-                    <div className="loading-progress"></div>
-                </div>
+            </div>
+            {/* Percentage Counter */}
+            <div className="preloader-counter">
+                {count}%
             </div>
         </div>
     );
