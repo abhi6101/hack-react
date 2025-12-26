@@ -56,7 +56,7 @@ const ApplicationModal = ({ interview, onClose, onSubmit }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content" data-lenis-prevent onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2>Apply for {interview.company}</h2>
                     <div style={{ display: 'flex', gap: '10px' }}>

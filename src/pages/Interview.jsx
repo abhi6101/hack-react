@@ -380,7 +380,7 @@ const Interview = () => {
 
             {showModal && (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal-content surface-glow" onClick={e => e.stopPropagation()}>
+                    <div className="modal-content surface-glow" data-lenis-prevent onClick={e => e.stopPropagation()}>
                         <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
                         <h2>Book Interview: {selectedCompany?.company}</h2>
                         <form onSubmit={handleBookingSubmit} className="booking-form">

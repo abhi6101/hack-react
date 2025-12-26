@@ -2532,7 +2532,7 @@ const AdminDashboard = () => {
 
                             <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
                                 {/* Left: Data */}
-                                <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', borderRight: '1px solid rgba(255,255,255,0.1)', background: '#1e293b' }}>
+                                <div data-lenis-prevent style={{ flex: 1, padding: '2rem', overflowY: 'auto', borderRight: '1px solid rgba(255,255,255,0.1)', background: '#1e293b' }}>
                                     <h3 style={{ color: '#94a3b8', marginBottom: '1.5rem', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>Submitted Details</h3>
 
                                     <div style={{ display: 'grid', gap: '1.5rem' }}>

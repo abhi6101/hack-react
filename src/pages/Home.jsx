@@ -94,7 +94,7 @@ const RoadmapScroll = () => {
                     transition={{ duration: 0.6 }}
                     style={{ textAlign: 'center', marginBottom: '4rem', maxWidth: '800px', margin: '0 auto 4rem' }}
                 >
-                    <h2 className="glitch-hover" style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
+                    <h2 className="glitch-hover" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
                         Scroll to explore our proven 4-step roadmap.
                     </p>
@@ -207,7 +207,7 @@ const LearningHubScroll = () => {
                     transition={{ duration: 0.8 }}
                     style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '800px', margin: '0 auto 3rem' }}
                 >
-                    <h2 className="glitch-hover" style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
+                    <h2 className="glitch-hover" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
                         Hand-picked resources to build your skills and prepare you for the industry.
                     </p>
@@ -369,7 +369,7 @@ const Home = () => {
             {/* NEW: Feature Grid Section (User Request) */}
             <section className="feature-grid-section" style={{ padding: '4rem 5%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
                 {/* Left: 2x2 Grid */}
-                <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', flex: '1', minWidth: '300px', maxWidth: '800px' }}>
+                <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', flex: '1', width: '100%', maxWidth: '800px' }}>
                     {/* Card 1 */}
                     <FeatureCard icon="fas fa-lightbulb" title="Mentorship" desc="Weekly check-ins, real guidance, and accountability from industry mentors." color="#fbbf24" />
                     {/* Card 2 */}
