@@ -5,7 +5,8 @@
     /* --- NEW THEME: Deep Navy & Electric Cyan --- */
     --dark-bg: #0B1120;
     /* Deep Navy Blue Background */
-    --surface-bg: #151F32;
+    --surface-bg: rgba(21, 31, 50, 0.6);
+    /* Translucent for Glass Effect */
     /* Lighter Navy for Cards */
     --border-color: rgba(56, 189, 248, 0.1);
     /* Subtle Cyan Border */
@@ -135,6 +136,10 @@ section {
 
 .surface-glow {
     background: var(--surface-bg);
+    backdrop-filter: blur(12px);
+    /* Glass blur */
+    -webkit-backdrop-filter: blur(12px);
+    /* Safari support */
     border-radius: 16px;
     position: relative;
     transition: transform 0.3s ease, background 0.3s ease;
@@ -198,8 +203,8 @@ section {
     filter: blur(120px);
     will-change: transform;
     border-radius: 50%;
-    opacity: 0.4;
-    /* Reduce opacity so stars show through slightly */
+    opacity: 0.15;
+    /* Drastically reduced to prevent "boxing" effect */
 }
 
 .hero::before {
