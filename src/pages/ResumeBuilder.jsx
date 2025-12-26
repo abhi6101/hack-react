@@ -198,8 +198,16 @@ const ResumeBuilder = () => {
             });
 
             if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || 'Failed to generate PDF');
+                let errorMsg = 'Failed to generate PDF';
+                try {
+                    const err = await res.json();
+                    errorMsg = err.error || err.message || errorMsg;
+                } catch (parseErr) {
+                    // If response is not JSON (e.g. plain text "Unauthorized"), read as text
+                    const text = await res.text();
+                    errorMsg = text || errorMsg;
+                }
+                throw new Error(errorMsg);
             }
 
             const data = await res.json();
@@ -209,7 +217,16 @@ const ResumeBuilder = () => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            if (!downloadRes.ok) throw new Error("Failed to download file");
+            if (!downloadRes.ok) {
+                let errorMsg = 'Failed to download file';
+                try {
+                    const err = await downloadRes.text(); // Often download endpoints return text/html on error
+                    if (err) errorMsg = err;
+                } catch (e) {
+                    console.error('Error reading download failure:', e);
+                }
+                throw new Error(errorMsg);
+            }
 
             const blob = await downloadRes.blob();
             const url = window.URL.createObjectURL(blob);
