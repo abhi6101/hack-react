@@ -58,13 +58,13 @@ export default function CustomCursor() {
             opacity: 0.7
         },
         hover: {
-            x: mousePosition.x - 24,
-            y: mousePosition.y - 24,
-            height: 48,
-            width: 48,
+            x: mousePosition.x - 10,
+            y: mousePosition.y - 10,
+            height: 20,
+            width: 20,
             scale: 1,
-            backgroundColor: "rgba(14, 165, 233, 0.15)", // Cyan tint
-            border: "1.5px solid var(--primary)",
+            backgroundColor: "rgba(14, 165, 233, 0.3)", // Cyan tint
+            border: "2px solid var(--primary)",
             opacity: 1
         }
     };
