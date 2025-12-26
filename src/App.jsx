@@ -38,6 +38,8 @@ import './styles/interaction.css';
 import Lenis from 'lenis';
 import CustomCursor from './components/CustomCursor';
 import StarBackground from './components/StarBackground';
+import AIRobot from './components/AIRobot';
+
 
 
 function Layout({ children }) {
@@ -142,6 +144,7 @@ function App() {
         <ToastProvider>
             <CustomCursor />
             <StarBackground />
+            <AIRobot />
             <Router>
                 <Layout>
                     <Routes>
