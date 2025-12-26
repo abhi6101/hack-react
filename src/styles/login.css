@@ -23,7 +23,7 @@
 }
 
 body {
-    background-color: var(--dark-bg);
+    background-color: transparent;
     color: var(--text-primary);
     font-family: var(--font-family);
     line-height: 1.7;
@@ -31,19 +31,6 @@ body {
     flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden;
-    /* Animated background for visual interest */
-    background-image: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
-    animation: background-pan 20s infinite alternate ease-in-out;
-}
-
-@keyframes background-pan {
-    from {
-        background-position: 0% center;
-    }
-
-    to {
-        background-position: 100% center;
-    }
 }
 
 /* --- 2. Navigation (Identical to Homepage) --- */
@@ -88,12 +75,18 @@ nav a:hover {
 }
 
 /* --- 3. Login Section & Card --- */
+.login-body-wrapper {
+    background: transparent !important;
+    min-height: 100vh;
+}
+
 .login-section {
     flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem 1rem;
+    background: transparent;
 }
 
 .login-card {
@@ -123,7 +116,10 @@ nav a:hover {
 
 /* --- 4. Interactive Glowing Border (Identical to Homepage) --- */
 .surface-glow {
-    background: var(--surface-bg);
+    background: rgba(10, 10, 20, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
 }
 
@@ -280,6 +276,7 @@ nav a:hover {
     box-shadow: 0 0 25px var(--primary-glow);
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
 .btn-primary::before {
@@ -293,6 +290,7 @@ nav a:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: translate(-50%, -50%);
     transition: width 0.6s, height 0.6s;
+    z-index: -1;
 }
 
 .btn-primary:hover::before {
