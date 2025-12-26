@@ -459,7 +459,7 @@ const Jobs = () => {
             {/* Application Modal */}
             {showModal && selectedJob && (
                 <div id="applicationFormModal" className="modal" style={{ display: 'flex' }}>
-                    <div className="modal-content">
+                    <div className="modal-content" data-lenis-prevent>
                         <span className="close-button" onClick={() => setShowModal(false)}>&times;</span>
                         <h2>Apply for <span id="jobTitleForApplication">{selectedJob.title}</span></h2>
                         <form id="jobApplicationForm" onSubmit={handleApplicationSubmit}>

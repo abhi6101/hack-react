@@ -206,14 +206,16 @@ const Gallery = () => {
             {/* Upload Modal */}
             {showUploadModal && (
                 <div className="modal" style={{ display: 'flex', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}>
-                    <div className="modal-content" style={{
+                    <div className="modal-content" data-lenis-prevent style={{
                         maxWidth: '500px',
                         width: '90%',
                         padding: '2.5rem',
                         borderRadius: '24px',
                         background: 'rgba(22, 22, 34, 0.95)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                        maxHeight: '90vh',
+                        overflowY: 'auto'
                     }}>
                         <span className="close-modal" onClick={() => setShowUploadModal(false)} style={{ position: 'absolute', right: '25px', top: '25px', fontSize: '1.5rem', cursor: 'pointer', color: 'rgba(255,255,255,0.5)', transition: 'color 0.3s' }}>&times;</span>
                         <h2 style={{
