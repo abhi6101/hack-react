@@ -3,15 +3,28 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    width: 32px;
+    /* Matched default size */
+    height: 32px;
+    /* Border and blend managed by framer-motion variants now */
     border-radius: 50%;
     pointer-events: none;
     z-index: 10000;
-    mix-blend-mode: difference;
     box-sizing: border-box;
-    will-change: transform;
+    will-change: transform, width, height, border;
+}
+
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10001;
+    will-change: transform, opacity;
 }
 
 /* Hide default cursor globally ONLY on desktop */
@@ -35,4 +48,7 @@
     }
 
     /* Let default cursor behavior return on mobile */
+    body {
+        cursor: auto !important;
+    }
 }

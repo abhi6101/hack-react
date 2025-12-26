@@ -48,31 +48,42 @@ export default function CustomCursor() {
 
     const ringVariants = {
         default: {
-            x: mousePosition.x - 20, // Center 40px circle
-            y: mousePosition.y - 20,
+            x: mousePosition.x - 16, // 32px ring
+            y: mousePosition.y - 16,
+            height: 32,
+            width: 32,
             scale: 1,
             backgroundColor: "transparent",
-            borderColor: "rgba(255, 255, 255, 0.3)"
+            border: "1.5px solid var(--primary)", // Electric Cyan
+            opacity: 0.7
         },
         hover: {
-            x: mousePosition.x - 20,
-            y: mousePosition.y - 20,
-            scale: 1.5,
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            borderColor: "transparent"
+            x: mousePosition.x - 24,
+            y: mousePosition.y - 24,
+            height: 48,
+            width: 48,
+            scale: 1,
+            backgroundColor: "rgba(14, 165, 233, 0.15)", // Cyan tint
+            border: "1.5px solid var(--primary)",
+            opacity: 1
         }
     };
 
     const dotVariants = {
         default: {
-            x: mousePosition.x - 4, // Center 8px dot
-            y: mousePosition.y - 4,
-            scale: 1
+            x: mousePosition.x - 3,
+            y: mousePosition.y - 3,
+            height: 6,
+            width: 6,
+            backgroundColor: "#FFFFFF"
         },
         hover: {
-            x: mousePosition.x - 4,
-            y: mousePosition.y - 4,
-            scale: 0 // Hide dot on hover for cleaner look
+            x: mousePosition.x - 3,
+            y: mousePosition.y - 3,
+            height: 6,
+            width: 6,
+            scale: 0, // Disappear on hover effect
+            backgroundColor: "var(--primary)"
         }
     };
 
@@ -85,10 +96,17 @@ export default function CustomCursor() {
                 animate={isHovered ? "hover" : "default"}
                 transition={{
                     type: "spring",
-                    stiffness: 250,  /* Increased stiffness for tighter magnetic control */
-                    damping: 20,     /* Adjusted damping for smooth settling */
-                    mass: 0.5        /* Slight mass for momentum */
+                    stiffness: 100,  /* Softer stiffness for more "float" */
+                    damping: 20,     /* Higher damping for smooth drag */
+                    mass: 0.8        /* Heavier feel */
                 }}
+            />
+            {/* The Precision Dot */}
+            <motion.div
+                className="cursor-dot"
+                variants={dotVariants}
+                animate={isHovered ? "hover" : "default"}
+                transition={{ duration: 0.1 }}
             />
         </div>
     );
