@@ -74,8 +74,8 @@ const RoadmapScroll = () => {
                     {steps.map((step) => (
                         <motion.div
                             key={step.id}
-                            className="surface-glow"
-                            whileHover={{ y: -15, scale: 1.02 }}
+                            /* className="surface-glow" Removed to ensure full transparency */
+                            whileHover={{ y: -15, scale: 1.02, textShadow: "0 0 8px rgba(0,212,255,0.5)" }}
                             transition={{ duration: 0.4, ease: "easeOut" }}
                             style={{
                                 minWidth: '400px',
@@ -190,7 +190,7 @@ const LearningHubScroll = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             key={index}
-                            className="surface-glow"
+                            /* className="surface-glow" Removed */
                             whileHover={{ y: -15, scale: 1.02 }}
                             transition={{ duration: 0.4 }}
                             style={{
