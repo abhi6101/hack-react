@@ -3,12 +3,13 @@
 /* --- 1. Root Variables & Global Styles --- */
 :root {
     /* --- NEW THEME: Deep Navy & Electric Cyan --- */
-    --dark-bg: #0B1120;
+    --dark-bg: #000000;
+    /* Pure Black */
     /* Deep Navy Blue Background */
-    --surface-bg: rgba(21, 31, 50, 0.6);
-    /* Translucent for Glass Effect */
+    --surface-bg: rgba(0, 0, 0, 0.5);
+    /* Neutral Black Glass for Cards (No Blue Tint) */
     /* Lighter Navy for Cards */
-    --border-color: rgba(56, 189, 248, 0.1);
+    --border-color: rgba(56, 189, 248, 0.2);
     /* Subtle Cyan Border */
 
     --primary: #0EA5E9;
@@ -196,6 +197,8 @@ section {
 
 .hero::before,
 .hero::after {
+    display: none !important;
+    /* Completely remove the colored haze */
     content: '';
     position: absolute;
     z-index: -1;
@@ -203,7 +206,7 @@ section {
     filter: blur(120px);
     will-change: transform;
     border-radius: 50%;
-    opacity: 0.15;
+    opacity: 0;
     /* Drastically reduced to prevent "boxing" effect */
 }
 
