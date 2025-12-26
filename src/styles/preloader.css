@@ -19,33 +19,32 @@
     transform: translateY(-100%);
 }
 
-/* Content Wrapper */
-.preloader-content {
-    position: relative;
-    z-index: 2;
-    overflow: hidden;
-    /* For text reveal mask */
-}
-
 /* Text Styling */
 .preloader-text {
     font-family: 'Inter', sans-serif;
-    font-size: 4rem;
-    /* Slightly larger */
+    font-size: 3rem;
     font-weight: 800;
     color: #fff;
-    letter-spacing: -0.02em;
-    margin: 0;
+    letter-spacing: -0.05em;
     position: relative;
+    overflow: hidden;
 }
 
-/* Gradient Reveal Animation */
+/* Text Reveal Animation */
+.preloader-text span {
+    display: inline-block;
+    transform: translateY(100%);
+    animation: textUp 0.8s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+/* Stagger delays for letters/words if we split them, 
+   but simplistic fade/slide is often more elegant. 
+   Let's do a clip-path reveal. */
 .reveal-text {
     background: linear-gradient(to right, #fff 50%, #333 50%);
     background-size: 200% 100%;
     background-position: 100% 0;
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: fillText 1.5s cubic-bezier(0.76, 0, 0.24, 1) forwards;
 }
@@ -60,32 +59,41 @@
     }
 }
 
-/* Counter Styling */
-.preloader-counter {
-    position: absolute;
-    bottom: 40px;
-    right: 60px;
-    font-family: 'Inter', sans-serif;
-    font-size: 8rem;
-    /* Massive counter like award sites */
-    font-weight: 100;
-    /* Very thin */
-    color: rgba(255, 255, 255, 0.2);
-    /* Subtle */
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-    pointer-events: none;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .preloader-text {
-        font-size: 2.5rem;
+@keyframes textUp {
+    0% {
+        transform: translateY(100%);
     }
 
-    .preloader-counter {
-        font-size: 4rem;
-        bottom: 20px;
-        right: 20px;
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Optional: Loading Progress Bar */
+.loading-bar {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.loading-progress {
+    width: 0%;
+    height: 100%;
+    background: #fff;
+    animation: progressFill 2s ease-in-out forwards;
+}
+
+@keyframes progressFill {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
     }
 }
