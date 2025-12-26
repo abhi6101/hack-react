@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../components/CustomAlert';
+import { useToast } from '../components/CustomToast';
 // ProfileUpdateModal import removed
 import API_BASE_URL from '../config';
 import '../styles/dashboard.css';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
+    const { showToast } = useToast();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false); // Read-only mode
@@ -16,12 +20,19 @@ const StudentDashboard = () => {
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            alert('Please login to access dashboard');
-            navigate('/login');
+            showAlert({
+                title: 'Login Required',
+                message: 'Please login to access dashboard',
+                type: 'login',
+                actions: [
+                    { label: 'Login Now', primary: true, onClick: () => navigate('/login') },
+                    { label: 'Go Home', primary: false, onClick: () => navigate('/') }
+                ]
+            });
             return;
         }
         fetchData();
-    }, [navigate]);
+    }, [navigate, showAlert]);
 
     const handleLogout = () => {
         localStorage.clear();
@@ -46,13 +57,22 @@ const StudentDashboard = () => {
             if (response.ok) {
                 // Fetch fresh data to ensure UI sync
                 fetchData();
-                alert('Profile updated successfully!');
+                showToast({
+                    message: 'Profile updated successfully!',
+                    type: 'success'
+                });
             } else {
-                alert('Failed to update profile');
+                showToast({
+                    message: 'Failed to update profile',
+                    type: 'error'
+                });
             }
         } catch (err) {
             console.error('Error updating profile:', err);
-            alert('Error updating profile');
+            showToast({
+                message: 'Error updating profile',
+                type: 'error'
+            });
         }
     };
 

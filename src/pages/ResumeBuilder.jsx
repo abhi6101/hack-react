@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../components/CustomAlert';
+import { useToast } from '../components/CustomToast';
 import API_BASE_URL from '../config';
 
 const ResumeBuilder = () => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
+    const { showToast } = useToast();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -221,7 +223,10 @@ const ResumeBuilder = () => {
 
         } catch (err) {
             console.error(err);
-            alert("Error: " + err.message);
+            showToast({
+                message: `Error: ${err.message}`,
+                type: 'error'
+            });
         } finally {
             setIsGenerating(false);
         }

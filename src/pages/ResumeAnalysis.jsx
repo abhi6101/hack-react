@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useToast } from '../components/CustomToast';
 import API_BASE_URL from '../config';
 import '../styles/dashboard.css'; // Reuse dashboard styles for glass effect
 
 const ResumeAnalysis = () => {
+    const { showToast } = useToast();
     const [file, setFile] = useState(null);
     const [analyzing, setAnalyzing] = useState(false);
     const [result, setResult] = useState(null);
@@ -36,7 +38,10 @@ const ResumeAnalysis = () => {
 
     const validateAndSetFile = (uploadedFile) => {
         if (uploadedFile.type !== "application/pdf") {
-            alert("Please upload a PDF file.");
+            showToast({
+                message: 'Please upload a PDF file only.',
+                type: 'error'
+            });
             return;
         }
         setFile(uploadedFile);
@@ -73,7 +78,10 @@ const ResumeAnalysis = () => {
             setResult(mockData);
 
         } catch (error) {
-            alert("Analysis failed. Please try again.");
+            showToast({
+                message: 'Analysis failed. Please try again.',
+                type: 'error'
+            });
             console.error(error);
         } finally {
             setAnalyzing(false);
