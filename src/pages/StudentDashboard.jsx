@@ -24,8 +24,9 @@ const StudentDashboard = () => {
     }, [navigate]);
 
     const handleLogout = () => {
-        localStorage.removeItem('authToken');
-        navigate('/login');
+        localStorage.clear();
+        navigate('/');
+        window.location.reload();
     };
 
     // handleEdit removed as it is no longer needed (always editing)

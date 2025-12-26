@@ -305,7 +305,8 @@ const Home = () => {
 
     const handleLogout = () => {
         localStorage.clear();
-        navigate('/login');
+        navigate('/');
+        window.location.reload(); // Refresh to update UI state
     };
 
     return (
