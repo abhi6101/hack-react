@@ -69,8 +69,9 @@ const Home = () => {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        if (data.fullName || data.full_name) {
-                            const fullName = data.fullName || data.full_name;
+                        const profile = Array.isArray(data) ? data[0] : data;
+                        if (profile && (profile.fullName || profile.full_name)) {
+                            const fullName = profile.fullName || profile.full_name;
                             localStorage.setItem('userFullName', fullName);
                             // Update state to trigger re-render with new name
                             setUser(prev => ({ ...prev, name: fullName }));
