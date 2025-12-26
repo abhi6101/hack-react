@@ -524,7 +524,7 @@ const Home = () => {
                 <p className="subtitle" style={{ maxWidth: '600px', margin: '0 auto 2rem' }}>
                     Have questions or need assistance? Our team is here to help you every step of the way.
                 </p>
-                <Link to="/contact" className="btn btn-primary">
+                <Link to="/contact" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '0.8rem 2rem', width: 'auto' }}>
                     <i className="fas fa-envelope"></i> Contact Us
                 </Link>
             </section>
