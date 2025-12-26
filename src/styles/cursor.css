@@ -14,41 +14,9 @@
     will-change: transform, width, height, border;
 }
 
-.cursor-dot {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 6px;
-    background-color: white;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 10001;
-    will-change: transform, opacity;
-}
-
-/* Hide default cursor globally ONLY on desktop */
-@media (hover: hover) and (pointer: fine) {
-
-    body,
-    html,
-    a,
-    button,
-    input,
-    textarea,
-    [role="button"] {
-        cursor: none !important;
-    }
-}
-
 /* Hide Custom Cursor on Touch Devices */
 @media (hover: none) or (pointer: coarse) {
     .custom-cursor-container {
         display: none !important;
-    }
-
-    /* Let default cursor behavior return on mobile */
-    body {
-        cursor: auto !important;
     }
 }

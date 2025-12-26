@@ -69,24 +69,6 @@ export default function CustomCursor() {
         }
     };
 
-    const dotVariants = {
-        default: {
-            x: mousePosition.x - 3,
-            y: mousePosition.y - 3,
-            height: 6,
-            width: 6,
-            backgroundColor: "#FFFFFF"
-        },
-        hover: {
-            x: mousePosition.x - 3,
-            y: mousePosition.y - 3,
-            height: 6,
-            width: 6,
-            scale: 0, // Disappear on hover effect
-            backgroundColor: "var(--primary)"
-        }
-    };
-
     return (
         <div className="custom-cursor-container">
             {/* The Smooth Follower Ring */}
@@ -100,13 +82,6 @@ export default function CustomCursor() {
                     damping: 20,     /* Higher damping for smooth drag */
                     mass: 0.8        /* Heavier feel */
                 }}
-            />
-            {/* The Precision Dot */}
-            <motion.div
-                className="cursor-dot"
-                variants={dotVariants}
-                animate={isHovered ? "hover" : "default"}
-                transition={{ duration: 0.1 }}
             />
         </div>
     );
