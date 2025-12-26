@@ -78,9 +78,9 @@ export default function CustomCursor() {
                 animate={isHovered ? "hover" : "default"}
                 transition={{
                     type: "spring",
-                    stiffness: 100,  /* Softer stiffness for more "float" */
-                    damping: 20,     /* Higher damping for smooth drag */
-                    mass: 0.8        /* Heavier feel */
+                    stiffness: 400,  /* Much tighter pull */
+                    damping: 28,     /* No wobble */
+                    mass: 0.2        /* Lightweight for fast response */
                 }}
             />
         </div>
