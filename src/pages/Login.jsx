@@ -1,6 +1,7 @@
 import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/login.css';
 
 const Login = () => {
@@ -156,23 +157,40 @@ const Login = () => {
     return (
         <div className="login-body-wrapper">
             <section className="login-section">
-                <div className="login-card surface-glow">
-                    <Link to="/" style={{
-                        position: 'absolute',
-                        top: '1rem',
-                        left: '1rem',
-                        color: '#667eea',
-                        textDecoration: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        fontSize: '0.9rem',
-                        fontWeight: '600'
-                    }}>
-                        <i className="fas fa-home"></i> Home
-                    </Link>
+                <motion.div
+                    className="login-card surface-glow"
+                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <Link to="/" style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            left: '1rem',
+                            color: '#667eea',
+                            textDecoration: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            fontSize: '0.9rem',
+                            fontWeight: '600'
+                        }}>
+                            <i className="fas fa-home"></i> Home
+                        </Link>
+                    </motion.div>
 
-                    <h1>Welcome Back</h1>
+                    <motion.h1
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                    >
+                        Welcome Back
+                    </motion.h1>
 
                     {/* Login Mode Toggle */}
                     <div style={{
@@ -294,9 +312,9 @@ const Login = () => {
                     <div className="login-footer">
                         <p>Don't have an account? <Link to="/register">Register here</Link></p>
                     </div>
-                </div>
+                </motion.div>
             </section>
-        </div>
+        </div >
     );
 };
 

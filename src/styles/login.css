@@ -10,12 +10,17 @@
     --accent: #ff477b;
     --text-primary: #ECEFF1;
     --text-secondary: #90A4AE;
-    --error: #ff477b; /* Using accent color for error */
+    --error: #ff477b;
+    /* Using accent color for error */
     --success: #28a745;
     --font-family: 'Poppins', sans-serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     background-color: var(--dark-bg);
@@ -32,8 +37,13 @@ body {
 }
 
 @keyframes background-pan {
-    from { background-position: 0% center; }
-    to { background-position: 100% center; }
+    from {
+        background-position: 0% center;
+    }
+
+    to {
+        background-position: 100% center;
+    }
 }
 
 /* --- 2. Navigation (Identical to Homepage) --- */
@@ -49,11 +59,33 @@ nav {
     position: relative;
     z-index: 1000;
 }
-.logo { font-size: 1.8rem; font-weight: 800; }
-.logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
-nav ul { display: flex; list-style: none; gap: 1.5rem; }
-nav a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
-nav a:hover { color: var(--primary); }
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.logo span {
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--primary);
+}
 
 /* --- 3. Login Section & Card --- */
 .login-section {
@@ -94,21 +126,49 @@ nav a:hover { color: var(--primary); }
     background: var(--surface-bg);
     border-radius: 16px;
 }
+
 .surface-glow::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    border-radius: inherit; padding: 1px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: 1px;
     background: conic-gradient(from var(--angle), transparent 20%, var(--primary), var(--accent), transparent 80%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-    animation: spin 5s linear infinite paused; opacity: 0; transition: opacity 0.4s ease;
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: spin 5s linear infinite paused;
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
-.surface-glow:hover::before { animation-play-state: running; opacity: 1; }
-@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
-@keyframes spin { to { --angle: 360deg; } }
+
+.surface-glow:hover::before {
+    animation-play-state: running;
+    opacity: 1;
+}
+
+@property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes spin {
+    to {
+        --angle: 360deg;
+    }
+}
 
 /* --- 5. Form Styling with Staggered Animations --- */
-.login-card form { display: flex; flex-direction: column; gap: 1.5rem; }
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
 .input-group {
     position: relative;
@@ -117,13 +177,30 @@ nav a:hover { color: var(--primary); }
     transform: translateX(-20px);
     animation: fade-in-slide 0.5s ease-out forwards;
 }
-/* Stagger the delays */
-.input-group:nth-of-type(1) { animation-delay: 0.4s; }
-.input-group:nth-of-type(2) { animation-delay: 0.5s; }
-.login-card form button { animation-delay: 0.6s; }
-.login-card p { animation-delay: 0.7s; }
 
-@keyframes fade-in-slide { to { opacity: 1; transform: translateX(0); } }
+/* Stagger the delays */
+.input-group:nth-of-type(1) {
+    animation-delay: 0.4s;
+}
+
+.input-group:nth-of-type(2) {
+    animation-delay: 0.5s;
+}
+
+.login-card form button {
+    animation-delay: 0.6s;
+}
+
+.login-card p {
+    animation-delay: 0.7s;
+}
+
+@keyframes fade-in-slide {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 
 .input-group label {
     display: block;
@@ -141,28 +218,109 @@ nav a:hover { color: var(--primary); }
     border-radius: 8px;
     font-size: 1rem;
     font-family: var(--font-family);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 .input-group input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-glow);
+    box-shadow: 0 0 0 3px var(--primary-glow), 0 0 20px rgba(0, 212, 255, 0.3);
+    transform: translateY(-2px);
+    background: rgba(0, 0, 0, 0.3);
 }
+
+.input-group input:hover {
+    border-color: rgba(0, 212, 255, 0.5);
+}
+
+/* Floating label effect */
+.input-group {
+    position: relative;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in-slide 0.5s ease-out forwards;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.input-group:focus-within label {
+    color: var(--primary);
+}
+
 
 /* --- 6. Button Styling (Identical to Homepage) --- */
 .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
-    padding: 0.9rem 1.8rem; border-radius: 50px; font-weight: 600;
-    text-decoration: none; border: none; cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
     /* Animation properties for the form */
     opacity: 0;
     transform: translateX(-20px);
     animation: fade-in-slide 0.5s ease-out forwards;
 }
-.btn-primary { background: var(--primary); color: #000; box-shadow: 0 0 25px var(--primary-glow); }
-.btn-primary:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 0 40px var(--primary-glow); }
+
+.btn-primary {
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 0 25px var(--primary-glow);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-primary:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 0 40px var(--primary-glow), 0 10px 30px rgba(0, 212, 255, 0.3);
+    animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 40px var(--primary-glow), 0 10px 30px rgba(0, 212, 255, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 60px var(--primary-glow), 0 10px 40px rgba(0, 212, 255, 0.5);
+    }
+}
+
+.btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
 
 /* --- 7. Form Bottom & Alerts --- */
 .login-card p {
@@ -174,8 +332,15 @@ nav a:hover { color: var(--primary); }
     transform: translateX(-20px);
     animation: fade-in-slide 0.5s ease-out forwards;
 }
-.login-card p a { font-weight: 600; color: var(--primary); }
-.login-card p a:hover { color: white; }
+
+.login-card p a {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.login-card p a:hover {
+    color: white;
+}
 
 .alert {
     padding: 0.8rem 1rem;
@@ -185,13 +350,23 @@ nav a:hover { color: var(--primary); }
     border-left: 4px solid;
     background-color: var(--surface-bg);
 }
-.alert-error { border-color: var(--error); color: var(--error); }
-.alert-success { border-color: var(--success); color: var(--success); }
+
+.alert-error {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+.alert-success {
+    border-color: var(--success);
+    color: var(--success);
+}
 
 /* --- 8. Spinner & Loading State --- */
 .spinner {
-    display: none; /* Hide by default */
-    border: 3px solid rgba(0, 0, 0, 0.3); /* Dark spinner on a light button */
+    display: none;
+    /* Hide by default */
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    /* Dark spinner on a light button */
     border-top-color: #000;
     border-radius: 50%;
     width: 20px;
@@ -199,12 +374,25 @@ nav a:hover { color: var(--primary); }
     animation: spin-button 1s linear infinite;
 }
 
-@keyframes spin-button { to { transform: rotate(360deg); } }
+@keyframes spin-button {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
-button:disabled { cursor: not-allowed; opacity: 0.7; }
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 /* When loading class is added by JS */
-button.loading .button-text { display: none; }
-button.loading .spinner { display: block; }
+button.loading .button-text {
+    display: none;
+}
+
+button.loading .spinner {
+    display: block;
+}
 
 
 /* --- 5. Form Styling with Staggered Animations --- */
@@ -219,7 +407,7 @@ button.loading .spinner { display: block; }
 
 .password-wrapper input {
     /* Make room for the icon on the right */
-    padding-right: 3.5rem; 
+    padding-right: 3.5rem;
 }
 
 .password-toggle-icon {
