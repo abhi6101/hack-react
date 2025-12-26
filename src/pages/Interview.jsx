@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../components/CustomAlert';
+import { useToast } from '../components/CustomToast';
 import ApplicationModal from '../components/ApplicationModal';
 import API_BASE_URL from '../config';
 import '../styles/interview.css';
@@ -46,14 +48,23 @@ const mockInterviewData = [
 
 const Interview = () => {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
+    const { showToast } = useToast();
 
     useEffect(() => {
         const token = localStorage.getItem("authToken");
         if (!token) {
-            alert("You must be logged in to view interview schedules.");
-            navigate('/login');
+            showAlert({
+                title: 'Login Required',
+                message: 'You must be logged in to view interview schedules.',
+                type: 'login',
+                actions: [
+                    { label: 'Login Now', primary: true, onClick: () => navigate('/login') },
+                    { label: 'Go Home', primary: false, onClick: () => navigate('/') }
+                ]
+            });
         }
-    }, [navigate]);
+    }, [navigate, showAlert]);
 
     const [interviews, setInterviews] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
@@ -136,7 +147,10 @@ const Interview = () => {
 
     const handleBookingSubmit = (e) => {
         e.preventDefault();
-        alert(`Booking Confirmed for ${selectedCompany.company}!\n\nEmail: ${bookingData.studentEmail}`);
+        showToast({
+            message: `Booking confirmed for ${selectedCompany.company}! Confirmation sent to ${bookingData.studentEmail}`,
+            type: 'success'
+        });
         setShowModal(false);
         setBookingData({ studentName: '', studentEmail: '', studentRoll: '', preferredSlot: '' });
 
@@ -180,7 +194,10 @@ const Interview = () => {
 
             // Refresh applications list
             fetchMyApplications();
-            alert('Application submitted successfully!');
+            showToast({
+                message: 'Application submitted successfully!',
+                type: 'success'
+            });
         } catch (err) {
             throw err;
         }

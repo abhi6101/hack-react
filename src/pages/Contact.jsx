@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useToast } from '../components/CustomToast';
 import '../styles/contact.css';
 
 const Contact = () => {
+    const { showToast } = useToast();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -17,7 +19,10 @@ const Contact = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('Form Submitted:', formData);
-        alert('Thank you for your message! We will get back to you shortly.');
+        showToast({
+            message: 'Thank you for your message! We will get back to you shortly.',
+            type: 'success'
+        });
         setFormData({
             name: '',
             email: '',
