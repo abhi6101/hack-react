@@ -1,6 +1,7 @@
 import API_BASE_URL from '../config';
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '../components/CustomToast';
 import '../styles/login.css';
 
 const VerifyOTP = () => {
@@ -11,6 +12,7 @@ const VerifyOTP = () => {
     const [resendCooldown, setResendCooldown] = useState(0);
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const inputRefs = useRef([]);
 
     const email = sessionStorage.getItem('recoveryEmail');
@@ -130,7 +132,10 @@ const VerifyOTP = () => {
             } else if (response.status === 410 && data.accountDeleted) {
                 // Old account was deleted - redirect to registration
                 sessionStorage.clear(); // Clear all session data
-                alert(data.message || 'Your old account has been removed. Please register again.');
+                showToast({
+                    message: data.message || 'Your old account has been removed. Please register again.',
+                    type: 'warning'
+                });
                 navigate('/register');
             } else {
                 setError(data.message || 'Invalid OTP. Please try again.');

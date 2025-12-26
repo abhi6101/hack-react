@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../components/CustomToast';
 import API_BASE_URL from '../config';
 import '../styles/dashboard.css';
 
 const Onboarding = () => {
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
@@ -102,7 +104,10 @@ const Onboarding = () => {
 
     const handleScanID = async () => {
         if (!formData.idCardFile) {
-            alert("Please upload ID card first");
+            showToast({
+                message: 'Please upload ID card first',
+                type: 'warning'
+            });
             return;
         }
         setLoading(true);
@@ -111,7 +116,10 @@ const Onboarding = () => {
 
         try {
             // OCR scanning is disabled in production as it requires a local python service
-            alert("Auto-fill from ID Card is currently only available for local developers.");
+            showToast({
+                message: 'Auto-fill from ID Card is currently only available for local developers.',
+                type: 'info'
+            });
             /*
             const res = await fetch(`http://localhost:5001/scan-id`, { method: 'POST', body: scanData });
             const data = await res.json();
@@ -134,7 +142,10 @@ const Onboarding = () => {
             */
         } catch (e) {
             console.error(e);
-            alert("Scan service unavailable or Tesseract not installed. Please fill manually.");
+            showToast({
+                message: 'Scan service unavailable or Tesseract not installed. Please fill manually.',
+                type: 'warning'
+            });
         } finally {
             setLoading(false);
         }
@@ -212,12 +223,20 @@ const Onboarding = () => {
                 await fetch(`${API_BASE_URL}/student-profile/upload-admit-card`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
             }
 
-            alert("Onboarding Complete! Welcome to the portal.");
+            showToast({
+                message: 'Onboarding Complete! Welcome to the portal.',
+                type: 'success'
+            });
             // Reload to clear Iron Dome guard
-            window.location.href = '/dashboard';
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1500);
 
         } catch (err) {
-            alert(err.message);
+            showToast({
+                message: err.message || 'Onboarding failed',
+                type: 'error'
+            });
         } finally {
             setLoading(false);
         }

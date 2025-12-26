@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useToast } from './CustomToast';
 import API_BASE_URL from '../config';
 
 const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
+    const { showToast } = useToast();
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -92,11 +94,16 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
             const result = await response.json();
 
             if (response.ok) {
-                alert("Profile Updated Successfully!");
+                showToast({
+                    message: 'Profile Updated Successfully!',
+                    type: 'success'
+                });
                 onUpdate();
                 onClose();
                 // Reload the page to refresh the Iron Dome guard check
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
             } else {
                 setError(result.message || 'Failed to update profile');
             }

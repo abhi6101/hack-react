@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useToast } from '../components/CustomToast';
 import Tesseract from 'tesseract.js';
 import { DISTRICT_STATE_MAP } from '../data/indianDistricts';
 import jsQR from 'jsqr';
@@ -12,6 +13,7 @@ const TARGET_SCANS = 5; // Reduced for faster capture
 
 const Register = () => {
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const navLocation = useLocation();
     const isUpdate = navLocation.state?.isUpdate; // Check if this is an account update (Old User)
     const [formData, setFormData] = useState({
@@ -1272,7 +1274,10 @@ const Register = () => {
             setTimeout(() => { if (videoRef.current) videoRef.current.srcObject = stream; }, 100);
         } catch (err) {
             console.error("Camera Error:", err);
-            alert("Could not access camera.");
+            showToast({
+                message: 'Could not access camera.',
+                type: 'error'
+            });
             setShowCamera(false);
         }
     };
