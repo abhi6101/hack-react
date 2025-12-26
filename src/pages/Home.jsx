@@ -520,7 +520,7 @@ const Home = () => {
 
             {/* Contact Teaser Section */}
             <section className="contact-teaser" style={{ textAlign: 'center', background: 'transparent' }}>
-                <h2 className="glitch-hover">Ready to Start Your Journey?</h2>
+                <h2>Ready to Start Your Journey?</h2>
                 <p className="subtitle" style={{ maxWidth: '600px', margin: '0 auto 2rem' }}>
                     Have questions or need assistance? Our team is here to help you every step of the way.
                 </p>
