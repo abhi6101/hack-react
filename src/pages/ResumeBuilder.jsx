@@ -119,129 +119,160 @@ const ResumeBuilder = () => {
 
     const generatePDF = async () => {
         setIsGenerating(true);
-        const token = localStorage.getItem('authToken');
+
+        // Dynamically import jsPDF to ensure it loads on client side
+        const { jsPDF } = await import('jspdf');
 
         try {
-            // Transform data to match backend expectation if needed
-            // Currently backend expects fields that match directly, but 'education' etc are strings in ResumeData model?
-            // WAIT - ResumeData in backend expects STRING for 'education', 'experience' etc (HTML content).
-            // I need to format the arrays into HTML Strings before sending!
+            const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const margin = 15;
+            let yPos = 20;
 
-            const formatEducation = (eduList) => {
-                if (!eduList || eduList.length === 0) return "";
-                let html = "<div class='education-list'>";
-                eduList.forEach(e => {
-                    html += `<div class='edu-item'>
-                        <div class='degree-row'>
-                            <span>${e.degree}</span>
-                            <span>${e.year} | ${e.score}</span>
-                        </div>
-                        <div class='uni-row'>${e.institution}</div>
-                    </div>`;
-                });
-                html += "</div>";
-                return html;
+            // Helper to add text and update yPos
+            const addText = (text, x, y, options = {}) => {
+                doc.text(text, x, y, options);
             };
 
-            const formatExperience = (expList) => {
-                if (!expList || expList.length === 0) return "";
-                let html = "<ul>";
-                expList.forEach(e => {
-                    html += `<li>
-                        <div class='item-title'>${e.role}</div>
-                        <div class='item-subtitle'>${e.company} | ${e.duration}</div>
-                        <div class='item-desc'>${e.description}</div>
-                    </li>`;
-                });
-                html += "</ul>";
-                return html;
+            const addSectionHeader = (title) => {
+                yPos += 5;
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "bold");
+                doc.text(title.toUpperCase(), margin, yPos);
+
+                // Draw line under header
+                yPos += 2;
+                doc.setLineWidth(0.5);
+                doc.line(margin, yPos, pageWidth - margin, yPos);
+                yPos += 5;
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
             };
 
-            const formatProjects = (projList) => {
-                if (!projList || projList.length === 0) return "";
-                let html = "<ul>";
-                projList.forEach(p => {
-                    html += `<li>
-                        <span class='project-title'>${p.title}</span> 
-                        ${p.techStack ? `<i>[${p.techStack}]</i>` : ''}
-                        <div>${p.description}</div>
-                    </li>`;
-                });
-                html += "</ul>";
-                return html;
-            };
+            // --- HEADER ---
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bold");
+            doc.text(formData.name || "YOUR NAME", pageWidth / 2, yPos, { align: "center" });
 
-            const formatSkills = (skillStr) => {
-                if (!skillStr) return "";
-                // If SDE format, users often want categories. 
-                // For now, we wrap it in a simple list or paragraph.
-                return `<p>${skillStr}</p>`;
-            };
+            yPos += 7;
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
 
-            const payload = {
-                ...formData,
-                education: formatEducation(formData.education),
-                experience: formatExperience(formData.experience),
-                projects: formatProjects(formData.projects),
-                skills: formatSkills(formData.skills),
-                declaration: "I hereby declare that the information furnished above is true to the best of my knowledge."
-                // template handles CSS
-            };
+            // Build contact line: Email | Phone | LinkedIn | GitHub
+            const contacts = [];
+            if (formData.email) contacts.push(formData.email);
+            if (formData.phone) contacts.push(formData.phone);
+            if (formData.linkedin) contacts.push(formData.linkedin.replace('https://', '').replace('www.', ''));
+            if (formData.github) contacts.push(formData.github.replace('https://', '').replace('www.', ''));
 
-            const res = await fetch(`${API_BASE_URL}/resume/generate-pdf`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
+            doc.text(contacts.join("  |  "), pageWidth / 2, yPos, { align: "center" });
 
-            if (!res.ok) {
-                let errorMsg = 'Failed to generate PDF';
-                try {
-                    const err = await res.json();
-                    errorMsg = err.error || err.message || errorMsg;
-                } catch (parseErr) {
-                    // If response is not JSON (e.g. plain text "Unauthorized"), read as text
-                    const text = await res.text();
-                    errorMsg = text || errorMsg;
-                }
-                throw new Error(errorMsg);
+            yPos += 10;
+
+            // --- SUMMARY ---
+            if (formData.summary) {
+                // Determine layout
+                const splitSummary = doc.splitTextToSize(formData.summary, pageWidth - (margin * 2));
+                doc.text(splitSummary, margin, yPos);
+                yPos += (splitSummary.length * 5) + 5;
             }
 
-            const data = await res.json();
+            // --- EDUCATION ---
+            if (formData.education && formData.education.length > 0 && formData.education[0].institution) {
+                addSectionHeader("EDUCATION");
 
-            // Download the file
-            const downloadRes = await fetch(`${API_BASE_URL}/resume/download/${data.filename}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+                formData.education.forEach(edu => {
+                    // Institution & Year
+                    doc.setFont("helvetica", "bold");
+                    doc.text(edu.institution, margin, yPos);
 
-            if (!downloadRes.ok) {
-                let errorMsg = 'Failed to download file';
-                try {
-                    const err = await downloadRes.text(); // Often download endpoints return text/html on error
-                    if (err) errorMsg = err;
-                } catch (e) {
-                    console.error('Error reading download failure:', e);
-                }
-                throw new Error(errorMsg);
+                    doc.setFont("helvetica", "normal");
+                    if (edu.year) {
+                        doc.text(edu.year, pageWidth - margin, yPos, { align: "right" });
+                    }
+                    yPos += 5;
+
+                    // Degree & Score
+                    const degreeLine = `${edu.degree}${edu.score ? ` (${edu.score})` : ''}`;
+                    doc.setFont("helvetica", "italic");
+                    doc.text(degreeLine, margin, yPos);
+                    yPos += 6;
+                });
             }
 
-            const blob = await downloadRes.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = data.filename;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+            // --- EXPERIENCE ---
+            if (formData.experience && formData.experience.length > 0 && formData.experience[0].company) {
+                addSectionHeader("EXPERIENCE");
+
+                formData.experience.forEach(exp => {
+                    doc.setFont("helvetica", "bold");
+                    doc.text(exp.company, margin, yPos);
+
+                    doc.setFont("helvetica", "normal");
+                    if (exp.duration) {
+                        doc.text(exp.duration, pageWidth - margin, yPos, { align: "right" });
+                    }
+                    yPos += 5;
+
+                    doc.setFont("helvetica", "italic");
+                    doc.text(exp.role, margin, yPos);
+                    yPos += 5;
+
+                    doc.setFont("helvetica", "normal");
+                    if (exp.description) {
+                        const splitDesc = doc.splitTextToSize(exp.description, pageWidth - (margin * 2));
+                        doc.text(splitDesc, margin, yPos);
+                        yPos += (splitDesc.length * 4) + 3;
+                    }
+                });
+            }
+
+            // --- PROJECTS ---
+            if (formData.projects && formData.projects.length > 0 && formData.projects[0].title) {
+                addSectionHeader("PROJECTS");
+
+                formData.projects.forEach(proj => {
+                    doc.setFont("helvetica", "bold");
+                    doc.text(proj.title, margin, yPos);
+
+                    if (proj.techStack) {
+                        doc.setFont("helvetica", "italic");
+                        const techText = `[ ${proj.techStack} ]`;
+                        const textWidth = doc.getTextWidth(proj.title);
+                        doc.text(techText, margin + textWidth + 2, yPos);
+                    }
+                    yPos += 5;
+
+                    doc.setFont("helvetica", "normal");
+                    if (proj.description) {
+                        const splitDesc = doc.splitTextToSize(proj.description, pageWidth - (margin * 2));
+                        doc.text(splitDesc, margin, yPos);
+                        yPos += (splitDesc.length * 4) + 3;
+                    }
+                });
+            }
+
+            // --- SKILLS ---
+            if (formData.skills) {
+                addSectionHeader("TECHNICAL SKILLS");
+                doc.setFont("helvetica", "normal");
+                const splitSkills = doc.splitTextToSize(formData.skills, pageWidth - (margin * 2));
+                doc.text(splitSkills, margin, yPos);
+                yPos += (splitSkills.length * 5);
+            }
+
+            // Save the PDF
+            doc.save(`${formData.name.replace(/\s+/g, '_')}_Resume.pdf`);
+
+            showToast({
+                message: 'Resume downloaded successfully!',
+                type: 'success'
+            });
 
         } catch (err) {
             console.error(err);
             showToast({
-                message: `Error: ${err.message}`,
+                message: `Error generating PDF: ${err.message}`,
                 type: 'error'
             });
         } finally {
