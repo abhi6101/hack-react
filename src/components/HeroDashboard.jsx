@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 import '../styles/hero-dashboard.css';
 
 const HeroDashboard = ({ user, onLogout }) => {
     const [greeting, setGreeting] = useState('');
+    const [displayName, setDisplayName] = useState(user.name || user.username);
+
+    useEffect(() => {
+        setDisplayName(user.name || user.username);
+    }, [user]);
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -12,6 +18,27 @@ const HeroDashboard = ({ user, onLogout }) => {
         else setGreeting('Good Evening');
     }, []);
 
+    // Self-healing: If name is all digits (ID), try to fetch real name
+    useEffect(() => {
+        const isNumeric = /^\d+$/.test(displayName);
+        if (isNumeric) {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                fetch(`${API_BASE_URL}/student-profile`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.fullName) {
+                            setDisplayName(data.fullName);
+                            localStorage.setItem('userFullName', data.fullName);
+                        }
+                    })
+                    .catch(err => console.error("Dashboard name fetch failed", err));
+            }
+        }
+    }, [displayName]);
+
     return (
         <div className="hero-dashboard-card animate-on-scroll visible">
             <div className="dashboard-user-info">
@@ -19,7 +46,7 @@ const HeroDashboard = ({ user, onLogout }) => {
                     {greeting} 👋
                 </div>
                 <h2 className="dashboard-username" style={{ textTransform: 'capitalize' }}>
-                    {user.name || user.username}
+                    {displayName}
                 </h2>
                 <div className="dashboard-role-badge">
                     <span className="status-dot"></span>
