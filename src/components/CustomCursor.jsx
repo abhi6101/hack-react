@@ -85,17 +85,10 @@ export default function CustomCursor() {
                 animate={isHovered ? "hover" : "default"}
                 transition={{
                     type: "spring",
-                    stiffness: 150,
-                    damping: 15,
-                    mass: 0.1
+                    stiffness: 250,  /* Increased stiffness for tighter magnetic control */
+                    damping: 20,     /* Adjusted damping for smooth settling */
+                    mass: 0.5        /* Slight mass for momentum */
                 }}
-            />
-            {/* The Snappy Center Dot */}
-            <motion.div
-                className="cursor-dot"
-                variants={dotVariants}
-                animate={isHovered ? "hover" : "default"}
-                transition={{ duration: 0 }} // Instant follow
             />
         </div>
     );

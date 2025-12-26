@@ -14,20 +14,6 @@
     will-change: transform;
 }
 
-.cursor-dot {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 8px;
-    height: 8px;
-    background-color: white;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 10001;
-    mix-blend-mode: difference;
-    will-change: transform;
-}
-
 /* Hide default cursor globally ONLY on desktop */
 @media (hover: hover) and (pointer: fine) {
 
