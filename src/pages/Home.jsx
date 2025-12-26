@@ -335,6 +335,34 @@ const Home = () => {
                 </motion.div>
             </section>
 
+            {/* NEW: Feature Grid Section (User Request) */}
+            <section className="feature-grid-section" style={{ padding: '4rem 5%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
+                {/* Left: 2x2 Grid */}
+                <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', flex: '1', minWidth: '300px', maxWidth: '800px' }}>
+                    {/* Card 1 */}
+                    <FeatureCard icon="fas fa-lightbulb" title="Mentorship" desc="Weekly check-ins, real guidance, and accountability from industry mentors." color="#fbbf24" />
+                    {/* Card 2 */}
+                    <FeatureCard icon="fas fa-laptop-code" title="Coding & CGPA" desc="Master C, ace your CGPA, and start coding for placements from day one." color="#a855f7" />
+                    {/* Card 3 */}
+                    <FeatureCard icon="fas fa-globe" title="Web & App Dev" desc="Kickstart your dev journey with hands-on web and app projects." color="#3b82f6" />
+                    {/* Card 4 */}
+                    <FeatureCard icon="fas fa-rocket" title="Career Roadmap" desc="Get a clear, actionable plan for internships and projects." color="#ef4444" />
+                </div>
+
+                {/* Right: Animated Robot */}
+                <motion.div
+                    className="feature-robot"
+                    animate={{ y: [-15, 15, -15], rotate: [0, 2, -2, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ flex: '1', display: 'flex', justifyContent: 'center', minWidth: '300px' }}
+                >
+                    <img
+                        src="https://cdn3d.iconscout.com/3d/premium/thumb/robot-5650119-4707689.png"
+                        alt="3D Robot Assistant"
+                        style={{ maxWidth: '100%', maxHeight: '550px', filter: 'drop-shadow(0 0 40px rgba(14, 165, 233, 0.4))' }}
+                    />
+                </motion.div>
+            </section>
 
             {/* Horizontal Scrolling Roadmap (Lenis Style) */}
             <RoadmapScroll />
@@ -486,5 +514,35 @@ const Home = () => {
         </main>
     );
 };
+
+const FeatureCard = ({ icon, title, desc, color }) => (
+    <motion.div
+        className="glass-card"
+        whileHover={{ y: -10, boxShadow: `0 10px 30px -10px ${color}` }}
+        style={{
+            padding: '2rem',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'rgba(0, 0, 0, 0.3)', // Darker glass
+            backdropFilter: 'blur(10px)',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem'
+        }}
+    >
+        <div style={{
+            fontSize: '2.5rem',
+            color: color,
+            marginBottom: '0.5rem',
+            filter: `drop-shadow(0 0 10px ${color})`
+        }}>
+            <i className={icon}></i>
+        </div>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{title}</h3>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{desc}</p>
+    </motion.div>
+);
 
 export default Home;
