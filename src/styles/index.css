@@ -193,10 +193,13 @@ section {
 .hero::after {
     content: '';
     position: absolute;
-    z-index: 0;
+    z-index: -1;
+    /* Behind content, but on top of stars (-50) */
     filter: blur(120px);
     will-change: transform;
     border-radius: 50%;
+    opacity: 0.4;
+    /* Reduce opacity so stars show through slightly */
 }
 
 .hero::before {
@@ -204,7 +207,7 @@ section {
     height: 40vw;
     max-width: 500px;
     max-height: 500px;
-    background: radial-gradient(circle, var(--primary) 0%, transparent 60%);
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
     top: 10%;
     left: 10%;
     animation: drift-1 20s infinite alternate ease-in-out;
