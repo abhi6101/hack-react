@@ -387,7 +387,7 @@ const Home = () => {
                     style={{ flex: '1', display: 'flex', justifyContent: 'center', minWidth: '300px' }}
                 >
                     <img
-                        src="https://cdn3d.iconscout.com/3d/premium/thumb/robot-5650119-4707689.png"
+                        src="/images/robot-assistant.png"
                         alt="3D Robot Assistant"
                         style={{ maxWidth: '100%', maxHeight: '550px', filter: 'drop-shadow(0 0 40px rgba(14, 165, 233, 0.4))' }}
                     />
