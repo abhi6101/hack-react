@@ -129,6 +129,100 @@ const RoadmapScroll = () => {
     );
 };
 
+const LearningHubScroll = () => {
+    const targetRef = useRef(null);
+    const { scrollYProgress } = useScroll({ target: targetRef });
+    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-55%"]);
+
+    const resources = [
+        {
+            title: "Web Security Academy",
+            icon: "fas fa-flask",
+            desc: "The definitive free resource for learning web application security from the creators of Burp Suite.",
+            link: "https://portswigger.net/web-security",
+            cta: "Explore Platform"
+        },
+        {
+            title: "Chai aur JavaScript",
+            icon: "fab fa-js-square",
+            desc: "Deep dive into JavaScript with Hitesh Choudhary. Perfect for mastering modern web development.",
+            link: "https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37",
+            cta: "Watch Now"
+        },
+        {
+            title: "Hack The Box",
+            icon: "fas fa-cube",
+            desc: "Challenge your abilities with real-world lab scenarios and compete with a global community.",
+            link: "https://www.hackthebox.com/",
+            cta: "Explore Platform"
+        }
+    ];
+
+    return (
+        <section ref={targetRef} style={{ height: "250vh", position: "relative" }}>
+            <div className="sticky-wrapper" style={{
+                position: "sticky",
+                top: 0,
+                height: "100vh",
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                zIndex: 10
+            }}>
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8 }}
+                    style={{ paddingLeft: '10vw', marginBottom: '3rem' }}
+                >
+                    <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
+                    <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
+                        Hand-picked resources to build your skills and prepare you for the industry.
+                    </p>
+                </motion.div>
+
+                <motion.div style={{ x, display: 'flex', gap: '60px', paddingLeft: '10vw' }}>
+                    {resources.map((res, index) => (
+                        <motion.a
+                            href={res.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            key={index}
+                            className="surface-glow"
+                            whileHover={{ y: -15, scale: 1.02 }}
+                            transition={{ duration: 0.4 }}
+                            style={{
+                                minWidth: '500px',
+                                height: '400px',
+                                padding: '3rem',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                borderRadius: '32px',
+                                border: '1px solid var(--border-color)',
+                                background: 'var(--surface-bg)',
+                                textDecoration: 'none',
+                                color: 'inherit',
+                                position: 'relative'
+                            }}
+                        >
+                            <div>
+                                <i className={res.icon} style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1.5rem' }}></i>
+                                <h3 style={{ fontSize: '2.2rem', marginBottom: '1rem', fontWeight: 700 }}>{res.title}</h3>
+                                <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{res.desc}</p>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', fontWeight: 600, color: 'var(--primary)', fontSize: '1.2rem' }}>
+                                {res.cta} <i className="fas fa-arrow-right" style={{ marginLeft: '10px' }}></i>
+                            </div>
+                        </motion.a>
+                    ))}
+                </motion.div>
+            </div>
+        </section>
+    );
+};
+
 const Home = () => {
     const [user, setUser] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -231,55 +325,8 @@ const Home = () => {
             {/* Horizontal Scrolling Roadmap (Lenis Style) */}
             <RoadmapScroll />
 
-            {/* Learning Hub Section */}
-            <motion.section
-                className="learning-hub-section"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={staggerContainer}
-            >
-                <motion.h2 variants={fadeInUp}>Start Your Learning Journey</motion.h2>
-                <motion.p className="subtitle" variants={fadeInUp}>Hand-picked resources to build your skills and prepare you for the industry.</motion.p>
-
-                <div className="hub-grid">
-                    <motion.a
-                        href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" className="hub-card-link"
-                        variants={fadeInUp} whileHover={scaleHover.hover}
-                    >
-                        <div className="hub-card surface-glow">
-                            <i className="fas fa-flask"></i>
-                            <h3>Web Security Academy</h3>
-                            <p>The definitive free resource for learning web application security from the creators of Burp Suite.</p>
-                            <span className="hub-link">Explore Platform <i className="fas fa-arrow-right"></i></span>
-                        </div>
-                    </motion.a>
-
-                    <motion.a
-                        href="https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37" target="_blank" rel="noopener noreferrer" className="hub-card-link"
-                        variants={fadeInUp} whileHover={scaleHover.hover}
-                    >
-                        <div className="hub-card surface-glow">
-                            <i className="fab fa-js-square"></i>
-                            <h3>Chai aur JavaScript</h3>
-                            <p>Deep dive into JavaScript with Hitesh Choudhary. Perfect for mastering modern web development.</p>
-                            <span className="hub-link">Watch Now <i className="fas fa-arrow-right"></i></span>
-                        </div>
-                    </motion.a>
-
-                    <motion.a
-                        href="https://www.hackthebox.com/" target="_blank" rel="noopener noreferrer" className="hub-card-link"
-                        variants={fadeInUp} whileHover={scaleHover.hover}
-                    >
-                        <div className="hub-card surface-glow">
-                            <i className="fas fa-cube"></i>
-                            <h3>Hack The Box</h3>
-                            <p>Challenge your abilities with real-world lab scenarios and compete with a global community.</p>
-                            <span className="hub-link">Explore Platform <i className="fas fa-arrow-right"></i></span>
-                        </div>
-                    </motion.a>
-                </div>
-            </motion.section>
+            {/* Horizontal Scrolling Learning Hub (Lenis Style) */}
+            <LearningHubScroll />
 
             {/* Stats Section */}
             <section className="stats">
