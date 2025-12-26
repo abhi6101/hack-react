@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import API_BASE_URL from '../config';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
@@ -32,20 +34,7 @@ const Home = () => {
         return () => clearInterval(interval);
     }, []);
 
-    // Scroll Animation Observer
-    useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
-
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         // Check for logged in user using individual keys set by Login.jsx
@@ -76,7 +65,12 @@ const Home = () => {
         <main>
             {/* Hero Section */}
             <section className="hero">
-                <div className="hero-content">
+                <motion.div
+                    className="hero-content"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
                     <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
                         <Typewriter text="Launch Your Career with Ease!" delay={70} />
                     </h1>
@@ -102,12 +96,18 @@ const Home = () => {
                             </>
                         )}
                     </div>
-                </div>
+                </motion.div>
             </section>
 
 
             {/* NEW: Learning Roadmap Section (Learnext Inspired) */}
-            <section className="roadmap-section animate-on-scroll">
+            <motion.section
+                className="roadmap-section"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+            >
                 <h2>Your Path to Success</h2>
                 <p className="subtitle">Follow our proven 4-step roadmap to land your dream job.</p>
                 <div className="roadmap-container">
@@ -140,10 +140,16 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Learning Hub Section */}
-            <section className="learning-hub-section animate-on-scroll">
+            <motion.section
+                className="learning-hub-section"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+            >
                 <h2>Start Your Learning Journey</h2>
                 <p className="subtitle">Hand-picked resources to build your skills and prepare you for the industry.</p>
 
@@ -175,7 +181,7 @@ const Home = () => {
                         </div>
                     </a>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Stats Section */}
             <section className="stats">
