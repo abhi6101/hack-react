@@ -1,6 +1,8 @@
 import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../components/CustomAlert';
+import { useToast } from '../components/CustomToast';
 import ProfilePictureUpload from '../components/ProfilePictureUpload';
 import { getProfilePicture } from '../utils/avatar';
 import '../styles/profile.css';
@@ -8,6 +10,8 @@ import '../styles/profile-picture.css';
 
 const StudentProfile = () => {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
+    const { showToast } = useToast();
     const [user, setUser] = useState({ username: '', profilePictureUrl: '' });
     const [profile, setProfile] = useState({
         fullName: '', phoneNumber: '', dateOfBirth: '', address: '',
@@ -20,13 +24,20 @@ const StudentProfile = () => {
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            alert('Please login to access your profile');
-            navigate('/login');
+            showAlert({
+                title: 'Login Required',
+                message: 'Please login to access your profile',
+                type: 'login',
+                actions: [
+                    { label: 'Login Now', primary: true, onClick: () => navigate('/login') },
+                    { label: 'Go Home', primary: false, onClick: () => navigate('/') }
+                ]
+            });
             return;
         }
         fetchUser();
         fetchProfile();
-    }, [navigate]);
+    }, [navigate, showAlert]);
 
     const fetchUser = async () => {
         const token = localStorage.getItem('authToken');
@@ -194,10 +205,10 @@ const StudentProfile = () => {
                                                 body: formData
                                             });
                                             if (res.ok) {
-                                                alert('ID Card uploaded successfully!');
+                                                showToast({ message: 'ID Card uploaded successfully!', type: 'success' });
                                                 setProfile(prev => ({ ...prev, idCardUrl: 'uploaded' }));
-                                            } else alert('Failed to upload ID Card');
-                                        } catch (err) { alert('Error uploading ID Card'); }
+                                            } else showToast({ message: 'Failed to upload ID Card', type: 'error' });
+                                        } catch (err) { showToast({ message: 'Error uploading ID Card', type: 'error' }); }
                                         finally { e.target.disabled = false; }
                                     }}
                                     className="form-control"
@@ -227,10 +238,10 @@ const StudentProfile = () => {
                                                 body: formData
                                             });
                                             if (res.ok) {
-                                                alert('Aadhar Card uploaded successfully!');
+                                                showToast({ message: 'Aadhar Card uploaded successfully!', type: 'success' });
                                                 setProfile(prev => ({ ...prev, aadharCardUrl: 'uploaded' }));
-                                            } else alert('Failed to upload Aadhar Card');
-                                        } catch (err) { alert('Error uploading Aadhar Card'); }
+                                            } else showToast({ message: 'Failed to upload Aadhar Card', type: 'error' });
+                                        } catch (err) { showToast({ message: 'Error uploading Aadhar Card', type: 'error' }); }
                                         finally { e.target.disabled = false; }
                                     }}
                                     className="form-control"
@@ -260,10 +271,10 @@ const StudentProfile = () => {
                                                 body: formData
                                             });
                                             if (res.ok) {
-                                                alert('Admit Card uploaded successfully!');
+                                                showToast({ message: 'Admit Card uploaded successfully!', type: 'success' });
                                                 setProfile(prev => ({ ...prev, admitCardUrl: 'uploaded' }));
-                                            } else alert('Failed to upload Admit Card');
-                                        } catch (err) { alert('Error uploading Admit Card'); }
+                                            } else showToast({ message: 'Failed to upload Admit Card', type: 'error' });
+                                        } catch (err) { showToast({ message: 'Error uploading Admit Card', type: 'error' }); }
                                         finally { e.target.disabled = false; }
                                     }}
                                     className="form-control"
