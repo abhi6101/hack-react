@@ -22,17 +22,47 @@ const Gallery = () => {
         image: null
     });
 
+    // Static images from public folder
+    const STATIC_GALLERY_ITEMS = [
+        { id: 's1', url: '/images/lab1.jpg', title: 'Computer Lab Session', type: 'lab', description: 'Students working on projects.', uploadedBy: 'Admin' },
+        { id: 's2', url: '/images/lab2.jpg', title: 'Advanced Coding Lab', type: 'lab', description: 'Focus and dedication.', uploadedBy: 'Admin' },
+        { id: 's3', url: '/images/class1.jpg', title: 'Classroom Lecture', type: 'class', description: 'Engaging session with faculty.', uploadedBy: 'Admin' },
+        { id: 's4', url: '/images/class2.jpg', title: 'Interactive Learning', type: 'class', description: 'Group discussion in class.', uploadedBy: 'Admin' },
+        { id: 's5', url: '/images/fair.jpg', title: 'Tech Fair Celebration', type: 'farewell', description: 'Celebrating achievements and milestones.', uploadedBy: 'Admin' },
+        { id: 's6', url: '/images/student-group-photo.jpg', title: 'Batch Group Photo', type: 'campus', description: 'Memories to cherish forever.', uploadedBy: 'Admin' },
+        { id: 's7', url: '/images/4E9A7129-copy.jpg', title: 'Campus Event Highlights', type: 'function', description: 'Cultural fest and fun times.', uploadedBy: 'Admin' },
+        { id: 's8', url: '/images/Group-photo-1-copy-4.jpg', title: 'Team Spirit', type: 'campus', description: 'Our brilliant students together.', uploadedBy: 'Admin' },
+        { id: 's9', url: '/images/teach.jpg', title: 'Faculty Guidance', type: 'class', description: 'Mentorship in action.', uploadedBy: 'Admin' },
+        { id: 's10', url: '/images/wteach.jpg', title: 'Workshop Session', type: 'lab', description: 'Hands-on workshop learning skills.', uploadedBy: 'Admin' },
+        { id: 's11', url: '/images/DSCF2122-copy.jpg', title: 'Award Ceremony', type: 'function', description: 'Recognizing talent and success.', uploadedBy: 'Admin' },
+        { id: 's12', url: '/images/20240123_145917-copy.jpg', title: 'Campus Life', type: 'campus', description: ' Everyday moments.', uploadedBy: 'Admin' },
+        { id: 's13', url: '/images/STUDENT5-1.jpg', title: 'Student Portrait', type: 'campus', description: 'Future leaders.', uploadedBy: 'Admin' },
+    ];
+
     useEffect(() => {
         fetchGallery();
     }, []);
 
     const fetchGallery = async () => {
         try {
-            const res = await fetch('/gallery');
-            if (res.ok) {
-                const data = await res.json();
-                // Reverse to show oldest images first, newest at bottom
-                setGalleryItems(data.reverse());
+            // Start with static items
+            let startItems = [...STATIC_GALLERY_ITEMS];
+
+            // Try to fetch dynamic items from backend
+            try {
+                const res = await fetch('/gallery');
+                if (res.ok) {
+                    const data = await res.json();
+                    // Combine static + dynamic (dynamic first or last? Let's assume dynamic is newer, so first)
+                    // The user wanted to "use photos from public folder", so ensuring they are present is key.
+                    // We'll merge them.
+                    setGalleryItems([...data.reverse(), ...startItems]);
+                } else {
+                    setGalleryItems(startItems);
+                }
+            } catch (apiErr) {
+                console.warn("API fetch failed, using static only", apiErr);
+                setGalleryItems(startItems);
             }
         } catch (err) {
             console.error("Failed to load gallery", err);
