@@ -133,7 +133,7 @@ const RoadmapScroll = () => {
 const LearningHubScroll = () => {
     const targetRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: targetRef });
-    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-55%"]);
+    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
 
     const resources = [
         {
