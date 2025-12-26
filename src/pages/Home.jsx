@@ -350,8 +350,8 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Testimonials Section */}
-            <motion.section
+            {/* Testimonials Section (Removed per user request) */}
+            {/* <motion.section
                 className="testimonials"
                 initial="hidden"
                 whileInView="visible"
@@ -382,7 +382,7 @@ const Home = () => {
                         </div>
                     </motion.div>
                 </div>
-            </motion.section>
+            </motion.section> */}
 
             {/* Gallery Section */}
             <section className="gallery">
