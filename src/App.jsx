@@ -37,6 +37,7 @@ import { ToastProvider } from './components/Toast';
 import './styles/interaction.css';
 import Lenis from 'lenis';
 import CustomCursor from './components/CustomCursor';
+import StarBackground from './components/StarBackground';
 
 
 function Layout({ children }) {
@@ -140,6 +141,7 @@ function App() {
     return (
         <ToastProvider>
             <CustomCursor />
+            <StarBackground />
             <Router>
                 <Layout>
                     <Routes>
