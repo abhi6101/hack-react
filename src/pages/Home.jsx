@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import API_BASE_URL from '../config';
+import FloatingCodeBackground from '../components/FloatingCodeBackground';
 import Typewriter from '../components/Typewriter';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
@@ -94,7 +95,7 @@ const RoadmapScroll = () => {
                     transition={{ duration: 0.6 }}
                     style={{ textAlign: 'center', marginBottom: '4rem', maxWidth: '800px', margin: '0 auto 4rem' }}
                 >
-                    <h2 className="glitch-hover" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
+                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>Your Path to Success</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
                         Scroll to explore our proven 4-step roadmap.
                     </p>
@@ -207,7 +208,7 @@ const LearningHubScroll = () => {
                     transition={{ duration: 0.8 }}
                     style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '800px', margin: '0 auto 3rem' }}
                 >
-                    <h2 className="glitch-hover" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
+                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>Start Your Learning Journey</h2>
                     <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
                         Hand-picked resources to build your skills and prepare you for the industry.
                     </p>
@@ -311,6 +312,10 @@ const Home = () => {
 
     return (
         <main>
+            <FloatingCodeBackground />
+
+
+
             {/* Hero Section */}
             <section className="hero">
                 <motion.div
