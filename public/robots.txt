@@ -1,0 +1,27 @@
+# Robots.txt for Hack2Hired Placement Portal
+# https://hack-2-hired.onrender.com
+
+User-agent: *
+Allow: /
+
+# Disallow admin and dashboard pages from search engines
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /onboarding
+
+# Allow important pages
+Allow: /jobs
+Allow: /resume
+Allow: /resume-builder
+Allow: /interview
+Allow: /papers
+Allow: /quiz
+Allow: /courses
+Allow: /blog
+Allow: /gallery
+Allow: /videos
+Allow: /contact
+
+# Sitemap location
+Sitemap: https://hack-2-hired.onrender.com/sitemap.xml
