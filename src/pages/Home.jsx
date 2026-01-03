@@ -415,21 +415,21 @@ const Home = () => {
                     <motion.div className="testimonial-card surface-glow" variants={fadeInUp} whileHover={{ y: -5 }}>
                         <p>"The resume builder and mock interviews were game-changers! Landed my dream job at a top tech company..."</p>
                         <div className="testimonial-author">
-                            <img src="/images/i-priya.jpg" alt="Priya Sharma" />
+                            <img src="/images/i-priya.jpg" alt="Priya Sharma" loading="lazy" />
                             <div className="author-info"><h4>Priya Sharma</h4><p>Software Engineer at Google</p></div>
                         </div>
                     </motion.div>
                     <motion.div className="testimonial-card surface-glow" variants={fadeInUp} whileHover={{ y: -5 }}>
                         <p>"I went from zero calls to 5 job offers in 2 months. The interview prep resources are pure gold."</p>
                         <div className="testimonial-author">
-                            <img src="/images/i-rahul.jpg" alt="Rahul Verma" />
+                            <img src="/images/i-rahul.jpg" alt="Rahul Verma" loading="lazy" />
                             <div className="author-info"><h4>Rahul Verma</h4><p>Data Analyst at Amazon</p></div>
                         </div>
                     </motion.div>
                     <motion.div className="testimonial-card surface-glow" variants={fadeInUp} whileHover={{ y: -5 }}>
                         <p>"Personalized career guidance helped me transition into a higher-paying role. Highly recommended!"</p>
                         <div className="testimonial-author">
-                            <img src="/images/i-neha.jpg" alt="Neha Patel" />
+                            <img src="/images/i-neha.jpg" alt="Neha Patel" loading="lazy" />
                             <div className="author-info"><h4>Neha Patel</h4><p>Product Manager at Microsoft</p></div>
                         </div>
                     </motion.div>
@@ -493,32 +493,32 @@ const Home = () => {
                 <div className="logos-marquee-container">
                     <div className="logos-marquee-track">
                         {/* 1st Set of Logos */}
-                        <div className="company-logo-item"><img src="/images/accenture-logo.jpg" alt="Accenture" /></div>
-                        <div className="company-logo-item"><img src="/images/wipro-logo.jpg" alt="Wipro" /></div>
-                        <div className="company-logo-item"><img src="/images/infosys-logo.jpg" alt="Infosys" /></div>
-                        <div className="company-logo-item"><img src="/images/tcs-logo.jpg" alt="TCS" /></div>
-                        <div className="company-logo-item"><img src="/images/capgemini-logo.jpg" alt="Capgemini" /></div>
-                        <div className="company-logo-item"><img src="/images/persistent-logo.jpg" alt="Persistent" /></div>
-                        <div className="company-logo-item"><img src="/images/google.png" alt="Google" /></div>
-                        <div className="company-logo-item"><img src="/images/microsoft.png" alt="Microsoft" /></div>
-                        <div className="company-logo-item"><img src="/images/amazon.jpg" alt="Amazon" /></div>
-                        <div className="company-logo-item"><img src="/images/ibm.jpg" alt="IBM" /></div>
-                        <div className="company-logo-item"><img src="/images/hexaware-logo.jpg" alt="Hexaware" /></div>
-                        <div className="company-logo-item"><img src="/images/deleoite.jpg" alt="Deloitte" /></div>
+                        <div className="company-logo-item"><img src="/images/accenture-logo.jpg" alt="Accenture" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/wipro-logo.jpg" alt="Wipro" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/infosys-logo.jpg" alt="Infosys" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/tcs-logo.jpg" alt="TCS" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/capgemini-logo.jpg" alt="Capgemini" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/persistent-logo.jpg" alt="Persistent" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/google.png" alt="Google" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/microsoft.png" alt="Microsoft" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/amazon.jpg" alt="Amazon" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/ibm.jpg" alt="IBM" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/hexaware-logo.jpg" alt="Hexaware" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/deleoite.jpg" alt="Deloitte" loading="lazy" /></div>
 
                         {/* Duplicate Set for Seamless Scroll */}
-                        <div className="company-logo-item"><img src="/images/accenture-logo.jpg" alt="Accenture" /></div>
-                        <div className="company-logo-item"><img src="/images/wipro-logo.jpg" alt="Wipro" /></div>
-                        <div className="company-logo-item"><img src="/images/infosys-logo.jpg" alt="Infosys" /></div>
-                        <div className="company-logo-item"><img src="/images/tcs-logo.jpg" alt="TCS" /></div>
-                        <div className="company-logo-item"><img src="/images/capgemini-logo.jpg" alt="Capgemini" /></div>
-                        <div className="company-logo-item"><img src="/images/persistent-logo.jpg" alt="Persistent" /></div>
-                        <div className="company-logo-item"><img src="/images/google.png" alt="Google" /></div>
-                        <div className="company-logo-item"><img src="/images/microsoft.png" alt="Microsoft" /></div>
-                        <div className="company-logo-item"><img src="/images/amazon.jpg" alt="Amazon" /></div>
-                        <div className="company-logo-item"><img src="/images/ibm.jpg" alt="IBM" /></div>
-                        <div className="company-logo-item"><img src="/images/hexaware-logo.jpg" alt="Hexaware" /></div>
-                        <div className="company-logo-item"><img src="/images/deleoite.jpg" alt="Deloitte" /></div>
+                        <div className="company-logo-item"><img src="/images/accenture-logo.jpg" alt="Accenture" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/wipro-logo.jpg" alt="Wipro" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/infosys-logo.jpg" alt="Infosys" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/tcs-logo.jpg" alt="TCS" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/capgemini-logo.jpg" alt="Capgemini" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/persistent-logo.jpg" alt="Persistent" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/google.png" alt="Google" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/microsoft.png" alt="Microsoft" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/amazon.jpg" alt="Amazon" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/ibm.jpg" alt="IBM" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/hexaware-logo.jpg" alt="Hexaware" loading="lazy" /></div>
+                        <div className="company-logo-item"><img src="/images/deleoite.jpg" alt="Deloitte" loading="lazy" /></div>
                     </div>
                 </div>
             </section>
