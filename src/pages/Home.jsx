@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import API_BASE_URL from '../config';
 import FloatingCodeBackground from '../components/FloatingCodeBackground';
 import Typewriter from '../components/Typewriter';
+import SEOContent from '../components/SEOContent';
 import '../styles/index.css';
 import '../styles/home-interactive.css';
 
@@ -370,6 +371,9 @@ const Home = () => {
                     </motion.div>
                 </motion.div>
             </section>
+
+            {/* SEO Content Section - Google will read this! */}
+            <SEOContent />
 
             {/* NEW: Feature Grid Section (User Request) */}
             <section className="feature-grid-section" style={{ padding: '4rem 5%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
