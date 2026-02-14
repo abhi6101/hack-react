@@ -310,6 +310,18 @@ const Login = () => {
                         </button>
                     </form>
                     <div className="login-footer">
+                        <p style={{
+                            background: 'rgba(102, 126, 234, 0.1)',
+                            padding: '0.8rem',
+                            borderRadius: '8px',
+                            fontSize: '0.85rem',
+                            color: '#a0aec0',
+                            border: '1px solid rgba(102, 126, 234, 0.2)',
+                            marginBottom: '1.5rem'
+                        }}>
+                            <i className="fas fa-info-circle" style={{ color: '#667eea', marginRight: '0.5rem' }}></i>
+                            <strong>Old User?</strong> If you don't have a Computer Code yet, click <strong>"Forgot Password"</strong> below to verify and upgrade your account.
+                        </p>
                         <p>Don't have an account? <Link to="/register">Register here</Link></p>
                     </div>
                 </motion.div>
