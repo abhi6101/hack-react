@@ -12,6 +12,7 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showWaitNote, setShowWaitNote] = useState(false);
+    const [countdown, setCountdown] = useState(15);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -58,11 +59,16 @@ const Login = () => {
         setLoading(true);
         setError('');
         setShowWaitNote(false);
+        setCountdown(15);
 
-        // Start 5-second timer for wait note
+        let countdownInterval;
+        // Start 8-second timer for wait note
         const timer = setTimeout(() => {
             setShowWaitNote(true);
-        }, 5000);
+            countdownInterval = setInterval(() => {
+                setCountdown(prev => (prev > 0 ? prev - 1 : 0));
+            }, 1000);
+        }, 8000);
 
         try {
             console.log('🔐 Login attempt - Mode:', loginMode);
@@ -159,6 +165,7 @@ const Login = () => {
             setError('Network error. Please try again later.');
         } finally {
             clearTimeout(timer);
+            if (countdownInterval) clearInterval(countdownInterval);
             setLoading(false);
         }
     };
@@ -262,7 +269,7 @@ const Login = () => {
                                 exit={{ opacity: 0, height: 0 }}
                                 className="server-wait-note"
                             >
-                                ⏳ The server may take 30–60 seconds to start if it was idle. Please wait after clicking Login.
+                                ⏳ The server may take 15–20 seconds to start. Please wait: <strong>{countdown}s</strong>
                             </motion.div>
                         )}
                     </AnimatePresence>
