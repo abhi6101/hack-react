@@ -66,7 +66,7 @@ const Login = () => {
         const timer = setTimeout(() => {
             setShowWaitNote(true);
             countdownInterval = setInterval(() => {
-                setCountdown(prev => (prev > 0 ? prev - 1 : 0));
+                setCountdown(prev => (prev > 0 ? prev - 1 : 30));
             }, 1000);
         }, 8000);
 
@@ -269,7 +269,8 @@ const Login = () => {
                                 exit={{ opacity: 0, height: 0 }}
                                 className="server-wait-note"
                             >
-                                ⏳ The server may take 15–20 seconds to start. Please wait: <strong>{countdown}s</strong>
+                                ⏳ {countdown > 15 ? "Cold start detected. Backend is waking up..." : "The server may take 15–20 seconds to start."}
+                                <br />Please wait: <strong>{countdown}s</strong>
                             </motion.div>
                         )}
                     </AnimatePresence>
