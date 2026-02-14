@@ -284,7 +284,7 @@ const Login = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                                 <i
-                                    className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password - toggle - icon`}
+                                    className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password-toggle-icon`}
                                     onClick={() => setShowPassword(!showPassword)}
                                     style={{ cursor: 'pointer' }}
                                 ></i>
