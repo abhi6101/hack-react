@@ -96,7 +96,6 @@ function App() {
         <CustomToastProvider>
             <AlertProvider>
                 <ToastProvider>
-                    <CustomCursor />
                     <StarBackground />
                     <Router>
                         <Layout>
