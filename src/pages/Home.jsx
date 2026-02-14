@@ -544,19 +544,7 @@ const Home = () => {
 };
 
 const HiddenSEO = () => (
-    <div style={{
-        position: 'absolute',
-        width: '1px',
-        height: '1px',
-        padding: '0',
-        margin: '-1px',
-        overflow: 'hidden',
-        clip: 'rect(0, 0, 0, 0)',
-        whiteSpace: 'nowrap',
-        border: '0',
-        opacity: 0,
-        pointerEvents: 'none'
-    }}>
+    <div style={{ display: 'none' }}>
         <h1>Hack2Hired – Complete College Placement & Job Portal for Students and Recruiters</h1>
         <p>
             Hack2Hired is a comprehensive college placement and recruitment management platform designed to bridge the gap between students, colleges, and recruiters. Our intelligent system streamlines the entire placement process, from resume building and job applications to interview preparation and final hiring decisions. Whether you're a student looking for your dream job, a college managing placement drives, or a recruiter searching for top talent, Hack2Hired provides all the tools you need in one powerful platform.
