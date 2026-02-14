@@ -11,6 +11,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showWaitNote, setShowWaitNote] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -56,6 +57,12 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
+        setShowWaitNote(false);
+
+        // Start 5-second timer for wait note
+        const timer = setTimeout(() => {
+            setShowWaitNote(true);
+        }, 5000);
 
         try {
             console.log('🔐 Login attempt - Mode:', loginMode);
@@ -150,6 +157,8 @@ const Login = () => {
         } catch (err) {
             console.error('Login error:', err);
             setError('Network error. Please try again later.');
+        } finally {
+            clearTimeout(timer);
             setLoading(false);
         }
     };
@@ -244,9 +253,19 @@ const Login = () => {
                         </button>
                     </div>
 
-                    <p className="server-wait-note">
-                        ⏳ The server may take 30–60 seconds to start if it was idle. Please wait after clicking Login.
-                    </p>
+                    {/* Server Wait Note - Only show after 5 seconds of loading */}
+                    <AnimatePresence>
+                        {loading && showWaitNote && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="server-wait-note"
+                            >
+                                ⏳ The server may take 30–60 seconds to start if it was idle. Please wait after clicking Login.
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {error && <div className="alert alert-error" role="alert" style={{ display: 'block' }}>{error}</div>}
 
