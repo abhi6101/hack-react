@@ -390,11 +390,9 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Horizontal Scrolling Roadmap (Lenis Style) */}
-            <RoadmapScroll />
 
-            {/* Horizontal Scrolling Learning Hub (Lenis Style) */}
-            <LearningHubScroll />
+
+
 
             {/* Stats Section */}
             <section className="stats">
