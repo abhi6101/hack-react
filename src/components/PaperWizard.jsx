@@ -26,6 +26,10 @@ const PaperWizard = ({ onUploadSuccess }) => {
     const [universities, setUniversities] = useState([]);
     const [showUniManager, setShowUniManager] = useState(false);
     const [newUniName, setNewUniName] = useState('');
+    const [existingPapers, setExistingPapers] = useState([]);
+    const [semesterSubjects, setSemesterSubjects] = useState([]);
+    const [useExistingSubject, setUseExistingSubject] = useState(false);
+    const [loadingExisting, setLoadingExisting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -93,6 +97,65 @@ const PaperWizard = ({ onUploadSuccess }) => {
             }
         } catch (e) {
             showToast({ message: 'Failed to delete university', type: 'error' });
+        }
+    };
+
+    useEffect(() => {
+        if (step === 4) {
+            fetchAllSemesterSubjects();
+        }
+    }, [step, formData.branch, formData.newBranch, formData.semester, formData.newSemester]);
+
+    const fetchAllSemesterSubjects = async () => {
+        try {
+            const branch = formData.isNewBranch ? formData.newBranch : formData.branch;
+            const semester = formData.isNewSemester ? formData.newSemester : formData.semester;
+            const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}&semester=${semester}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const all = await res.json();
+                // Get unique subject names
+                const subjects = [...new Set(all.map(p => p.subject))].sort();
+                setSemesterSubjects(subjects);
+                // Auto-toggle: If subjects exist, use dropdown. Otherwise use manual input.
+                if (subjects.length > 0) {
+                    setUseExistingSubject(true);
+                } else {
+                    setUseExistingSubject(false);
+                    setFormData(prev => ({ ...prev, subject: '' }));
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        if (step === 4 && formData.subject.length > 1) {
+            fetchExistingPapers();
+        }
+    }, [step, formData.subject, formData.branch, formData.newBranch, formData.semester, formData.newSemester]);
+
+    const fetchExistingPapers = async () => {
+        setLoadingExisting(true);
+        try {
+            const branch = formData.isNewBranch ? formData.newBranch : formData.branch;
+            const semester = formData.isNewSemester ? formData.newSemester : formData.semester;
+            const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}&semester=${semester}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const all = await res.json();
+                const matches = all.filter(p =>
+                    p.subject.toLowerCase().includes(formData.subject.toLowerCase())
+                );
+                setExistingPapers(matches);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoadingExisting(false);
         }
     };
 
@@ -413,9 +476,80 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                     <h3>Step 4: Paper Details</h3>
                                     <div className="form-grid" style={{ marginTop: '1.5rem' }}>
                                         <div className="form-group full-width">
-                                            <label>Subject Name</label>
-                                            <input type="text" className="form-control" placeholder="e.g. Computer Graphics" value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })} />
-                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '5px' }}>Year will be auto-extracted from file names.</p>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                                <label style={{ fontSize: '1.1rem', fontWeight: '600' }}>Subject Name</label>
+                                                {semesterSubjects.length > 0 && (
+                                                    <button
+                                                        className={`btn-sm ${!useExistingSubject ? 'active' : ''}`}
+                                                        onClick={() => {
+                                                            setUseExistingSubject(!useExistingSubject);
+                                                            if (useExistingSubject) setFormData({ ...formData, subject: '' });
+                                                        }}
+                                                        style={{
+                                                            fontSize: '0.8rem',
+                                                            background: !useExistingSubject ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+                                                            border: '1px solid var(--border-color)',
+                                                            color: !useExistingSubject ? '#000' : 'var(--primary)',
+                                                            cursor: 'pointer',
+                                                            padding: '6px 15px',
+                                                            borderRadius: '8px',
+                                                            transition: '0.3s'
+                                                        }}
+                                                    >
+                                                        {useExistingSubject ? "+ Create New Subject" : "← Select Existing"}
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            {useExistingSubject && semesterSubjects.length > 0 ? (
+                                                <select
+                                                    className="form-control"
+                                                    value={formData.subject}
+                                                    onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                                                    style={{ padding: '1rem', borderRadius: '12px' }}
+                                                >
+                                                    <option value="">-- Select Subject --</option>
+                                                    {semesterSubjects.map(sub => <option key={sub} value={sub}>{sub.toUpperCase()}</option>)}
+                                                </select>
+                                            ) : (
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="e.g. Computer Graphics"
+                                                    value={formData.subject}
+                                                    onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                                                    style={{ padding: '1rem', borderRadius: '12px' }}
+                                                />
+                                            )}
+
+                                            {/* Existing Papers Detection (Small Preview) */}
+                                            {formData.subject && (
+                                                <div style={{ marginTop: '0.8rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                        <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--primary)' }}>
+                                                            {loadingExisting ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-search"></i>} Papers already in {formData.subject}:
+                                                        </span>
+                                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{existingPapers.length} found</span>
+                                                    </div>
+
+                                                    {existingPapers.length > 0 ? (
+                                                        <div style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                                            {existingPapers.map(p => (
+                                                                <div key={p.id} style={{ fontSize: '0.8rem', padding: '4px 0', display: 'flex', gap: '8px', color: 'rgba(255,255,255,0.7)' }}>
+                                                                    <i className="fas fa-history" style={{ marginTop: '3px' }}></i>
+                                                                    <span>{p.title} ({p.year}) - {p.category}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : !loadingExisting && (
+                                                        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>No files for this subject yet. Adding first set...</p>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '10px' }}>
+                                                <i className="fas fa-info-circle"></i> Year will be auto-extracted from file names.
+                                            </p>
                                         </div>
                                         <div className="form-group">
                                             <label>Exam Category</label>
