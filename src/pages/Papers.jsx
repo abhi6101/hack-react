@@ -11,11 +11,13 @@ const Papers = () => {
     const { showToast } = useToast();
 
     const [selectedSemester, setSelectedSemester] = useState(null);
+    const [selectedSubject, setSelectedSubject] = useState(null);
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [availableSems, setAvailableSems] = useState([]);
     const [branch, setBranch] = useState('IMCA');
     const [deptList, setDeptList] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const token = localStorage.getItem("authToken");
 
@@ -140,67 +142,146 @@ const Papers = () => {
         </div>
     );
 
-    const renderPaperList = () => (
-        <div className="paper-list-view fade-in">
-            <div className="view-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                <button className="btn btn-secondary btn-sm" onClick={() => setSelectedSemester(null)}>
-                    <i className="fas fa-arrow-left"></i> Back to Semesters
-                </button>
-                <h2 style={{ margin: 0 }}>{branch} - Semester {selectedSemester} Papers</h2>
-            </div>
+    const renderSubjectGrid = () => {
+        const subjects = [...new Set(papers.map(p => p.subject))].sort();
 
-            {loading ? (
-                <div className="loading-state" style={{ textAlign: 'center', padding: '3rem' }}>
-                    <i className="fas fa-spinner fa-spin" style={{ fontSize: '2rem', color: 'var(--primary)' }}></i>
-                    <p>Fetching papers from archive...</p>
+        return (
+            <div className="subject-view fade-in">
+                <div className="view-header" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1.5rem',
+                    marginBottom: '3rem',
+                    background: 'rgba(255,255,255,0.02)',
+                    padding: '2rem',
+                    borderRadius: '24px',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }}>
+                    <button className="back-btn" onClick={() => setSelectedSemester(null)}>
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
+                    <div>
+                        <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Semester {selectedSemester} Subjects</h2>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Select a subject folder to view papers</p>
+                    </div>
                 </div>
-            ) : papers.length === 0 ? (
-                <div className="empty-state surface-glow" style={{ textAlign: 'center', padding: '4rem', borderRadius: '16px' }}>
-                    <i className="fas fa-ghost" style={{ fontSize: '3rem', opacity: 0.3, marginBottom: '1rem' }}></i>
-                    <h3>No papers found for this semester.</h3>
-                    <p>Try checking back later or contact your department admin.</p>
+
+                <div className="subject-grid">
+                    {subjects.length === 0 ? (
+                        <div className="empty-state surface-glow" style={{ textAlign: 'center', padding: '6rem 2rem', borderRadius: '24px', gridColumn: '1/-1' }}>
+                            <i className="fas fa-folder-open" style={{ fontSize: '4rem', color: 'rgba(255,255,255,0.05)', marginBottom: '2rem' }}></i>
+                            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>No Subjects Found</h3>
+                            <p style={{ color: 'var(--text-secondary)' }}>We couldn't find any papers categorized for this semester yet.</p>
+                        </div>
+                    ) : (
+                        subjects.map(sub => {
+                            const count = papers.filter(p => p.subject === sub).length;
+                            return (
+                                <div key={sub} className="subject-folder surface-glow" onClick={() => setSelectedSubject(sub)}>
+                                    <div className="folder-icon-wrapper">
+                                        <div className="folder-icon">
+                                            <i className="fas fa-folder"></i>
+                                            <span className="file-count">{count}</span>
+                                        </div>
+                                    </div>
+                                    <div className="folder-info">
+                                        <h3 className="folder-name">{sub}</h3>
+                                        <span className="folder-desc">Examination Papers</span>
+                                    </div>
+                                    <div className="folder-arrow">
+                                        <i className="fas fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
-            ) : (
-                <div className="papers-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                    {papers.map(paper => (
-                        <div key={paper.id} className="paper-item surface-glow" style={{ padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                    <div style={{ width: '40px', height: '40px', background: 'rgba(255, 71, 123, 0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <i className="fas fa-file-pdf" style={{ color: '#ff477b' }}></i>
-                                    </div>
-                                    <div>
-                                        <h4 style={{ margin: 0 }}>{paper.title}</h4>
-                                        <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{paper.subject}</span>
-                                    </div>
+            </div>
+        );
+    };
+
+    const renderPaperList = () => {
+        const filteredPapers = papers.filter(p =>
+            p.subject === selectedSubject &&
+            (p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                p.subject.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+
+        return (
+            <div className="paper-list-view fade-in">
+                <div className="view-header" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.5rem',
+                    marginBottom: '3rem',
+                    background: 'rgba(255,255,255,0.02)',
+                    padding: '2rem',
+                    borderRadius: '24px',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                            <button className="back-btn" onClick={() => { setSelectedSubject(null); setSearchQuery(''); }}>
+                                <i className="fas fa-chevron-left"></i>
+                            </button>
+                            <div>
+                                <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>{selectedSubject}</h2>
+                                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Semester {selectedSemester} Archive</p>
+                            </div>
+                        </div>
+
+                        <div className="search-box-container">
+                            <i className="fas fa-search"></i>
+                            <input
+                                type="text"
+                                placeholder="Search by paper title or year..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="papers-grid">
+                    {filteredPapers.map(paper => (
+                        <div key={paper.id} className="paper-card-premium surface-glow">
+                            <div className="card-top">
+                                <div className="file-icon">
+                                    <i className="fas fa-file-pdf"></i>
+                                </div>
+                                <div className="year-badge">{paper.year !== "0" ? paper.year : 'N/A'}</div>
+                            </div>
+
+                            <div className="card-body">
+                                <h4 className="paper-title">{paper.title}</h4>
+                                <div className="tag-group">
+                                    <span className="premium-tag category">{paper.category}</span>
+                                    <span className="premium-tag uni">{paper.university}</span>
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                <span className="badge badge-primary">{paper.category}</span>
-                                <span className="badge badge-secondary">{paper.university}</span>
-                            </div>
-
-                            <button className="btn btn-primary" onClick={() => handleDownload(paper)} style={{ marginTop: 'auto', width: '100%' }}>
-                                <i className="fas fa-download"></i> Download Paper
+                            <button className="download-btn-premium" onClick={() => handleDownload(paper)}>
+                                <span style={{ flex: 1 }}>Download PDF</span>
+                                <div className="btn-icon">
+                                    <i className="fas fa-arrow-down"></i>
+                                </div>
                             </button>
                         </div>
                     ))}
                 </div>
-            )}
-        </div>
-    );
+            </div>
+        );
+    };
 
     return (
         <>
-            <header className="page-header" style={{ position: 'relative' }}>
+            <header className="papers-hero">
                 {!selectedSemester && (
-                    <div style={{ position: 'absolute', top: '2rem', right: '5%', zIndex: 10 }}>
+                    <div className="dept-selector-container">
                         <select
-                            className="form-control"
+                            className="dept-select-premium"
                             value={branch}
                             onChange={(e) => setBranch(e.target.value)}
-                            style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '8px 15px' }}
                         >
                             <option value="IMCA">IMCA Department</option>
                             {deptList.filter(d => d.code !== 'IMCA').map(d => (
@@ -209,16 +290,22 @@ const Papers = () => {
                         </select>
                     </div>
                 )}
-                <h1>{branch} Exam Papers Archive</h1>
-                <p className="subtitle">
-                    {selectedSemester
-                        ? `Available papers for ${branch} Semester ${selectedSemester}`
-                        : "Select a semester to view and download all available previous year papers."}
-                </p>
+
+                <div className="hero-content">
+                    <span className="hero-tag">Digital Library</span>
+                    <h1 className="hero-title">
+                        {branch} <span className="highlight">Archive</span>
+                    </h1>
+                    <p className="hero-subtitle">
+                        {selectedSemester
+                            ? `Curated examination materials for Semester ${selectedSemester}`
+                            : "Access a comprehensive collection of previous year question papers and academic resources."}
+                    </p>
+                </div>
             </header>
 
             <main className="papers-container" style={{ padding: '2rem 5%' }}>
-                {selectedSemester ? renderPaperList() : renderSemesterGrid()}
+                {selectedSemester === null ? renderSemesterGrid() : (selectedSubject === null ? renderSubjectGrid() : renderPaperList())}
             </main>
         </>
     );

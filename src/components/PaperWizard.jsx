@@ -340,8 +340,23 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                             </select>
                                         )}
                                     </div>
-                                    <div style={{ marginTop: '3rem', textAlign: 'right' }}>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.isNewBranch ? !formData.newBranch : !formData.branch} style={{ padding: '0.8rem 2.5rem' }}>Next <i className="fas fa-arrow-right"></i></button>
+                                    <div style={{ marginTop: '3.5rem', textAlign: 'right' }}>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={nextStep}
+                                            disabled={formData.isNewBranch ? !formData.newBranch : !formData.branch}
+                                            style={{
+                                                padding: '1rem 3rem',
+                                                borderRadius: '14px',
+                                                fontWeight: '700',
+                                                fontSize: '1.1rem',
+                                                boxShadow: '0 0 20px rgba(0, 212, 255, 0.3)',
+                                                border: 'none',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Next Step <i className="fas fa-chevron-right" style={{ marginLeft: '10px' }}></i>
+                                        </button>
                                     </div>
                                 </div>
                             )}
@@ -378,27 +393,29 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                                     placeholder="Enter Semester Number (e.g. 9)"
                                                     value={formData.newSemester}
                                                     onChange={e => setFormData({ ...formData, newSemester: e.target.value })}
-                                                    style={{ padding: '1rem' }}
+                                                    style={{ padding: '1.2rem', borderRadius: '14px', fontSize: '1.1rem', background: 'rgba(0,0,0,0.2)' }}
                                                 />
                                             </motion.div>
                                         ) : (
-                                            <div className="semester-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 2fr)', gap: '1rem' }}>
+                                            <div className="semester-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.2rem' }}>
                                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
                                                     <button
                                                         key={s}
                                                         onClick={() => setFormData({ ...formData, semester: s })}
                                                         style={{
-                                                            padding: '1.5rem 1rem', borderRadius: '14px',
-                                                            border: formData.semester === s ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                                            background: formData.semester === s ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255,255,255,0.08)',
-                                                            color: formData.semester === s ? 'var(--primary)' : 'rgba(255,255,255,0.9)',
+                                                            padding: '1.5rem 1rem', borderRadius: '16px',
+                                                            border: formData.semester === s ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
+                                                            background: formData.semester === s ? 'rgba(0, 212, 255, 0.15)' : 'rgba(255,255,255,0.03)',
+                                                            color: formData.semester === s ? 'var(--primary)' : 'rgba(255,255,255,0.7)',
                                                             fontWeight: '700',
-                                                            fontSize: '1rem',
+                                                            fontSize: '1.1rem',
                                                             cursor: 'pointer',
-                                                            transition: '0.3s',
-                                                            boxShadow: formData.semester === s ? '0 0 15px rgba(0,212,255,0.2)' : 'none'
+                                                            transition: 'all 0.3s ease',
+                                                            boxShadow: formData.semester === s ? '0 0 20px rgba(0,212,255,0.15)' : 'none'
                                                         }}
-                                                    >Sem {s}</button>
+                                                    >
+                                                        Sem {s}
+                                                    </button>
                                                 ))}
                                             </div>
                                         )}
@@ -682,23 +699,41 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                             )}
                                         </div>
                                     </div>
-                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
+                                    <div style={{ marginTop: '3.5rem', display: 'flex', justifyContent: 'space-between' }}>
                                         <button
                                             className="btn btn-secondary"
                                             onClick={prevStep}
                                             style={{
-                                                padding: '0.8rem 2rem',
-                                                background: 'rgba(255,255,255,0.05)',
+                                                padding: '1rem 2rem',
+                                                background: 'rgba(255,255,255,0.03)',
                                                 border: '1px solid rgba(255,255,255,0.1)',
+                                                borderRadius: '12px',
                                                 color: '#fff',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                gap: '8px'
+                                                gap: '10px',
+                                                cursor: 'pointer',
+                                                transition: '0.3s'
                                             }}
                                         >
-                                            <i className="fas fa-arrow-left"></i> Back
+                                            <i className="fas fa-chevron-left"></i> Back
                                         </button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={!formData.subject} style={{ padding: '0.8rem 2.5rem' }}>Review <i className="fas fa-arrow-right"></i></button>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={nextStep}
+                                            disabled={!formData.subject}
+                                            style={{
+                                                padding: '1rem 3rem',
+                                                borderRadius: '14px',
+                                                fontWeight: '800',
+                                                fontSize: '1.15rem',
+                                                boxShadow: '0 0 25px rgba(0, 212, 255, 0.4)',
+                                                border: 'none',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Review <i className="fas fa-arrow-right" style={{ marginLeft: '12px' }}></i>
+                                        </button>
                                     </div>
                                 </div>
                             )}

@@ -139,129 +139,422 @@ nav a.active {
 
 /* === PAPERS-SPECIFIC STYLES START HERE === */
 
-/* --- 4. Page Header & Layout --- */
-.page-header {
+/* --- 4. Papers Hero Section --- */
+.papers-hero {
+    padding: 6rem 5% 4rem;
     text-align: center;
-    padding: 4rem 1rem 3rem;
+    background: radial-gradient(circle at top right, rgba(0, 212, 255, 0.05), transparent 40%),
+        radial-gradient(circle at bottom left, rgba(255, 71, 123, 0.05), transparent 40%);
+    position: relative;
+    overflow: hidden;
 }
 
-.page-header h1 {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-}
-
-.page-header .subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0.5rem auto 0;
-}
-
-.papers-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem 4rem;
-}
-
-/* --- 5. Semester Grid & Cards --- */
-.semester-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.semester-card {
+.dept-selector-container {
+    margin-bottom: 2rem;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem;
-    border-radius: 16px;
-    text-decoration: none;
-    color: var(--text-primary);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    justify-content: center;
 }
 
-.semester-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.card-content h2 {
-    font-size: 1.8rem;
-    margin: 0;
-}
-
-.card-content p {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    margin: 0;
-}
-
-.card-icon i {
-    font-size: 3rem;
-    color: var(--primary);
-    opacity: 0.3;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.semester-card:hover .card-icon i {
-    opacity: 1;
-    transform: scale(1.1);
-}
-
-/* --- 6. Paper List View --- */
-.paper-list-view {
-    animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.paper-item {
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.paper-item:hover {
-    transform: translateY(-5px);
-    border-color: var(--primary);
-    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.1);
-}
-
-.badge {
-    padding: 0.3rem 0.8rem;
+.dept-select-premium {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 12px 24px;
     border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.2rem center;
+    background-size: 1rem;
+    padding-right: 3.5rem;
 }
 
-.badge-primary {
+.dept-select-premium:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+}
+
+.hero-tag {
+    display: inline-block;
+    padding: 6px 16px;
     background: rgba(0, 212, 255, 0.1);
     color: var(--primary);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
     border: 1px solid rgba(0, 212, 255, 0.2);
 }
 
-.badge-secondary {
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.hero-title .highlight {
+    background: linear-gradient(135deg, #fff 30%, var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    opacity: 0.8;
+}
+
+/* --- 5. Navigation & Search --- */
+.back-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: var(--primary);
+    color: #000;
+    transform: translateX(-5px);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.search-box-container {
+    position: relative;
+    min-width: 320px;
+}
+
+.search-box-container i {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.search-box-container input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    padding: 12px 1.5rem 12px 3.2rem;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.search-box-container input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+}
+
+/* --- 6. Subject Grid & Folders --- */
+.subject-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.subject-folder {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.subject-folder:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--primary);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.folder-icon-wrapper {
+    position: relative;
+}
+
+.folder-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--primary);
+    position: relative;
+}
+
+.file-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--primary);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #111;
+}
+
+.folder-info {
+    flex: 1;
+}
+
+.folder-name {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.folder-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.folder-arrow {
+    color: var(--text-secondary);
+    opacity: 0.3;
+    transition: all 0.3s ease;
+}
+
+.subject-folder:hover .folder-arrow {
+    opacity: 1;
+    transform: translateX(5px);
+    color: var(--primary);
+}
+
+/* --- 6. Papers Grid & Premium Cards --- */
+.papers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.paper-card-premium {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 24px;
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    height: 100%;
+}
+
+.paper-card-premium:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(0, 212, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, rgba(255, 71, 123, 0.2), rgba(255, 71, 123, 0.1));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--accent);
+    border: 1px solid rgba(255, 71, 123, 0.2);
+}
+
+.year-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
     color: var(--text-secondary);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.loading-state i {
-    margin-bottom: 1rem;
+.paper-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+    line-height: 1.3;
 }
 
-.empty-state i {
-    margin-bottom: 1.5rem;
-    display: block;
+.paper-subject {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0.2rem 0 0;
+}
+
+.tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.premium-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.premium-tag.category {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--primary);
+}
+
+.premium-tag.uni {
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.download-btn-premium {
+    margin-top: auto;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    font-weight: 800;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.download-btn-premium:hover {
+    background: var(--primary);
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+/* --- 7. Loading States --- */
+.loader-ripple {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loader-ripple::after,
+.loader-ripple::before {
+    content: "";
+    position: absolute;
+    border: 4px solid var(--primary);
+    opacity: 1;
+    border-radius: 50%;
+    animation: ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.loader-ripple::after {
+    animation-delay: -0.5s;
+}
+
+@keyframes ripple {
+    0% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+
+    4.9% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+
+    5% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+
+    100% {
+        top: 0;
+        left: 0;
+        width: 72px;
+        height: 72px;
+        opacity: 0;
+    }
+}
+
+/* --- Responsive Fixes --- */
+@media (max-width: 768px) {
+    .papers-hero {
+        padding: 4rem 1.5rem 2rem;
+    }
+
+    .search-box-container {
+        min-width: 100%;
+    }
+
+    .view-header {
+        padding: 1.5rem !important;
+    }
 }
