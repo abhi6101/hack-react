@@ -11,9 +11,12 @@ const PaperWizard = ({ onUploadSuccess }) => {
     // Form State
     const [formData, setFormData] = useState({
         branch: '',
+        newBranch: '',
+        isNewBranch: false,
         semester: '',
+        newSemester: '',
+        isNewSemester: false,
         subject: '',
-        year: new Date().getFullYear(),
         examType: 'End-Sem',
         university: 'DAVV',
         files: []
@@ -61,12 +64,15 @@ const PaperWizard = ({ onUploadSuccess }) => {
         setUploadProgress(10);
 
         try {
+            const finalBranch = formData.isNewBranch ? formData.newBranch : formData.branch;
+            const finalSemester = formData.isNewSemester ? formData.newSemester : formData.semester;
+
             if (uploadMode === 'manual') {
                 const data = new FormData();
-                data.append('branch', formData.branch);
-                data.append('semester', formData.semester);
+                data.append('branch', finalBranch);
+                data.append('semester', finalSemester);
                 data.append('subject', formData.subject);
-                data.append('year', formData.year);
+                data.append('year', 0); // Backend will extract from filename or use 0
                 data.append('category', formData.examType);
                 data.append('university', formData.university);
                 data.append('title', formData.subject);
@@ -91,7 +97,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
                 const data = new FormData();
                 data.append('file', formData.files[0]);
                 data.append('university', formData.university);
-                data.append('year', formData.year);
+                data.append('year', 0); // Automatic extraction
 
                 const res = await fetch(`${API_BASE_URL}/papers/bulk-upload-zip`, {
                     method: 'POST',
@@ -117,9 +123,9 @@ const PaperWizard = ({ onUploadSuccess }) => {
 
     const resetForm = () => {
         setFormData({
-            branch: '', semester: '', subject: '',
-            year: new Date().getFullYear(),
-            examType: 'End-Sem', university: 'DAVV',
+            branch: '', newBranch: '', isNewBranch: false,
+            semester: '', newSemester: '', isNewSemester: false,
+            subject: '', examType: 'End-Sem', university: 'DAVV',
             files: []
         });
         setStep(1);
@@ -149,7 +155,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
         <div className="paper-wizard-container" style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div className="surface-glow" style={{ padding: '2rem', borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <h2><i className="fas fa-magic"></i> Paper Upload Wizard</h2>
+                    <h2><i className="fas fa-magic"></i> Paper Wizard</h2>
                     <div className="mode-toggle" style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '4px' }}>
                         <button
                             className={`btn-sm ${uploadMode === 'manual' ? 'active' : ''}`}
@@ -171,107 +177,144 @@ const PaperWizard = ({ onUploadSuccess }) => {
                         <motion.div key={`step-${step}`} variants={stepVariants} initial="hidden" animate="visible" exit="exit" transition={{ duration: 0.3 }}>
                             {step === 1 && (
                                 <div className="step-content">
-                                    <h3>Step 1: Choose Branch</h3>
-                                    <div className="form-group" style={{ marginTop: '1rem' }}>
-                                        <label>Select Branch</label>
-                                        <select className="form-control" value={formData.branch} onChange={e => setFormData({ ...formData, branch: e.target.value })}>
-                                            <option value="">-- Choose Branch --</option>
-                                            {departments.map(d => <option key={d.code} value={d.code}>{d.name} ({d.code})</option>)}
-                                        </select>
-                                        <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Branch not found? It will be created automatically if you type a new code in Subject name (standardized later).</p>
+                                    <h3>Step 1: Branch Selection</h3>
+                                    <div className="form-group" style={{ marginTop: '1.5rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                            <label>Choose Existing or Create New</label>
+                                            <button
+                                                className="btn-sm"
+                                                onClick={() => setFormData({ ...formData, isNewBranch: !formData.isNewBranch })}
+                                                style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', border: 'none', color: 'var(--primary)', cursor: 'pointer' }}
+                                            >
+                                                {formData.isNewBranch ? "Select from list" : "+ Create New Branch"}
+                                            </button>
+                                        </div>
+
+                                        {formData.isNewBranch ? (
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Enter Branch Code (e.g. CSE, MCA)"
+                                                value={formData.newBranch}
+                                                onChange={e => setFormData({ ...formData, newBranch: e.target.value.toUpperCase() })}
+                                            />
+                                        ) : (
+                                            <select className="form-control" value={formData.branch} onChange={e => setFormData({ ...formData, branch: e.target.value })}>
+                                                <option value="">-- Select Branch --</option>
+                                                {departments.map(d => <option key={d.code} value={d.code}>{d.name} ({d.code})</option>)}
+                                            </select>
+                                        )}
                                     </div>
-                                    <div style={{ marginTop: '2rem', textAlign: 'right' }}>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={!formData.branch}>Next <i className="fas fa-arrow-right"></i></button>
+                                    <div style={{ marginTop: '2.5rem', textAlign: 'right' }}>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.isNewBranch ? !formData.newBranch : !formData.branch}>Next <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
 
                             {step === 2 && (
                                 <div className="step-content">
-                                    <h3>Step 2: Choose Semester</h3>
-                                    <div className="semester-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginTop: '1rem' }}>
-                                        {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
+                                    <h3>Step 2: Semester Selection</h3>
+                                    <div className="form-group" style={{ marginTop: '1.5rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                            <label>Select Semester</label>
                                             <button
-                                                key={s}
-                                                onClick={() => setFormData({ ...formData, semester: s })}
-                                                style={{
-                                                    padding: '1.5rem', borderRadius: '12px', border: formData.semester === s ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                                    background: formData.semester === s ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)',
-                                                    cursor: 'pointer', transition: '0.3s'
-                                                }}
-                                            >Sem {s}</button>
-                                        ))}
+                                                className="btn-sm"
+                                                onClick={() => setFormData({ ...formData, isNewSemester: !formData.isNewSemester })}
+                                                style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', border: 'none', color: 'var(--primary)', cursor: 'pointer' }}
+                                            >
+                                                {formData.isNewSemester ? "Choose from list" : "+ Custom/New Semester"}
+                                            </button>
+                                        </div>
+
+                                        {formData.isNewSemester ? (
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                placeholder="Enter Semester Number"
+                                                value={formData.newSemester}
+                                                onChange={e => setFormData({ ...formData, newSemester: e.target.value })}
+                                            />
+                                        ) : (
+                                            <div className="semester-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+                                                {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
+                                                    <button
+                                                        key={s}
+                                                        onClick={() => setFormData({ ...formData, semester: s })}
+                                                        style={{
+                                                            padding: '1rem', borderRadius: '12px', border: formData.semester === s ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                                            background: formData.semester === s ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)',
+                                                            cursor: 'pointer', transition: '0.3s'
+                                                        }}
+                                                    >Sem {s}</button>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
-                                    <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
+                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
                                         <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={!formData.semester}>Next <i className="fas fa-arrow-right"></i></button>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.isNewSemester ? !formData.newSemester : !formData.semester}>Next <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
 
                             {step === 3 && (
                                 <div className="step-content">
-                                    <h3>Step 3: Subject & Details</h3>
-                                    <div className="form-grid" style={{ marginTop: '1rem' }}>
-                                        <div className="form-group full-width">
-                                            <label>Subject Name</label>
-                                            <input type="text" className="form-control" placeholder="e.g. Computer Networks" value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Exam Year</label>
-                                            <input type="number" className="form-control" value={formData.year} onChange={e => setFormData({ ...formData, year: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Exam Type</label>
-                                            <select className="form-control" value={formData.examType} onChange={e => setFormData({ ...formData, examType: e.target.value })}>
-                                                <option value="End-Sem">End-Sem (Final)</option>
-                                                <option value="Mid-Sem">Mid-Sem</option>
-                                                <option value="Internal">Internal / MST</option>
-                                                <option value="Quiz">Quiz / Assignment</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group full-width">
-                                            <label>University / School</label>
-                                            <input type="text" className="form-control" placeholder="e.g. DAVV, RGPV" value={formData.university} onChange={e => setFormData({ ...formData, university: e.target.value })} />
-                                        </div>
+                                    <h3>Step 3: Choose Files</h3>
+                                    <div
+                                        style={{
+                                            border: '2px dashed var(--primary)', borderRadius: '12px', padding: '3rem', textAlign: 'center', marginTop: '1.5rem',
+                                            background: 'rgba(0, 212, 255, 0.02)', cursor: 'pointer'
+                                        }}
+                                        onClick={() => document.getElementById('wizard-files').click()}
+                                    >
+                                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                                        <p style={{ fontSize: '1.1rem' }}>Select one or more PDF papers</p>
+                                        <input type="file" id="wizard-files" hidden multiple accept=".pdf" onChange={handleFileChange} />
                                     </div>
-                                    <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
+
+                                    {formData.files.length > 0 && (
+                                        <div style={{ marginTop: '1.5rem', maxHeight: '180px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
+                                            {formData.files.map((f, i) => (
+                                                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', alignItems: 'center' }}>
+                                                    <span style={{ fontSize: '0.9rem' }}><i className="fas fa-file-pdf" style={{ color: 'var(--accent)', marginRight: '10px' }}></i>{f.name}</span>
+                                                    <button onClick={() => removeFile(i)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer' }}><i className="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
                                         <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={!formData.subject}>Next <i className="fas fa-arrow-right"></i></button>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.files.length === 0}>Next <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
 
                             {step === 4 && (
                                 <div className="step-content">
-                                    <h3>Step 4: Upload Files</h3>
-                                    <div
-                                        style={{
-                                            border: '2px dashed var(--primary)', borderRadius: '12px', padding: '3rem', textAlign: 'center', marginTop: '1rem',
-                                            background: 'rgba(0, 212, 255, 0.02)', cursor: 'pointer'
-                                        }}
-                                        onClick={() => document.getElementById('wizard-files').click()}
-                                    >
-                                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
-                                        <p style={{ fontSize: '1.2rem' }}>Drag & drop papers or click here</p>
-                                        <p style={{ color: 'var(--text-secondary)' }}>Accepts multiple PDF files</p>
-                                        <input type="file" id="wizard-files" hidden multiple accept=".pdf" onChange={handleFileChange} />
-                                    </div>
-
-                                    {formData.files.length > 0 && (
-                                        <div style={{ marginTop: '1.5rem', maxHeight: '200px', overflowY: 'auto' }}>
-                                            {formData.files.map((f, i) => (
-                                                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '0.5rem', alignItems: 'center' }}>
-                                                    <span><i className="fas fa-file-pdf" style={{ color: 'var(--accent)', marginRight: '10px' }}></i>{f.name}</span>
-                                                    <button onClick={() => removeFile(i)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer' }}><i className="fas fa-times"></i></button>
-                                                </div>
-                                            ))}
+                                    <h3>Step 4: Paper Details</h3>
+                                    <div className="form-grid" style={{ marginTop: '1.5rem' }}>
+                                        <div className="form-group full-width">
+                                            <label>Subject Name</label>
+                                            <input type="text" className="form-control" placeholder="e.g. Computer Graphics" value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })} />
+                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '5px' }}>Year will be auto-extracted from file names.</p>
                                         </div>
-                                    )}
-
-                                    <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
+                                        <div className="form-group">
+                                            <label>Exam Category</label>
+                                            <select className="form-control" value={formData.examType} onChange={e => setFormData({ ...formData, examType: e.target.value })}>
+                                                <option value="End-Sem">End-Sem</option>
+                                                <option value="Mid-Sem">Mid-Sem</option>
+                                                <option value="Internal">Internal</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>University</label>
+                                            <input type="text" className="form-control" value={formData.university} onChange={e => setFormData({ ...formData, university: e.target.value })} />
+                                        </div>
+                                    </div>
+                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
                                         <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.files.length === 0}>Review <i className="fas fa-arrow-right"></i></button>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={!formData.subject}>Review <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
@@ -279,20 +322,18 @@ const PaperWizard = ({ onUploadSuccess }) => {
                             {step === 5 && (
                                 <div className="step-content">
                                     <h3>Step 5: Review & Confirm</h3>
-                                    <div className="surface-glow" style={{ padding: '1.5rem', marginTop: '1rem', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' }}>
-                                        <p><strong>Branch:</strong> {formData.branch}</p>
-                                        <p><strong>Semester:</strong> Sem {formData.semester}</p>
+                                    <div className="surface-glow" style={{ padding: '1.5rem', marginTop: '1.5rem', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' }}>
+                                        <p><strong>Branch:</strong> {formData.isNewBranch ? formData.newBranch : formData.branch}</p>
+                                        <p><strong>Semester:</strong> {formData.isNewSemester ? formData.newSemester : formData.semester}</p>
                                         <p><strong>Subject:</strong> {formData.subject}</p>
-                                        {uploadMode === 'manual' && <p><strong>Year:</strong> {formData.year}</p>}
-                                        <p><strong>Category:</strong> {formData.examType}</p>
-                                        <p><strong>University:</strong> {formData.university}</p>
                                         <p><strong>Total Files:</strong> {formData.files.length}</p>
+                                        <p style={{ color: 'var(--primary)', fontSize: '0.85rem' }}><i className="fas fa-info-circle"></i> Year will be extracted from each PDF file name automatically.</p>
                                     </div>
 
-                                    <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
+                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
                                         <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
                                         <button className="btn btn-success" onClick={handleUpload} disabled={isUploading}>
-                                            {isUploading ? <><i className="fas fa-spinner fa-spin"></i> Uploading...</> : <><i className="fas fa-check"></i> Confirm & Upload</>}
+                                            {isUploading ? <><i className="fas fa-spinner fa-spin"></i> Uploading...</> : <><i className="fas fa-check"></i> Finalize Upload</>}
                                         </button>
                                     </div>
                                 </div>
@@ -302,42 +343,31 @@ const PaperWizard = ({ onUploadSuccess }) => {
                         <motion.div key="bulk-step" variants={stepVariants} initial="hidden" animate="visible" exit="exit" transition={{ duration: 0.3 }}>
                             <div className="step-content">
                                 <h3>Bulk ZIP Upload</h3>
-                                <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-                                    Upload a ZIP file containing folders structured as:<br />
-                                    <strong>Branch → Semester X → Subject → Files.pdf</strong>
-                                </p>
-
-                                {step === 1 && (
-                                    <>
-                                        <div className="form-grid" style={{ marginBottom: '1.5rem' }}>
-                                            <div className="form-group full-width">
-                                                <label>Default University</label>
-                                                <input type="text" className="form-control" value={formData.university} onChange={e => setFormData({ ...formData, university: e.target.value })} />
-                                            </div>
-                                        </div>
-                                        <div
-                                            style={{
-                                                border: '2px dashed var(--primary)', borderRadius: '12px', padding: '3rem', textAlign: 'center',
-                                                background: 'rgba(0, 212, 255, 0.02)', cursor: 'pointer'
-                                            }}
-                                            onClick={() => document.getElementById('zip-file').click()}
-                                        >
-                                            <i className="fas fa-file-archive" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
-                                            <p style={{ fontSize: '1.2rem' }}>Select ZIP archive</p>
-                                            <input type="file" id="zip-file" hidden accept=".zip" onChange={handleFileChange} />
-                                        </div>
-                                        {formData.files.length > 0 && (
-                                            <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
-                                                <i className="fas fa-file-archive" style={{ color: 'orange', marginRight: '10px' }}></i> {formData.files[0].name}
-                                            </div>
-                                        )}
-                                        <div style={{ marginTop: '2rem', textAlign: 'right' }}>
-                                            <button className="btn btn-primary" onClick={handleUpload} disabled={formData.files.length === 0 || isUploading}>
-                                                {isUploading ? <><i className="fas fa-spinner fa-spin"></i> Processing...</> : <><i className="fas fa-upload"></i> Process ZIP</>}
-                                            </button>
-                                        </div>
-                                    </>
+                                <div className="form-group" style={{ marginTop: '1.5rem' }}>
+                                    <label>Default University</label>
+                                    <input type="text" className="form-control" value={formData.university} onChange={e => setFormData({ ...formData, university: e.target.value })} />
+                                </div>
+                                <div
+                                    style={{
+                                        border: '2px dashed var(--primary)', borderRadius: '12px', padding: '3rem', textAlign: 'center', marginTop: '1rem',
+                                        background: 'rgba(0, 212, 255, 0.02)', cursor: 'pointer'
+                                    }}
+                                    onClick={() => document.getElementById('zip-file').click()}
+                                >
+                                    <i className="fas fa-file-archive" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                                    <p>Select ZIP archive</p>
+                                    <input type="file" id="zip-file" hidden accept=".zip" onChange={handleFileChange} />
+                                </div>
+                                {formData.files.length > 0 && (
+                                    <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+                                        <i className="fas fa-file-archive" style={{ color: 'orange', marginRight: '10px' }}></i> {formData.files[0].name}
+                                    </div>
                                 )}
+                                <div style={{ marginTop: '2rem', textAlign: 'right' }}>
+                                    <button className="btn btn-primary" onClick={handleUpload} disabled={formData.files.length === 0 || isUploading}>
+                                        {isUploading ? "Processing..." : "Start Import"}
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     )}
