@@ -23,6 +23,9 @@ const PaperWizard = ({ onUploadSuccess }) => {
     });
 
     const [departments, setDepartments] = useState([]);
+    const [universities, setUniversities] = useState([]);
+    const [showUniManager, setShowUniManager] = useState(false);
+    const [newUniName, setNewUniName] = useState('');
     const [loading, setLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -31,6 +34,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
 
     useEffect(() => {
         fetchDepartments();
+        fetchUniversities();
     }, []);
 
     const fetchDepartments = async () => {
@@ -41,6 +45,54 @@ const PaperWizard = ({ onUploadSuccess }) => {
             if (res.ok) setDepartments(await res.json());
         } catch (e) {
             console.error(e);
+        }
+    };
+
+    const fetchUniversities = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/universities`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) setUniversities(await res.json());
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const handleAddUniversity = async () => {
+        if (!newUniName.trim()) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/universities`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: newUniName })
+            });
+            if (res.ok) {
+                setNewUniName('');
+                fetchUniversities();
+                showToast({ message: 'University added!', type: 'success' });
+            }
+        } catch (e) {
+            showToast({ message: 'Failed to add university', type: 'error' });
+        }
+    };
+
+    const handleDeleteUniversity = async (id) => {
+        if (!window.confirm('Delete this university?')) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/universities/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                fetchUniversities();
+                showToast({ message: 'University deleted!', type: 'success' });
+            }
+        } catch (e) {
+            showToast({ message: 'Failed to delete university', type: 'error' });
         }
     };
 
@@ -179,34 +231,54 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                 <div className="step-content">
                                     <h3>Step 1: Branch Selection</h3>
                                     <div className="form-group" style={{ marginTop: '1.5rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                            <label>Choose Existing or Create New</label>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                            <label style={{ fontSize: '1.1rem', fontWeight: '600' }}>Select Branch</label>
                                             <button
-                                                className="btn-sm"
+                                                className={`btn-sm ${formData.isNewBranch ? 'active' : ''}`}
                                                 onClick={() => setFormData({ ...formData, isNewBranch: !formData.isNewBranch })}
-                                                style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', border: 'none', color: 'var(--primary)', cursor: 'pointer' }}
+                                                style={{
+                                                    fontSize: '0.8rem',
+                                                    background: formData.isNewBranch ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+                                                    border: '1px solid var(--border-color)',
+                                                    color: formData.isNewBranch ? '#000' : 'var(--primary)',
+                                                    cursor: 'pointer',
+                                                    padding: '6px 15px',
+                                                    borderRadius: '8px',
+                                                    transition: '0.3s'
+                                                }}
                                             >
-                                                {formData.isNewBranch ? "Select from list" : "+ Create New Branch"}
+                                                {formData.isNewBranch ? "← Back to List" : "+ Create New Branch"}
                                             </button>
                                         </div>
 
                                         {formData.isNewBranch ? (
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Enter Branch Code (e.g. CSE, MCA)"
-                                                value={formData.newBranch}
-                                                onChange={e => setFormData({ ...formData, newBranch: e.target.value.toUpperCase() })}
-                                            />
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Enter Branch Code (e.g. CSE, MCA, AI)"
+                                                    value={formData.newBranch}
+                                                    onChange={e => setFormData({ ...formData, newBranch: e.target.value.toUpperCase() })}
+                                                    style={{ padding: '1rem', fontSize: '1.1rem' }}
+                                                />
+                                                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                                                    <i className="fas fa-info-circle"></i> This will automatically create a new department if it doesn't exist.
+                                                </p>
+                                            </motion.div>
                                         ) : (
-                                            <select className="form-control" value={formData.branch} onChange={e => setFormData({ ...formData, branch: e.target.value })}>
-                                                <option value="">-- Select Branch --</option>
+                                            <select
+                                                className="form-control"
+                                                value={formData.branch}
+                                                onChange={e => setFormData({ ...formData, branch: e.target.value })}
+                                                style={{ padding: '1rem', borderRadius: '12px' }}
+                                            >
+                                                <option value="">-- Choose Branch --</option>
                                                 {departments.map(d => <option key={d.code} value={d.code}>{d.name} ({d.code})</option>)}
                                             </select>
                                         )}
                                     </div>
-                                    <div style={{ marginTop: '2.5rem', textAlign: 'right' }}>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.isNewBranch ? !formData.newBranch : !formData.branch}>Next <i className="fas fa-arrow-right"></i></button>
+                                    <div style={{ marginTop: '3rem', textAlign: 'right' }}>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.isNewBranch ? !formData.newBranch : !formData.branch} style={{ padding: '0.8rem 2.5rem' }}>Next <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
@@ -215,44 +287,76 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                 <div className="step-content">
                                     <h3>Step 2: Semester Selection</h3>
                                     <div className="form-group" style={{ marginTop: '1.5rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                            <label>Select Semester</label>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                            <label style={{ fontSize: '1.1rem', fontWeight: '600' }}>Choose Semester</label>
                                             <button
-                                                className="btn-sm"
+                                                className={`btn-sm ${formData.isNewSemester ? 'active' : ''}`}
                                                 onClick={() => setFormData({ ...formData, isNewSemester: !formData.isNewSemester })}
-                                                style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', border: 'none', color: 'var(--primary)', cursor: 'pointer' }}
+                                                style={{
+                                                    fontSize: '0.8rem',
+                                                    background: formData.isNewSemester ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+                                                    border: '1px solid var(--border-color)',
+                                                    color: formData.isNewSemester ? '#000' : 'var(--primary)',
+                                                    cursor: 'pointer',
+                                                    padding: '6px 15px',
+                                                    borderRadius: '8px',
+                                                    transition: '0.3s'
+                                                }}
                                             >
-                                                {formData.isNewSemester ? "Choose from list" : "+ Custom/New Semester"}
+                                                {formData.isNewSemester ? "← Back to Grid" : "+ Custom Semester"}
                                             </button>
                                         </div>
 
                                         {formData.isNewSemester ? (
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                placeholder="Enter Semester Number"
-                                                value={formData.newSemester}
-                                                onChange={e => setFormData({ ...formData, newSemester: e.target.value })}
-                                            />
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                                                <input
+                                                    type="number"
+                                                    className="form-control"
+                                                    placeholder="Enter Semester Number (e.g. 9)"
+                                                    value={formData.newSemester}
+                                                    onChange={e => setFormData({ ...formData, newSemester: e.target.value })}
+                                                    style={{ padding: '1rem' }}
+                                                />
+                                            </motion.div>
                                         ) : (
-                                            <div className="semester-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+                                            <div className="semester-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 2fr)', gap: '1rem' }}>
                                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
                                                     <button
                                                         key={s}
                                                         onClick={() => setFormData({ ...formData, semester: s })}
                                                         style={{
-                                                            padding: '1rem', borderRadius: '12px', border: formData.semester === s ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                                            background: formData.semester === s ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)',
-                                                            cursor: 'pointer', transition: '0.3s'
+                                                            padding: '1.5rem 1rem', borderRadius: '14px',
+                                                            border: formData.semester === s ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                                            background: formData.semester === s ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255,255,255,0.08)',
+                                                            color: formData.semester === s ? 'var(--primary)' : 'rgba(255,255,255,0.9)',
+                                                            fontWeight: '700',
+                                                            fontSize: '1rem',
+                                                            cursor: 'pointer',
+                                                            transition: '0.3s',
+                                                            boxShadow: formData.semester === s ? '0 0 15px rgba(0,212,255,0.2)' : 'none'
                                                         }}
                                                     >Sem {s}</button>
                                                 ))}
                                             </div>
                                         )}
                                     </div>
-                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
-                                        <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.isNewSemester ? !formData.newSemester : !formData.semester}>Next <i className="fas fa-arrow-right"></i></button>
+                                    <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'space-between' }}>
+                                        <button
+                                            className="btn btn-secondary"
+                                            onClick={prevStep}
+                                            style={{
+                                                padding: '0.8rem 2rem',
+                                                background: 'rgba(255,255,255,0.05)',
+                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                color: '#fff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px'
+                                            }}
+                                        >
+                                            <i className="fas fa-arrow-left"></i> Back
+                                        </button>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.isNewSemester ? !formData.newSemester : !formData.semester} style={{ padding: '0.8rem 2.5rem' }}>Next <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
@@ -284,8 +388,22 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                     )}
 
                                     <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
-                                        <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.files.length === 0}>Next <i className="fas fa-arrow-right"></i></button>
+                                        <button
+                                            className="btn btn-secondary"
+                                            onClick={prevStep}
+                                            style={{
+                                                padding: '0.8rem 2rem',
+                                                background: 'rgba(255,255,255,0.05)',
+                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                color: '#fff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px'
+                                            }}
+                                        >
+                                            <i className="fas fa-arrow-left"></i> Back
+                                        </button>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.files.length === 0} style={{ padding: '0.8rem 2.5rem' }}>Next <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
@@ -307,14 +425,78 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                                 <option value="Internal">Internal</option>
                                             </select>
                                         </div>
-                                        <div className="form-group">
-                                            <label>University</label>
-                                            <input type="text" className="form-control" value={formData.university} onChange={e => setFormData({ ...formData, university: e.target.value })} />
+                                        <div className="form-group" style={{ position: 'relative' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                <label>University</label>
+                                                <button
+                                                    className="btn-sm"
+                                                    onClick={() => setShowUniManager(!showUniManager)}
+                                                    style={{ fontSize: '0.75rem', color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer' }}
+                                                >
+                                                    {showUniManager ? "Close Manager" : "Manage List"}
+                                                </button>
+                                            </div>
+
+                                            {showUniManager ? (
+                                                <motion.div
+                                                    initial={{ opacity: 0, scale: 0.95 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    style={{
+                                                        background: 'rgba(0,0,0,0.4)', padding: '1rem', borderRadius: '10px',
+                                                        border: '1px solid var(--border-color)', marginBottom: '1rem'
+                                                    }}
+                                                >
+                                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="University Name"
+                                                            value={newUniName}
+                                                            onChange={e => setNewUniName(e.target.value)}
+                                                            style={{ flex: 1, height: '35px' }}
+                                                        />
+                                                        <button className="btn btn-primary" onClick={handleAddUniversity} style={{ padding: '0 15px', height: '35px' }}>Add</button>
+                                                    </div>
+                                                    <div style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                                        {universities.map(u => (
+                                                            <div key={u.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                                                <span style={{ fontSize: '0.85rem' }}>{u.name}</span>
+                                                                <i className="fas fa-trash" onClick={() => handleDeleteUniversity(u.id)} style={{ color: 'var(--accent)', cursor: 'pointer', fontSize: '0.8rem' }}></i>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </motion.div>
+                                            ) : (
+                                                <select
+                                                    className="form-control"
+                                                    value={formData.university}
+                                                    onChange={e => setFormData({ ...formData, university: e.target.value })}
+                                                >
+                                                    <option value="DAVV">DAVV (Default)</option>
+                                                    {universities.filter(u => u.name !== 'DAVV').map(u => (
+                                                        <option key={u.id} value={u.name}>{u.name}</option>
+                                                    ))}
+                                                </select>
+                                            )}
                                         </div>
                                     </div>
                                     <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
-                                        <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={!formData.subject}>Review <i className="fas fa-arrow-right"></i></button>
+                                        <button
+                                            className="btn btn-secondary"
+                                            onClick={prevStep}
+                                            style={{
+                                                padding: '0.8rem 2rem',
+                                                background: 'rgba(255,255,255,0.05)',
+                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                color: '#fff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px'
+                                            }}
+                                        >
+                                            <i className="fas fa-arrow-left"></i> Back
+                                        </button>
+                                        <button className="btn btn-primary" onClick={nextStep} disabled={!formData.subject} style={{ padding: '0.8rem 2.5rem' }}>Review <i className="fas fa-arrow-right"></i></button>
                                     </div>
                                 </div>
                             )}
@@ -331,8 +513,22 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                     </div>
 
                                     <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
-                                        <button className="btn btn-secondary" onClick={prevStep}><i className="fas fa-arrow-left"></i> Back</button>
-                                        <button className="btn btn-success" onClick={handleUpload} disabled={isUploading}>
+                                        <button
+                                            className="btn btn-secondary"
+                                            onClick={prevStep}
+                                            style={{
+                                                padding: '0.8rem 2rem',
+                                                background: 'rgba(255,255,255,0.05)',
+                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                color: '#fff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px'
+                                            }}
+                                        >
+                                            <i className="fas fa-arrow-left"></i> Back
+                                        </button>
+                                        <button className="btn btn-success" onClick={handleUpload} disabled={isUploading} style={{ padding: '0.8rem 2.5rem' }}>
                                             {isUploading ? <><i className="fas fa-spinner fa-spin"></i> Uploading...</> : <><i className="fas fa-check"></i> Finalize Upload</>}
                                         </button>
                                     </div>
