@@ -164,11 +164,11 @@ const Papers = () => {
                         whileHover={{ scale: 1.05, translateY: -5 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <div className="card-content">
-                            <h2>Semester {sem}</h2>
-                        </div>
                         <div className="card-icon">
                             <i className={`fas fa-folder${selectedSemester === sem ? '-open' : ''}`}></i>
+                        </div>
+                        <div className="card-content">
+                            <h2>Semester {sem}</h2>
                         </div>
                     </motion.div>
                 ))

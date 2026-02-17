@@ -282,10 +282,11 @@ nav a.active {
 }
 
 .hero-title .highlight {
-    background: linear-gradient(135deg, #fff 30%, var(--primary));
+    background: linear-gradient(135deg, #fff 20%, var(--primary) 50%, var(--accent) 80%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
 }
 
 .hero-subtitle {
@@ -351,30 +352,120 @@ nav a.active {
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
 }
 
+/* --- 5. Semester Grid & Cards --- */
+.semester-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.semester-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 28px;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+
+.semester-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(0, 212, 255, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.semester-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.semester-card:hover::after {
+    opacity: 1;
+}
+
+.semester-card .card-content h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 50%, rgba(255, 255, 255, 0.5));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.semester-card .card-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    color: var(--primary);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.semester-card:hover .card-icon {
+    transform: scale(1.1) rotate(-5deg);
+    background: rgba(0, 212, 255, 0.1);
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(0, 212, 255, 0.2);
+}
+
 /* --- 6. Subject Grid & Folders --- */
 .subject-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
 .subject-folder {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 1.5rem;
+    border-radius: 24px;
+    padding: 1.8rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    max-width: 500px;
+    width: 100%;
 }
 
 .subject-folder:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: var(--primary);
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(255, 71, 123, 0.1);
+}
+
+.subject-folder:hover .folder-icon {
+    background: rgba(255, 71, 123, 0.15);
+    color: var(--accent);
+}
+
+.subject-folder:hover .file-count {
+    background: var(--accent);
 }
 
 .folder-icon-wrapper {
@@ -635,5 +726,12 @@ nav a.active {
 
     .view-header {
         padding: 1.5rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .semester-grid,
+    .subject-grid,
+    .papers-grid {
+        grid-template-columns: 1fr !important;
     }
 }
