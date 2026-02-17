@@ -333,9 +333,9 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                                 className="form-control"
                                                 value={formData.branch}
                                                 onChange={e => setFormData({ ...formData, branch: e.target.value })}
-                                                style={{ padding: '1rem', borderRadius: '12px' }}
+                                                style={{ padding: '1.2rem', borderRadius: '14px', fontWeight: '500', fontSize: '1.1rem', letterSpacing: '0.5px' }}
                                             >
-                                                <option value="">-- Choose Branch --</option>
+                                                <option value="">-- Select Your Department --</option>
                                                 {departments.map(d => <option key={d.code} value={d.code}>{d.name} ({d.code})</option>)}
                                             </select>
                                         )}
@@ -506,9 +506,9 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                                     className="form-control"
                                                     value={formData.subject}
                                                     onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                                                    style={{ padding: '1rem', borderRadius: '12px' }}
+                                                    style={{ padding: '1.2rem', borderRadius: '14px', fontWeight: '500', fontSize: '1.1rem' }}
                                                 >
-                                                    <option value="">-- Select Subject --</option>
+                                                    <option value="">-- Choose Subject --</option>
                                                     {semesterSubjects.map(sub => <option key={sub} value={sub}>{sub.toUpperCase()}</option>)}
                                                 </select>
                                             ) : (
@@ -553,7 +553,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                         </div>
                                         <div className="form-group">
                                             <label>Exam Category</label>
-                                            <select className="form-control" value={formData.examType} onChange={e => setFormData({ ...formData, examType: e.target.value })}>
+                                            <select className="form-control" value={formData.examType} onChange={e => setFormData({ ...formData, examType: e.target.value })} style={{ padding: '1.2rem', borderRadius: '14px' }}>
                                                 <option value="End-Sem">End-Sem</option>
                                                 <option value="Mid-Sem">Mid-Sem</option>
                                                 <option value="Internal">Internal</option>
@@ -605,8 +605,9 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                                     className="form-control"
                                                     value={formData.university}
                                                     onChange={e => setFormData({ ...formData, university: e.target.value })}
+                                                    style={{ padding: '1.2rem', borderRadius: '14px' }}
                                                 >
-                                                    <option value="DAVV">DAVV (Default)</option>
+                                                    <option value="DAVV">DAVV</option>
                                                     {universities.filter(u => u.name !== 'DAVV').map(u => (
                                                         <option key={u.id} value={u.name}>{u.name}</option>
                                                     ))}
