@@ -560,44 +560,111 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                             </select>
                                         </div>
                                         <div className="form-group" style={{ position: 'relative' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                <label>University</label>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+                                                <label style={{ fontSize: '1rem', fontWeight: '600', color: 'rgba(255,255,255,0.9)' }}>University</label>
                                                 <button
                                                     className="btn-sm"
                                                     onClick={() => setShowUniManager(!showUniManager)}
-                                                    style={{ fontSize: '0.75rem', color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer' }}
+                                                    style={{
+                                                        fontSize: '0.75rem',
+                                                        color: showUniManager ? '#ff6b6b' : 'var(--primary)',
+                                                        background: 'rgba(255,255,255,0.03)',
+                                                        border: `1px solid ${showUniManager ? 'rgba(255,107,107,0.2)' : 'rgba(0,212,255,0.2)'}`,
+                                                        padding: '5px 12px',
+                                                        borderRadius: '8px',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.3s ease',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '6px'
+                                                    }}
                                                 >
-                                                    {showUniManager ? "Close Manager" : "Manage List"}
+                                                    {showUniManager ? (
+                                                        <><i className="fas fa-times"></i> Close Manager</>
+                                                    ) : (
+                                                        <><i className="fas fa-edit"></i> Manage List</>
+                                                    )}
                                                 </button>
                                             </div>
 
                                             {showUniManager ? (
                                                 <motion.div
-                                                    initial={{ opacity: 0, scale: 0.95 }}
-                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
                                                     style={{
-                                                        background: 'rgba(0,0,0,0.4)', padding: '1rem', borderRadius: '10px',
-                                                        border: '1px solid var(--border-color)', marginBottom: '1rem'
+                                                        background: 'rgba(15, 23, 42, 0.4)',
+                                                        padding: '1.2rem',
+                                                        borderRadius: '16px',
+                                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                        marginBottom: '1.5rem',
+                                                        backdropFilter: 'blur(10px)',
+                                                        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)'
                                                     }}
                                                 >
-                                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
+                                                    <div style={{ display: 'flex', gap: '10px', marginBottom: '1.2rem' }}>
                                                         <input
                                                             type="text"
                                                             className="form-control"
-                                                            placeholder="University Name"
+                                                            placeholder="University Name (e.g. RGPV)"
                                                             value={newUniName}
                                                             onChange={e => setNewUniName(e.target.value)}
-                                                            style={{ flex: 1, height: '35px' }}
+                                                            style={{
+                                                                flex: 1,
+                                                                height: '48px',
+                                                                background: 'rgba(0,0,0,0.3)',
+                                                                borderRadius: '12px',
+                                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                                padding: '0 1.2rem',
+                                                                fontSize: '0.95rem',
+                                                                color: 'white'
+                                                            }}
                                                         />
-                                                        <button className="btn btn-primary" onClick={handleAddUniversity} style={{ padding: '0 15px', height: '35px' }}>Add</button>
+                                                        <button
+                                                            className="btn btn-primary"
+                                                            onClick={handleAddUniversity}
+                                                            style={{
+                                                                padding: '0 24px',
+                                                                height: '48px',
+                                                                borderRadius: '12px',
+                                                                fontWeight: '600',
+                                                                boxShadow: '0 0 20px rgba(0, 212, 255, 0.3)',
+                                                                border: 'none',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            Add
+                                                        </button>
                                                     </div>
-                                                    <div style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                                        {universities.map(u => (
-                                                            <div key={u.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                                                <span style={{ fontSize: '0.85rem' }}>{u.name}</span>
-                                                                <i className="fas fa-trash" onClick={() => handleDeleteUniversity(u.id)} style={{ color: 'var(--accent)', cursor: 'pointer', fontSize: '0.8rem' }}></i>
-                                                            </div>
-                                                        ))}
+                                                    <div className="uni-list-scroll" style={{ maxHeight: '130px', overflowY: 'auto', paddingRight: '5px' }}>
+                                                        {universities.length === 0 ? (
+                                                            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', padding: '10px' }}>No universities added yet.</p>
+                                                        ) : (
+                                                            universities.map(u => (
+                                                                <div key={u.id} style={{
+                                                                    display: 'flex',
+                                                                    justifyContent: 'space-between',
+                                                                    alignItems: 'center',
+                                                                    padding: '10px 14px',
+                                                                    background: 'rgba(255,255,255,0.03)',
+                                                                    borderRadius: '10px',
+                                                                    marginBottom: '8px',
+                                                                    border: '1px solid rgba(255,255,255,0.05)',
+                                                                    transition: 'all 0.2s ease'
+                                                                }}>
+                                                                    <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                                        <i className="fas fa-university" style={{ color: 'var(--primary)', opacity: 0.6, fontSize: '0.85rem' }}></i>
+                                                                        {u.name}
+                                                                    </span>
+                                                                    <i
+                                                                        className="fas fa-trash-alt"
+                                                                        onClick={() => handleDeleteUniversity(u.id)}
+                                                                        style={{ color: '#ff4d4d', cursor: 'pointer', fontSize: '0.85rem', opacity: 0.6, transition: '0.2s' }}
+                                                                        onMouseEnter={(e) => e.target.style.opacity = '1'}
+                                                                        onMouseLeave={(e) => e.target.style.opacity = '0.6'}
+                                                                    ></i>
+                                                                </div>
+                                                            ))
+                                                        )}
                                                     </div>
                                                 </motion.div>
                                             ) : (
@@ -605,7 +672,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                                     className="form-control"
                                                     value={formData.university}
                                                     onChange={e => setFormData({ ...formData, university: e.target.value })}
-                                                    style={{ padding: '1.2rem', borderRadius: '14px' }}
+                                                    style={{ padding: '1.2rem', borderRadius: '14px', fontWeight: '500' }}
                                                 >
                                                     <option value="DAVV">DAVV</option>
                                                     {universities.filter(u => u.name !== 'DAVV').map(u => (
