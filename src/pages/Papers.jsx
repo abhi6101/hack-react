@@ -155,14 +155,14 @@ const Papers = () => {
                 availableSems.map((sem, idx) => (
                     <motion.div
                         key={sem}
-                        className="semester-card surface-glow"
+                        className="semester-card"
                         onClick={() => fetchPapers(sem)}
                         style={{ cursor: 'pointer' }}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        whileHover={{ scale: 1.05, translateY: -5 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        whileTap={{ scale: 0.98 }}
                     >
                         <div className="card-icon">
                             <i className={`fas fa-folder${selectedSemester === sem ? '-open' : ''}`}></i>
@@ -250,12 +250,12 @@ const Papers = () => {
                             return (
                                 <motion.div
                                     key={sub}
-                                    className="subject-folder surface-glow"
+                                    className="subject-folder"
                                     onClick={() => setSelectedSubject(sub)}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: idx * 0.05 }}
-                                    whileHover={{ scale: 1.02, y: -5 }}
+                                    whileHover={{ scale: 1.02, x: 10 }}
                                 >
                                     <div className="folder-icon-wrapper">
                                         <div className="folder-icon">
