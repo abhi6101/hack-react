@@ -13,6 +13,7 @@ const Papers = () => {
     const [selectedSemester, setSelectedSemester] = useState(null);
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [availableSems, setAvailableSems] = useState([]);
     const [branch, setBranch] = useState('IMCA');
     const [deptList, setDeptList] = useState([]);
 
@@ -71,7 +72,23 @@ const Papers = () => {
         if (selectedSemester) {
             fetchPapers(selectedSemester);
         }
+        fetchAvailableMetadata();
     }, [branch]);
+
+    const fetchAvailableMetadata = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const all = await res.json();
+                const sems = [...new Set(all.map(p => p.semester))].sort((a, b) => a - b);
+                setAvailableSems(sems);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
     const fetchPapers = async (sem) => {
         setLoading(true);
@@ -102,34 +119,24 @@ const Papers = () => {
 
     const renderSemesterGrid = () => (
         <div className="semester-grid">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                <div key={sem} className="semester-card surface-glow" onClick={() => fetchPapers(sem)} style={{ cursor: 'pointer' }}>
-                    <div className="card-content">
-                        <h2>Semester {sem}</h2>
+            {availableSems.length === 0 ? (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px' }}>
+                    <i className="fas fa-folder-open" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}></i>
+                    <h3>No Semesters found for {branch}</h3>
+                    <p style={{ color: 'var(--text-secondary)' }}>Try selecting a different department or check back later.</p>
+                </div>
+            ) : (
+                availableSems.map(sem => (
+                    <div key={sem} className="semester-card surface-glow" onClick={() => fetchPapers(sem)} style={{ cursor: 'pointer' }}>
+                        <div className="card-content">
+                            <h2>Semester {sem}</h2>
+                        </div>
+                        <div className="card-icon">
+                            <i className={`fas fa-folder${selectedSemester === sem ? '-open' : ''}`}></i>
+                        </div>
                     </div>
-                    <div className="card-icon">
-                        <i className={`fas fa-folder${selectedSemester === sem ? '-open' : ''}`}></i>
-                    </div>
-                </div>
-            ))}
-
-            <div className="semester-card surface-glow" onClick={() => showToast({ message: 'MST Papers coming soon!', type: 'info' })} style={{ cursor: 'pointer' }}>
-                <div className="card-content">
-                    <h2>MST Papers</h2>
-                </div>
-                <div className="card-icon">
-                    <i className="fas fa-file-alt"></i>
-                </div>
-            </div>
-
-            <div className="semester-card surface-glow" onClick={() => showToast({ message: 'Notes coming soon!', type: 'info' })} style={{ cursor: 'pointer' }}>
-                <div className="card-content">
-                    <h2>NOTES</h2>
-                </div>
-                <div className="card-icon">
-                    <i className="fas fa-book"></i>
-                </div>
-            </div>
+                ))
+            )}
         </div>
     );
 
