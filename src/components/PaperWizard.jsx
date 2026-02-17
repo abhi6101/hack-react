@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../config';
 import { useToast } from '../components/CustomToast';
+import MultiSubjectUpload from './MultiSubjectUpload';
 
 const PaperWizard = ({ onUploadSuccess }) => {
     const { showToast } = useToast();
     const [step, setStep] = useState(1);
-    const [uploadMode, setUploadMode] = useState('manual'); // 'manual' or 'bulk'
+    const [uploadMode, setUploadMode] = useState('manual'); // 'manual', 'bulk', or 'multi'
 
     // Form State
     const [formData, setFormData] = useState({
@@ -174,6 +175,68 @@ const PaperWizard = ({ onUploadSuccess }) => {
         }));
     };
 
+    const handleMultiSubjectUpload = async (subjects) => {
+        setIsUploading(true);
+        const totalSubjects = subjects.length;
+        let successCount = 0;
+        let failedSubjects = [];
+
+        try {
+            const finalBranch = formData.isNewBranch ? formData.newBranch : formData.branch;
+            const finalSemester = formData.isNewSemester ? formData.newSemester : formData.semester;
+
+            for (let i = 0; i < subjects.length; i++) {
+                const subject = subjects[i];
+                const progress = ((i + 1) / totalSubjects) * 100;
+                setUploadProgress(progress);
+
+                showToast({ message: `Uploading ${subject.subject} (${i + 1}/${totalSubjects})...`, type: 'info' });
+
+                try {
+                    const data = new FormData();
+                    data.append('branch', finalBranch);
+                    data.append('semester', finalSemester);
+                    data.append('subject', subject.subject);
+                    data.append('year', 0);
+                    data.append('category', formData.examType);
+                    data.append('university', formData.university);
+                    data.append('title', subject.subject);
+                    subject.files.forEach(file => data.append('files', file));
+
+                    const res = await fetch(`${API_BASE_URL}/papers/upload-multiple`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: data
+                    });
+
+                    if (res.ok) {
+                        successCount++;
+                        showToast({ message: `✓ ${subject.subject} uploaded!`, type: 'success' });
+                    } else {
+                        throw new Error(await res.text());
+                    }
+                } catch (e) {
+                    failedSubjects.push(subject.subject);
+                    showToast({ message: `✗ ${subject.subject} failed`, type: 'error' });
+                }
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            if (successCount === totalSubjects) {
+                showToast({ message: `🎉 All ${totalSubjects} subjects uploaded!`, type: 'success' });
+                onUploadSuccess?.();
+                resetForm();
+            } else if (successCount > 0) {
+                showToast({ message: `⚠️ ${successCount}/${totalSubjects} uploaded`, type: 'warning' });
+            }
+        } catch (e) {
+            showToast({ message: `Upload failed: ${e.message}`, type: 'error' });
+        } finally {
+            setIsUploading(false);
+            setUploadProgress(0);
+        }
+    };
+
     const handleUpload = async () => {
         setIsUploading(true);
         setUploadProgress(10);
@@ -254,7 +317,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
 
     const renderStepIndicators = () => (
         <div className="wizard-steps" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-            {[1, 2, 3, 4, 5].map(i => (
+            {(uploadMode === 'bulk' ? [1] : [1, 2, 3]).map(i => (
                 <div key={i} style={{
                     width: '30px', height: '30px', borderRadius: '50%',
                     background: step >= i ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
@@ -449,334 +512,14 @@ const PaperWizard = ({ onUploadSuccess }) => {
                             )}
 
                             {step === 3 && (
-                                <div className="step-content">
-                                    <h3>Step 3: Choose Files</h3>
-                                    <div
-                                        style={{
-                                            border: '2px dashed var(--primary)', borderRadius: '12px', padding: '3rem', textAlign: 'center', marginTop: '1.5rem',
-                                            background: 'rgba(0, 212, 255, 0.02)', cursor: 'pointer'
-                                        }}
-                                        onClick={() => document.getElementById('wizard-files').click()}
-                                    >
-                                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
-                                        <p style={{ fontSize: '1.1rem' }}>Select one or more PDF papers</p>
-                                        <input type="file" id="wizard-files" hidden multiple accept=".pdf" onChange={handleFileChange} />
-                                    </div>
-
-                                    {formData.files.length > 0 && (
-                                        <div style={{ marginTop: '1.5rem', maxHeight: '180px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
-                                            {formData.files.map((f, i) => (
-                                                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', alignItems: 'center' }}>
-                                                    <span style={{ fontSize: '0.9rem' }}><i className="fas fa-file-pdf" style={{ color: 'var(--accent)', marginRight: '10px' }}></i>{f.name}</span>
-                                                    <button onClick={() => removeFile(i)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer' }}><i className="fas fa-trash-alt"></i></button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
-                                        <button
-                                            className="btn btn-secondary"
-                                            onClick={prevStep}
-                                            style={{
-                                                padding: '0.8rem 2rem',
-                                                background: 'rgba(255,255,255,0.05)',
-                                                border: '1px solid rgba(255,255,255,0.1)',
-                                                color: '#fff',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px'
-                                            }}
-                                        >
-                                            <i className="fas fa-arrow-left"></i> Back
-                                        </button>
-                                        <button className="btn btn-primary" onClick={nextStep} disabled={formData.files.length === 0} style={{ padding: '0.8rem 2.5rem' }}>Next <i className="fas fa-arrow-right"></i></button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {step === 4 && (
-                                <div className="step-content">
-                                    <h3>Step 4: Paper Details</h3>
-                                    <div className="form-grid" style={{ marginTop: '1.5rem' }}>
-                                        <div className="form-group full-width">
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                                                <label style={{ fontSize: '1.1rem', fontWeight: '600' }}>Subject Name</label>
-                                                {semesterSubjects.length > 0 && (
-                                                    <button
-                                                        className={`btn-sm ${!useExistingSubject ? 'active' : ''}`}
-                                                        onClick={() => {
-                                                            setUseExistingSubject(!useExistingSubject);
-                                                            if (useExistingSubject) setFormData({ ...formData, subject: '' });
-                                                        }}
-                                                        style={{
-                                                            fontSize: '0.8rem',
-                                                            background: !useExistingSubject ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-                                                            border: '1px solid var(--border-color)',
-                                                            color: !useExistingSubject ? '#000' : 'var(--primary)',
-                                                            cursor: 'pointer',
-                                                            padding: '6px 15px',
-                                                            borderRadius: '8px',
-                                                            transition: '0.3s'
-                                                        }}
-                                                    >
-                                                        {useExistingSubject ? "+ Create New Subject" : "← Select Existing"}
-                                                    </button>
-                                                )}
-                                            </div>
-
-                                            {useExistingSubject && semesterSubjects.length > 0 ? (
-                                                <select
-                                                    className="form-control"
-                                                    value={formData.subject}
-                                                    onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                                                    style={{ padding: '1.2rem', borderRadius: '14px', fontWeight: '500', fontSize: '1.1rem' }}
-                                                >
-                                                    <option value="">-- Choose Subject --</option>
-                                                    {semesterSubjects.map(sub => <option key={sub} value={sub}>{sub.toUpperCase()}</option>)}
-                                                </select>
-                                            ) : (
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="e.g. Computer Graphics"
-                                                    value={formData.subject}
-                                                    onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                                                    style={{ padding: '1rem', borderRadius: '12px' }}
-                                                />
-                                            )}
-
-                                            {/* Existing Papers Detection (Small Preview) */}
-                                            {formData.subject && (
-                                                <div style={{ marginTop: '0.8rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                        <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--primary)' }}>
-                                                            {loadingExisting ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-search"></i>} Papers already in {formData.subject}:
-                                                        </span>
-                                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{existingPapers.length} found</span>
-                                                    </div>
-
-                                                    {existingPapers.length > 0 ? (
-                                                        <div style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                                            {existingPapers.map(p => (
-                                                                <div key={p.id} style={{ fontSize: '0.8rem', padding: '4px 0', display: 'flex', gap: '8px', color: 'rgba(255,255,255,0.7)' }}>
-                                                                    <i className="fas fa-history" style={{ marginTop: '3px' }}></i>
-                                                                    <span>{p.title} ({p.year}) - {p.category}</span>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    ) : !loadingExisting && (
-                                                        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>No files for this subject yet. Adding first set...</p>
-                                                    )}
-                                                </div>
-                                            )}
-
-                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '10px' }}>
-                                                <i className="fas fa-info-circle"></i> Year will be auto-extracted from file names.
-                                            </p>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Exam Category</label>
-                                            <select className="form-control" value={formData.examType} onChange={e => setFormData({ ...formData, examType: e.target.value })} style={{ padding: '1.2rem', borderRadius: '14px' }}>
-                                                <option value="End-Sem">End-Sem</option>
-                                                <option value="Mid-Sem">Mid-Sem</option>
-                                                <option value="Internal">Internal</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group" style={{ position: 'relative' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
-                                                <label style={{ fontSize: '1rem', fontWeight: '600', color: 'rgba(255,255,255,0.9)' }}>University</label>
-                                                <button
-                                                    className="btn-sm"
-                                                    onClick={() => setShowUniManager(!showUniManager)}
-                                                    style={{
-                                                        fontSize: '0.75rem',
-                                                        color: showUniManager ? '#ff6b6b' : 'var(--primary)',
-                                                        background: 'rgba(255,255,255,0.03)',
-                                                        border: `1px solid ${showUniManager ? 'rgba(255,107,107,0.2)' : 'rgba(0,212,255,0.2)'}`,
-                                                        padding: '5px 12px',
-                                                        borderRadius: '8px',
-                                                        cursor: 'pointer',
-                                                        transition: 'all 0.3s ease',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: '6px'
-                                                    }}
-                                                >
-                                                    {showUniManager ? (
-                                                        <><i className="fas fa-times"></i> Close Manager</>
-                                                    ) : (
-                                                        <><i className="fas fa-edit"></i> Manage List</>
-                                                    )}
-                                                </button>
-                                            </div>
-
-                                            {showUniManager ? (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: -10, scale: 0.98 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    style={{
-                                                        background: 'rgba(15, 23, 42, 0.4)',
-                                                        padding: '1.2rem',
-                                                        borderRadius: '16px',
-                                                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                        marginBottom: '1.5rem',
-                                                        backdropFilter: 'blur(10px)',
-                                                        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)'
-                                                    }}
-                                                >
-                                                    <div style={{ display: 'flex', gap: '10px', marginBottom: '1.2rem' }}>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="University Name (e.g. RGPV)"
-                                                            value={newUniName}
-                                                            onChange={e => setNewUniName(e.target.value)}
-                                                            style={{
-                                                                flex: 1,
-                                                                height: '48px',
-                                                                background: 'rgba(0,0,0,0.3)',
-                                                                borderRadius: '12px',
-                                                                border: '1px solid rgba(255,255,255,0.1)',
-                                                                padding: '0 1.2rem',
-                                                                fontSize: '0.95rem',
-                                                                color: 'white'
-                                                            }}
-                                                        />
-                                                        <button
-                                                            className="btn btn-primary"
-                                                            onClick={handleAddUniversity}
-                                                            style={{
-                                                                padding: '0 24px',
-                                                                height: '48px',
-                                                                borderRadius: '12px',
-                                                                fontWeight: '600',
-                                                                boxShadow: '0 0 20px rgba(0, 212, 255, 0.3)',
-                                                                border: 'none',
-                                                                cursor: 'pointer'
-                                                            }}
-                                                        >
-                                                            Add
-                                                        </button>
-                                                    </div>
-                                                    <div className="uni-list-scroll" style={{ maxHeight: '130px', overflowY: 'auto', paddingRight: '5px' }}>
-                                                        {universities.length === 0 ? (
-                                                            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', padding: '10px' }}>No universities added yet.</p>
-                                                        ) : (
-                                                            universities.map(u => (
-                                                                <div key={u.id} style={{
-                                                                    display: 'flex',
-                                                                    justifyContent: 'space-between',
-                                                                    alignItems: 'center',
-                                                                    padding: '10px 14px',
-                                                                    background: 'rgba(255,255,255,0.03)',
-                                                                    borderRadius: '10px',
-                                                                    marginBottom: '8px',
-                                                                    border: '1px solid rgba(255,255,255,0.05)',
-                                                                    transition: 'all 0.2s ease'
-                                                                }}>
-                                                                    <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                                        <i className="fas fa-university" style={{ color: 'var(--primary)', opacity: 0.6, fontSize: '0.85rem' }}></i>
-                                                                        {u.name}
-                                                                    </span>
-                                                                    <i
-                                                                        className="fas fa-trash-alt"
-                                                                        onClick={() => handleDeleteUniversity(u.id)}
-                                                                        style={{ color: '#ff4d4d', cursor: 'pointer', fontSize: '0.85rem', opacity: 0.6, transition: '0.2s' }}
-                                                                        onMouseEnter={(e) => e.target.style.opacity = '1'}
-                                                                        onMouseLeave={(e) => e.target.style.opacity = '0.6'}
-                                                                    ></i>
-                                                                </div>
-                                                            ))
-                                                        )}
-                                                    </div>
-                                                </motion.div>
-                                            ) : (
-                                                <select
-                                                    className="form-control"
-                                                    value={formData.university}
-                                                    onChange={e => setFormData({ ...formData, university: e.target.value })}
-                                                    style={{ padding: '1.2rem', borderRadius: '14px', fontWeight: '500' }}
-                                                >
-                                                    <option value="RGPV">RGPV</option>
-                                                    {universities.filter(u => u.name !== 'RGPV').map(u => (
-                                                        <option key={u.id} value={u.name}>{u.name}</option>
-                                                    ))}
-                                                </select>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div style={{ marginTop: '3.5rem', display: 'flex', justifyContent: 'space-between' }}>
-                                        <button
-                                            className="btn btn-secondary"
-                                            onClick={prevStep}
-                                            style={{
-                                                padding: '1rem 2rem',
-                                                background: 'rgba(255,255,255,0.03)',
-                                                border: '1px solid rgba(255,255,255,0.1)',
-                                                borderRadius: '12px',
-                                                color: '#fff',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '10px',
-                                                cursor: 'pointer',
-                                                transition: '0.3s'
-                                            }}
-                                        >
-                                            <i className="fas fa-chevron-left"></i> Back
-                                        </button>
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={nextStep}
-                                            disabled={!formData.subject}
-                                            style={{
-                                                padding: '1rem 3rem',
-                                                borderRadius: '14px',
-                                                fontWeight: '800',
-                                                fontSize: '1.15rem',
-                                                boxShadow: '0 0 25px rgba(0, 212, 255, 0.4)',
-                                                border: 'none',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            Review <i className="fas fa-arrow-right" style={{ marginLeft: '12px' }}></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {step === 5 && (
-                                <div className="step-content">
-                                    <h3>Step 5: Review & Confirm</h3>
-                                    <div className="surface-glow" style={{ padding: '1.5rem', marginTop: '1.5rem', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' }}>
-                                        <p><strong>Branch:</strong> {formData.isNewBranch ? formData.newBranch : formData.branch}</p>
-                                        <p><strong>Semester:</strong> {formData.isNewSemester ? formData.newSemester : formData.semester}</p>
-                                        <p><strong>Subject:</strong> {formData.subject}</p>
-                                        <p><strong>Total Files:</strong> {formData.files.length}</p>
-                                        <p style={{ color: 'var(--primary)', fontSize: '0.85rem' }}><i className="fas fa-info-circle"></i> Year will be extracted from each PDF file name automatically.</p>
-                                    </div>
-
-                                    <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between' }}>
-                                        <button
-                                            className="btn btn-secondary"
-                                            onClick={prevStep}
-                                            style={{
-                                                padding: '0.8rem 2rem',
-                                                background: 'rgba(255,255,255,0.05)',
-                                                border: '1px solid rgba(255,255,255,0.1)',
-                                                color: '#fff',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px'
-                                            }}
-                                        >
-                                            <i className="fas fa-arrow-left"></i> Back
-                                        </button>
-                                        <button className="btn btn-success" onClick={handleUpload} disabled={isUploading} style={{ padding: '0.8rem 2.5rem' }}>
-                                            {isUploading ? <><i className="fas fa-spinner fa-spin"></i> Uploading...</> : <><i className="fas fa-check"></i> Finalize Upload</>}
-                                        </button>
-                                    </div>
-                                </div>
+                                <MultiSubjectUpload
+                                    branch={formData.isNewBranch ? formData.newBranch : formData.branch}
+                                    semester={formData.isNewSemester ? formData.newSemester : formData.semester}
+                                    semesterSubjects={semesterSubjects}
+                                    onBack={prevStep}
+                                    onUpload={handleMultiSubjectUpload}
+                                    isUploading={isUploading}
+                                />
                             )}
                         </motion.div>
                     ) : (
