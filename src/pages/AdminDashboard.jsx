@@ -1870,8 +1870,6 @@ const AdminDashboard = () => {
                         </section>
                     </>
                 );
-            case 'students':
-                return renderStudentMonitor();
             case 'profile-details':
                 return renderProfileDetails();
             case 'applications':
