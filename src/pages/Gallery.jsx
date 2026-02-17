@@ -206,7 +206,7 @@ const Gallery = () => {
             {/* Upload Modal */}
             {showUploadModal && (
                 <div className="modal" style={{ display: 'flex', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}>
-                    <div className="modal-content" data-lenis-prevent style={{
+                    <div className="modal-content" style={{
                         maxWidth: '500px',
                         width: '90%',
                         padding: '2.5rem',

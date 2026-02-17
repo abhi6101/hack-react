@@ -35,7 +35,6 @@ import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
 import { ToastProvider } from './components/Toast';
 import './styles/interaction.css';
-import Lenis from '@studio-freight/lenis';
 import CustomCursor from './components/CustomCursor';
 import StarBackground from './components/StarBackground';
 import { AlertProvider } from './components/CustomAlert';
@@ -70,25 +69,9 @@ function App() {
     useEffect(() => {
         keepAliveService.start();
 
-        // Initialize Lenis for smooth scrolling
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-            smoothTouch: false,
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-
-        requestAnimationFrame(raf);
-
         // Cleanup on unmount
         return () => {
             keepAliveService.stop();
-            lenis.destroy();
         };
     }, []);
 

@@ -129,7 +129,7 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
             justifyContent: 'center',
             zIndex: 9999
         }}>
-            <div data-lenis-prevent style={{
+            <div style={{
                 background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
                 padding: '2rem',
                 borderRadius: '16px',
