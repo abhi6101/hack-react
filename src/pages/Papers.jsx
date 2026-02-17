@@ -119,6 +119,21 @@ const Papers = () => {
         window.open(downloadUrl, '_blank');
     };
 
+    const downloadBatch = (subject = null) => {
+        const url = new URL(`${API_BASE_URL}/papers/batch-download`);
+        url.searchParams.append('branch', branch);
+        url.searchParams.append('semester', selectedSemester);
+        if (subject) url.searchParams.append('subject', subject);
+
+        // Use hidden anchor to trigger download
+        const link = document.createElement('a');
+        link.href = url.toString();
+        link.setAttribute('download', '');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const renderSemesterGrid = () => (
         <div className="semester-grid">
             {availableSems.length === 0 ? (
@@ -149,21 +164,44 @@ const Papers = () => {
             <div className="subject-view fade-in">
                 <div className="view-header" style={{
                     display: 'flex',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    gap: '1.5rem',
                     marginBottom: '3rem',
                     background: 'rgba(255,255,255,0.02)',
                     padding: '2rem',
                     borderRadius: '24px',
                     border: '1px solid rgba(255,255,255,0.05)'
                 }}>
-                    <button className="back-btn" onClick={() => setSelectedSemester(null)}>
-                        <i className="fas fa-chevron-left"></i>
-                    </button>
-                    <div>
-                        <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Semester {selectedSemester} Subjects</h2>
-                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Select a subject folder to view papers</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <button className="back-btn" onClick={() => setSelectedSemester(null)}>
+                            <i className="fas fa-chevron-left"></i>
+                        </button>
+                        <div>
+                            <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Semester {selectedSemester} Subjects</h2>
+                            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Select a subject folder to view papers</p>
+                        </div>
                     </div>
+
+                    {subjects.length > 0 && (
+                        <button
+                            className="download-all-btn surface-glow"
+                            onClick={() => downloadBatch()}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                padding: '0.8rem 1.5rem',
+                                borderRadius: '14px',
+                                border: '1px solid rgba(0, 212, 255, 0.2)',
+                                color: 'var(--primary)',
+                                fontWeight: '600',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <i className="fas fa-cloud-download-alt"></i>
+                            Download Full Semester
+                        </button>
+                    )}
                 </div>
 
                 <div className="subject-grid">
@@ -230,14 +268,37 @@ const Papers = () => {
                             </div>
                         </div>
 
-                        <div className="search-box-container">
-                            <i className="fas fa-search"></i>
-                            <input
-                                type="text"
-                                placeholder="Search by paper title or year..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <button
+                                className="download-batch-btn"
+                                onClick={() => downloadBatch(selectedSubject)}
+                                style={{
+                                    height: '48px',
+                                    padding: '0 1.5rem',
+                                    background: 'rgba(255,255,255,0.05)',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    color: 'var(--primary)',
+                                    borderRadius: '12px',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <i className="fas fa-file-archive"></i>
+                                Bundle Download
+                            </button>
+
+                            <div className="search-box-container">
+                                <i className="fas fa-search"></i>
+                                <input
+                                    type="text"
+                                    placeholder="Search by paper title or year..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
