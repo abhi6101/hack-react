@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InterviewRoundsForm from '../components/InterviewRoundsForm';
+import PaperWizard from '../components/PaperWizard';
+import PaperList from '../components/PaperList';
 import API_BASE_URL from '../config';
 import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
@@ -337,7 +339,9 @@ const AdminDashboard = () => {
     const [departments, setDepartments] = useState([]);
     const [loadingDepts, setLoadingDepts] = useState(false);
     const [deptForm, setDeptForm] = useState({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 });
-    const [deptMode, setDeptMode] = useState('single'); // 'single' | 'bulk'
+    const [deptMode, setDeptMode] = useState('single');
+    const [refreshKey, setRefreshKey] = useState(0);
+
     const [editingDept, setEditingDept] = useState(null); // For editing departments
     const [bulkForm, setBulkForm] = useState({ category: '', degree: '', maxSemesters: 8, branches: '' });
 
@@ -2372,6 +2376,13 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            case 'question-papers':
+                return (
+                    <>
+                        <PaperWizard onUploadSuccess={() => setRefreshKey(prev => prev + 1)} />
+                        <PaperList key={refreshKey} />
+                    </>
+                );
             default:
                 return <div>Select a tab</div>;
         }
@@ -2457,6 +2468,17 @@ const AdminDashboard = () => {
                                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
                                 >
                                     <i className="fas fa-images"></i> Gallery Management
+                                </button>
+                            </li>
+                        )}
+                        {(isSuperAdmin || role === 'ADMIN' || role === 'DEPT_ADMIN') && (
+                            <li>
+                                <button
+                                    className={activeTab === 'question-papers' ? 'active' : ''}
+                                    onClick={() => setActiveTab('question-papers')}
+                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                                >
+                                    <i className="fas fa-file-pdf"></i> Question Papers
                                 </button>
                             </li>
                         )}
