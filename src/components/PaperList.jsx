@@ -59,7 +59,6 @@ const PaperList = () => {
                                 <th>Topic/Subject</th>
                                 <th>Details</th>
                                 <th>University</th>
-                                <th>Year</th>
                                 <th>Category</th>
                                 <th>Actions</th>
                             </tr>
@@ -75,7 +74,6 @@ const PaperList = () => {
                                     </td>
                                     <td><span className="badge badge-primary">{p.branch}</span> | Sem {p.semester}</td>
                                     <td>{p.university || 'DAVV'}</td>
-                                    <td>{p.year}</td>
                                     <td><span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{p.category}</span></td>
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>

@@ -283,7 +283,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                         <p><strong>Branch:</strong> {formData.branch}</p>
                                         <p><strong>Semester:</strong> Sem {formData.semester}</p>
                                         <p><strong>Subject:</strong> {formData.subject}</p>
-                                        <p><strong>Year:</strong> {formData.year}</p>
+                                        {uploadMode === 'manual' && <p><strong>Year:</strong> {formData.year}</p>}
                                         <p><strong>Category:</strong> {formData.examType}</p>
                                         <p><strong>University:</strong> {formData.university}</p>
                                         <p><strong>Total Files:</strong> {formData.files.length}</p>
@@ -310,13 +310,9 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                 {step === 1 && (
                                     <>
                                         <div className="form-grid" style={{ marginBottom: '1.5rem' }}>
-                                            <div className="form-group">
+                                            <div className="form-group full-width">
                                                 <label>Default University</label>
                                                 <input type="text" className="form-control" value={formData.university} onChange={e => setFormData({ ...formData, university: e.target.value })} />
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Default Year</label>
-                                                <input type="number" className="form-control" value={formData.year} onChange={e => setFormData({ ...formData, year: e.target.value })} />
                                             </div>
                                         </div>
                                         <div
