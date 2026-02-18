@@ -84,7 +84,7 @@ const AdminDashboard = () => {
     });
 
     const ADMIN_API_URL = `${API_BASE_URL}/admin`;
-    const token = localStorage.getItem('authToken');
+    const getToken = () => localStorage.getItem('authToken');
     const normalizedRole = localStorage.getItem('userRole'); // ADMIN, SUPER_ADMIN, COMPANY_ADMIN
     // Treat legacy ADMIN as SUPER_ADMIN for now, or just ADMIN
     const role = normalizedRole || 'USER';
@@ -184,7 +184,7 @@ const AdminDashboard = () => {
         setLoadingStats(true);
         try {
             const res = await fetch(`${ADMIN_API_URL}/stats/companies`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -201,7 +201,7 @@ const AdminDashboard = () => {
         setLoadingActivity(true);
         try {
             const res = await fetch(`${ADMIN_API_URL}/stats/students`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -218,7 +218,7 @@ const AdminDashboard = () => {
         setLoadingProfiles(true);
         try {
             const res = await fetch(`${API_BASE_URL}/student-profile/admin/all`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -235,7 +235,7 @@ const AdminDashboard = () => {
     const viewStudentResume = async (userId, studentName) => {
         try {
             const res = await fetch(`${API_BASE_URL}/resume/admin/view/${userId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (!res.ok) throw new Error("Resume not found or access denied");
 
@@ -258,7 +258,7 @@ const AdminDashboard = () => {
     };
     const fetchInterviews = () => {
         fetch(`${API_BASE_URL}/interview-drives`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { 'Authorization': `Bearer ${getToken()}` }
         })
             .then(res => {
                 if (!res.ok) throw new Error("Unauthorized");
@@ -276,7 +276,7 @@ const AdminDashboard = () => {
         setLoadingApplications(true);
         try {
             const response = await fetch(`${ADMIN_API_URL}/job-applications`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (!response.ok) throw new Error('Failed to fetch applications');
             const data = await response.json();
@@ -322,7 +322,7 @@ const AdminDashboard = () => {
         setLoadingSettings(true);
         try {
             const res = await fetch(`${ADMIN_API_URL}/settings`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -349,7 +349,7 @@ const AdminDashboard = () => {
         setLoadingDepts(true);
         try {
             const res = await fetch(`${API_BASE_URL}/admin/departments`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) setDepartments(await res.json());
         } catch (e) { console.error(e); }
@@ -378,7 +378,7 @@ const AdminDashboard = () => {
 
             const res = await fetch(url, {
                 method: method,
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify(deptForm)
             });
             if (res.ok) {
@@ -415,7 +415,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${API_BASE_URL}/admin/departments/bulk`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify(deptsToCreate)
             });
             if (res.ok) {
@@ -436,7 +436,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${API_BASE_URL}/student-profile/${id}/status?status=${status}`, {
                 method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 setMessage({ text: `Student ${status}`, type: 'success' });
@@ -450,7 +450,7 @@ const AdminDashboard = () => {
 
     const deleteDept = async (id) => {
         if (!window.confirm('Delete Dept?')) return;
-        await fetch(`${API_BASE_URL}/admin/departments/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+        await fetch(`${API_BASE_URL}/admin/departments/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${getToken()}` } });
         loadDepartments();
     };
 
@@ -463,7 +463,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${ADMIN_API_URL}/settings`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify(newSettings)
             });
             if (!res.ok) {
@@ -491,7 +491,7 @@ const AdminDashboard = () => {
         setLoadingInterviewApps(true);
         try {
             const response = await fetch(`${ADMIN_API_URL}/interview-applications`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (!response.ok) throw new Error('Failed to fetch interview applications');
             const data = await response.json();
@@ -508,7 +508,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${ADMIN_API_URL}/interview-applications/${appId}/status`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify({ status: newStatus })
             });
             if (res.ok) {
@@ -526,7 +526,7 @@ const AdminDashboard = () => {
         setLoadingGallery(true);
         try {
             const response = await fetch(`${ADMIN_API_URL}/gallery`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (!response.ok) throw new Error('Failed to fetch gallery items');
             const data = await response.json();
@@ -576,7 +576,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${ADMIN_API_URL}/job-applications/${appId}/status`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify({ status: newStatus })
             });
             if (res.ok) {
@@ -629,7 +629,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(endpoint, {
                 method: method,
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify(newInterview)
             });
 
@@ -718,7 +718,7 @@ const AdminDashboard = () => {
     const loadJobs = async () => {
         setLoadingJobs(true);
         try {
-            const response = await fetch(`${ADMIN_API_URL}/jobs`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const response = await fetch(`${ADMIN_API_URL}/jobs`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
             if (!response.ok) throw new Error('Failed to fetch jobs');
             const data = await response.json();
             setJobs(data);
@@ -733,7 +733,7 @@ const AdminDashboard = () => {
     const loadUsers = async () => {
         setLoadingUsers(true);
         try {
-            const response = await fetch(`${ADMIN_API_URL}/users`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const response = await fetch(`${ADMIN_API_URL}/users`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
             if (!response.ok) throw new Error('Failed to fetch users');
             const data = await response.json();
             setUsers(data);
@@ -785,7 +785,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(endpoint, {
                 method,
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify(payload)
             });
 
@@ -821,7 +821,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${ADMIN_API_URL}/users/${userId}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 setMessage({ text: 'User deleted successfully', type: 'success' });
@@ -855,7 +855,7 @@ const AdminDashboard = () => {
         try {
             const response = await fetch(`${ADMIN_API_URL}/jobs/${jobId}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
 
             if (!response.ok) throw new Error('Failed to delete job. Please try again.');
@@ -1005,13 +1005,13 @@ const AdminDashboard = () => {
 
         console.log('🌐 API Endpoint:', endpoint);
         console.log('📨 HTTP Method:', method);
-        console.log('🔑 Token:', token ? 'Present' : 'Missing');
+        console.log('🔑 Token:', getToken() ? 'Present' : 'Missing');
 
         try {
             console.log('⏳ Sending request to backend...');
             const response = await fetch(endpoint, {
                 method: method,
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify(jobPayload)
             });
 
@@ -2203,7 +2203,7 @@ const AdminDashboard = () => {
                     try {
                         const response = await fetch(`${API_BASE_URL}/users/${userId}/toggle-status`, {
                             method: 'PUT',
-                            headers: { 'Authorization': `Bearer ${token}` }
+                            headers: { 'Authorization': `Bearer ${getToken()}` }
                         });
 
                         if (response.ok) {

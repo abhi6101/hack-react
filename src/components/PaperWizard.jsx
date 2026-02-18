@@ -71,7 +71,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
             const res = await fetch(`${API_BASE_URL}/universities`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${getToken()}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ name: newUniName })
@@ -91,7 +91,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
         try {
             const res = await fetch(`${API_BASE_URL}/universities/${id}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 fetchUniversities();
@@ -145,7 +145,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
             const branch = formData.isNewBranch ? formData.newBranch : formData.branch;
             const semester = formData.isNewSemester ? formData.newSemester : formData.semester;
             const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}&semester=${semester}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const all = await res.json();
