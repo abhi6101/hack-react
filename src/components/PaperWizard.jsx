@@ -7,7 +7,7 @@ import MultiSubjectUpload from './MultiSubjectUpload';
 const PaperWizard = ({ onUploadSuccess }) => {
     const { showToast } = useToast();
     const [step, setStep] = useState(1);
-    const [uploadMode, setUploadMode] = useState('manual'); // 'manual', 'bulk', or 'multi'
+    const [uploadMode, setUploadMode] = useState('standard'); // 'standard', 'bulk'
 
     // Form State
     const [formData, setFormData] = useState({
@@ -102,10 +102,10 @@ const PaperWizard = ({ onUploadSuccess }) => {
     };
 
     useEffect(() => {
-        if (step === 4) {
+        if (step === 3 && uploadMode === 'standard') {
             fetchAllSemesterSubjects();
         }
-    }, [step, formData.branch, formData.newBranch, formData.semester, formData.newSemester]);
+    }, [step, uploadMode, formData.branch, formData.newBranch, formData.semester, formData.newSemester]);
 
     const fetchAllSemesterSubjects = async () => {
         try {
@@ -213,11 +213,13 @@ const PaperWizard = ({ onUploadSuccess }) => {
                         successCount++;
                         showToast({ message: `✓ ${subject.subject} uploaded!`, type: 'success' });
                     } else {
-                        throw new Error(await res.text());
+                        const errorText = await res.text();
+                        throw new Error(errorText);
                     }
                 } catch (e) {
+                    console.error("Upload Error for subject:", subject.subject, e);
                     failedSubjects.push(subject.subject);
-                    showToast({ message: `✗ ${subject.subject} failed`, type: 'error' });
+                    showToast({ message: `✗ ${subject.subject} failed: ${e.message}`, type: 'error' });
                 }
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
