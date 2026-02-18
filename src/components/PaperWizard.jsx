@@ -223,14 +223,29 @@ const PaperWizard = ({ onUploadSuccess }) => {
                     }
                 } catch (e) {
                     console.error("Upload Error for subject:", subject.subject, e);
-                    failedSubjects.push(subject.subject);
-                    showToast({ message: `✗ ${subject.subject} failed: ${e.message}`, type: 'error' });
 
-                    // If it's an authorization error, stop the entire process
-                    if (e.message.includes("Unauthorized")) {
-                        setIsUploading(false);
-                        return;
+                    // Detailed logging for debugging "Semester 5" issue
+                    if (finalSemester == 5) {
+                        console.warn("!! Semester 5 Upload Failure Details !!");
+                        console.warn("Branch:", finalBranch);
+                        console.warn("Subject:", subject.subject);
+                        console.warn("File Count:", subject.files.length);
+                        console.warn("Error:", e.message);
                     }
+
+                    failedSubjects.push(subject.subject);
+
+                    if (e.message.includes("Unauthorized") || e.message.includes("401")) {
+                        showToast({
+                            message: `⚠️ Session Expired! Please login in a NEW TAB, then click Upload again. Do not refresh this page!`,
+                            type: 'error',
+                            duration: 10000
+                        });
+                        setIsUploading(false);
+                        return; // Stop processing subsequent subjects
+                    }
+
+                    showToast({ message: `✗ ${subject.subject} failed: ${e.message}`, type: 'error' });
                 }
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
