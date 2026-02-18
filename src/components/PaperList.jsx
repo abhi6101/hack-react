@@ -146,21 +146,16 @@ const PaperList = () => {
                             setLoading(true);
                             let successCount = 0;
 
-                            // Execute deletions in batches of 50 to avoid browser blocking
-                            const batchSize = 50;
-                            for (let i = 0; i < filteredPapers.length; i += batchSize) {
-                                const batch = filteredPapers.slice(i, i + batchSize);
-                                await Promise.all(batch.map(async (paper) => {
-                                    try {
-                                        const res = await fetch(`${API_BASE_URL}/papers/${paper.id}`, {
-                                            method: 'DELETE',
-                                            headers: { 'Authorization': `Bearer ${token}` }
-                                        });
-                                        if (res.ok) successCount++;
-                                    } catch (e) {
-                                        console.error("Failed to delete paper", paper.id, e);
-                                    }
-                                }));
+                            for (const paper of filteredPapers) {
+                                try {
+                                    const res = await fetch(`${API_BASE_URL}/papers/${paper.id}`, {
+                                        method: 'DELETE',
+                                        headers: { 'Authorization': `Bearer ${token}` }
+                                    });
+                                    if (res.ok) successCount++;
+                                } catch (e) {
+                                    console.error("Failed to delete paper", paper.id, e);
+                                }
                             }
 
                             showToast({ message: `Deleted ${successCount} papers.`, type: 'success' });
