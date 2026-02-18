@@ -35,7 +35,8 @@ const PaperWizard = ({ onUploadSuccess }) => {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
 
-    const token = localStorage.getItem('authToken');
+    // Token should be read dynamically inside methods to avoid stale/null values
+    const getToken = () => localStorage.getItem('authToken');
 
     useEffect(() => {
         fetchDepartments();
@@ -45,7 +46,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
     const fetchDepartments = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/admin/departments`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) setDepartments(await res.json());
         } catch (e) {
@@ -56,7 +57,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
     const fetchUniversities = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/universities`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) setUniversities(await res.json());
         } catch (e) {
@@ -112,7 +113,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
             const branch = formData.isNewBranch ? formData.newBranch : formData.branch;
             const semester = formData.isNewSemester ? formData.newSemester : formData.semester;
             const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}&semester=${semester}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const all = await res.json();
@@ -205,21 +206,31 @@ const PaperWizard = ({ onUploadSuccess }) => {
 
                     const res = await fetch(`${API_BASE_URL}/papers/upload-multiple`, {
                         method: 'POST',
-                        headers: { 'Authorization': `Bearer ${token}` },
+                        headers: { 'Authorization': `Bearer ${getToken()}` },
                         body: data
                     });
 
                     if (res.ok) {
                         successCount++;
                         showToast({ message: `✓ ${subject.subject} uploaded!`, type: 'success' });
+                    } else if (res.status === 401) {
+                        throw new Error("Unauthorized: Please login first!");
+                    } else if (res.status === 413) {
+                        throw new Error("Files too large! Combined size exceeds limit.");
                     } else {
                         const errorText = await res.text();
-                        throw new Error(errorText);
+                        throw new Error(errorText || "Server error occurred");
                     }
                 } catch (e) {
                     console.error("Upload Error for subject:", subject.subject, e);
                     failedSubjects.push(subject.subject);
                     showToast({ message: `✗ ${subject.subject} failed: ${e.message}`, type: 'error' });
+
+                    // If it's an authorization error, stop the entire process
+                    if (e.message.includes("Unauthorized")) {
+                        setIsUploading(false);
+                        return;
+                    }
                 }
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
@@ -247,12 +258,12 @@ const PaperWizard = ({ onUploadSuccess }) => {
             const finalBranch = formData.isNewBranch ? formData.newBranch : formData.branch;
             const finalSemester = formData.isNewSemester ? formData.newSemester : formData.semester;
 
-            if (uploadMode === 'manual') {
+            if (uploadMode === 'manual' || uploadMode === 'standard') {
                 const data = new FormData();
                 data.append('branch', finalBranch);
                 data.append('semester', finalSemester);
                 data.append('subject', formData.subject);
-                data.append('year', 0); // Backend will extract from filename or use 0
+                data.append('year', 0);
                 data.append('category', formData.examType);
                 data.append('university', formData.university);
                 data.append('title', formData.subject);
@@ -261,7 +272,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
 
                 const res = await fetch(`${API_BASE_URL}/papers/upload-multiple`, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: { 'Authorization': `Bearer ${getToken()}` },
                     body: data
                 });
 
@@ -269,19 +280,21 @@ const PaperWizard = ({ onUploadSuccess }) => {
                     showToast({ message: 'Papers uploaded successfully!', type: 'success' });
                     onUploadSuccess?.();
                     resetForm();
+                } else if (res.status === 401) {
+                    throw new Error("Unauthorized! Please login again.");
                 } else {
-                    throw new Error(await res.text());
+                    throw new Error(await res.text() || "Upload failed");
                 }
             } else {
                 // ZIP Bulk Upload
                 const data = new FormData();
                 data.append('file', formData.files[0]);
                 data.append('university', formData.university);
-                data.append('year', 0); // Automatic extraction
+                data.append('year', 0);
 
                 const res = await fetch(`${API_BASE_URL}/papers/bulk-upload-zip`, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: { 'Authorization': `Bearer ${getToken()}` },
                     body: data
                 });
 
@@ -289,8 +302,10 @@ const PaperWizard = ({ onUploadSuccess }) => {
                     showToast({ message: 'ZIP upload processed successfully!', type: 'success' });
                     onUploadSuccess?.();
                     resetForm();
+                } else if (res.status === 401) {
+                    throw new Error("Unauthorized! Please login again.");
                 } else {
-                    throw new Error(await res.text());
+                    throw new Error(await res.text() || "ZIP upload failed");
                 }
             }
         } catch (e) {
