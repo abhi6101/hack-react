@@ -282,6 +282,8 @@ const PaperWizard = ({ onUploadSuccess }) => {
                     resetForm();
                 } else if (res.status === 401) {
                     throw new Error("Unauthorized! Please login again.");
+                } else if (res.status === 413) {
+                    throw new Error("File too large! Maximum limit exceeded.");
                 } else {
                     throw new Error(await res.text() || "Upload failed");
                 }
@@ -304,6 +306,8 @@ const PaperWizard = ({ onUploadSuccess }) => {
                     resetForm();
                 } else if (res.status === 401) {
                     throw new Error("Unauthorized! Please login again.");
+                } else if (res.status === 413) {
+                    throw new Error("ZIP file too large!");
                 } else {
                     throw new Error(await res.text() || "ZIP upload failed");
                 }
