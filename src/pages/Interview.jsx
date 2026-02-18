@@ -51,9 +51,10 @@ const Interview = () => {
     const { showAlert } = useAlert();
     const { showToast } = useToast();
 
+    const getToken = () => localStorage.getItem('authToken');
+
     useEffect(() => {
-        const token = localStorage.getItem("authToken");
-        if (!token) {
+        if (!getToken()) {
             showAlert({
                 title: 'Login Required',
                 message: 'You must be logged in to view interview schedules.',
@@ -75,15 +76,19 @@ const Interview = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterLocation, setFilterLocation] = useState('all');
     const [stats, setStats] = useState({ total: 0, available: 0, applied: 0 });
-    const token = localStorage.getItem('authToken');
 
     useEffect(() => {
         const fetchInterviews = async () => {
             try {
-                const response = await fetch('/interview-drives');
+                const response = await fetch(`${API_BASE_URL}/interview-drives`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setInterviews(data);
+                } else if (response.status === 401) {
+                    localStorage.clear();
+                    navigate('/login');
                 } else {
                     console.error("Failed to fetch interviews from backend");
                     setInterviews([]); // Show empty if backend fails
@@ -181,11 +186,17 @@ const Interview = () => {
             formData.append('applicantPhone', applicationData.applicantPhone);
             formData.append('resume', applicationData.resume);
 
-            const res = await fetch('/interview-applications/apply', {
+            const res = await fetch(`${API_BASE_URL}/interview-applications/apply`, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }, // No Content-Type for FormData
+                headers: { 'Authorization': `Bearer ${getToken()}` }, // No Content-Type for FormData
                 body: formData
             });
+
+            if (res.status === 401) {
+                localStorage.clear();
+                navigate('/login');
+                return;
+            }
 
             if (!res.ok) {
                 const error = await res.text();
@@ -204,15 +215,19 @@ const Interview = () => {
     };
 
     const fetchMyApplications = async () => {
-        if (!token) return;
+        const currentToken = getToken();
+        if (!currentToken) return;
 
         try {
-            const res = await fetch('/interview-applications/my', {
-                headers: { 'Authorization': `Bearer ${token}` }
+            const res = await fetch(`${API_BASE_URL}/interview-applications/my`, {
+                headers: { 'Authorization': `Bearer ${currentToken}` }
             });
             if (res.ok) {
                 const apps = await res.json();
                 setMyApplications(apps);
+            } else if (res.status === 401) {
+                localStorage.clear();
+                navigate('/login');
             }
         } catch (err) {
             console.error('Failed to fetch applications', err);
@@ -221,7 +236,7 @@ const Interview = () => {
 
     useEffect(() => {
         fetchMyApplications();
-    }, [token]);
+    }, []);
 
     const hasApplied = (interviewId) => {
         // Check if any application matches the interview drive ID

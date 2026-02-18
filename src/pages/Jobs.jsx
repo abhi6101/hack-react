@@ -42,8 +42,10 @@ const Jobs = () => {
     const APPLY_JOB_API_URL = `${API_BASE_URL}/apply-job`;
     const APPLIED_JOBS_API_URL = `${API_BASE_URL}/job-applications/my`;
 
+    const getToken = () => localStorage.getItem('authToken');
+
     useEffect(() => {
-        const token = localStorage.getItem("authToken");
+        const token = getToken();
         if (!token) {
             setShowLoginPrompt(true);
         } else {
@@ -59,8 +61,9 @@ const Jobs = () => {
         filterAndSortJobs();
     }, [allJobs, filters]);
 
-    const fetchAppliedJobs = async (token) => {
+    const fetchAppliedJobs = async () => {
         try {
+            const token = getToken();
             const cleanToken = token ? token.replace('Bearer ', '') : '';
             const response = await fetch(APPLIED_JOBS_API_URL, {
                 headers: {
@@ -72,6 +75,9 @@ const Jobs = () => {
                 // Extract job IDs from the applications
                 const ids = new Set(data.map(app => app.jobId));
                 setAppliedJobIds(ids);
+            } else if (response.status === 401) {
+                localStorage.clear();
+                navigate('/login');
             }
         } catch (err) {
             console.error("Error fetching applied jobs:", err);
@@ -80,7 +86,7 @@ const Jobs = () => {
 
     const fetchJobs = async () => {
         try {
-            const token = localStorage.getItem("authToken");
+            const token = getToken();
             const cleanToken = token ? token.replace('Bearer ', '') : '';
             if (!cleanToken) throw new Error("No token found");
 
@@ -183,7 +189,7 @@ const Jobs = () => {
             return;
         }
 
-        const token = localStorage.getItem("authToken");
+        const token = getToken();
         // ... rest of modal logic ...
         // Pre-fill logic (mocked here as we don't have user object easily accessible without context)
         const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
@@ -215,7 +221,7 @@ const Jobs = () => {
         formData.append('companyName', selectedJob.company_name);
 
         try {
-            const token = localStorage.getItem('authToken');
+            const token = getToken();
             const response = await fetch(APPLY_JOB_API_URL, {
                 method: 'POST',
                 headers: {
@@ -223,6 +229,12 @@ const Jobs = () => {
                 },
                 body: formData
             });
+
+            if (response.status === 401) {
+                localStorage.clear();
+                navigate('/login');
+                return;
+            }
 
             if (!response.ok) {
                 throw new Error('Failed to submit application');
@@ -234,7 +246,7 @@ const Jobs = () => {
             });
             setShowModal(false);
             setSubmitting(false);
-            fetchAppliedJobs(token); // Refresh applied jobs list
+            fetchAppliedJobs(); // Refresh applied jobs list
 
             // Reset form
             setApplicationData({

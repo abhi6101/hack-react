@@ -55,10 +55,12 @@ const Onboarding = () => {
         }
     }, [formData.branch, formData.startYear, departments]);
 
+    const getToken = () => localStorage.getItem('authToken');
+
+    // Fetch basic user info to pre-fill
     useEffect(() => {
-        // Fetch basic user info to pre-fill
         const fetchUser = async () => {
-            const token = localStorage.getItem('authToken');
+            const token = getToken();
             if (!token) {
                 navigate('/login');
                 return;
@@ -79,6 +81,9 @@ const Onboarding = () => {
                         semester: data.semester || '',
                         batch: data.batch || ''
                     }));
+                } else if (res.status === 401) {
+                    localStorage.clear();
+                    navigate('/login');
                 }
             } catch (err) {
                 console.error("Error fetching user", err);

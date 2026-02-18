@@ -15,14 +15,15 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const getToken = () => localStorage.getItem('authToken');
+
     useEffect(() => {
         if (isOpen) {
             // Fetch current user data when modal opens
             const fetchUserData = async () => {
-                const token = localStorage.getItem('authToken');
                 try {
                     const response = await fetch(`${API_BASE_URL}/auth/me`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
+                        headers: { 'Authorization': `Bearer ${getToken()}` }
                     });
                     if (response.ok) {
                         const userData = await response.json();
@@ -34,6 +35,11 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                             batch: userData.batch || '',
                             computerCode: userData.computerCode || ''
                         });
+                    } else if (response.status === 401) {
+                        // Optional: Handle 401 silently or close modal, usually managed by parent or global interceptor
+                        // But for safety:
+                        localStorage.clear();
+                        window.location.reload();
                     }
                 } catch (err) {
                     console.error('Failed to fetch user data');
@@ -74,12 +80,11 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
         setError('');
 
         try {
-            const token = localStorage.getItem('authToken');
             const response = await fetch(`${API_BASE_URL}/auth/update-profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${getToken()}`
                 },
                 body: JSON.stringify({
                     name: formData.name,
@@ -90,6 +95,12 @@ const ProfileUpdateModal = ({ isOpen, onClose, onUpdate }) => {
                     computerCode: formData.computerCode
                 })
             });
+
+            if (response.status === 401) {
+                localStorage.clear();
+                window.location.href = '/login';
+                return;
+            }
 
             const result = await response.json();
 

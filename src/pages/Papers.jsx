@@ -21,7 +21,7 @@ const Papers = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isDeptOpen, setIsDeptOpen] = useState(false);
 
-    const token = localStorage.getItem("authToken");
+    const getToken = () => localStorage.getItem("authToken");
 
     const deptFullName = deptList.find(d => d.code === branch)?.name || branch;
 
@@ -32,16 +32,21 @@ const Papers = () => {
     const fetchDepartments = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/admin/departments`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) setDeptList(await res.json());
+            else if (res.status === 401) {
+                localStorage.clear();
+                navigate('/login');
+            }
         } catch (e) {
             console.error(e);
         }
     };
 
     useEffect(() => {
-        if (!token) {
+        const currentToken = getToken();
+        if (!currentToken) {
             showAlert({
                 title: 'Login Required',
                 message: 'You must be logged in to view this page.',
@@ -55,7 +60,7 @@ const Papers = () => {
         }
 
         try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
+            const payload = JSON.parse(atob(currentToken.split('.')[1]));
             if (payload.exp < Date.now() / 1000) {
                 showAlert({
                     title: 'Session Expired',
@@ -72,7 +77,7 @@ const Papers = () => {
             localStorage.clear();
             navigate('/login');
         }
-    }, [navigate, showAlert, token]);
+    }, [navigate, showAlert]);
 
     useEffect(() => {
         if (selectedSemester) {
@@ -84,12 +89,15 @@ const Papers = () => {
     const fetchAvailableMetadata = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const all = await res.json();
                 const sems = [...new Set(all.map(p => p.semester))].sort((a, b) => a - b);
                 setAvailableSems(sems);
+            } else if (res.status === 401) {
+                localStorage.clear();
+                navigate('/login');
             }
         } catch (e) {
             console.error(e);
@@ -101,11 +109,14 @@ const Papers = () => {
         setSelectedSemester(sem);
         try {
             const res = await fetch(`${API_BASE_URL}/papers?semester=${sem}&branch=${branch}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 const data = await res.json();
                 setPapers(data);
+            } else if (res.status === 401) {
+                localStorage.clear();
+                navigate('/login');
             } else {
                 showToast({ message: 'Failed to fetch papers', type: 'error' });
             }

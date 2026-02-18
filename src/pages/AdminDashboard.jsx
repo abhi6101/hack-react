@@ -543,7 +543,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${ADMIN_API_URL}/gallery/${id}/status`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
                 body: JSON.stringify({ status: newStatus })
             });
             if (res.ok) {
@@ -561,7 +561,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${ADMIN_API_URL}/gallery/${id}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 setGalleryItems(galleryItems.filter(i => i.id !== id));
@@ -595,7 +595,7 @@ const AdminDashboard = () => {
         try {
             const res = await fetch(`${ADMIN_API_URL}/job-applications/${appId}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) {
                 setApplications(applications.filter(app => app.id !== appId));
@@ -663,7 +663,7 @@ const AdminDashboard = () => {
         try {
             await fetch(`${API_BASE_URL}/interview-drives/admin/${id}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             setInterviews(interviews.filter(i => i.id !== id));
         } catch (err) {
@@ -676,7 +676,8 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         const allowedRoles = ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'];
-        if (!token || !allowedRoles.includes(role)) {
+        const currentToken = getToken();
+        if (!currentToken || !allowedRoles.includes(role)) {
             showAlert({
                 title: 'Access Denied',
                 message: 'Access Denied. Admins only.',
@@ -703,7 +704,7 @@ const AdminDashboard = () => {
         if (activeTab === 'profile-details' && (isSuperAdmin || role === 'DEPT_ADMIN' || role === 'ADMIN')) {
             fetchAllProfiles();
         }
-    }, [navigate, token, role, isSuperAdmin, activeTab]);
+    }, [navigate, role, isSuperAdmin, activeTab]);
 
     // Pre-fill Branch for DEPT_ADMIN
     useEffect(() => {

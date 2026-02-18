@@ -17,9 +17,10 @@ const StudentDashboard = () => {
     const [jobApplications, setJobApplications] = useState([]);
     const [interviews, setInterviews] = useState([]);
 
+    const getToken = () => localStorage.getItem('authToken');
+
     useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
+        if (!getToken()) {
             showAlert({
                 title: 'Login Required',
                 message: 'Please login to access dashboard',
@@ -43,12 +44,11 @@ const StudentDashboard = () => {
     // handleEdit removed as it is no longer needed (always editing)
 
     const handleSave = async () => {
-        const token = localStorage.getItem('authToken');
         try {
             const response = await fetch(`${API_BASE_URL}/auth/update-profile`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${getToken()}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(editedData)
@@ -61,6 +61,9 @@ const StudentDashboard = () => {
                     message: 'Profile updated successfully!',
                     type: 'success'
                 });
+            } else if (response.status === 401) {
+                localStorage.clear();
+                navigate('/login');
             } else {
                 showToast({
                     message: 'Failed to update profile',
@@ -86,12 +89,10 @@ const StudentDashboard = () => {
     };
 
     const fetchData = async () => {
-        const token = localStorage.getItem('authToken');
-
         // Fetch user info
         try {
             const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (userRes.ok) {
                 const userData = await userRes.json();
@@ -107,6 +108,9 @@ const StudentDashboard = () => {
                     enrollmentNumber: userData.enrollmentNumber || '',
                     startYear: userData.startYear || ''
                 });
+            } else if (userRes.status === 401) {
+                localStorage.clear();
+                navigate('/login');
             }
         } catch (err) {
             console.error('Failed to load user data');
@@ -115,7 +119,7 @@ const StudentDashboard = () => {
         // Fetch job applications
         try {
             const jobAppsRes = await fetch(`${API_BASE_URL}/job-applications/my`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (jobAppsRes.ok) {
                 const jobAppsData = await jobAppsRes.json();
@@ -128,7 +132,7 @@ const StudentDashboard = () => {
         // Fetch interviews
         try {
             const interviewRes = await fetch(`${API_BASE_URL}/interview-drives`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (interviewRes.ok) {
                 const interviewData = await interviewRes.json();
