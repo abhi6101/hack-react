@@ -129,8 +129,8 @@ const Papers = () => {
     };
 
     const handleDownload = (paper) => {
-        // Use Backend Proxy for reliable download
-        const downloadUrl = `${API_BASE_URL}/papers/proxy/${paper.id}`;
+        // Use Public Endpoint with Cache Buster
+        const downloadUrl = `${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`;
         window.open(downloadUrl, '_blank');
     };
 

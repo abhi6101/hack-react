@@ -210,7 +210,7 @@ const PaperList = () => {
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>
                                             <a
-                                                href={`${API_BASE_URL}/papers/proxy/${p.id}`}
+                                                href={`${API_BASE_URL}/public/papers/download/${p.id}?t=${Date.now()}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="btn btn-primary btn-sm"
