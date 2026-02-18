@@ -136,9 +136,39 @@ const PaperList = () => {
                         <i className="fas fa-times"></i> Clear Filters
                     </button>
                 )}
+
+                {filteredPapers.length > 0 && (
+                    <button
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={async () => {
+                            if (!window.confirm(`Are you sure you want to delete ALL ${filteredPapers.length} currently shown papers? This cannot be undone.`)) return;
+
+                            setLoading(true);
+                            let successCount = 0;
+
+                            for (const paper of filteredPapers) {
+                                try {
+                                    const res = await fetch(`${API_BASE_URL}/papers/${paper.id}`, {
+                                        method: 'DELETE',
+                                        headers: { 'Authorization': `Bearer ${token}` }
+                                    });
+                                    if (res.ok) successCount++;
+                                } catch (e) {
+                                    console.error("Failed to delete paper", paper.id, e);
+                                }
+                            }
+
+                            showToast({ message: `Deleted ${successCount} papers.`, type: 'success' });
+                            fetchPapers(); // Refresh list
+                        }}
+                        style={{ height: '38px', marginTop: 'auto', padding: '0 1rem', marginLeft: 'auto' }}
+                    >
+                        <i className="fas fa-trash-alt"></i> Delete All Shown
+                    </button>
+                )}
             </div>
 
-            {loading ? <div className="loading-indicator">Loading Archive...</div> : (
+            {loading ? <div className="loading-indicator">Processing...</div> : (
                 <div className="table-responsive">
                     <table className="table">
                         <thead>
