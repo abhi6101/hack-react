@@ -178,87 +178,91 @@ const PaperWizard = ({ onUploadSuccess }) => {
 
     const handleMultiSubjectUpload = async (subjects) => {
         setIsUploading(true);
-        const totalSubjects = subjects.length;
-        let successCount = 0;
-        let failedSubjects = [];
+        // Calculate total operations (Total Files across all subjects)
+        const totalFiles = subjects.reduce((sum, sub) => sum + sub.files.length, 0);
+        let completedFiles = 0;
+        let failedFiles = [];
+        let anySuccess = false;
 
         try {
             const finalBranch = formData.isNewBranch ? formData.newBranch : formData.branch;
             const finalSemester = formData.isNewSemester ? formData.newSemester : formData.semester;
 
+            // Loop through each subject
             for (let i = 0; i < subjects.length; i++) {
                 const subject = subjects[i];
-                const progress = ((i + 1) / totalSubjects) * 100;
-                setUploadProgress(progress);
 
-                showToast({ message: `Uploading ${subject.subject} (${i + 1}/${totalSubjects})...`, type: 'info' });
+                // Loop through each file in the subject
+                for (let j = 0; j < subject.files.length; j++) {
+                    const file = subject.files[j];
 
-                try {
-                    const data = new FormData();
-                    data.append('branch', finalBranch);
-                    data.append('semester', finalSemester);
-                    data.append('subject', subject.subject);
-                    data.append('year', 0);
-                    data.append('category', formData.examType);
-                    data.append('university', formData.university);
-                    data.append('title', subject.subject);
-                    subject.files.forEach(file => data.append('files', file));
+                    // Update Progress
+                    const progress = ((completedFiles + 1) / totalFiles) * 100;
+                    setUploadProgress(progress);
+                    showToast({ message: `Uploading ${subject.subject}: ${file.name} (${j + 1}/${subject.files.length})...`, type: 'info' });
 
-                    const res = await fetch(`${API_BASE_URL}/papers/upload-multiple`, {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${getToken()}` },
-                        body: data
-                    });
+                    try {
+                        const data = new FormData();
+                        data.append('branch', finalBranch);
+                        data.append('semester', finalSemester);
+                        data.append('subject', subject.subject);
+                        data.append('year', 0); // Backend extracts or defaults
+                        data.append('category', formData.examType);
+                        data.append('university', formData.university);
 
-                    if (res.ok) {
-                        successCount++;
-                        showToast({ message: `✓ ${subject.subject} uploaded!`, type: 'success' });
-                    } else if (res.status === 401) {
-                        throw new Error("Unauthorized: Please login first!");
-                    } else if (res.status === 413) {
-                        throw new Error("Files too large! Combined size exceeds limit.");
-                    } else {
-                        const errorText = await res.text();
-                        throw new Error(errorText || "Server error occurred");
-                    }
-                } catch (e) {
-                    console.error("Upload Error for subject:", subject.subject, e);
+                        // Construct a unique title: "Subject - Filename"
+                        let title = subject.subject;
+                        let cleanName = file.name;
+                        if (cleanName.includes('.')) cleanName = cleanName.substring(0, cleanName.lastIndexOf('.'));
+                        title = `${subject.subject} (${cleanName})`;
 
-                    // Detailed logging for debugging "Semester 5" issue
-                    if (finalSemester == 5) {
-                        console.warn("!! Semester 5 Upload Failure Details !!");
-                        console.warn("Branch:", finalBranch);
-                        console.warn("Subject:", subject.subject);
-                        console.warn("File Count:", subject.files.length);
-                        console.warn("Error:", e.message);
-                    }
+                        data.append('title', title);
+                        data.append('file', file); // Single file upload
 
-                    failedSubjects.push(subject.subject);
-
-                    if (e.message.includes("Unauthorized") || e.message.includes("401")) {
-                        showToast({
-                            message: `⚠️ Session Expired! Please login in a NEW TAB, then click Upload again. Do not refresh this page!`,
-                            type: 'error',
-                            duration: 10000
+                        const res = await fetch(`${API_BASE_URL}/papers/upload`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${getToken()}` },
+                            body: data
                         });
-                        setIsUploading(false);
-                        return; // Stop processing subsequent subjects
+
+                        if (res.ok) {
+                            anySuccess = true;
+                        } else {
+                            if (res.status === 401) throw new Error("Unauthorized: Please login first!");
+                            if (res.status === 413) throw new Error("File too large!");
+                            throw new Error(await res.text() || "Server error");
+                        }
+                    } catch (e) {
+                        console.error(`Failed to upload ${file.name}:`, e);
+                        failedFiles.push(`${subject.subject}: ${file.name}`);
+
+                        if (e.message.includes("Unauthorized") || e.message.includes("401")) {
+                            showToast({
+                                message: `⚠️ Session Expired! Please login in a NEW TAB.`,
+                                type: 'error',
+                                duration: 10000
+                            });
+                            setIsUploading(false);
+                            return; // Stop everything on Auth error
+                        }
                     }
 
-                    showToast({ message: `✗ ${subject.subject} failed: ${e.message}`, type: 'error' });
+                    completedFiles++;
+                    // Small delay to prevent overwhelming the server
+                    await new Promise(resolve => setTimeout(resolve, 300));
                 }
-                await new Promise(resolve => setTimeout(resolve, 500));
             }
 
-            if (successCount === totalSubjects) {
-                showToast({ message: `🎉 All ${totalSubjects} subjects uploaded!`, type: 'success' });
+            if (failedFiles.length === 0) {
+                showToast({ message: `🎉 All ${totalFiles} files uploaded successfully!`, type: 'success' });
                 onUploadSuccess?.();
                 resetForm();
-            } else if (successCount > 0) {
-                showToast({ message: `⚠️ ${successCount}/${totalSubjects} uploaded`, type: 'warning' });
+            } else {
+                showToast({ message: `⚠️ Finished with ${failedFiles.length} errors.`, type: 'warning' });
+                console.warn("Failed Files:", failedFiles);
             }
         } catch (e) {
-            showToast({ message: `Upload failed: ${e.message}`, type: 'error' });
+            showToast({ message: `Critical failure: ${e.message}`, type: 'error' });
         } finally {
             setIsUploading(false);
             setUploadProgress(0);
