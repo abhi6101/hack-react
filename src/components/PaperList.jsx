@@ -209,7 +209,14 @@ const PaperList = () => {
                                     <td><span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{p.category}</span></td>
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>
-                                            <a href={`${API_BASE_URL.replace('/api', '')}${p.pdfUrl}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm"><i className="fas fa-eye"></i></a>
+                                            <a
+                                                href={p.pdfUrl && p.pdfUrl.startsWith('http') ? p.pdfUrl : `${API_BASE_URL.replace('/api', '')}${p.pdfUrl}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="btn btn-primary btn-sm"
+                                            >
+                                                <i className="fas fa-eye"></i>
+                                            </a>
                                             <button className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}><i className="fas fa-trash"></i></button>
                                         </div>
                                     </td>

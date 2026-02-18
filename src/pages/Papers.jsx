@@ -131,7 +131,7 @@ const Papers = () => {
     const handleDownload = (paper) => {
         // Construct clear download URL
         const urlToUse = paper.downloadUrl || paper.pdfUrl;
-        const downloadUrl = urlToUse.startsWith('http')
+        const downloadUrl = urlToUse && urlToUse.startsWith('http')
             ? urlToUse
             : `${API_BASE_URL.replace('/api', '')}${urlToUse}`;
         window.open(downloadUrl, '_blank');
