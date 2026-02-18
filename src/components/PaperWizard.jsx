@@ -317,7 +317,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
 
     const renderStepIndicators = () => (
         <div className="wizard-steps" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-            {(uploadMode === 'bulk' ? [1] : [1, 2, 3]).map(i => (
+            {(uploadMode === 'bulk' ? [1] : uploadMode === 'multi' ? [1, 2, 3] : [1, 2, 3, 4, 5]).map(i => (
                 <div key={i} style={{
                     width: '30px', height: '30px', borderRadius: '50%',
                     background: step >= i ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
@@ -341,6 +341,11 @@ const PaperWizard = ({ onUploadSuccess }) => {
                             style={{ background: uploadMode === 'manual' ? 'var(--primary)' : 'transparent', border: 'none', color: uploadMode === 'manual' ? '#000' : '#fff', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}
                         >Manual</button>
                         <button
+                            className={`btn-sm ${uploadMode === 'multi' ? 'active' : ''}`}
+                            onClick={() => { setUploadMode('multi'); setStep(1); }}
+                            style={{ background: uploadMode === 'multi' ? 'var(--primary)' : 'transparent', border: 'none', color: uploadMode === 'multi' ? '#000' : '#fff', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}
+                        >Multi-Subject</button>
+                        <button
                             className={`btn-sm ${uploadMode === 'bulk' ? 'active' : ''}`}
                             onClick={() => { setUploadMode('bulk'); setStep(1); }}
                             style={{ background: uploadMode === 'bulk' ? 'var(--primary)' : 'transparent', border: 'none', color: uploadMode === 'bulk' ? '#000' : '#fff', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}
@@ -351,7 +356,7 @@ const PaperWizard = ({ onUploadSuccess }) => {
                 {renderStepIndicators()}
 
                 <AnimatePresence mode="wait">
-                    {uploadMode === 'manual' ? (
+                    {(uploadMode === 'manual' || uploadMode === 'multi') ? (
                         <motion.div key={`step-${step}`} variants={stepVariants} initial="hidden" animate="visible" exit="exit" transition={{ duration: 0.3 }}>
                             {step === 1 && (
                                 <div className="step-content">
@@ -511,15 +516,182 @@ const PaperWizard = ({ onUploadSuccess }) => {
                                 </div>
                             )}
 
-                            {step === 3 && (
+                            {/* Step 3: Multi-Subject Mode */}
+                            {step === 3 && uploadMode === 'multi' && (
                                 <MultiSubjectUpload
                                     branch={formData.isNewBranch ? formData.newBranch : formData.branch}
                                     semester={formData.isNewSemester ? formData.newSemester : formData.semester}
-                                    semesterSubjects={semesterSubjects}
+                                    semesterSubjects={semesterSubjects} // Fetched on mount of step 3
                                     onBack={prevStep}
                                     onUpload={handleMultiSubjectUpload}
                                     isUploading={isUploading}
                                 />
+                            )}
+
+                            {/* Step 3: Manual Mode (File Upload) */}
+                            {step === 3 && uploadMode === 'manual' && (
+                                <div className="step-content">
+                                    <h3>Step 3: Upload Paper</h3>
+                                    <div
+                                        style={{
+                                            border: '2px dashed var(--primary)',
+                                            borderRadius: '12px',
+                                            padding: '3rem',
+                                            textAlign: 'center',
+                                            marginTop: '1.5rem',
+                                            background: 'rgba(0, 212, 255, 0.02)',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onClick={() => document.getElementById('manual-file').click()}
+                                    >
+                                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                                        <p style={{ fontSize: '1.1rem' }}>
+                                            {formData.files.length > 0
+                                                ? `${formData.files.length} file(s) selected`
+                                                : "Click to Select Paper (PDF)"}
+                                        </p>
+                                        <input
+                                            type="file"
+                                            id="manual-file"
+                                            hidden
+                                            accept=".pdf"
+                                            multiple
+                                            onChange={handleFileChange}
+                                        />
+                                    </div>
+                                    {formData.files.length > 0 && (
+                                        <div style={{ marginTop: '1rem' }}>
+                                            {formData.files.map((f, i) => (
+                                                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', marginBottom: '0.5rem' }}>
+                                                    <span>{f.name}</span>
+                                                    <button onClick={(e) => { e.stopPropagation(); removeFile(i); }} style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer' }}>×</button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <div className="wizard-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+                                        <button className="btn-secondary" onClick={prevStep}>Back</button>
+                                        <button className="btn-primary" onClick={nextStep} disabled={formData.files.length === 0}>Next</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Step 4: Manual Mode (Details) */}
+                            {step === 4 && uploadMode === 'manual' && (
+                                <div className="step-content">
+                                    <h3>Step 4: Paper Details</h3>
+                                    <div className="form-group" style={{ marginTop: '1rem' }}>
+                                        <label>Subject Name</label>
+                                        <div style={{ position: 'relative' }}>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="e.g. Data Structures"
+                                                value={formData.subject}
+                                                onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                                                list="subjects-list"
+                                            />
+                                            <datalist id="subjects-list">
+                                                {semesterSubjects.map(s => <option key={s} value={s} />)}
+                                            </datalist>
+                                        </div>
+                                        {existingPapers.length > 0 && (
+                                            <div style={{ fontSize: '0.8rem', color: 'orange', marginTop: '0.5rem' }}>
+                                                ⚠️ Similar papers exist: {existingPapers.map(p => p.year).join(', ')}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="form-row" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                                        <div className="form-group" style={{ flex: 1 }}>
+                                            <label>Exam Type</label>
+                                            <select
+                                                className="form-control"
+                                                value={formData.examType}
+                                                onChange={e => setFormData({ ...formData, examType: e.target.value })}
+                                            >
+                                                <option value="End-Sem">End-Sem</option>
+                                                <option value="MST">MST</option>
+                                                <option value="Assignment">Assignment</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group" style={{ flex: 1 }}>
+                                            <label>Year (Optional)</label>
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                placeholder="2024"
+                                                value={formData.year}
+                                                onChange={e => setFormData({ ...formData, year: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group" style={{ marginTop: '1rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <label>University</label>
+                                            <button className="text-btn" onClick={() => setShowUniManager(!showUniManager)} style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>
+                                                Manage Universities
+                                            </button>
+                                        </div>
+                                        {showUniManager && (
+                                            <div style={{ background: 'rgba(0,0,0,0.3)', padding: '0.5rem', borderRadius: '8px', marginBottom: '0.5rem' }}>
+                                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                    <input type="text" placeholder="New Uni" value={newUniName} onChange={e => setNewUniName(e.target.value)} style={{ padding: '0.3rem', flex: 1 }} />
+                                                    <button onClick={handleAddUniversity} className="btn-sm" style={{ background: 'var(--primary)', color: '#000' }}>Add</button>
+                                                </div>
+                                                <div style={{ marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                                    {universities.map(u => (
+                                                        <span key={u.id} style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                            {u.name}
+                                                            <i className="fas fa-times" onClick={() => handleDeleteUniversity(u.id)} style={{ cursor: 'pointer', color: '#ff4444' }}></i>
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        <select
+                                            className="form-control"
+                                            value={formData.university}
+                                            onChange={e => setFormData({ ...formData, university: e.target.value })}
+                                        >
+                                            {universities.map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="wizard-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+                                        <button className="btn-secondary" onClick={prevStep}>Back</button>
+                                        <button className="btn-primary" onClick={nextStep} disabled={!formData.subject}>Review</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Step 5: Manual Mode (Review) */}
+                            {step === 5 && uploadMode === 'manual' && (
+                                <div className="step-content">
+                                    <h3>Step 5: Review & Upload</h3>
+                                    <div className="review-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px', marginTop: '1.5rem' }}>
+                                        <p><strong>Department:</strong> {formData.isNewBranch ? formData.newBranch : formData.branch}</p>
+                                        <p><strong>Semester:</strong> {formData.isNewSemester ? formData.newSemester : formData.semester}</p>
+                                        <p><strong>Subject:</strong> {formData.subject}</p>
+                                        <p><strong>Type:</strong> {formData.examType}</p>
+                                        <p><strong>University:</strong> {formData.university}</p>
+                                        <p><strong>Files:</strong> {formData.files.length} selected</p>
+                                    </div>
+                                    <div className="wizard-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+                                        <button className="btn-secondary" onClick={prevStep}>Back</button>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={handleUpload}
+                                            disabled={isUploading}
+                                            style={{
+                                                background: 'linear-gradient(135deg, #00d4ff 0%, #005bea 100%)',
+                                                boxShadow: '0 0 20px rgba(0, 212, 255, 0.4)',
+                                                transform: 'scale(1.05)'
+                                            }}
+                                        >
+                                            {isUploading ? "Uploading..." : "Confirm Upload"} <i className="fas fa-rocket"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </motion.div>
                     ) : (
