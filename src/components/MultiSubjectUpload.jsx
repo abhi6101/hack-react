@@ -40,7 +40,7 @@ const MultiSubjectUpload = ({
     // Update custom subject name
     const updateCustomName = (id, customName) => {
         setSubjects(subjects.map(s =>
-            s.id === id ? { ...s, customName, name: '' } : s
+            s.id === id ? { ...s, customName } : s
         ));
     };
 
@@ -64,7 +64,7 @@ const MultiSubjectUpload = ({
     // Validate form
     const isValid = () => {
         return subjects.every(s =>
-            (s.name || s.customName.trim()) && s.files.length > 0
+            ((s.name && s.name !== '__custom__') || s.customName.trim()) && s.files.length > 0
         );
     };
 
