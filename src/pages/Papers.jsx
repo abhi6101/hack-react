@@ -129,11 +129,8 @@ const Papers = () => {
     };
 
     const handleDownload = (paper) => {
-        // Construct clear download URL
-        const urlToUse = paper.downloadUrl || paper.pdfUrl;
-        const downloadUrl = urlToUse && urlToUse.startsWith('http')
-            ? urlToUse
-            : `${API_BASE_URL.replace('/api', '')}${urlToUse}`;
+        // Use Backend Proxy for reliable download
+        const downloadUrl = `${API_BASE_URL}/papers/proxy/${paper.id}`;
         window.open(downloadUrl, '_blank');
     };
 
