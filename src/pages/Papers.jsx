@@ -20,6 +20,7 @@ const Papers = () => {
     const [deptList, setDeptList] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isDeptOpen, setIsDeptOpen] = useState(false);
+    const [viewPdfUrl, setViewPdfUrl] = useState(null);
 
     const getToken = () => localStorage.getItem("authToken");
 
@@ -141,13 +142,8 @@ const Papers = () => {
                 const blob = await res.blob();
                 const url = window.URL.createObjectURL(blob);
 
-                // 3. Open the Blob in a new tab (Viewer)
-                const newWindow = window.open(url, '_blank');
-
-                // Optional: Revoke URL to free memory after a delay
-                if (newWindow) {
-                    newWindow.onload = () => window.URL.revokeObjectURL(url);
-                }
+                // 3. Open in Modal (In-App Viewer)
+                setViewPdfUrl(url); // Triggers the modal
             } else {
                 if (res.status === 401) {
                     showAlert({
@@ -527,7 +523,86 @@ const Papers = () => {
                     )}
                 </AnimatePresence>
             </main>
-        </div>
+
+
+            {/* PDF Viewer Model */}
+            <AnimatePresence>
+                {viewPdfUrl && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(0,0,0,0.95)',
+                            zIndex: 9999,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '2rem'
+                        }}
+                    >
+                        {/* Close Button */}
+                        <motion.button
+                            onClick={() => {
+                                setViewPdfUrl(null);
+                                window.URL.revokeObjectURL(viewPdfUrl);
+                            }}
+                            whileHover={{ scale: 1.1, rotate: 90 }}
+                            whileTap={{ scale: 0.9 }}
+                            style={{
+                                position: 'absolute',
+                                top: '2rem',
+                                right: '2rem',
+                                background: 'rgba(255,255,255,0.1)',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                color: 'white',
+                                width: '50px',
+                                height: '50px',
+                                borderRadius: '50%',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '1.5rem',
+                                zIndex: 10000
+                            }}
+                        >
+                            <i className="fas fa-times"></i>
+                        </motion.button>
+
+                        {/* PDF Frame */}
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            style={{
+                                width: '90%',
+                                height: '90%',
+                                background: '#1a1a1a',
+                                borderRadius: '12px',
+                                overflow: 'hidden',
+                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                            }}
+                        >
+                            <iframe
+                                src={`${viewPdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                                type="application/pdf"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 'none' }}
+                                title="Secure PDF Viewer"
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div >
     );
 };
 
