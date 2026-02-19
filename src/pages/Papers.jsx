@@ -128,10 +128,42 @@ const Papers = () => {
         }
     };
 
-    const handleDownload = (paper) => {
-        // Use Public Endpoint with Cache Buster
-        const downloadUrl = `${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`;
-        window.open(downloadUrl, '_blank');
+    const handleDownload = async (paper) => {
+        try {
+            // 1. Fetch the blob securely using the token
+            const res = await fetch(`${API_BASE_URL}/papers/proxy/${paper.id}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+
+            if (res.ok) {
+                // 2. Create a Blob from the PDF data
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+
+                // 3. Open the Blob in a new tab (Viewer)
+                const newWindow = window.open(url, '_blank');
+
+                // Optional: Revoke URL to free memory after a delay
+                if (newWindow) {
+                    newWindow.onload = () => window.URL.revokeObjectURL(url);
+                }
+            } else {
+                if (res.status === 401) {
+                    showAlert({
+                        title: 'Access Denied',
+                        message: 'Please log in to view this paper.',
+                        type: 'error'
+                    });
+                    navigate('/login');
+                } else {
+                    showToast({ message: 'Error loading paper. Please try again.', type: 'error' });
+                }
+            }
+        } catch (e) {
+            console.error("Download error:", e);
+            showToast({ message: 'Failed to access document.', type: 'error' });
+        }
     };
 
     const downloadBatch = (subject = null) => {
