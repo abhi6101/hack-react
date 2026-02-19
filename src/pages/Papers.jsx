@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import API_BASE_URL from '../config';
 import StarBackground from '../components/StarBackground';
 import Typewriter from '../components/Typewriter';
@@ -402,6 +403,10 @@ const Papers = () => {
 
     return (
         <div className="papers-page-wrapper">
+            <Helmet>
+                <title>RGPV IMCA Question Papers | Download Previous Year Papers | Hack2Hired</title>
+                <meta name="description" content="Download exclusive RGPV Integrated MCA (IMCA) question papers. Access the complete collection of 1st to 10th semester papers to ace your exams." />
+            </Helmet>
             <StarBackground />
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
