@@ -4,6 +4,8 @@ import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../config';
+import StarBackground from '../components/StarBackground';
+import Typewriter from '../components/Typewriter';
 import '../styles/papers.css';
 
 const Papers = () => {
@@ -400,6 +402,7 @@ const Papers = () => {
 
     return (
         <div className="papers-page-wrapper">
+            <StarBackground />
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
 
@@ -455,8 +458,11 @@ const Papers = () => {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
+                    whileHover={{ scale: 1.02 }}
                 >
-                    <span className="hero-tag">Digital Library</span>
+                    <div className="hero-tag">
+                        <Typewriter text="Digital Library" delay={50} infinite={false} />
+                    </div>
                     <h1 className="hero-title">
                         {branch} <span className="highlight">Archive</span>
                     </h1>
@@ -465,6 +471,32 @@ const Papers = () => {
                             ? `Curated examination materials for Semester ${selectedSemester}`
                             : "Access a comprehensive collection of previous year question papers and academic resources."}
                     </p>
+
+                    {/* Floating Icons */}
+                    <motion.div
+                        className="floating-icon"
+                        animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        style={{ position: 'absolute', top: '10%', left: '10%', fontSize: '3rem', color: 'rgba(0, 212, 255, 0.2)', pointerEvents: 'none' }}
+                    >
+                        <i className="fas fa-file-alt"></i>
+                    </motion.div>
+                    <motion.div
+                        className="floating-icon"
+                        animate={{ y: [0, 25, 0], rotate: [0, -15, 0] }}
+                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                        style={{ position: 'absolute', bottom: '20%', right: '15%', fontSize: '4rem', color: 'rgba(255, 71, 123, 0.2)', pointerEvents: 'none' }}
+                    >
+                        <i className="fas fa-atom"></i>
+                    </motion.div>
+                    <motion.div
+                        className="floating-icon"
+                        animate={{ x: [0, 30, 0], rotate: [0, 20, 0] }}
+                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                        style={{ position: 'absolute', top: '30%', right: '25%', fontSize: '2.5rem', color: 'rgba(255, 255, 255, 0.1)', pointerEvents: 'none' }}
+                    >
+                        <i className="fas fa-laptop-code"></i>
+                    </motion.div>
                 </motion.div>
             </header>
 

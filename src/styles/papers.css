@@ -162,12 +162,26 @@ nav a.active {
     top: -200px;
     right: -100px;
     background: var(--primary);
+    animation: floatBlob 20s infinite alternate ease-in-out;
 }
 
 .blob-2 {
     bottom: -100px;
     left: -200px;
     background: var(--accent);
+    animation: floatBlob 25s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes floatBlob {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(50px, 50px) scale(1.1);
+    }
+    100% {
+        transform: translate(-30px, 20px) scale(0.9);
+    }
 }
 
 .papers-hero {
