@@ -459,6 +459,17 @@ const Papers = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
                     whileHover={{ scale: 1.02 }}
+                    style={{
+                        maxWidth: '700px',
+                        margin: '0 auto',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        borderRadius: '30px',
+                        padding: '3rem',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                        position: 'relative'
+                    }}
                 >
                     <div className="hero-tag">
                         <Typewriter text="Digital Library" delay={50} infinite={false} />

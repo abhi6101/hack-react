@@ -176,9 +176,11 @@ nav a.active {
     0% {
         transform: translate(0, 0) scale(1);
     }
+
     50% {
         transform: translate(50px, 50px) scale(1.1);
     }
+
     100% {
         transform: translate(-30px, 20px) scale(0.9);
     }
@@ -192,9 +194,13 @@ nav a.active {
 }
 
 .dept-selector-container {
-    margin-bottom: 3rem;
+    padding-bottom: 25px;
+    z-index: 100;
+    position: absolute;
+    top: 2rem;
+    right: 5%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 /* Custom Premium Dropdown */
