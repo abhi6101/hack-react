@@ -388,9 +388,9 @@ const Papers = () => {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <span style={{ flex: 1 }}>Download PDF</span>
+                                <span style={{ flex: 1 }}>View Paper</span>
                                 <div className="btn-icon">
-                                    <i className="fas fa-arrow-down"></i>
+                                    <i className="fas fa-eye"></i>
                                 </div>
                             </motion.button>
                         </motion.div>
