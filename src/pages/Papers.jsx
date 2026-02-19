@@ -252,28 +252,7 @@ const Papers = () => {
                         </div>
                     </div>
 
-                    {subjects.length > 0 && (
-                        <motion.button
-                            className="download-all-btn surface-glow"
-                            onClick={() => downloadBatch()}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '10px',
-                                padding: '0.8rem 1.5rem',
-                                borderRadius: '14px',
-                                border: '1px solid rgba(0, 212, 255, 0.2)',
-                                color: 'var(--primary)',
-                                fontWeight: '600',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <i className="fas fa-cloud-download-alt"></i>
-                            Download Full Semester
-                        </motion.button>
-                    )}
+
                 </div>
 
                 <div className="subject-grid">
@@ -361,28 +340,7 @@ const Papers = () => {
                         </div>
 
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <motion.button
-                                className="download-batch-btn"
-                                onClick={() => downloadBatch(selectedSubject)}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                style={{
-                                    height: '48px',
-                                    padding: '0 1.5rem',
-                                    background: 'rgba(255,255,255,0.05)',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    color: 'var(--primary)',
-                                    borderRadius: '12px',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px'
-                                }}
-                            >
-                                <i className="fas fa-file-archive"></i>
-                                Bundle Download
-                            </motion.button>
+
 
                             <div className="search-box-container">
                                 <i className="fas fa-search"></i>
