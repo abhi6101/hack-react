@@ -460,24 +460,24 @@ const Papers = () => {
                     transition={{ duration: 0.8 }}
                     whileHover={{ scale: 1.02 }}
                     style={{
-                        maxWidth: '700px',
+                        maxWidth: '480px',
                         margin: '0 auto',
                         background: 'rgba(255, 255, 255, 0.03)',
-                        borderRadius: '30px',
-                        padding: '3rem',
+                        borderRadius: '24px',
+                        padding: '2rem',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         backdropFilter: 'blur(10px)',
                         boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
                         position: 'relative'
                     }}
                 >
-                    <div className="hero-tag">
+                    <div className="hero-tag" style={{ transform: 'scale(0.9)', marginBottom: '1rem' }}>
                         <Typewriter text="Digital Library" delay={50} infinite={false} />
                     </div>
-                    <h1 className="hero-title">
+                    <h1 className="hero-title" style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>
                         {branch} <span className="highlight">Archive</span>
                     </h1>
-                    <p className="hero-subtitle">
+                    <p className="hero-subtitle" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>
                         {selectedSemester
                             ? `Curated examination materials for Semester ${selectedSemester}`
                             : "Access a comprehensive collection of previous year question papers and academic resources."}
