@@ -24,6 +24,7 @@ const Papers = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isDeptOpen, setIsDeptOpen] = useState(false);
     const [viewPdfUrl, setViewPdfUrl] = useState(null);
+    const [currentPaper, setCurrentPaper] = useState(null); // For SEO Filename
 
     const getToken = () => localStorage.getItem("authToken");
 
@@ -146,6 +147,7 @@ const Papers = () => {
                 const url = window.URL.createObjectURL(blob);
 
                 // 3. Open in Modal (In-App Viewer)
+                setCurrentPaper(paper);
                 setViewPdfUrl(url); // Triggers the modal
             } else {
                 if (res.status === 401) {
@@ -480,7 +482,7 @@ const Papers = () => {
                         <Typewriter text="Digital Library" delay={50} infinite={false} />
                     </div>
                     <h1 className="hero-title" style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>
-                        {branch} <span className="highlight">Archive</span>
+                        RGPV IMCA Archive & <span className="highlight">Previous Year Papers</span>
                     </h1>
                     <p className="hero-subtitle" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>
                         {selectedSemester
@@ -557,6 +559,7 @@ const Papers = () => {
                         <motion.button
                             onClick={() => {
                                 setViewPdfUrl(null);
+                                setCurrentPaper(null);
                                 window.URL.revokeObjectURL(viewPdfUrl);
                             }}
                             whileHover={{ scale: 1.1, rotate: 90 }}
@@ -580,6 +583,43 @@ const Papers = () => {
                             }}
                         >
                             <i className="fas fa-times"></i>
+                        </motion.button>
+
+                        {/* SEO Download Button (Added per request) */}
+                        <motion.button
+                            onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = viewPdfUrl;
+                                // SEO Naming: RGPV-IMCA-[Subject]-[Year].pdf
+                                const fileName = `RGPV-IMCA-${currentPaper?.subject?.replace(/\s+/g, '-')}-${currentPaper?.year || 'Unknown'}.pdf`;
+                                link.download = fileName;
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                            }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            style={{
+                                position: 'absolute',
+                                top: '2rem',
+                                right: '8rem',
+                                background: 'var(--primary)',
+                                border: 'none',
+                                color: 'black',
+                                padding: '0.8rem 1.5rem',
+                                borderRadius: '30px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.8rem',
+                                fontWeight: '700',
+                                fontSize: '0.9rem',
+                                zIndex: 10000,
+                                boxShadow: '0 0 20px var(--primary-glow)'
+                            }}
+                        >
+                            <i className="fas fa-download"></i>
+                            Download Paper
                         </motion.button>
 
                         {/* PDF Frame */}
