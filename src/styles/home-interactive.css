@@ -753,11 +753,12 @@ main {
     position: absolute;
     top: 10%;
     right: -10%;
-    background: #ffffff;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
     padding: 1.5rem;
     border-radius: 20px;
-    border: 2px solid rgba(99, 102, 241, 0.3);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
     width: 180px;
     text-align: center;
     animation: float 4s ease-in-out infinite;
@@ -770,18 +771,18 @@ main {
     border-radius: 50%;
     margin-bottom: 0.75rem;
     object-fit: cover;
-    border: 3px solid #e2e8f0;
+    border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
 .floating-profile-card h4 {
-    color: #1e293b;
+    color: #ffffff;
     font-size: 0.9rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
 }
 
 .floating-profile-card p {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 0.75rem;
     font-weight: 600;
 }
