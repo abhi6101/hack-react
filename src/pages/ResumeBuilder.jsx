@@ -287,7 +287,7 @@ const ResumeBuilder = () => {
                 <p>Create a professional, clean resume in seconds.</p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem' }}>
+            <div className="resume-layout-grid">
                 {/* Form Side */}
                 <div className="resume-form-container">
 
@@ -520,6 +520,22 @@ const ResumeBuilder = () => {
                     background: #304ffe;
                     transform: translateY(-2px);
                     box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+                }
+                .resume-layout-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 350px;
+                    gap: 2rem;
+                }
+                @media (max-width: 768px) {
+                    .resume-layout-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+                    .form-grid-2 {
+                        grid-template-columns: 1fr !important;
+                    }
+                    .sticky-box {
+                        position: static;
+                    }
                 }
             `}</style>
         </div>

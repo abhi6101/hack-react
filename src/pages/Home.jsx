@@ -329,8 +329,8 @@ const Home = () => {
                     >
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                                <span style={{ whiteSpace: 'nowrap' }}>Get Your Dream Job with</span> <br />
-                                <span style={{ whiteSpace: 'nowrap' }}>hack-2-hired</span>
+                                Get Your Dream Job with <br />
+                                <span className="hero-brand-text">hack-2-hired</span>
                             </h1>
                         </motion.div>
 

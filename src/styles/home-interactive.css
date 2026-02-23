@@ -465,7 +465,7 @@ main {
     .hero-main-container {
         flex-direction: column-reverse;
         text-align: center;
-        gap: 3rem;
+        gap: 2rem;
         padding-top: 2rem;
     }
 
@@ -476,6 +476,9 @@ main {
     .hero-content #heroHeading {
         text-align: center !important;
         margin: 0 auto;
+        font-size: clamp(1.6rem, 5vw, 2.8rem) !important;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .hero-content #heroSubtitle,
@@ -490,22 +493,237 @@ main {
     }
 
     .hero-image-side {
-        max-width: 400px;
+        max-width: 350px;
+        margin: 0 auto;
+    }
+
+    .how-it-works-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .how-left-side,
+    .how-right-side {
+        width: 100%;
+        max-width: 600px;
         margin: 0 auto;
     }
 }
 
 @media (max-width: 768px) {
     .hero-image-side {
-        max-width: 280px;
+        max-width: 240px;
     }
 
     .hero-main-container {
         gap: 1.5rem;
     }
+
+    .hero-content #heroHeading {
+        font-size: clamp(1.4rem, 6vw, 2rem) !important;
+        line-height: 1.2 !important;
+    }
+
+    .hero-content #heroSubtitle {
+        font-size: 0.95rem !important;
+        padding: 0 1rem;
+    }
+
+    /* Partners Section Mobile */
+    .partners-scroll-section {
+        padding: 2rem 0 3rem;
+    }
+
+    .partners-header {
+        margin-bottom: 2rem;
+    }
+
+    .partners-title {
+        font-size: 1.6rem !important;
+    }
+
+    .partners-subtitle {
+        font-size: 0.9rem !important;
+        padding: 0 1rem;
+    }
+
+    .logo-item {
+        width: 160px;
+        height: 80px;
+        padding: 1rem;
+        border-radius: 14px;
+    }
+
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .metric-card h3 {
+        font-size: 1.5rem;
+    }
+
+    /* How it Works Mobile */
+    .how-it-works-section {
+        padding: 4rem 5%;
+    }
+
+    .how-it-works-header {
+        margin-bottom: 3rem;
+    }
+
+    .how-it-works-title {
+        font-size: 1.8rem !important;
+    }
+
+    .how-it-works-subtitle {
+        font-size: 0.95rem;
+        padding: 0 1rem;
+    }
+
+    .how-it-works-container {
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .girl-image-container {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .floating-profile-card {
+        width: 150px;
+        padding: 1rem;
+        right: -5%;
+        top: 5%;
+    }
+
+    .floating-profile-card img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .floating-profile-card h4 {
+        font-size: 0.75rem;
+    }
+
+    .floating-profile-card p {
+        font-size: 0.65rem;
+    }
+
+    .how-step-item {
+        padding: 1rem;
+    }
+
+    .step-icon-box {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        font-size: 1.2rem;
+        border-radius: 12px;
+    }
+
+    .step-text h3 {
+        font-size: 1.1rem;
+    }
+
+    .step-text p {
+        font-size: 0.9rem;
+    }
 }
 
-/* === Partners Section Refined === */
+@media (max-width: 480px) {
+    .hero-image-side {
+        max-width: 200px;
+    }
+
+    .hero-content #heroHeading {
+        font-size: 1.4rem !important;
+    }
+
+    .hero-content #heroSubtitle {
+        font-size: 0.85rem !important;
+    }
+
+    .partners-title {
+        font-size: 1.3rem !important;
+    }
+
+    .logo-item {
+        width: 130px;
+        height: 65px;
+        padding: 0.75rem;
+        border-radius: 12px;
+    }
+
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .metric-card {
+        padding: 1.2rem 0.75rem;
+        border-radius: 16px;
+    }
+
+    .metric-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .metric-card p {
+        font-size: 0.7rem;
+    }
+
+    .how-it-works-title {
+        font-size: 1.5rem !important;
+    }
+
+    .girl-image-container {
+        max-width: 260px;
+    }
+
+    .floating-profile-card {
+        width: 130px;
+        padding: 0.75rem;
+        right: 0;
+        top: 0;
+    }
+
+    .floating-profile-card img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .floating-profile-card h4 {
+        font-size: 0.65rem;
+    }
+
+    .floating-profile-card p {
+        font-size: 0.55rem;
+    }
+
+    .how-step-item {
+        gap: 1rem;
+        padding: 0.75rem;
+    }
+
+    .step-icon-box {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        font-size: 1rem;
+    }
+
+    .step-text h3 {
+        font-size: 1rem;
+    }
+
+    .step-text p {
+        font-size: 0.8rem;
+    }
+}
+
 .partners-scroll-section {
     padding: 0 0 4rem;
     margin-top: -2rem;
@@ -842,17 +1060,4 @@ main {
     color: var(--text-secondary);
     font-size: 1rem;
     line-height: 1.5;
-}
-
-@media (max-width: 1100px) {
-    .how-it-works-container {
-        flex-direction: column;
-        gap: 5rem;
-    }
-
-    .how-left-side,
-    .how-right-side {
-        width: 100%;
-        max-width: 600px;
-    }
 }
