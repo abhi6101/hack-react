@@ -456,7 +456,7 @@ const Home = () => {
                             <img src="/images/Girl.png" alt="How it works" className="how-girl-img" />
                             {/* Floating Profile Card */}
                             <div className="floating-profile-card">
-                                <img src="/images/Boy.png" alt="Profile" />
+                                <img src="/images/avatar1.png" alt="Profile" />
                                 <h4>Complete your profile</h4>
                                 <p>70% Completed</p>
                             </div>
