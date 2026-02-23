@@ -283,12 +283,13 @@ section {
 }
 
 #heroHeading {
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
     background: linear-gradient(90deg, #fff, #b0c4de);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     white-space: nowrap;
+    letter-spacing: -0.5px;
 }
 
 #heroSubtitle {
@@ -1118,6 +1119,7 @@ footer .heart {
 .logo .highlight {
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
     /* Glow effect */
