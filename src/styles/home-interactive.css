@@ -379,18 +379,20 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 90%;
-    max-width: 1400px;
+    width: 95%;
+    max-width: 1500px;
     margin: 0 auto;
-    gap: 2rem;
+    gap: 0;
     position: relative;
     z-index: 10;
+    overflow: visible;
 }
 
 .hero-content {
-    flex: 1.5;
+    flex: 2.5;
     text-align: left;
     z-index: 5;
+    overflow: visible;
 }
 
 .hero-image-side {
