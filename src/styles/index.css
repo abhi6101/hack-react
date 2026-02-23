@@ -283,13 +283,14 @@ section {
 }
 
 #heroHeading {
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-size: clamp(2rem, 5vw, 4.2rem);
     background: linear-gradient(90deg, #fff, #b0c4de);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     white-space: nowrap;
-    letter-spacing: -0.5px;
+    letter-spacing: -1px;
+    font-weight: 800;
 }
 
 #heroSubtitle {
