@@ -753,10 +753,11 @@ main {
     position: absolute;
     top: 10%;
     right: -10%;
-    background: rgba(255, 255, 255, 0.95);
+    background: #ffffff;
     padding: 1.5rem;
     border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     width: 180px;
     text-align: center;
     animation: float 4s ease-in-out infinite;
@@ -769,18 +770,19 @@ main {
     border-radius: 50%;
     margin-bottom: 0.75rem;
     object-fit: cover;
-    border: 3px solid #fff;
+    border: 3px solid #e2e8f0;
 }
 
 .floating-profile-card h4 {
     color: #1e293b;
     font-size: 0.9rem;
+    font-weight: 700;
     margin-bottom: 0.25rem;
 }
 
 .floating-profile-card p {
     color: #64748b;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
 }
 
