@@ -366,8 +366,8 @@ const Home = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
-                                    <Link to="/login" className="btn btn-outline">Login</Link>
+                                    <Link to="/register" id="registerBtn" className="btn btn-outline">🚀 Get Started</Link>
+                                    <Link to="/login" className="btn btn-outline">Sign In</Link>
                                 </>
                             )}
                         </motion.div>
