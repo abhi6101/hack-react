@@ -185,7 +185,7 @@ section {
 /* --- 4. Hero Section --- */
 .hero {
     min-height: 100vh;
-    padding: 8rem 2rem;
+    padding: 4rem 2rem 8rem;
     display: flex;
     align-items: center;
     justify-content: center;

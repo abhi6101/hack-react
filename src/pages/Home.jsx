@@ -344,7 +344,7 @@ const Home = () => {
                                     boxShadow: 'none',
                                     padding: 0,
                                     textAlign: 'left', // Aligned left now
-                                    marginTop: '2rem'
+                                    marginTop: '1rem'
                                 }}
                             >
                                 <h2 style={{ textAlign: 'left' }}>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
@@ -352,7 +352,7 @@ const Home = () => {
                             </motion.div>
                         )}
 
-                        <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '1.5rem 0 2.5rem' }}>
+                        <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '0.75rem 0 1.5rem' }}>
                             Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
                         </motion.p>
 
