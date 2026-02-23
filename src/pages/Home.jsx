@@ -328,7 +328,7 @@ const Home = () => {
                         style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                     >
                         <motion.div variants={fadeInUp}>
-                            <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
+                            <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block', whiteSpace: 'nowrap' }}>
                                 Launch Your Career with Ease!
                             </h1>
                         </motion.div>

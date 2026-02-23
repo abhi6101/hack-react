@@ -283,11 +283,12 @@ section {
 }
 
 #heroHeading {
-    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-size: clamp(2rem, 4.5vw, 4rem);
     background: linear-gradient(90deg, #fff, #b0c4de);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    white-space: nowrap;
 }
 
 #heroSubtitle {
@@ -454,6 +455,7 @@ section {
     margin-bottom: 1rem;
     background: linear-gradient(90deg, #fff, var(--primary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -978,6 +980,7 @@ footer .heart {
     margin-bottom: 1rem;
     background: linear-gradient(to right, #fff, #b0c4de);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
