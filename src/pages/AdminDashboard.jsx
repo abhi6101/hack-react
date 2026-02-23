@@ -156,6 +156,7 @@ const AdminDashboard = () => {
     const [jobSearch, setJobSearch] = useState('');
     const [interviewSearch, setInterviewSearch] = useState('');
     const [appSearch, setAppSearch] = useState('');
+    const [globalSearch, setGlobalSearch] = useState('');
 
     const clearUserForm = () => {
         setUserForm({
@@ -1179,49 +1180,51 @@ const AdminDashboard = () => {
     );
 
     const renderAnalytics = () => {
-        const data = [
+        const userData = [
             { name: 'Students', value: users.filter(u => !u.role || u.role === 'USER' || u.role === 'STUDENT').length, color: '#3b82f6' },
             { name: 'Admins', value: users.filter(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN').length, color: '#ef4444' },
             { name: 'Companies', value: users.filter(u => u.role === 'COMPANY_ADMIN').length, color: '#10b981' }
         ].filter(d => d.value > 0);
 
+        const appData = [
+            { name: 'Pending', value: applications.filter(a => a.status === 'PENDING').length, color: '#eab308' },
+            { name: 'Selected', value: applications.filter(a => a.status === 'SELECTED' || a.status === 'SHORTLISTED').length, color: '#22c55e' },
+            { name: 'Rejected', value: applications.filter(a => a.status === 'REJECTED').length, color: '#ef4444' }
+        ].filter(d => d.value > 0);
+
         return (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
-                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '16px' }}>
-                    <h3 style={{ marginBottom: '1rem', textAlign: 'center' }}>User Distribution</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
+                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
+                    <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <i className="fas fa-chart-pie" style={{ color: 'var(--primary)' }}></i> User Demographics
+                    </h3>
                     <div style={{ height: '300px', width: '100%' }}>
                         <ResponsiveContainer>
                             <PieChart>
-                                <Pie
-                                    data={data}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={100}
-                                    paddingAngle={5}
-                                    dataKey="value"
-                                >
-                                    {data.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
+                                <Pie data={userData} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={5} dataKey="value">
+                                    {userData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                                 </Pie>
-                                <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }} />
-                                <Legend />
+                                <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }} />
+                                <Legend verticalAlign="bottom" height={36} />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
-                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '16px' }}>
-                    <h3 style={{ marginBottom: '1rem', textAlign: 'center' }}>Recent Jobs (Salary in LPA)</h3>
+                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
+                    <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <i className="fas fa-tasks" style={{ color: 'var(--accent)' }}></i> Application Pulse
+                    </h3>
                     <div style={{ height: '300px', width: '100%' }}>
                         <ResponsiveContainer>
-                            <BarChart data={jobs.slice(0, 8).map(j => ({ name: j.company_name ? j.company_name.substring(0, 10) : 'Unknown', salary: j.salary ? (j.salary / 100000) : 0 }))}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                            <BarChart data={appData}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
                                 <XAxis dataKey="name" stroke="#94a3b8" />
                                 <YAxis stroke="#94a3b8" />
-                                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }} />
-                                <Bar dataKey="salary" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Salary (LPA)" />
+                                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }} />
+                                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                                    {appData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                                </Bar>
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
@@ -1310,28 +1313,86 @@ const AdminDashboard = () => {
             case 'students':
                 return renderStudentMonitor();
             case 'dashboard':
+                const pendingVerifications = allProfiles.filter(p => p.approvalStatus === 'PENDING').length;
+                const totalStudents = users.filter(u => u.role === 'USER').length;
+                const recentActivities = [
+                    ...applications.slice(0, 3).map(a => ({ type: 'app', text: `${a.applicantName} applied for ${a.jobTitle}`, time: a.appliedAt })),
+                    ...jobs.slice(0, 2).map(j => ({ type: 'job', text: `New job posted at ${j.company_name}`, time: j.last_date })),
+                ].sort((a, b) => new Date(b.time) - new Date(a.time));
+
                 return (
-                    <div className="dashboard-overview">
-                        <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
-                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
-                                <i className="fas fa-briefcase" style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
-                                <h3>Total Jobs</h3>
-                                <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{jobs.length}</p>
+                    <div className="dashboard-overview animate-in">
+                        <div className="stats-grid" style={{ marginBottom: '2.5rem' }}>
+                            <div className="stat-card-modern primary">
+                                <div className="stat-icon"><i className="fas fa-briefcase"></i></div>
+                                <div className="stat-details">
+                                    <h3>Total Vacancies</h3>
+                                    <div className="stat-value">{loadingJobs ? '...' : jobs.length}</div>
+                                </div>
                             </div>
-                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
-                                <i className="fas fa-users" style={{ fontSize: '2.5rem', color: 'var(--accent)', marginBottom: '1rem' }}></i>
-                                <h3>Total Users</h3>
-                                <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{users.length}</p>
+                            <div className="stat-card-modern accent">
+                                <div className="stat-icon"><i className="fas fa-user-graduate"></i></div>
+                                <div className="stat-details">
+                                    <h3>Students Enrolled</h3>
+                                    <div className="stat-value">{loadingUsers ? '...' : totalStudents}</div>
+                                </div>
                             </div>
-                            <div className="stat-card surface-glow" style={{ padding: '2rem', textAlign: 'center' }}>
-                                <i className="fas fa-user-shield" style={{ fontSize: '2.5rem', color: '#28a745', marginBottom: '1rem' }}></i>
-                                <h3>Admin Status</h3>
-                                <p style={{ fontSize: '1.2rem', color: '#28a745' }}>Active</p>
+                            <div className="stat-card-modern warning">
+                                <div className="stat-icon"><i className="fas fa-user-check"></i></div>
+                                <div className="stat-details">
+                                    <h3>Pending Verification</h3>
+                                    <div className="stat-value">{loadingProfiles ? '...' : pendingVerifications}</div>
+                                </div>
+                            </div>
+                            <div className="stat-card-modern success">
+                                <div className="stat-icon"><i className="fas fa-file-invoice"></i></div>
+                                <div className="stat-details">
+                                    <h3>Job Applications</h3>
+                                    <div className="stat-value">{loadingApplications ? '...' : applications.length}</div>
+                                </div>
                             </div>
                         </div>
 
-                        {/* New Visual Analytics Section */}
-                        {renderAnalytics()}
+                        <div className="dashboard-split-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', marginBottom: '2.5rem' }}>
+                            <div className="analytics-col">
+                                {renderAnalytics()}
+                            </div>
+                            <div className="activity-col">
+                                <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '20px', height: '100%', border: '1px solid var(--border-color)' }}>
+                                    <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <i className="fas fa-bolt" style={{ color: '#fbbf24' }}></i> Quick Actions
+                                    </h3>
+                                    <div className="quick-actions-list" style={{ display: 'grid', gap: '1rem' }}>
+                                        <button className="btn-premium" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setActiveTab('jobs')}>
+                                            <i className="fas fa-plus"></i> Post New Job
+                                        </button>
+                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)', justifyContent: 'center' }} onClick={() => setActiveTab('users')}>
+                                            <i className="fas fa-user-plus"></i> Onboard Student
+                                        </button>
+                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)', justifyContent: 'center' }} onClick={() => setActiveTab('profile-details')}>
+                                            <i className="fas fa-check-double"></i> Verify Profiles
+                                        </button>
+                                    </div>
+
+                                    <h3 style={{ marginTop: '2.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <i className="fas fa-history" style={{ color: 'var(--primary)' }}></i> Recent Feed
+                                    </h3>
+                                    <div className="activity-feed">
+                                        {recentActivities.map((act, i) => (
+                                            <div key={i} style={{ padding: '0.75rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '1rem', alignItems: 'start' }}>
+                                                <div style={{ padding: '0.5rem', borderRadius: '8px', background: act.type === 'app' ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 71, 123, 0.1)', color: act.type === 'app' ? 'var(--primary)' : 'var(--accent)' }}>
+                                                    <i className={`fas ${act.type === 'app' ? 'fa-file-alt' : 'fa-briefcase'}`}></i>
+                                                </div>
+                                                <div>
+                                                    <p style={{ fontSize: '0.85rem', margin: 0 }}>{act.text}</p>
+                                                    <small style={{ color: 'var(--text-secondary)' }}>{new Date(act.time).toLocaleDateString()}</small>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         {isSuperAdmin && (
                             <div className="company-stats-section" style={{ marginBottom: '2.5rem' }}>
@@ -2314,23 +2375,27 @@ const AdminDashboard = () => {
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                                                         <select
                                                             value={item.status}
                                                             onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
                                                             className="form-control"
-                                                            style={{ width: 'auto', padding: '0.25rem' }}
+                                                            style={{ width: 'auto', padding: '0.4rem', fontSize: '0.85rem' }}
                                                         >
                                                             <option value="PENDING">Pending</option>
                                                             <option value="ACCEPTED">Accept</option>
                                                             <option value="REJECTED">Reject</option>
                                                         </select>
-                                                        <button className="btn btn-danger" onClick={() => deleteGalleryItem(item.id)} style={{ padding: '0.25rem 0.5rem' }}>
+                                                        <button className="action-btn-modern delete-btn" onClick={() => deleteGalleryItem(item.id)} title="Delete Item">
                                                             <i className="fas fa-trash"></i>
                                                         </button>
-                                                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem' }}>
+                                                        <button
+                                                            className="action-btn-modern edit-btn"
+                                                            onClick={() => window.open(item.url, '_blank')}
+                                                            title="View Image"
+                                                        >
                                                             <i className="fas fa-eye"></i>
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -2585,11 +2650,13 @@ const AdminDashboard = () => {
                 </nav>
 
                 <div className="sidebar-footer">
-                    <div className="user-info-mini">
-                        <div className="mini-avatar">{role.charAt(0)}</div>
-                        <div className="mini-details">
-                            <span className="mini-name">{localStorage.getItem('username') || 'Admin'}</span>
-                            <span className="mini-role">{role.replace('_', ' ')}</span>
+                    <div className="user-info-mini" style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border-color)', margin: '0 1rem 1.5rem' }}>
+                        <div className="mini-avatar" style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))', width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                            {role.charAt(0)}
+                        </div>
+                        <div className="mini-details" style={{ marginLeft: '1rem' }}>
+                            <div className="mini-name" style={{ fontWeight: '600', fontSize: '0.95rem' }}>{localStorage.getItem('username') || 'Admin'}</div>
+                            <div className="mini-role" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{role.replace('_', ' ')}</div>
                         </div>
                     </div>
                 </div>
@@ -2603,7 +2670,25 @@ const AdminDashboard = () => {
                     <div className="header-right">
                         <div className="header-search">
                             <i className="fas fa-search"></i>
-                            <input type="text" placeholder="Global Search..." />
+                            <input
+                                type="text"
+                                placeholder="Universal Search..."
+                                value={globalSearch}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setGlobalSearch(val);
+                                    if (val.length > 2) {
+                                        // Logic to switch tabs if something specific is found
+                                        if (val.toLowerCase().includes('job')) setActiveTab('jobs');
+                                        if (val.toLowerCase().includes('user') || val.toLowerCase().includes('student')) setActiveTab('users');
+
+                                        // Update child filters
+                                        setUserSearch(val);
+                                        setJobSearch(val);
+                                        setAppSearch(val);
+                                    }
+                                }}
+                            />
                         </div>
                         <button className="header-icon-btn">
                             <i className="fas fa-bell"></i>

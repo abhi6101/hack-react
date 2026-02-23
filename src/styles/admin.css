@@ -1200,3 +1200,112 @@ td {
     color: #22c55e;
     border: 1px solid rgba(34, 197, 94, 0.3);
 }
+
+/* --- 6. Stats & Dashboard Enhancements --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card-modern {
+    background: var(--surface-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-modern:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--primary);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px var(--primary-glow);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.stat-card-modern.primary .stat-icon {
+    color: var(--primary);
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.stat-card-modern.accent .stat-icon {
+    color: var(--accent);
+    background: rgba(255, 71, 123, 0.1);
+}
+
+.stat-card-modern.success .stat-icon {
+    color: var(--success);
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.stat-card-modern.warning .stat-icon {
+    color: #eab308;
+    background: rgba(234, 179, 8, 0.1);
+}
+
+.stat-details h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.stat-details .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* --- Skeleton Loading Animation --- */
+@keyframes skeleton-loading {
+    0% {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    50% {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    100% {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+}
+
+.skeleton {
+    animation: skeleton-loading 1.5s infinite ease-in-out;
+    border-radius: 4px;
+}
+
+.skeleton-text {
+    height: 1.2rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-title {
+    height: 2rem;
+    width: 60%;
+    margin-bottom: 1rem;
+}
+
+.skeleton-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
