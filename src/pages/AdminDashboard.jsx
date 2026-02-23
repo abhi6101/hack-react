@@ -152,6 +152,25 @@ const AdminDashboard = () => {
         computerCode: '',          // Unique student ID (e.g., 59500)
         batch: ''                  // Passout year (e.g., 2027)
     });
+    const [userSearch, setUserSearch] = useState('');
+    const [jobSearch, setJobSearch] = useState('');
+    const [interviewSearch, setInterviewSearch] = useState('');
+    const [appSearch, setAppSearch] = useState('');
+
+    const clearUserForm = () => {
+        setUserForm({
+            username: '',
+            email: '',
+            password: '',
+            role: 'USER',
+            adminBranch: '',
+            allowedDepartments: [],
+            companyName: '',
+            computerCode: '',
+            batch: '',
+            branch: ''
+        });
+    };
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
     const [editingInterview, setEditingInterview] = useState(null);
@@ -247,7 +266,6 @@ const AdminDashboard = () => {
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
             document.body.removeChild(a);
         } catch (err) {
             showToast({
@@ -691,9 +709,9 @@ const AdminDashboard = () => {
         }
         loadJobs();
         fetchInterviews();
-        if (isSuperAdmin) {
-            loadUsers(); // Only Super Admins load users
-            fetchCompanyStats();
+        if (isSuperAdmin || role === 'DEPT_ADMIN' || role === 'ADMIN') {
+            loadUsers();
+            if (isSuperAdmin) fetchCompanyStats();
         }
         if (isSuperAdmin || activeTab === 'jobs' || activeTab === 'departments') {
             loadDepartments();
@@ -760,28 +778,33 @@ const AdminDashboard = () => {
             role: userForm.role
         };
 
+        if (userForm.computerCode) payload.computerCode = userForm.computerCode;
+        if (userForm.batch) payload.batch = userForm.batch;
+        if (userForm.branch) payload.branch = userForm.branch;
+
         // Only include password if:
         // 1. Creating new user (editingUser is null), OR
         // 2. Editing user AND password field is not empty
-        if (!editingUser || (editingUser && userForm.password.trim() !== '')) {
+        if (!editingUser || (editingUser && userForm.password && userForm.password.trim() !== '')) {
             payload.password = userForm.password;
         }
 
         // Add role-specific fields
-        if (userForm.role === 'DEPT_ADMIN' && userForm.adminBranch) {
+        if (userForm.role === 'DEPT_ADMIN') {
             payload.adminBranch = userForm.adminBranch;
         }
 
         if (userForm.role === 'COMPANY_ADMIN') {
             payload.companyName = userForm.companyName;
             // Convert array to comma-separated string
-            payload.allowedDepartments = userForm.allowedDepartments.join(',');
+            payload.allowedDepartments = Array.isArray(userForm.allowedDepartments)
+                ? userForm.allowedDepartments.join(',')
+                : userForm.allowedDepartments;
         }
 
         // Debug logging
-        console.log('Updating user:', editingUser ? editingUser.id : 'NEW');
+        console.log('User Action:', editingUser ? `Updating ID: ${editingUser.id}` : 'Creating NEW');
         console.log('Payload being sent:', payload);
-        console.log('Password included?', 'password' in payload);
 
         try {
             const res = await fetch(endpoint, {
@@ -794,15 +817,7 @@ const AdminDashboard = () => {
                 console.log('✅ User update successful');
                 setMessage({ text: editingUser ? 'User updated!' : 'User created!', type: 'success' });
                 loadUsers();
-                setUserForm({
-                    username: '',
-                    email: '',
-                    password: '',
-                    role: 'USER',
-                    adminBranch: '',
-                    allowedDepartments: [],
-                    companyName: ''
-                });
+                clearUserForm();
                 setEditingUser(null);
             } else {
                 const error = await res.text();
@@ -838,16 +853,21 @@ const AdminDashboard = () => {
     };
 
     const startEditUser = (user) => {
-        // Must preserve verification status!
         setUserForm({
-            username: user.username,
-            email: user.email,
+            username: user.username || '',
+            email: user.email || '',
             password: '',
-            role: user.role,
-            verified: user.verified, // Include this
-            companyName: user.companyName
+            role: user.role || 'USER',
+            adminBranch: user.adminBranch || '',
+            allowedDepartments: user.allowedDepartments ? user.allowedDepartments.split(',') : [],
+            companyName: user.companyName || '',
+            computerCode: user.computerCode || '',
+            batch: user.batch || '',
+            branch: user.branch || ''
         });
         setEditingUser(user);
+        // Scroll to the form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const deleteJob = async (jobId) => {
@@ -1423,18 +1443,35 @@ const AdminDashboard = () => {
                         )}
 
                         <div className="recent-activity">
-                            <h2>Recent Jobs</h2>
-                            <div className="table-responsive surface-glow" style={{ marginTop: '1rem' }}>
-                                <table className="table">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                <h2>Recent Job Postings</h2>
+                                <div className="search-box-modern">
+                                    <i className="fas fa-search"></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Quick search jobs..."
+                                        value={jobSearch}
+                                        onChange={(e) => setJobSearch(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="table-responsive surface-glow animate-slide-up" style={{ marginTop: '1rem', borderRadius: '16px' }}>
+                                <table className="modern-table">
                                     <thead>
-                                        <tr><th>Title</th><th>Company</th><th>Date</th></tr>
+                                        <tr><th>Title</th><th>Company</th><th>Status</th><th>Date</th></tr>
                                     </thead>
                                     <tbody>
-                                        {jobs.slice(0, 5).map(job => (
-                                            <tr key={job.id}>
-                                                <td>{job.title}</td>
+                                        {jobs.filter(j =>
+                                            j.title?.toLowerCase().includes(jobSearch.toLowerCase()) ||
+                                            j.company_name?.toLowerCase().includes(jobSearch.toLowerCase())
+                                        ).slice(0, 6).map(job => (
+                                            <tr key={job.id} className="row-hover">
+                                                <td><span style={{ fontWeight: '600' }}>{job.title}</span></td>
                                                 <td>{job.company_name}</td>
-                                                <td>{new Date(job.last_date).toLocaleDateString()}</td>
+                                                <td>
+                                                    <span className="badge-role role-user" style={{ fontSize: '0.7rem' }}>Active</span>
+                                                </td>
+                                                <td style={{ color: 'var(--text-secondary)' }}>{new Date(job.last_date).toLocaleDateString()}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -1661,205 +1698,307 @@ const AdminDashboard = () => {
                     </>
                 );
             case 'users':
-                return (
-                    <>
-                        {!isCompanyAdmin && (
-                            <section className="card surface-glow">
-                                <div className="card-header">
-                                    <h3><i className="fas fa-user-plus"></i> {editingUser ? 'Edit User' : 'Add New User'}</h3>
-                                </div>
-                                <form onSubmit={handleUserSubmit}>
-                                    <div className="form-grid">
-                                        <div className="form-group">
-                                            <label>Username</label>
-                                            <input type="text" className="form-control" required value={userForm.username} onChange={e => setUserForm({ ...userForm, username: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Email</label>
-                                            <input type="email" className="form-control" required value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Password {editingUser && '(leave blank to keep current)'}</label>
-                                            <input type="password" className="form-control" required={!editingUser} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} />
-                                        </div>
-                                        {userForm.role === 'USER' && (
-                                            <>
-                                                <div className="form-group">
-                                                    <label>Computer Code (Student ID)</label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        value={userForm.computerCode}
-                                                        onChange={e => setUserForm({ ...userForm, computerCode: e.target.value })}
-                                                        placeholder="e.g., 59500"
-                                                    />
-                                                    <small className="form-text text-muted">
-                                                        Unique student identifier from ID card
-                                                    </small>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Batch (Passout Year)</label>
-                                                    <select
-                                                        className="form-control"
-                                                        value={userForm.batch}
-                                                        onChange={e => setUserForm({ ...userForm, batch: e.target.value })}
-                                                    >
-                                                        <option value="">Select Batch</option>
-                                                        <option value="2025">2025</option>
-                                                        <option value="2026">2026</option>
-                                                        <option value="2027">2027</option>
-                                                        <option value="2028">2028</option>
-                                                        <option value="2029">2029</option>
-                                                        <option value="2030">2030</option>
-                                                    </select>
-                                                    <small className="form-text text-muted">
-                                                        Expected graduation/passout year
-                                                    </small>
-                                                </div>
-                                            </>
-                                        )}
-                                        <div className="form-group">
-                                            <label>Role</label>
-                                            <select className="form-control" value={userForm.role} onChange={e => {
-                                                const newRole = e.target.value;
-                                                setUserForm(prev => ({
-                                                    ...prev,
-                                                    role: newRole,
-                                                    companyName: newRole === 'COMPANY_ADMIN' ? prev.companyName : '',
-                                                    branch: newRole === 'DEPT_ADMIN' ? (departments.length > 0 ? departments[0].code : '') : ''
-                                                }));
-                                            }}>
-                                                <option value="USER">USER</option>
-                                                <option value="ADMIN">ADMIN</option>
-                                                <option value="SUPER_ADMIN">SUPER ADMIN</option>
-                                                <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
-                                                <option value="DEPT_ADMIN">DEPT ADMIN</option>
-                                            </select>
-                                        </div>
-                                        {userForm.role === 'DEPT_ADMIN' && (
-                                            <div className="form-group">
-                                                <label>Admin Branch (Department to Manage) *</label>
-                                                <select
-                                                    className="form-control"
-                                                    required
-                                                    value={userForm.adminBranch || ''}
-                                                    onChange={e => setUserForm({ ...userForm, adminBranch: e.target.value })}
-                                                >
-                                                    <option value="">Select Branch to Manage</option>
-                                                    {departments.map(d => (
-                                                        <option key={d.id} value={d.code}>{d.name} ({d.code})</option>
-                                                    ))}
-                                                </select>
-                                                <small className="form-text text-muted">
-                                                    This admin will manage only this branch
-                                                </small>
-                                            </div>
-                                        )}
-                                        {userForm.role === 'COMPANY_ADMIN' && (
-                                            <>
-                                                <div className="form-group">
-                                                    <label>Company Name *</label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        required
-                                                        value={userForm.companyName || ''}
-                                                        onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
-                                                        placeholder="e.g. Google, Microsoft"
-                                                    />
-                                                </div>
+                const filteredUsers = users.filter(user => {
+                    if (role === 'DEPT_ADMIN') {
+                        const myBranch = localStorage.getItem('adminBranch');
+                        return user.role === 'USER' && user.branch === myBranch;
+                    }
+                    return true;
+                });
 
-                                                <div className="form-group">
-                                                    <label>Allowed Departments *</label>
-                                                    <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '4px', backgroundColor: '#f8f9fa' }}>
-                                                        {departments.length > 0 ? departments.map(dept => (
-                                                            <div key={dept.id} className="form-check">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    className="form-check-input"
-                                                                    id={`dept-${dept.code}`}
-                                                                    checked={userForm.allowedDepartments.includes(dept.code)}
-                                                                    onChange={e => {
-                                                                        if (e.target.checked) {
-                                                                            setUserForm({
-                                                                                ...userForm,
-                                                                                allowedDepartments: [...userForm.allowedDepartments, dept.code]
-                                                                            });
-                                                                        } else {
-                                                                            setUserForm({
-                                                                                ...userForm,
-                                                                                allowedDepartments: userForm.allowedDepartments.filter(d => d !== dept.code)
-                                                                            });
-                                                                        }
-                                                                    }}
-                                                                />
-                                                                <label className="form-check-label" htmlFor={`dept-${dept.code}`}>
-                                                                    {dept.name} ({dept.code})
-                                                                </label>
-                                                            </div>
-                                                        )) : (
-                                                            <p className="text-muted">No departments available. Please create departments first.</p>
-                                                        )}
+                return (
+                    <div className="users-management-page animate-in">
+                        {!isCompanyAdmin && (
+                            <section className="card surface-glow-premium" style={{ marginBottom: '2.5rem', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <i className={`fas ${editingUser ? 'fa-user-edit' : 'fa-user-plus'}`} style={{ color: 'var(--primary)' }}></i>
+                                        {editingUser ? 'Update Professional Account' : 'Onboard New User'}
+                                    </h3>
+                                    {editingUser && (
+                                        <button className="btn btn-outline-sm" onClick={() => { setEditingUser(null); clearUserForm(); }}>
+                                            <i className="fas fa-times"></i> Cancel Edit
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="card-body" style={{ padding: '2rem' }}>
+                                    <form onSubmit={handleUserSubmit}>
+                                        <div className="form-grid-modern">
+                                            <div className="form-group-modern">
+                                                <label><i className="fas fa-at"></i> Username</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control-modern"
+                                                    placeholder="@hack-2-hired"
+                                                    required
+                                                    value={userForm.username}
+                                                    onChange={e => setUserForm({ ...userForm, username: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label><i className="fas fa-envelope"></i> Email Address</label>
+                                                <input
+                                                    type="email"
+                                                    className="form-control-modern"
+                                                    placeholder="depabhijain@gmail.com"
+                                                    required
+                                                    value={userForm.email}
+                                                    onChange={e => setUserForm({ ...userForm, email: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label><i className="fas fa-key"></i> Password {editingUser && '(Leave blank to retain)'}</label>
+                                                <input
+                                                    type="password"
+                                                    className="form-control-modern"
+                                                    placeholder="••••••••••••"
+                                                    required={!editingUser}
+                                                    value={userForm.password}
+                                                    onChange={e => setUserForm({ ...userForm, password: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label><i className="fas fa-user-tag"></i> Role</label>
+                                                <select
+                                                    className="form-control-modern"
+                                                    value={userForm.role}
+                                                    disabled={role === 'DEPT_ADMIN'}
+                                                    onChange={e => {
+                                                        const newRole = e.target.value;
+                                                        setUserForm(prev => ({
+                                                            ...prev,
+                                                            role: newRole,
+                                                            companyName: newRole === 'COMPANY_ADMIN' ? prev.companyName : '',
+                                                            adminBranch: newRole === 'DEPT_ADMIN' ? (departments.length > 0 ? departments[0].code : prev.adminBranch) : ''
+                                                        }));
+                                                    }}
+                                                >
+                                                    <option value="USER">STUDENT / USER</option>
+                                                    <option value="ADMIN">ADMIN</option>
+                                                    <option value="SUPER_ADMIN">SUPER ADMIN</option>
+                                                    <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
+                                                    <option value="DEPT_ADMIN">DEPT ADMIN</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Role-Specific Fields - Dynamic Appearance */}
+                                            {userForm.role === 'USER' && (
+                                                <>
+                                                    <div className="form-group-modern animate-slide-up">
+                                                        <label><i className="fas fa-barcode"></i> Computer Code</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control-modern"
+                                                            value={userForm.computerCode}
+                                                            onChange={e => setUserForm({ ...userForm, computerCode: e.target.value })}
+                                                            placeholder="Unique ID (e.g. 59500)"
+                                                        />
                                                     </div>
-                                                    <small className="form-text text-muted">
-                                                        Company can post jobs for selected departments only
-                                                    </small>
+                                                    <div className="form-group-modern animate-slide-up">
+                                                        <label><i className="fas fa-graduation-cap"></i> Branch</label>
+                                                        <select
+                                                            className="form-control-modern"
+                                                            value={userForm.branch}
+                                                            onChange={e => setUserForm({ ...userForm, branch: e.target.value })}
+                                                        >
+                                                            <option value="">Select Department</option>
+                                                            {departments.map(d => (
+                                                                <option key={d.id} value={d.code}>{d.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group-modern animate-slide-up">
+                                                        <label><i className="fas fa-users"></i> Batch (Passout)</label>
+                                                        <select
+                                                            className="form-control-modern"
+                                                            value={userForm.batch}
+                                                            onChange={e => setUserForm({ ...userForm, batch: e.target.value })}
+                                                        >
+                                                            <option value="">Select Year</option>
+                                                            {[2024, 2025, 2026, 2027, 2028, 2029, 2030].map(yr => (
+                                                                <option key={yr} value={yr}>{yr}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </>
+                                            )}
+
+                                            {userForm.role === 'DEPT_ADMIN' && (
+                                                <div className="form-group-modern full-width animate-slide-up" style={{ background: 'rgba(0, 212, 255, 0.05)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                                    <label style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Admin Branch (Department to Manage) *</label>
+                                                    <select
+                                                        className="form-control-modern"
+                                                        required
+                                                        value={userForm.adminBranch || ''}
+                                                        onChange={e => setUserForm({ ...userForm, adminBranch: e.target.value })}
+                                                        style={{ marginTop: '0.5rem' }}
+                                                    >
+                                                        <option value="">Select Branch to Manage</option>
+                                                        {departments.map(d => (
+                                                            <option key={d.id} value={d.code}>{d.name} ({d.code})</option>
+                                                        ))}
+                                                    </select>
+                                                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem', margin: '0.5rem 0 0' }}>
+                                                        <i className="fas fa-info-circle"></i> This admin will have restricted access to manage only the selected department's data.
+                                                    </p>
                                                 </div>
-                                            </>
-                                        )}
-                                    </div>
-                                    <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> {editingUser ? 'Update' : 'Create'} User</button>
-                                    {editingUser && <button type="button" className="btn btn-secondary" onClick={() => {
-                                        setEditingUser(null);
-                                        setUserForm({
-                                            username: '',
-                                            email: '',
-                                            password: '',
-                                            role: 'USER',
-                                            adminBranch: '',
-                                            allowedDepartments: [],
-                                            companyName: '',
-                                            computerCode: '',
-                                            batch: ''
-                                        });
-                                    }}>Cancel</button>}
-                                </form>
+                                            )}
+
+                                            {userForm.role === 'COMPANY_ADMIN' && (
+                                                <div className="form-group-modern full-width animate-slide-up" style={{ background: 'rgba(255, 71, 123, 0.05)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(255, 71, 123, 0.2)' }}>
+                                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
+                                                        <div>
+                                                            <label style={{ color: 'var(--accent)', fontWeight: 'bold' }}>Company Name *</label>
+                                                            <input
+                                                                type="text"
+                                                                className="form-control-modern"
+                                                                required
+                                                                value={userForm.companyName || ''}
+                                                                onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
+                                                                placeholder="e.g. Google, Amazon"
+                                                                style={{ marginTop: '0.5rem' }}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label style={{ color: 'var(--accent)', fontWeight: 'bold' }}>Allowed Hiring Channels *</label>
+                                                            <div className="dept-checkbox-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '0.5rem', marginTop: '0.5rem' }}>
+                                                                {departments.map(dept => (
+                                                                    <label key={dept.id} className="custom-checkbox-container">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={userForm.allowedDepartments.includes(dept.code)}
+                                                                            onChange={e => {
+                                                                                const depts = e.target.checked
+                                                                                    ? [...userForm.allowedDepartments, dept.code]
+                                                                                    : userForm.allowedDepartments.filter(d => d !== dept.code);
+                                                                                setUserForm({ ...userForm, allowedDepartments: depts });
+                                                                            }}
+                                                                        />
+                                                                        <span className="checkmark"></span>
+                                                                        {dept.code}
+                                                                    </label>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                            <button type="submit" className="btn-premium">
+                                                <span>{editingUser ? 'Update Professional Account' : 'Initialize Account'}</span>
+                                                <i className="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </section>
                         )}
 
-                        <section id="users-section" className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-users"></i> Registered Users</h3>
+                        <section className="card surface-glow" style={{ border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <div className="card-header" style={{ padding: '1.5rem 2rem' }}>
+                                <div>
+                                    <h3 style={{ margin: 0 }}>Registered Workforce</h3>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '5px 0 0' }}>
+                                        {role === 'DEPT_ADMIN' ? `Displaying students from ${localStorage.getItem('adminBranch')}` : 'Full access to system registry'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <div className="search-box-modern">
+                                        <i className="fas fa-search"></i>
+                                        <input
+                                            type="text"
+                                            placeholder="Search accounts..."
+                                            value={userSearch}
+                                            onChange={(e) => setUserSearch(e.target.value)}
+                                        />
+                                    </div>
+                                    <button className="btn-icon" title="Refresh List" onClick={loadUsers}>
+                                        <i className="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
                             </div>
-                            {loadingUsers && <div id="loadingUsersIndicator" className="loading-indicator">Loading users...</div>}
-                            {!loadingUsers && (
-                                <div className="table-responsive">
-                                    {users.length === 0 ? <p style={{ padding: '1rem' }}>No registered users found.</p> : (
-                                        <table id="usersTable">
+
+                            {loadingUsers ? (
+                                <div className="loader-container">
+                                    <div className="pulse-loader"></div>
+                                    <p>Retrieving secure registry...</p>
+                                </div>
+                            ) : (
+                                <div className="table-container">
+                                    {filteredUsers.filter(u =>
+                                        u.username?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                                        u.email?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                                        u.companyName?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                                        u.role?.toLowerCase().includes(userSearch.toLowerCase())
+                                    ).length === 0 ? (
+                                        <div className="empty-state">
+                                            <i className="fas fa-user-slash"></i>
+                                            <p>No matching users found in registry.</p>
+                                        </div>
+                                    ) : (
+                                        <table className="modern-table">
                                             <thead>
-                                                <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Company</th><th>Actions</th></tr>
+                                                <tr>
+                                                    <th>Identify</th>
+                                                    <th>Account Credentials</th>
+                                                    <th>Professional Role</th>
+                                                    <th>Assignment</th>
+                                                    <th style={{ textAlign: 'right' }}>Management</th>
+                                                </tr>
                                             </thead>
-                                            <tbody id="userList">
-                                                {users.map(user => (
-                                                    <tr key={user.id}>
-                                                        <td>{user.id}</td>
-                                                        <td>{user.username}</td>
-                                                        <td>{user.email}</td>
-                                                        <td>{user.role}</td>
-                                                        <td>{user.companyName || user.branch || '-'}</td>
-                                                        <td className="action-btns">
-                                                            {!isCompanyAdmin ? (
-                                                                <>
-                                                                    <button className="btn btn-secondary" onClick={() => startEditUser(user)}>
-                                                                        <i className="fas fa-edit"></i>
-                                                                    </button>
-                                                                    <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>
-                                                                        <i className="fas fa-trash"></i>
-                                                                    </button>
-                                                                </>
-                                                            ) : (
-                                                                <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
-                                                            )}
+                                            <tbody>
+                                                {filteredUsers.filter(u =>
+                                                    u.username?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                                                    u.email?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                                                    u.companyName?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                                                    u.role?.toLowerCase().includes(userSearch.toLowerCase())
+                                                ).map(user => (
+                                                    <tr key={user.id} className="row-hover">
+                                                        <td>
+                                                            <div className="user-avatar-small">
+                                                                {user.username.charAt(0).toUpperCase()}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{user.username}</div>
+                                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.email}</div>
+                                                        </td>
+                                                        <td>
+                                                            <span className={`badge-role role-${user.role.toLowerCase().replace('_', '-')}`}>
+                                                                {user.role}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div style={{ fontSize: '0.9rem' }}>
+                                                                {user.companyName ? (
+                                                                    <span style={{ color: 'var(--accent)' }}><i className="fas fa-building"></i> {user.companyName}</span>
+                                                                ) : user.adminBranch ? (
+                                                                    <span style={{ color: 'var(--primary)' }}><i className="fas fa-university"></i> {user.adminBranch}</span>
+                                                                ) : user.branch ? (
+                                                                    <span>{user.branch} {user.batch ? `'${user.batch.toString().slice(-2)}` : ''}</span>
+                                                                ) : (
+                                                                    <span style={{ opacity: 0.5 }}>System Wide</span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                                                <button
+                                                                    className="action-btn-modern edit-btn"
+                                                                    onClick={() => startEditUser(user)}
+                                                                    disabled={isCompanyAdmin}
+                                                                >
+                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                                <button
+                                                                    className="action-btn-modern delete-btn"
+                                                                    onClick={() => deleteUser(user.id)}
+                                                                    disabled={isCompanyAdmin || user.role === 'SUPER_ADMIN'}
+                                                                >
+                                                                    <i className="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -1869,18 +2008,31 @@ const AdminDashboard = () => {
                                 </div>
                             )}
                         </section>
-                    </>
+                    </div>
                 );
             case 'profile-details':
                 return renderProfileDetails();
             case 'applications':
                 return (
                     <section className="card surface-glow">
-                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
-                            <button className="btn-secondary" onClick={() => downloadCSV(applications, 'job_applications.csv')}>
-                                <i className="fas fa-file-csv"></i> Export
-                            </button>
+                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div>
+                                <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
+                            </div>
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <div className="search-box-modern">
+                                    <i className="fas fa-search"></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Search apps..."
+                                        value={appSearch}
+                                        onChange={(e) => setAppSearch(e.target.value)}
+                                    />
+                                </div>
+                                <button className="btn-secondary" onClick={() => downloadCSV(applications, 'job_applications.csv')}>
+                                    <i className="fas fa-file-csv"></i> Export
+                                </button>
+                            </div>
                         </div>
                         {loadingApplications ? (
                             <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
@@ -1889,73 +2041,60 @@ const AdminDashboard = () => {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th>Student Name</th>
-                                            <th>Email</th>
-                                            <th>Company</th>
-                                            <th>Job Title</th>
-                                            <th>Applied On</th>
+                                            <th>Student</th>
+                                            <th>Contact</th>
+                                            <th>Job/Company</th>
+                                            <th>Applied</th>
                                             <th>Resume</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {applications.map(app => (
+                                        {applications.filter(app =>
+                                            app.applicantName?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                                            app.companyName?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                                            app.jobTitle?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                                            app.applicantEmail?.toLowerCase().includes(appSearch.toLowerCase())
+                                        ).map(app => (
                                             <tr key={app.id}>
-                                                <td>{app.applicantName}</td>
-                                                <td>{app.applicantEmail}</td>
-                                                <td>{app.companyName}</td>
-                                                <td>{app.jobTitle}</td>
+                                                <td><strong>{app.applicantName}</strong></td>
+                                                <td style={{ fontSize: '0.8rem' }}>{app.applicantEmail}</td>
+                                                <td>
+                                                    <div style={{ fontWeight: '500' }}>{app.jobTitle}</div>
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>{app.companyName}</div>
+                                                </td>
                                                 <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
                                                 <td>
                                                     {app.resumePath ? (
-                                                        <a href={`${API_BASE_URL.replace('/api', '')}/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
-                                                            <i className="fas fa-file-pdf"></i> View
-                                                        </a>
-                                                    ) : (
-                                                        <span style={{ color: '#888' }}>No resume</span>
-                                                    )}
+                                                        <button
+                                                            className="action-btn-modern edit-btn"
+                                                            onClick={() => {
+                                                                const filename = app.resumePath.split('/').pop();
+                                                                window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
+                                                            }}
+                                                        >
+                                                            <i className="fas fa-file-pdf"></i>
+                                                        </button>
+                                                    ) : <span style={{ opacity: 0.5 }}>None</span>}
                                                 </td>
                                                 <td>
-                                                    <span style={{
-                                                        padding: '0.25rem 0.75rem',
-                                                        borderRadius: '12px',
-                                                        fontSize: '0.85rem',
-                                                        fontWeight: '600',
-                                                        textTransform: 'uppercase',
-                                                        background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
-                                                            app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
-                                                                app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
-                                                                    'rgba(99, 102, 241, 0.2)',
-                                                        color: app.status === 'PENDING' ? '#fbbf24' :
-                                                            app.status === 'SHORTLISTED' ? '#22c55e' :
-                                                                app.status === 'REJECTED' ? '#ef4444' :
-                                                                    'var(--primary)'
-                                                    }}>
+                                                    <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'REJECTED' ? 'super-admin' : 'admin'}`}>
                                                         {app.status}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                                        <select
-                                                            value={app.status}
-                                                            onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
-                                                            className="form-control"
-                                                            style={{ width: 'auto', padding: '0.5rem' }}
-                                                        >
-                                                            <option value="PENDING">Pending</option>
-                                                            <option value="SHORTLISTED">Shortlist</option>
-                                                            <option value="REJECTED">Reject</option>
-                                                            <option value="SELECTED">Select</option>
-                                                        </select>
-                                                        <button
-                                                            className="btn btn-danger"
-                                                            onClick={() => deleteApplication(app.id)}
-                                                            title="Delete Application"
-                                                        >
-                                                            <i className="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
+                                                    <select
+                                                        value={app.status}
+                                                        onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+                                                        className="form-control"
+                                                        style={{ width: 'auto', padding: '0.4rem' }}
+                                                    >
+                                                        <option value="PENDING">Pending</option>
+                                                        <option value="SHORTLISTED">Shortlist</option>
+                                                        <option value="REJECTED">Reject</option>
+                                                        <option value="SELECTED">Select</option>
+                                                    </select>
                                                 </td>
                                             </tr>
                                         ))}
@@ -2060,8 +2199,17 @@ const AdminDashboard = () => {
             case 'interview-applications':
                 return (
                     <section className="card surface-glow">
-                        <div className="card-header">
+                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h3><i className="fas fa-user-check"></i> Interview Drive Applications</h3>
+                            <div className="search-box-modern">
+                                <i className="fas fa-search"></i>
+                                <input
+                                    type="text"
+                                    placeholder="Search interview apps..."
+                                    value={interviewSearch}
+                                    onChange={(e) => setInterviewSearch(e.target.value)}
+                                />
+                            </div>
                         </div>
                         {loadingInterviewApps ? (
                             <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
@@ -2079,34 +2227,32 @@ const AdminDashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {interviewApplications.map(app => (
+                                        {interviewApplications.filter(app =>
+                                            app.applicantName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
+                                            app.companyName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
+                                            app.applicantEmail?.toLowerCase().includes(interviewSearch.toLowerCase())
+                                        ).map(app => (
                                             <tr key={app.id}>
                                                 <td>
-                                                    {app.applicantName}
+                                                    <div style={{ fontWeight: '600' }}>{app.applicantName}</div>
                                                     <div style={{ fontSize: '0.8rem', color: '#888' }}>{app.applicantEmail}</div>
                                                 </td>
                                                 <td>{app.companyName}</td>
                                                 <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
                                                 <td>
-                                                    <a href={`${API_BASE_URL.replace('/api', '')}/resumes/${app.resumePath.split('/').pop()}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
-                                                        <i className="fas fa-file-pdf"></i> View Resume
-                                                    </a>
+                                                    <button
+                                                        className="action-btn-modern edit-btn"
+                                                        onClick={() => {
+                                                            const filename = app.resumePath.split('/').pop();
+                                                            window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
+                                                        }}
+                                                        title="Download Resume"
+                                                    >
+                                                        <i className="fas fa-file-pdf"></i>
+                                                    </button>
                                                 </td>
                                                 <td>
-                                                    <span style={{
-                                                        padding: '0.25rem 0.75rem',
-                                                        borderRadius: '12px',
-                                                        fontSize: '0.85rem',
-                                                        fontWeight: '600',
-                                                        background: app.status === 'PENDING' ? 'rgba(251, 191, 36, 0.2)' :
-                                                            app.status === 'SHORTLISTED' ? 'rgba(34, 197, 94, 0.2)' :
-                                                                app.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.2)' :
-                                                                    'rgba(99, 102, 241, 0.2)',
-                                                        color: app.status === 'PENDING' ? '#fbbf24' :
-                                                            app.status === 'SHORTLISTED' ? '#22c55e' :
-                                                                app.status === 'REJECTED' ? '#ef4444' :
-                                                                    'var(--primary)'
-                                                    }}>
+                                                    <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'SHORTLISTED' ? 'admin' : app.status === 'REJECTED' ? 'super-admin' : 'dept-admin'}`}>
                                                         {app.status}
                                                     </span>
                                                 </td>
@@ -2202,7 +2348,7 @@ const AdminDashboard = () => {
 
                 const toggleCompanyStatus = async (userId) => {
                     try {
-                        const response = await fetch(`${API_BASE_URL}/users/${userId}/toggle-status`, {
+                        const response = await fetch(`${ADMIN_API_URL}/users/${userId}/toggle-status`, {
                             method: 'PUT',
                             headers: { 'Authorization': `Bearer ${getToken()}` }
                         });
@@ -2387,229 +2533,169 @@ const AdminDashboard = () => {
         }
     };
 
+    const menuItems = [
+        { id: 'dashboard', label: 'Dashboard', icon: 'fa-tachometer-alt', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'jobs', label: 'Manage Jobs', icon: 'fa-briefcase', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'users', label: 'Manage Users', icon: 'fa-users', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'students', label: 'Student Monitor', icon: 'fa-user-graduate', roles: ['ADMIN', 'SUPER_ADMIN'] },
+        { id: 'profile-details', label: 'Student Details', icon: 'fa-id-card', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'interviews', label: 'Manage Interviews', icon: 'fa-calendar-alt', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'applications', label: 'Job Applications', icon: 'fa-file-alt', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'interview-applications', label: 'Interview Apps', icon: 'fa-user-check', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'gallery', label: 'Gallery Management', icon: 'fa-images', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'question-papers', label: 'Question Papers', icon: 'fa-file-pdf', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'departments', label: 'Departments', icon: 'fa-university', roles: ['SUPER_ADMIN'] },
+        { id: 'companies', label: 'Companies', icon: 'fa-city', roles: ['SUPER_ADMIN'] }
+    ];
+
     return (
-        <div className="admin-container">
+        <div className="admin-container animate-in">
             <button className="mobile-menu-toggle" onClick={toggleSidebar}>
                 <i className={`fas ${isSidebarOpen ? 'fa-times' : 'fa-bars'}`}></i>
             </button>
+
             <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
                 <div className="sidebar-header">
-                    <h2><i className="fas fa-user-shield"></i> Admin Panel</h2>
+                    <div className="logo-glow"></div>
+                    <h2><i className="fas fa-shield-alt"></i> AntiHired <span>Admin</span></h2>
                 </div>
+
                 <nav className="sidebar-menu">
                     <ul>
-                        <li>
-                            <button onClick={() => setActiveTab('dashboard')} className={activeTab === 'dashboard' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
-                                <i className="fas fa-tachometer-alt"></i> Dashboard
-                            </button>
-                        </li>
-                        <li>
-                            <button onClick={() => setActiveTab('jobs')} className={activeTab === 'jobs' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
-                                <i className="fas fa-briefcase"></i> Manage Jobs
-                            </button>
-                        </li>
-                        {(isSuperAdmin || isCompanyAdmin) && (
-                            <li>
-                                <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem' }}>
-                                    <i className="fas fa-users"></i> Manage Users
-                                </button>
-                            </li>
-                        )}
-                        {(isSuperAdmin || role === 'ADMIN') && (
-                            <li>
+                        {menuItems.filter(item => item.roles.includes(role)).map(item => (
+                            <li key={item.id}>
                                 <button
-                                    onClick={() => setActiveTab('students')}
-                                    className={activeTab === 'students' ? 'active' : ''}
-                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
+                                    onClick={() => {
+                                        setActiveTab(item.id);
+                                        if (item.id === 'applications') loadApplications();
+                                        if (item.id === 'interview-applications') loadInterviewApplications();
+                                        if (item.id === 'gallery') loadGalleryItems();
+                                    }}
+                                    className={`nav-btn-modern ${activeTab === item.id ? 'active' : ''}`}
                                 >
-                                    <i className="fas fa-user-graduate"></i> Student Monitor
+                                    <div className="nav-icon-wrapper">
+                                        <i className={`fas ${item.icon}`}></i>
+                                    </div>
+                                    <span>{item.label}</span>
+                                    {activeTab === item.id && <div className="active-indicator"></div>}
                                 </button>
                             </li>
-                        )}
-                        {(isSuperAdmin || role === 'ADMIN' || role === 'DEPT_ADMIN') && (
-                            <li>
-                                <button
-                                    onClick={() => setActiveTab('profile-details')}
-                                    className={activeTab === 'profile-details' ? 'active' : ''}
-                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                >
-                                    <i className="fas fa-id-card"></i> Student Details
-                                </button>
-                            </li>
-                        )}
-                        <li>
-                            <button onClick={() => setActiveTab('interviews')} className={activeTab === 'interviews' ? 'active' : ''} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <i className="fas fa-calendar-alt"></i> Manage Interviews
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                className={activeTab === 'applications' ? 'active' : ''}
-                                onClick={() => { setActiveTab('applications'); loadApplications(); }}
-                            >
-                                <i className="fas fa-file-alt"></i> Job Applications
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                className={activeTab === 'interview-applications' ? 'active' : ''}
-                                onClick={() => { setActiveTab('interview-applications'); loadInterviewApplications(); }}
-                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                            >
-                                <i className="fas fa-user-check"></i> Interview Applications
-                            </button>
-                        </li>
-                        {!isCompanyAdmin && (
-                            <li>
-                                <button
-                                    className={activeTab === 'gallery' ? 'active' : ''}
-                                    onClick={() => { setActiveTab('gallery'); loadGalleryItems(); }}
-                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                >
-                                    <i className="fas fa-images"></i> Gallery Management
-                                </button>
-                            </li>
-                        )}
-                        {(isSuperAdmin || role === 'ADMIN' || role === 'DEPT_ADMIN') && (
-                            <li>
-                                <button
-                                    className={activeTab === 'question-papers' ? 'active' : ''}
-                                    onClick={() => setActiveTab('question-papers')}
-                                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                >
-                                    <i className="fas fa-file-pdf"></i> Question Papers
-                                </button>
-                            </li>
-                        )}
-                        {isSuperAdmin && (
-                            <>
-                                <li>
-                                    <button
-                                        className={activeTab === 'departments' ? 'active' : ''}
-                                        onClick={() => setActiveTab('departments')}
-                                        style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                    >
-                                        <i className="fas fa-university"></i> Departments
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        className={activeTab === 'companies' ? 'active' : ''}
-                                        onClick={() => setActiveTab('companies')}
-                                        style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontSize: '1rem', color: 'inherit', padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}
-                                    >
-                                        <i className="fas fa-building"></i> Company Management
-                                    </button>
-                                </li>
-                            </>
-                        )}
+                        ))}
                     </ul>
                 </nav>
+
+                <div className="sidebar-footer">
+                    <div className="user-info-mini">
+                        <div className="mini-avatar">{role.charAt(0)}</div>
+                        <div className="mini-details">
+                            <span className="mini-name">{localStorage.getItem('username') || 'Admin'}</span>
+                            <span className="mini-role">{role.replace('_', ' ')}</span>
+                        </div>
+                    </div>
+                </div>
             </aside>
 
-            <main className="main-content">
-                <header className="main-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                        <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
-                        <p className="subtitle">Welcome, Admin! Manage your portal content from here.</p>
+            <main className="admin-main">
+                <header className="main-header">
+                    <div className="header-left">
+                        <h1>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <button onClick={() => navigate('/')} className="btn btn-outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
-                            <i className="fas fa-arrow-left"></i> Back to Portal
+                    <div className="header-right">
+                        <div className="header-search">
+                            <i className="fas fa-search"></i>
+                            <input type="text" placeholder="Global Search..." />
+                        </div>
+                        <button className="header-icon-btn">
+                            <i className="fas fa-bell"></i>
+                            <span className="notification-dot"></span>
                         </button>
-                        <button
-                            onClick={() => {
-                                localStorage.clear();
-                                navigate('/login');
-                            }}
-                            className="btn btn-outline"
-                            style={{ borderColor: '#ef4444', color: '#ef4444' }}
-                        >
+                        <button onClick={() => { localStorage.clear(); navigate('/login'); }} className="logout-btn-modern">
                             <i className="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </div>
                 </header>
 
-                {renderContent()}
+                <div className="content-container">
+                    {renderContent()}
+                </div>
+            </main>
 
-                {/* Verification Modal */}
-                {selectedProfileForVerification && (
-                    <div style={{
-                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                        background: 'rgba(0,0,0,0.85)', zIndex: 9999,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        backdropFilter: 'blur(5px)'
-                    }}>
-                        <div className="surface-glow" style={{
-                            width: '1000px', maxWidth: '95%',
-                            height: '80vh', overflow: 'hidden',
-                            padding: '0', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)',
-                            display: 'flex', flexDirection: 'column'
-                        }}>
-                            <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a' }}>
-                                <h2 style={{ margin: 0, fontSize: '1.5rem' }}>Verify Student Identity</h2>
-                                <button onClick={() => setSelectedProfileForVerification(null)} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '2rem', cursor: 'pointer' }}>&times;</button>
+            {/* Verification Modal */}
+            {selectedProfileForVerification && (
+                <div className="modal-overlay">
+                    <div className="modal-content verification-modal pulse-in">
+                        <div className="modal-header">
+                            <div>
+                                <h2>Verify Student Identity</h2>
+                                <p className="subtitle">ID: {selectedProfileForVerification.id}</p>
                             </div>
+                            <button className="close-btn" onClick={() => setSelectedProfileForVerification(null)}>&times;</button>
+                        </div>
 
-                            <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-                                {/* Left: Data */}
-                                <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', borderRight: '1px solid rgba(255,255,255,0.1)', background: '#1e293b' }}>
-                                    <h3 style={{ color: '#94a3b8', marginBottom: '1.5rem', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>Submitted Details</h3>
-
-                                    <div style={{ display: 'grid', gap: '1.5rem' }}>
-                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Full Name</label> <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{selectedProfileForVerification.fullName}</div></div>
-                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Enrollment Number</label> <div style={{ fontSize: '1.2rem', color: '#60a5fa', fontFamily: 'monospace' }}>{selectedProfileForVerification.enrollmentNumber}</div></div>
-
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                                            <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Course/Branch</label> <div style={{ fontWeight: '500' }}>{selectedProfileForVerification.branch}</div></div>
-                                            <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Current Semester</label> <div style={{ fontWeight: '500' }}>{selectedProfileForVerification.semester}</div></div>
+                        <div className="modal-body-split">
+                            <div className="profile-details-col">
+                                <section>
+                                    <h3>Basic Information</h3>
+                                    <div className="info-grid-modern">
+                                        <div className="info-item">
+                                            <label>Full Name</label>
+                                            <p>{selectedProfileForVerification.fullName}</p>
                                         </div>
-
-                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Batch Session</label> <div style={{ fontWeight: '500', color: '#34d399' }}>{selectedProfileForVerification.batch}</div></div>
-                                        <div><label style={{ display: 'block', color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Phone</label> <div style={{ fontWeight: '500' }}>{selectedProfileForVerification.phoneNumber}</div></div>
+                                        <div className="info-item">
+                                            <label>Enrollment</label>
+                                            <p className="highlight">{selectedProfileForVerification.enrollmentNumber}</p>
+                                        </div>
+                                        <div className="info-item">
+                                            <label>Branch</label>
+                                            <p>{selectedProfileForVerification.branch}</p>
+                                        </div>
+                                        <div className="info-item">
+                                            <label>Semester</label>
+                                            <p>{selectedProfileForVerification.semester}</p>
+                                        </div>
+                                        <div className="info-item">
+                                            <label>Batch</label>
+                                            <p>{selectedProfileForVerification.batch}</p>
+                                        </div>
+                                        <div className="info-item">
+                                            <label>Phone</label>
+                                            <p>{selectedProfileForVerification.phoneNumber}</p>
+                                        </div>
                                     </div>
-                                </div>
-
-                                {/* Right: ID Card */}
-                                <div style={{ flex: 1.2, padding: '2rem', background: '#0f172a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <h3 style={{ color: '#94a3b8', marginBottom: '1rem', width: '100%', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
-                                        Verification Document: {verificationTab === 'idCard' ? 'College ID' : verificationTab === 'aadhar' ? 'Aadhar Card' : 'Admit Card'}
-                                    </h3>
-
-                                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.05)', padding: '0.25rem', borderRadius: '8px' }}>
-                                        <button onClick={() => setVerificationTab('idCard')} style={{ background: verificationTab === 'idCard' ? '#6366f1' : 'transparent', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}>ID Card</button>
-                                        <button onClick={() => setVerificationTab('aadhar')} style={{ background: verificationTab === 'aadhar' ? '#34d399' : 'transparent', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}>Aadhar</button>
-                                        <button onClick={() => setVerificationTab('admit')} style={{ background: verificationTab === 'admit' ? '#fbbf24' : 'transparent', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}>Admit Card</button>
-                                    </div>
-
-                                    <div style={{
-                                        flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        border: '2px dashed #334155', borderRadius: '12px', background: '#020617', padding: '1rem'
-                                    }}>
-                                        <img
-                                            src={`${API_BASE_URL}/student-profile/${verificationTab === 'idCard' ? 'id-card' : verificationTab === 'aadhar' ? 'aadhar' : 'admit-card'}/${selectedProfileForVerification.id}`}
-                                            alt="Document"
-                                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '4px' }}
-                                            onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; e.target.parentNode.innerHTML += `<span style="color:#64748b; text-align:center">No ${verificationTab} Uploaded</span>`; }}
-                                        />
-                                    </div>
-                                    {verificationTab === 'aadhar' && <div style={{ marginTop: '0.5rem', color: '#34d399', fontSize: '0.8rem' }}>Verify Name Matches Profile</div>}
-                                    {verificationTab === 'admit' && <div style={{ marginTop: '0.5rem', color: '#fbbf24', fontSize: '0.8rem' }}>Verify Enrollment & College</div>}
-                                </div>
+                                </section>
                             </div>
 
-                            <div style={{ padding: '1.5rem', background: '#1e293b', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-                                <button className="btn-secondary" onClick={() => approveStudent(selectedProfileForVerification.id, 'REJECTED')} style={{ background: '#ef444415', color: '#ef4444', border: '1px solid #ef4444' }}>
-                                    <i className="fas fa-times"></i> Reject
-                                </button>
-                                <button className="btn-primary" onClick={() => approveStudent(selectedProfileForVerification.id, 'APPROVED')} style={{ background: '#22c55e', color: '#fff', border: 'none', padding: '0.75rem 2rem' }}>
-                                    <i className="fas fa-check-circle"></i> Verify & Approve Student
-                                </button>
+                            <div className="document-preview-col">
+                                <div className="doc-tabs">
+                                    <button className={verificationTab === 'idCard' ? 'active' : ''} onClick={() => setVerificationTab('idCard')}>ID Card</button>
+                                    <button className={verificationTab === 'aadhar' ? 'active' : ''} onClick={() => setVerificationTab('aadhar')}>Aadhar</button>
+                                    <button className={verificationTab === 'admit' ? 'active' : ''} onClick={() => setVerificationTab('admit')}>Admit Card</button>
+                                </div>
+                                <div className="image-frame">
+                                    <img
+                                        src={`${API_BASE_URL}/student-profile/${verificationTab === 'idCard' ? 'id-card' : verificationTab === 'aadhar' ? 'aadhar' : 'admit-card'}/${selectedProfileForVerification.id}`}
+                                        alt="Student Document"
+                                        onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                                    />
+                                    <div className="empty-state" style={{ display: 'none' }}>
+                                        <i className="fas fa-file-image"></i>
+                                        <p>No document uploaded</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <div className="modal-footer">
+                            <button className="btn-modern btn-danger-outline" onClick={() => approveStudent(selectedProfileForVerification.id, 'REJECTED')}>
+                                <i className="fas fa-times"></i> Reject
+                            </button>
+                            <button className="btn-modern btn-success" onClick={() => approveStudent(selectedProfileForVerification.id, 'APPROVED')}>
+                                <i className="fas fa-check"></i> Approve Student
+                            </button>
+                        </div>
                     </div>
-                )}
-            </main>
+                </div>
+            )}
         </div>
     );
 };
