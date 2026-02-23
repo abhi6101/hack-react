@@ -387,9 +387,31 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* SEO Content Section - Google will read this! */}
+            {/* Partners Logo Scrolling Section */}
+            <section className="partners-scroll-section" style={{ position: 'relative', zIndex: 5 }}>
+                <div className="container">
+                    <div className="partners-title">
+                        Trusted By <span>100+ Companies</span> Worldwide
+                    </div>
+                </div>
 
-
+                <div className="logo-marquee-container">
+                    <div className="logo-scroll-track">
+                        {[
+                            'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
+                            'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
+                            'Slack.png', 'Figma.png', 'Pinterest.png',
+                            'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
+                            'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
+                            'Slack.png', 'Figma.png', 'Pinterest.png'
+                        ].map((logo, index) => (
+                            <div className="logo-item" key={index}>
+                                <img src={`/images/${logo}`} alt="Partner Logo" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
             {/* NEW: Feature Grid Section (User Request) */}
             <section className="feature-grid-section" style={{ padding: '4rem 5%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
                 {/* Left: 2x2 Grid */}
