@@ -1783,6 +1783,12 @@ const AdminDashboard = () => {
                                     )}
                                 </div>
                                 <div className="card-body" style={{ padding: '2rem' }}>
+                                    {message.text && (
+                                        <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'} animate-pulse-subtle`} style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', borderRadius: '12px', background: message.type === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)', border: `1px solid ${message.type === 'success' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`, color: message.type === 'success' ? '#22c55e' : '#ef4444' }}>
+                                            <i className={`fas ${message.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`}></i>
+                                            {message.text}
+                                        </div>
+                                    )}
                                     <form onSubmit={handleUserSubmit}>
                                         <div className="form-grid-modern">
                                             <div className="form-group-modern">
@@ -1842,7 +1848,6 @@ const AdminDashboard = () => {
                                                 </select>
                                             </div>
 
-                                            {/* Role-Specific Fields - Dynamic Appearance */}
                                             {userForm.role === 'USER' && (
                                                 <>
                                                     <div className="form-group-modern animate-slide-up">
