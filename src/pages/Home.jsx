@@ -439,6 +439,67 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* NEW: How It Works Section */}
+            <section className="how-it-works-section">
+                <div className="how-it-works-header">
+                    <h2 className="how-it-works-title">How it <span>Works</span></h2>
+                    <p className="how-it-works-subtitle">
+                        Seamlessly move through the process and secure your ideal role.
+                    </p>
+                </div>
+
+                <div className="how-it-works-container">
+                    {/* Left: Illustration */}
+                    <div className="how-left-side">
+                        <div className="girl-image-container">
+                            <img src="/images/Girl.png" alt="How it works" className="how-girl-img" />
+                            {/* Floating Profile Card */}
+                            <div className="floating-profile-card">
+                                <img src="/images/Boy.png" alt="Profile" />
+                                <h4>Complete your profile</h4>
+                                <p>70% Completed</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: Step List */}
+                    <div className="how-right-side">
+                        <div className="how-steps-list">
+                            <div className="how-step-item">
+                                <div className="step-icon-box">
+                                    <i className="fas fa-file-invoice"></i>
+                                </div>
+                                <div className="step-text">
+                                    <h3>Build Your Resume</h3>
+                                    <p>Create a standout resume with your skills.</p>
+                                </div>
+                            </div>
+
+                            <div className="how-step-item">
+                                <div className="step-icon-box">
+                                    <i className="fas fa-briefcase"></i>
+                                </div>
+                                <div className="step-text">
+                                    <h3>Apply for Job</h3>
+                                    <p>Find and apply for jobs that match your skills.</p>
+                                </div>
+                            </div>
+
+                            <div className="how-step-item">
+                                <div className="step-icon-box">
+                                    <i className="fas fa-check-circle"></i>
+                                </div>
+                                <div className="step-text">
+                                    <h3>Get Hired</h3>
+                                    <p>Connect with employers and start your new job.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* NEW: Feature Grid Section (User Request) */}
             <section className="feature-grid-section" style={{ padding: '4rem 5%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
                 {/* Left: 2x2 Grid */}
