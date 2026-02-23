@@ -329,7 +329,7 @@ const Home = () => {
                     >
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                                Get Your Dream Job <br /> with hack-2-hired
+                                Get Your Dream Job with <br /> hack-2-hired
                             </h1>
                         </motion.div>
 
