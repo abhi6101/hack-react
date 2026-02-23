@@ -319,57 +319,71 @@ const Home = () => {
 
             {/* Hero Section */}
             <section className="hero">
-                <motion.div
-                    className="hero-content"
-                    initial="hidden"
-                    animate="visible"
-                    variants={staggerContainer}
-                    style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
-                >
-                    <motion.div variants={fadeInUp}>
-                        <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                            <Typewriter text="Launch Your Career with Ease!" delay={70} />
-                        </h1>
-                    </motion.div>
-
-                    {user && (
-                        <motion.div
-                            id="userWelcome"
-                            variants={fadeInUp}
-                            style={{
-                                background: 'transparent',
-                                border: 'none',
-                                boxShadow: 'none',
-                                padding: 0,
-                                textAlign: 'center',
-                                marginTop: '2rem'
-                            }}
-                        >
-                            <h2>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
-                            <p>Account type: <span id="displayRole">{user.role}</span></p>
+                <div className="hero-main-container">
+                    <motion.div
+                        className="hero-content"
+                        initial="hidden"
+                        animate="visible"
+                        variants={staggerContainer}
+                        style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
+                    >
+                        <motion.div variants={fadeInUp}>
+                            <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
+                                <Typewriter text="Launch Your Career with Ease!" delay={70} />
+                            </h1>
                         </motion.div>
-                    )}
 
-                    <motion.p id="heroSubtitle" variants={fadeInUp}>
-                        Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
-                    </motion.p>
-
-                    <motion.div className="cta-btns" variants={fadeInUp}>
-                        {localStorage.getItem('authToken') ? (
-                            <>
-                                <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
-                                <button onClick={handleLogout} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
-                                    Logout
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
-                                <Link to="/login" className="btn btn-outline">Login</Link>
-                            </>
+                        {user && (
+                            <motion.div
+                                id="userWelcome"
+                                variants={fadeInUp}
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    boxShadow: 'none',
+                                    padding: 0,
+                                    textAlign: 'left', // Aligned left now
+                                    marginTop: '2rem'
+                                }}
+                            >
+                                <h2 style={{ textAlign: 'left' }}>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
+                                <p style={{ textAlign: 'left' }}>Account type: <span id="displayRole">{user.role}</span></p>
+                            </motion.div>
                         )}
+
+                        <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '1.5rem 0 2.5rem' }}>
+                            Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
+                        </motion.p>
+
+                        <motion.div className="cta-btns" variants={fadeInUp} style={{ justifyContent: 'flex-start' }}>
+                            {localStorage.getItem('authToken') ? (
+                                <>
+                                    <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
+                                    <button onClick={handleLogout} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/register" id="registerBtn" className="btn btn-outline">Register Now</Link>
+                                    <Link to="/login" className="btn btn-outline">Login</Link>
+                                </>
+                            )}
+                        </motion.div>
                     </motion.div>
-                </motion.div>
+
+                    <motion.div
+                        className="hero-image-side"
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+                    >
+                        <div className="boy-image-container">
+                            <img src="/images/Boy.png" alt="Career Aspirant" className="hero-boy-img" />
+                            <div className="image-glow-effect"></div>
+                        </div>
+                    </motion.div>
+                </div>
             </section>
 
             {/* SEO Content Section - Google will read this! */}
