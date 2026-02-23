@@ -37,7 +37,7 @@ const Footer = () => {
                 </div>
             </div>
             <p>Made with <span className="heart">❤️</span> by Abhi</p>
-            <p>2025 Hack-2-Hired. All rights reserved.</p>
+            <p>2026 Hack-2-Hired. All rights reserved.</p>
         </footer>
     );
 };
