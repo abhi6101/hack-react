@@ -52,7 +52,8 @@ const Navbar = () => {
                         {/* Resources Dropdown */}
                         <div className="dropdown"
                             onMouseEnter={() => setResourcesOpen(true)}
-                            onMouseLeave={() => setResourcesOpen(false)}>
+                            onMouseLeave={() => setResourcesOpen(false)}
+                            onClick={() => setResourcesOpen(!resourcesOpen)}>
                             <button className="dropdown-toggle">
                                 <i className="fas fa-book-reader"></i> Resources <i className="fas fa-chevron-down"></i>
                             </button>
@@ -66,7 +67,8 @@ const Navbar = () => {
                         {/* Explore Dropdown */}
                         <div className="dropdown"
                             onMouseEnter={() => setExploreOpen(true)}
-                            onMouseLeave={() => setExploreOpen(false)}>
+                            onMouseLeave={() => setExploreOpen(false)}
+                            onClick={() => setExploreOpen(!exploreOpen)}>
                             <button className="dropdown-toggle">
                                 <i className="fas fa-compass"></i> Explore <i className="fas fa-chevron-down"></i>
                             </button>
