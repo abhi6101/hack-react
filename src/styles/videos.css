@@ -4,7 +4,7 @@
 /* --- 1. Page Header (Hero) --- */
 .videos-page {
     /* Top padding to clear fixed nav */
-    padding: 8rem 1rem 4rem;
+    padding: 5rem 1rem 4rem;
     position: relative;
     max-width: 1400px;
     margin: 0 auto;

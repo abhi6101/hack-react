@@ -281,7 +281,7 @@ const ResumeBuilder = () => {
     };
 
     return (
-        <div className="container" style={{ paddingTop: '6rem' }}>
+        <div className="container" style={{ paddingTop: '2rem' }}>
             <div className="page-header">
                 <h1>ATS-Friendly Resume Builder</h1>
                 <p>Create a professional, clean resume in seconds.</p>

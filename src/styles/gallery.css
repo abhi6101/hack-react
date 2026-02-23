@@ -4,7 +4,7 @@
 /* --- 1. Gallery Hero --- */
 .gallery-page {
     position: relative;
-    padding: 8rem 5% 2rem;
+    padding: 5rem 5% 2rem;
     /* Adjusted for fixed navbar */
     max-width: 1400px;
     margin: 0 auto;
