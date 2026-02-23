@@ -385,17 +385,19 @@ main {
     gap: 0;
     position: relative;
     z-index: 10;
-}
-
-.hero-content {
-    flex: 2.5;
-    text-align: left;
-    z-index: 5;
     overflow: visible;
 }
 
+.hero-content {
+    flex: 3;
+    text-align: left;
+    z-index: 5;
+    overflow: visible;
+    min-width: 0;
+}
+
 .hero-image-side {
-    flex: 1.2;
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
