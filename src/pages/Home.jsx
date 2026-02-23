@@ -603,42 +603,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Partners Section */}
-            <section className="companies">
-                <h2>Our Valued Placement Partners</h2>
-                <p className="subtitle">We are proud to collaborate with industry leaders to create unparalleled opportunities for our students.</p>
-                <div className="logos-marquee-container">
-                    <div className="logos-marquee-track">
-                        {/* 1st Set of Logos */}
-                        <div className="company-logo-item"><img src="/images/accenture-logo.jpg" alt="Accenture" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/wipro-logo.jpg" alt="Wipro" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/infosys-logo.jpg" alt="Infosys" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/tcs-logo.jpg" alt="TCS" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/capgemini-logo.jpg" alt="Capgemini" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/persistent-logo.jpg" alt="Persistent" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/google.png" alt="Google" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/microsoft.png" alt="Microsoft" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/amazon.jpg" alt="Amazon" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/ibm.jpg" alt="IBM" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/hexaware-logo.jpg" alt="Hexaware" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/deleoite.jpg" alt="Deloitte" loading="lazy" /></div>
-
-                        {/* Duplicate Set for Seamless Scroll */}
-                        <div className="company-logo-item"><img src="/images/accenture-logo.jpg" alt="Accenture" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/wipro-logo.jpg" alt="Wipro" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/infosys-logo.jpg" alt="Infosys" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/tcs-logo.jpg" alt="TCS" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/capgemini-logo.jpg" alt="Capgemini" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/persistent-logo.jpg" alt="Persistent" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/google.png" alt="Google" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/microsoft.png" alt="Microsoft" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/amazon.jpg" alt="Amazon" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/ibm.jpg" alt="IBM" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/hexaware-logo.jpg" alt="Hexaware" loading="lazy" /></div>
-                        <div className="company-logo-item"><img src="/images/deleoite.jpg" alt="Deloitte" loading="lazy" /></div>
-                    </div>
-                </div>
-            </section>
 
             {/* Contact Teaser Section */}
             <section className="contact-teaser" style={{ textAlign: 'center', background: 'transparent' }}>
