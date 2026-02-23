@@ -388,27 +388,54 @@ const Home = () => {
             </section>
 
             {/* Partners Logo Scrolling Section */}
-            <section className="partners-scroll-section" style={{ position: 'relative', zIndex: 5 }}>
+            <section className="partners-scroll-section">
                 <div className="container">
-                    <div className="partners-title">
-                        Trusted By <span>100+ Companies</span> Worldwide
+                    <div className="partners-header">
+                        <div className="status-pill">
+                            <span className="dot"></span> Trusted Worldwide
+                        </div>
+                        <h2 className="partners-title">
+                            Trusted By <span>100+ Companies</span>
+                        </h2>
+                        <p className="partners-subtitle">
+                            Join thousands of leading companies that trust us to connect them with top talent and help professionals find their dream careers.
+                        </p>
                     </div>
-                </div>
 
-                <div className="logo-marquee-container">
-                    <div className="logo-scroll-track">
-                        {[
-                            'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
-                            'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
-                            'Slack.png', 'Figma.png', 'Pinterest.png',
-                            'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
-                            'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
-                            'Slack.png', 'Figma.png', 'Pinterest.png'
-                        ].map((logo, index) => (
-                            <div className="logo-item" key={index}>
-                                <img src={`/images/${logo}`} alt="Partner Logo" />
-                            </div>
-                        ))}
+                    <div className="logo-marquee-container">
+                        <div className="logo-scroll-track">
+                            {[
+                                'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
+                                'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
+                                'Slack.png', 'Figma.png', 'Pinterest.png',
+                                'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
+                                'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
+                                'Slack.png', 'Figma.png', 'Pinterest.png'
+                            ].map((logo, index) => (
+                                <div className="logo-item" key={index}>
+                                    <img src={`/images/${logo}`} alt="Partner Logo" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="metrics-grid">
+                        <div className="metric-card">
+                            <h3>100+</h3>
+                            <p>Companies</p>
+                        </div>
+                        <div className="metric-card">
+                            <h3>1K+</h3>
+                            <p>Job Seekers</p>
+                        </div>
+                        <div className="metric-card">
+                            <h3>5K+</h3>
+                            <p>Jobs Posted</p>
+                        </div>
+                        <div className="metric-card">
+                            <h3>95%</h3>
+                            <p>Success Rate</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -430,16 +457,6 @@ const Home = () => {
 
 
 
-
-            {/* Stats Section */}
-            <section className="stats">
-                <div className="stats-container">
-                    <div className="stat-item"><h3>500+</h3><p>Companies Hiring</p></div>
-                    <div className="stat-item"><h3>10,000+</h3><p>Successful Placements</p></div>
-                    <div className="stat-item"><h3>95%</h3><p>Placement Rate</p></div>
-                    <div className="stat-item"><h3>50+</h3><p>Career Resources</p></div>
-                </div>
-            </section>
 
             {/* Testimonials Section (Removed per user request) */}
             {/* <motion.section
