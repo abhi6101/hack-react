@@ -500,20 +500,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* NEW: Feature Grid Section (User Request) */}
-            <section className="feature-grid-section" style={{ padding: '4rem 5%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
-                {/* Left: 2x2 Grid */}
-                <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', flex: '1', width: '100%', maxWidth: '800px' }}>
-                    {/* Card 1 */}
-                    <FeatureCard icon="fas fa-lightbulb" title="Mentorship" desc="Weekly check-ins, real guidance, and accountability from industry mentors." color="#fbbf24" />
-                    {/* Card 2 */}
-                    <FeatureCard icon="fas fa-laptop-code" title="Coding & CGPA" desc="Master C, ace your CGPA, and start coding for placements from day one." color="#a855f7" />
-                    {/* Card 3 */}
-                    <FeatureCard icon="fas fa-globe" title="Web & App Dev" desc="Kickstart your dev journey with hands-on web and app projects." color="#3b82f6" />
-                    {/* Card 4 */}
-                    <FeatureCard icon="fas fa-rocket" title="Career Roadmap" desc="Get a clear, actionable plan for internships and projects." color="#ef4444" />
-                </div>
-            </section>
 
 
 
