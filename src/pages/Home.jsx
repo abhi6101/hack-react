@@ -329,7 +329,7 @@ const Home = () => {
                     >
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
-                                <Typewriter text="Launch Your Career with Ease!" delay={70} />
+                                Launch Your Career with Ease!
                             </h1>
                         </motion.div>
 
