@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import App from './App.jsx';
 import ErrorBoundary from './components/ErrorBoundary';
 import './styles/index.css'; // Globally applied styles
+import './styles/mobile-responsive.css'; // Mobile responsive overrides
 
 const redirect = sessionStorage.getItem('redirect');
 if (redirect) {
