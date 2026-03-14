@@ -1,0 +1,662 @@
+/* === JOBS PAGE: PREMIUM STYLESHEET === */
+/* NOTE: Global layout (body, nav, footer) is inherited from index.css */
+
+/* --- 1. Container --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 80vh;
+}
+
+.page-header {
+  text-align: center;
+  padding: 6rem 1rem 3rem;
+  /* Top padding to clear fixed navbar */
+  position: relative;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  border-radius: 2px;
+}
+
+.page-header h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.page-header p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 550px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* --- 2. Horizontal Pill Search Bar --- */
+.search-container {
+  padding: 0.5rem;
+  margin: 2rem auto 3rem;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  max-width: 900px;
+  box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.search-container:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  position: relative;
+}
+
+.search-icon {
+  color: var(--primary);
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  opacity: 0.8;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 0;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: #64748b;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.search-divider {
+  width: 1px;
+  height: 35px;
+  background: var(--border-color);
+}
+
+.btn.search-btn {
+  background: var(--primary);
+  color: #fff;
+  padding: 0.9rem 2.5rem;
+  margin: 0.3rem;
+  border-radius: 50px;
+  white-space: nowrap;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 20px var(--primary-glow);
+  transition: all 0.3s ease;
+}
+
+.btn.search-btn:hover {
+  box-shadow: 0 0 35px var(--primary-glow);
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .search-form {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .search-group {
+    width: 100%;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .search-divider {
+    display: none;
+  }
+
+  .btn.search-btn {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+/* --- 3. Filters --- */
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  padding: 0.7rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-100%);
+  transition: 0.5s;
+}
+
+.filter-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.filter-btn:hover {
+  border-color: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 20px var(--primary-glow);
+  transform: scale(1.05);
+  font-weight: 600;
+}
+
+/* Removed #sortSelect styles as we use custom dropdown now */
+
+/* --- 4. Job List & Cards --- */
+.job-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.job-card {
+  background: rgba(22, 22, 34, 0.8);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.6s ease backwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+  /* Default border for non-hover state */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.job-card::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  /* The gap becomes the border width */
+  background: #13131f;
+  /* Inner card background */
+  border-radius: 15px;
+  /* Slightly less than parent */
+  z-index: -1;
+}
+
+/* The Spinning Glow (Hidden by default) */
+.job-card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 250%;
+  /* Make it long to cover corners */
+  background: conic-gradient(from 0deg,
+      transparent 0deg,
+      transparent 80deg,
+      var(--primary) 130deg,
+      var(--accent) 180deg,
+      transparent 230deg);
+  transform: translate(-50%, -50%);
+  animation: rotate 4s linear infinite;
+  opacity: 0;
+  z-index: -2;
+  transition: opacity 0.3s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(67, 97, 238, 0.3);
+  border-color: transparent;
+  /* Hide static border to show glow */
+}
+
+.job-card:hover::before {
+  opacity: 1;
+}
+
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.job-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.job-title {
+  font-size: 1.4rem;
+  margin: 0;
+  flex-grow: 1;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.job-company {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.job-company i {
+  color: var(--primary);
+}
+
+.job-type {
+  background: rgba(67, 97, 238, 0.1);
+  color: var(--primary);
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid rgba(67, 97, 238, 0.2);
+}
+
+.job-type.internship {
+  background: rgba(114, 9, 183, 0.1);
+  color: var(--accent);
+  border-color: rgba(114, 9, 183, 0.2);
+}
+
+.job-content {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.job-description {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.job-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+}
+
+.job-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.job-actions .btn {
+  font-size: 0.9rem;
+  padding: 0.7rem 1.5rem;
+}
+
+/* --- 5. Skeleton, Zero State, Error --- */
+.skeleton-card {
+  gap: 1rem;
+  pointer-events: none;
+  border-color: transparent;
+}
+
+.skeleton-line {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line.title {
+  width: 60%;
+  height: 1.8rem;
+}
+
+.skeleton-line.subtitle {
+  width: 30%;
+  height: 1.2rem;
+}
+
+.skeleton-content {
+  flex: 1;
+  min-height: 4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.loading,
+.error-message,
+.no-results {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  border: 1px dashed var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-results h3 {
+  color: var(--text-primary);
+  margin: 1rem 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.error-message i {
+  font-size: 2.5rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+/* --- 6. Modal --- */
+.modal {
+  display: flex;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: rgba(22, 22, 34, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(67, 97, 238, 0.1);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+/* Custom scrollbar for modal */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.close-button {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+.close-button:hover {
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  background: linear-gradient(90deg, #fff, var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.modal-content .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.modal-content label {
+  color: #fff;
+  /* Brighter label */
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.07);
+  /* Lighter background */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus,
+.modal-content select:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.2);
+}
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.modal-content .btn {
+  width: 100%;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* --- 7. Pagination --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  gap: 0.5rem;
+}
+
+.page-btn {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.page-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-3px);
+}
+
+.page-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* Applied Button Style */
+.btn-applied {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  cursor: not-allowed;
+  opacity: 0.8;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-applied:hover {
+  transform: none;
+  box-shadow: none;
+  background: rgba(16, 185, 129, 0.15);
+}

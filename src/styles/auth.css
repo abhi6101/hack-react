@@ -1,0 +1,340 @@
+/* Auth Pages Styles (ForgotPassword, ResetPassword) - Dark Theme */
+
+/* Root Variables - Match Login.css */
+:root {
+    --dark-bg: #0A0A10;
+    --surface-bg: #111119;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --primary: #00d4ff;
+    --primary-glow: rgba(0, 212, 255, 0.5);
+    --accent: #ff477b;
+    --text-primary: #ECEFF1;
+    --text-secondary: #90A4AE;
+    --error: #ff477b;
+    --success: #28a745;
+    --font-family: 'Poppins', sans-serif;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: var(--dark-bg);
+    background-image: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
+    position: relative;
+    overflow: hidden;
+    animation: background-pan 20s infinite alternate ease-in-out;
+}
+
+@keyframes background-pan {
+    from { background-position: 0% center; }
+    to { background-position: 100% center; }
+}
+
+/* Remove any rotating decorative elements */
+.auth-container::before,
+.auth-container::after {
+    display: none;
+}
+
+.auth-card {
+    background: var(--surface-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 3rem;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 10;
+    border: 1px solid var(--border-color);
+    /* Entry animation */
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    animation: card-pop-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.2s;
+}
+
+@keyframes card-pop-in {
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Glowing border effect on hover */
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from var(--angle), transparent 20%, var(--primary), var(--accent), transparent 80%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: spin 5s linear infinite paused;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.auth-card:hover::before {
+    animation-play-state: running;
+    opacity: 1;
+}
+
+@property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes spin {
+    to { --angle: 360deg; }
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header i {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.auth-header h2 {
+    color: var(--text-primary);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* Staggered entry animation */
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in-slide 0.5s ease-out forwards;
+}
+
+.form-group:nth-of-type(1) { animation-delay: 0.4s; }
+.form-group:nth-of-type(2) { animation-delay: 0.5s; }
+.form-group:nth-of-type(3) { animation-delay: 0.6s; }
+
+@keyframes fade-in-slide {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-group label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-group label i {
+    color: var(--primary);
+}
+
+.form-group input {
+    padding: 0.9rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.form-group input:disabled {
+    background: rgba(0, 0, 0, 0.4);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-left: 4px solid;
+    background-color: var(--surface-bg);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    border-color: var(--success);
+    color: var(--success);
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.alert-danger {
+    border-color: var(--error);
+    color: var(--error);
+    background: rgba(255, 71, 123, 0.1);
+}
+
+.alert i {
+    font-size: 1.2rem;
+}
+
+.btn {
+    padding: 0.9rem 1.8rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    /* Entry animation */
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in-slide 0.5s ease-out forwards;
+    animation-delay: 0.7s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 0 25px var(--primary-glow);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 0 40px var(--primary-glow);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0) scale(1);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.auth-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    /* Entry animation */
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in-slide 0.5s ease-out forwards;
+    animation-delay: 0.8s;
+}
+
+.auth-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.auth-link:hover {
+    color: white;
+    gap: 0.75rem;
+}
+
+/* Loading spinner animation */
+.fa-spinner.fa-spin {
+    animation: smoothSpin 1s linear infinite;
+}
+
+@keyframes smoothSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 1rem;
+    }
+
+    .auth-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .auth-header h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Remove any unwanted animations or decorative elements */
+* {
+    box-sizing: border-box;
+}
+
+/* Ensure no rotating squares or boxes appear */
+.auth-container>*:not(.auth-card) {
+    display: none;
+}
