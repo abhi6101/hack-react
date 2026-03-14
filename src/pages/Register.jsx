@@ -250,12 +250,9 @@ const Register = () => {
     // Auto-rescan for incomplete ID scans
     useEffect(() => {
         if (verificationStage === 'ID_VERIFY_DATA' && scannedData) {
-            // Use the SAME check as renderStageContent
+            // RELAXED: Only Name and Code are mandatory to proceed
             const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
-                scannedData?.fatherName &&
-                scannedData?.code &&
-                scannedData?.branch &&
-                scannedData?.mobileCount > 0;
+                scannedData?.code;
 
             if (!isIdScanComplete) {
                 console.log("Incomplete scan detected - auto-rescanning in 2 seconds...");
@@ -839,7 +836,11 @@ const Register = () => {
                                                                 aadharData: aadharData,
                                                                 timestamp: new Date().toISOString()
                                                             };
-                                                            localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+                                                            try {
+                                                                localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+                                                            } catch (lsErr) {
+                                                                console.warn("localStorage full, continuing without saving images locally", lsErr);
+                                                            }
 
                                                             // Stop camera and proceed directly to form
                                                             stopCamera();
@@ -881,12 +882,9 @@ const Register = () => {
         const renderStageContent = () => {
             switch (verificationStage) {
                 case 'ID_VERIFY_DATA':
-                    // Check for missing critical details
+                    // RELAXED: Only Name and Code are mandatory to proceed
                     const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
-                        scannedData?.fatherName &&
-                        scannedData?.code &&
-                        scannedData?.branch &&
-                        scannedData?.mobileCount > 0;
+                        scannedData?.code;
 
                     return {
                         title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
@@ -1257,8 +1255,12 @@ const Register = () => {
             aadharCameraImg: aadharCameraImg,
             timestamp: new Date().toISOString()
         };
-        localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
-        console.log('✅ Verification data saved to localStorage');
+        try {
+            localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+            console.log('✅ Verification data saved to localStorage');
+        } catch (lsErr) {
+            console.warn("localStorage quota exceeded, skipping local save", lsErr);
+        }
         setStep(4);
     };
 
@@ -1537,12 +1539,13 @@ const Register = () => {
                     // New Secure QR is typically a very long numeric/base64-like string
                     const isNewSecureQR = code.data.length > 500 && !isNaN(code.data.substring(0, 10));
 
-                    if (isOldAadharXML || isNewSecureQR) {
+                     if (isOldAadharXML || isNewSecureQR) {
                         console.log("✅ Aadhaar QR Found!", isOldAadharXML ? "XML Format" : "Secure Format");
                         playSuccessSound();
 
                         // 1. EXTRACT DATA (If possible)
-                        let uid = "", name = "", dob = "", gender = "", fullAddress = "", co = "";
+                        let uid = "", name = "", dob = "", gender = "", fullAddress = "";
+                        let co = "", loc = "", vtc = "", dist = "", state = "", pc = "";
 
                         if (isOldAadharXML) {
                             uid = code.data.match(/uid="(\d+)"/)?.[1] || "";
@@ -1550,27 +1553,26 @@ const Register = () => {
                             dob = code.data.match(/dob="([^"]+)"/)?.[1] || code.data.match(/yob="(\d+)"/)?.[1] || "";
                             gender = code.data.match(/gender="([^"]+)"/)?.[1] || "";
                             co = code.data.match(/co="([^"]+)"/)?.[1] || "";
-                            let loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
-                            let vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
-                            let dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
-                            let state = code.data.match(/state="([^"]+)"/)?.[1] || "";
-                            let pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
+                            loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
+                            vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
+                            dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
+                            state = code.data.match(/state="([^"]+)"/)?.[1] || "";
+                            pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
                             fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
                         } else {
-                            // Secure QR - Extraction requires decryption, so we treat it as an authenticated card
-                            // We will use OCR fallback for the text but at least we know it's a real Aadhaar
+                            // Secure QR - Extraction requires decryption, but we allow it as an authenticated card
+                            // We will use OCR fallback for text but trust the presence of this QR format
                             console.log("Secure Aadhaar QR detected. Proceeding with authenticated OCR.");
+                            
+                            // Try basic extraction for newer QRs if tags exist
+                            co = code.data.match(/co="([^"]+)"/)?.[1] || "";
+                            loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
+                            vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
+                            dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
+                            state = code.data.match(/state="([^"]+)"/)?.[1] || "";
+                            pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
+                            fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
                         }
-
-                        // Extract full address details
-                        let co = code.data.match(/co="([^"]+)"/)?.[1] || "";
-                        let loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
-                        let vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
-                        let dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
-                        let state = code.data.match(/state="([^"]+)"/)?.[1] || "";
-                        let pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
-
-                        const fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
 
                         // 2. NAME MATCH CHECK
                         const knownName = scannedData?.name || "";
