@@ -3,12 +3,20 @@ import { Link } from 'react-router-dom';
 import '../styles/guest-banner.css';
 
 const StickyGuestBanner = () => {
+    const [isVisible, setIsVisible] = React.useState(true);
     const isGuest = !localStorage.getItem('authToken');
 
-    if (!isGuest) return null;
+    if (!isGuest || !isVisible) return null;
 
     return (
         <div className="guest-banner">
+            <button 
+                className="close-banner" 
+                onClick={() => setIsVisible(false)}
+                aria-label="Close banner"
+            >
+                ✕
+            </button>
             <div className="guest-banner-content">
                 <span className="guest-text">
                     🚀 <strong>Browsing as Guest:</strong> Join 1,000+ students from <strong>IPS Academy</strong> to unlock full job applications and papers.
