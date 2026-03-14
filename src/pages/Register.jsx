@@ -2451,7 +2451,11 @@ const Register = () => {
                         aadharData: aadharData,
                         timestamp: new Date().toISOString()
                     };
-                    localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+                    try {
+                        localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
+                    } catch (lsErr) {
+                        console.warn("localStorage quota full, continuing", lsErr);
+                    }
 
                     // Stop camera and proceed to form
                     stopCamera();
