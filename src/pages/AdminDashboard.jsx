@@ -9,25 +9,17 @@ import { useToast } from '../components/CustomToast';
 import '../styles/admin.css';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
 
-// Simple Toggle Switch Component
+// Enhanced Toggle Switch Component for Premium UI
 const ToggleSwitch = ({ checked, onChange, disabled }) => (
-    <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '50px', height: '26px', opacity: disabled ? 0.5 : 1 }}>
+    <label className="premium-toggle" style={{ opacity: disabled ? 0.5 : 1 }}>
         <input
             type="checkbox"
             checked={checked}
             onChange={onChange}
             disabled={disabled}
-            style={{ opacity: 0, width: 0, height: 0 }}
         />
-        <span className="slider round" style={{
-            position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: checked ? '#22c55e' : '#ccc', transition: '.4s', borderRadius: '34px'
-        }}>
-            <span style={{
-                position: 'absolute', content: '""', height: '18px', width: '18px', left: '4px', bottom: '4px',
-                backgroundColor: 'white', transition: '.4s', borderRadius: '50%',
-                transform: checked ? 'translateX(24px)' : 'translateX(0)'
-            }}></span>
+        <span className="premium-slider">
+            <span className="premium-knob"></span>
         </span>
     </label>
 );
@@ -1312,7 +1304,7 @@ const AdminDashboard = () => {
         switch (activeTab) {
             case 'students':
                 return renderStudentMonitor();
-            case 'dashboard':
+            case 'dashboard': {
                 const pendingVerifications = allProfiles.filter(p => p.approvalStatus === 'PENDING').length;
                 const totalStudents = users.filter(u => u.role === 'USER').length;
                 const recentActivities = [
@@ -1321,8 +1313,9 @@ const AdminDashboard = () => {
                 ].sort((a, b) => new Date(b.time) - new Date(a.time));
 
                 return (
-                    <div className="dashboard-overview animate-in">
-                        <div className="stats-grid" style={{ marginBottom: '2.5rem' }}>
+                    <>
+                        <div className="dashboard-overview animate-in" id="dashboard-root">
+                        <section className="stats-grid">
                             <div className="stat-card-modern primary">
                                 <div className="stat-icon"><i className="fas fa-briefcase"></i></div>
                                 <div className="stat-details">
@@ -1351,44 +1344,45 @@ const AdminDashboard = () => {
                                     <div className="stat-value">{loadingApplications ? '...' : applications.length}</div>
                                 </div>
                             </div>
-                        </div>
+                        </section>
 
-                        <div className="dashboard-split-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', marginBottom: '2.5rem' }}>
+                        <div className="dashboard-split-grid" style={{ display: 'grid', gridTemplateColumns: '1.8fr 1.2fr', gap: '2rem', marginBottom: '2.5rem' }}>
                             <div className="analytics-col">
                                 {renderAnalytics()}
                             </div>
                             <div className="activity-col">
-                                <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '20px', height: '100%', border: '1px solid var(--border-color)' }}>
-                                    <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <i className="fas fa-bolt" style={{ color: '#fbbf24' }}></i> Quick Actions
-                                    </h3>
+                                <div className="card surface-glow-premium" style={{ height: '100%' }}>
+                                    <div className="card-header" style={{ marginBottom: '1.5rem' }}>
+                                        <h3><i className="fas fa-bolt" style={{ color: '#fbbf24' }}></i> Quick Actions</h3>
+                                    </div>
                                     <div className="quick-actions-list" style={{ display: 'grid', gap: '1rem' }}>
                                         <button className="btn-premium" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setActiveTab('jobs')}>
                                             <i className="fas fa-plus"></i> Post New Job
                                         </button>
-                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)', justifyContent: 'center' }} onClick={() => setActiveTab('users')}>
+                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', justifyContent: 'center' }} onClick={() => setActiveTab('users')}>
                                             <i className="fas fa-user-plus"></i> Onboard Student
                                         </button>
-                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)', justifyContent: 'center' }} onClick={() => setActiveTab('profile-details')}>
+                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', justifyContent: 'center' }} onClick={() => setActiveTab('profile-details')}>
                                             <i className="fas fa-check-double"></i> Verify Profiles
                                         </button>
                                     </div>
 
-                                    <h3 style={{ marginTop: '2.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <h3 style={{ marginTop: '2.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.25rem' }}>
                                         <i className="fas fa-history" style={{ color: 'var(--primary)' }}></i> Recent Feed
                                     </h3>
                                     <div className="activity-feed">
                                         {recentActivities.map((act, i) => (
-                                            <div key={i} style={{ padding: '0.75rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '1rem', alignItems: 'start' }}>
-                                                <div style={{ padding: '0.5rem', borderRadius: '8px', background: act.type === 'app' ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 71, 123, 0.1)', color: act.type === 'app' ? 'var(--primary)' : 'var(--accent)' }}>
+                                            <div key={i} style={{ padding: '1rem 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', gap: '1rem', alignItems: 'start' }}>
+                                                <div style={{ padding: '0.6rem', borderRadius: '12px', background: act.type === 'app' ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 71, 123, 0.1)', color: act.type === 'app' ? 'var(--primary)' : 'var(--accent)' }}>
                                                     <i className={`fas ${act.type === 'app' ? 'fa-file-alt' : 'fa-briefcase'}`}></i>
                                                 </div>
                                                 <div>
-                                                    <p style={{ fontSize: '0.85rem', margin: 0 }}>{act.text}</p>
-                                                    <small style={{ color: 'var(--text-secondary)' }}>{new Date(act.time).toLocaleDateString()}</small>
+                                                    <p style={{ fontSize: '0.9rem', margin: 0, fontWeight: '500' }}>{act.text}</p>
+                                                    <small style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{new Date(act.time).toLocaleDateString()}</small>
                                                 </div>
                                             </div>
                                         ))}
+                                        {recentActivities.length === 0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '1rem' }}>No recent activity</p>}
                                     </div>
                                 </div>
                             </div>
@@ -1396,24 +1390,24 @@ const AdminDashboard = () => {
 
                         {isSuperAdmin && (
                             <div className="company-stats-section" style={{ marginBottom: '2.5rem' }}>
-                                <h2 style={{ marginBottom: '1.5rem' }}>Company Performance</h2>
+                                <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '700' }}>Company Performance</h2>
                                 {loadingStats ? (
-                                    <div className="loading-indicator">Loading company statistics...</div>
+                                    <div className="loading-indicator">Retrieving company metrics...</div>
                                 ) : (
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
                                         {companyStats.length === 0 ? <p>No company data available.</p> : companyStats.map((stat, index) => (
-                                            <div key={index} className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)' }}>
-                                                <h4 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--primary)' }}>
-                                                    <i className="fas fa-building" style={{ marginRight: '8px' }}></i>
+                                            <div key={index} className="card" style={{ padding: '1.5rem' }}>
+                                                <h4 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                    <i className="fas fa-building"></i>
                                                     {stat.companyName}
                                                 </h4>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                                    <span style={{ color: 'var(--text-secondary)' }}>Jobs Posted:</span>
-                                                    <span style={{ fontWeight: 'bold' }}>{stat.jobCount}</span>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid var(--glass-border)' }}>
+                                                    <span style={{ color: 'var(--text-secondary)' }}>Jobs Posted</span>
+                                                    <span style={{ fontWeight: '700' }}>{stat.jobCount}</span>
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                    <span style={{ color: 'var(--text-secondary)' }}>Interviews:</span>
-                                                    <span style={{ fontWeight: 'bold' }}>{stat.interviewCount}</span>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0' }}>
+                                                    <span style={{ color: 'var(--text-secondary)' }}>Interviews Scheduled</span>
+                                                    <span style={{ fontWeight: '700' }}>{stat.interviewCount}</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -1504,22 +1498,25 @@ const AdminDashboard = () => {
                         )}
 
                         <div className="recent-activity">
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                                <h2>Recent Job Postings</h2>
-                                <div className="search-box-modern">
-                                    <i className="fas fa-search"></i>
-                                    <input
-                                        type="text"
-                                        placeholder="Quick search jobs..."
-                                        value={jobSearch}
-                                        onChange={(e) => setJobSearch(e.target.value)}
-                                    />
+                            <div className="card" style={{ marginTop: '1rem' }}>
+                            <div className="card-header">
+                                <h3><i className="fas fa-list-ul"></i> Recent Job Postings</h3>
+                                <div className="header-search" style={{ border: 'none', background: 'none' }}>
+                                    <div className="search-box-modern">
+                                        <i className="fas fa-search"></i>
+                                        <input
+                                            type="text"
+                                            placeholder="Quick search jobs..."
+                                            value={jobSearch}
+                                            onChange={(e) => setJobSearch(e.target.value)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="table-responsive surface-glow animate-slide-up" style={{ marginTop: '1rem', borderRadius: '16px' }}>
+                            <div className="table-container animate-slide-up">
                                 <table className="modern-table">
                                     <thead>
-                                        <tr><th>Title</th><th>Company</th><th>Status</th><th>Date</th></tr>
+                                        <tr><th>Job Title</th><th>Company Name</th><th>Current Status</th><th>Filing Date</th></tr>
                                     </thead>
                                     <tbody>
                                         {jobs.filter(j =>
@@ -1527,88 +1524,111 @@ const AdminDashboard = () => {
                                             j.company_name?.toLowerCase().includes(jobSearch.toLowerCase())
                                         ).slice(0, 6).map(job => (
                                             <tr key={job.id} className="row-hover">
-                                                <td><span style={{ fontWeight: '600' }}>{job.title}</span></td>
+                                                <td><span style={{ fontWeight: '700', color: 'var(--primary)' }}>{job.title}</span></td>
                                                 <td>{job.company_name}</td>
                                                 <td>
-                                                    <span className="badge-role role-user" style={{ fontSize: '0.7rem' }}>Active</span>
+                                                    <span className="badge-role role-user">Active</span>
                                                 </td>
-                                                <td style={{ color: 'var(--text-secondary)' }}>{new Date(job.last_date).toLocaleDateString()}</td>
+                                                <td style={{ color: 'var(--text-muted)' }}>{new Date(job.last_date).toLocaleDateString()}</td>
                                             </tr>
                                         ))}
+                                        {jobs.length === 0 && <tr><td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No recent postings found</td></tr>}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </div>
+            </>
                 );
-            case 'jobs':
+            }
+            case 'jobs': {
                 return (
                     <>
-                        <section id="jobs-section" className="card surface-glow">
+                        <div className="animate-in" id="jobs-root">
+                        <section className="card surface-glow-premium">
                             <div className="card-header">
-                                <h3><i className={editingJob ? "fas fa-edit" : "fas fa-plus-circle"}></i> {editingJob ? 'Edit Job' : 'Post New Job'}</h3>
+                                <h3><i className={editingJob ? "fas fa-edit" : "fas fa-plus-circle"}></i> {editingJob ? 'Edit Job Posting' : 'Post New Vacancy'}</h3>
+                                {editingJob && (
+                                    <button className="btn btn-outline" onClick={() => { setEditingJob(null); clearForm(); }}>
+                                        Cancel Edit
+                                    </button>
+                                )}
                             </div>
+                            
                             {message.text && (
-                                <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ display: 'flex' }}>
+                                <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '2rem' }}>
+                                    <i className={`fas ${message.type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}`}></i>
                                     {message.text}
                                 </div>
                             )}
+
                             <form id="jobForm" onSubmit={handleSubmit}>
-                                <div className="form-grid">
-                                    <div className="form-group">
-                                        <label htmlFor="jobTitle">Job Title</label>
-                                        <input type="text" id="jobTitle" className="form-control" required value={formData.jobTitle} onChange={handleInputChange} />
+                                <div className="form-grid-modern">
+                                    <div className="form-group-modern">
+                                        <label htmlFor="jobTitle"><i className="fas fa-tag"></i> Job Title</label>
+                                        <input type="text" id="jobTitle" className="form-control-modern" placeholder="e.g. Senior Software Engineer" required value={formData.jobTitle} onChange={handleInputChange} />
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="companyName">Company Name</label>
+                                    <div className="form-group-modern">
+                                        <label htmlFor="companyName"><i className="fas fa-building"></i> Company Name</label>
                                         <input
                                             type="text"
                                             id="companyName"
-                                            className="form-control"
+                                            className="form-control-modern"
                                             required
                                             value={formData.companyName}
                                             onChange={handleInputChange}
                                             readOnly={isCompanyAdmin}
-                                            style={isCompanyAdmin ? { backgroundColor: 'rgba(255,255,255,0.1)', cursor: 'not-allowed' } : {}}
+                                            style={isCompanyAdmin ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
                                         />
                                     </div>
-                                    <div className="form-group full-width">
-                                        <label htmlFor="jobDescription">Job Description</label>
-                                        <textarea id="jobDescription" className="form-control" rows="4" required value={formData.jobDescription} onChange={handleInputChange}></textarea>
+                                    <div className="form-group-modern" style={{ gridColumn: 'span 2' }}>
+                                        <label htmlFor="jobDescription"><i className="fas fa-align-left"></i> Job Description & Requirements</label>
+                                        <textarea id="jobDescription" className="form-control-modern" rows="5" placeholder="Outline the role, responsibilities, and necessary skillsets..." required value={formData.jobDescription} onChange={handleInputChange}></textarea>
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="applyLink">Apply Link</label>
-                                        <input type="url" id="applyLink" className="form-control" required value={formData.applyLink} onChange={handleInputChange} />
+                                    <div className="form-group-modern">
+                                        <label htmlFor="applyLink"><i className="fas fa-link"></i> External Application Link</label>
+                                        <input type="url" id="applyLink" className="form-control-modern" placeholder="https://company.com/careers/..." required value={formData.applyLink} onChange={handleInputChange} />
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="lastDate">Last Date to Apply</label>
-                                        <input type="date" id="lastDate" className="form-control" required value={formData.lastDate} onChange={handleInputChange} />
+                                    <div className="form-group-modern">
+                                        <label htmlFor="lastDate"><i className="fas fa-calendar-alt"></i> Application Deadline</label>
+                                        <input type="date" id="lastDate" className="form-control-modern" required value={formData.lastDate} onChange={handleInputChange} />
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="salary">Salary (₹ per annum)</label>
-                                        <input type="number" id="salary" className="form-control" min="0" required value={formData.salary} onChange={handleInputChange} />
+                                    <div className="form-group-modern">
+                                        <label htmlFor="salary"><i className="fas fa-money-bill-wave"></i> Annual CTC (₹)</label>
+                                        <input type="number" id="salary" className="form-control-modern" placeholder="12,00,000" min="0" required value={formData.salary} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="form-group-modern">
+                                        <label><i className="fas fa-envelope-open-text"></i> System Notifications</label>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+                                            <ToggleSwitch 
+                                                checked={sendEmailNotifications} 
+                                                onChange={(e) => setSendEmailNotifications(e.target.checked)} 
+                                            />
+                                            <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Notify all students via email</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Interview Rounds Section */}
-                                <InterviewRoundsForm
-                                    interviewDetails={interviewDetails}
-                                    setInterviewDetails={setInterviewDetails}
-                                />
+                                <div style={{ margin: '2.5rem 0' }}>
+                                    <InterviewRoundsForm
+                                        interviewDetails={interviewDetails}
+                                        setInterviewDetails={setInterviewDetails}
+                                    />
+                                </div>
 
-                                {/* Eligibility Criteria Section */}
-                                <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '12px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
-                                    <h4 style={{ color: '#fbbf24', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <i className="fas fa-filter"></i> Eligibility Criteria
+                                <div className="card" style={{ background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                                    <h4 style={{ color: 'var(--warning)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.1rem' }}>
+                                        <i className="fas fa-filter"></i> Tailor Eligibility Criteria
                                     </h4>
-                                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
-                                        Enable specific branches and their corresponding semesters/years.
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                                        Restricts job visibility to specific departments and semesters.
                                     </p>
 
-                                    <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
+                                    <div style={{ display: 'grid', gap: '1rem' }}>
                                         {departments.length > 0 ? departments.map(dept => (
-                                            <div key={dept.code} style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                            <div key={dept.code} style={{ background: 'rgba(0,0,0,0.2)', padding: '1.25rem', borderRadius: '14px', border: '1px solid var(--glass-border)' }}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--primary)', fontWeight: '700', cursor: 'pointer' }}>
                                                     <input type="checkbox"
                                                         checked={formData.eligibleBranches?.includes(dept.code)}
                                                         onChange={(e) => {
@@ -1620,9 +1640,9 @@ const AdminDashboard = () => {
                                                     {dept.name} ({dept.code})
                                                 </label>
                                                 {formData.eligibleBranches?.includes(dept.code) && (
-                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: '1rem', marginLeft: '1.75rem' }}>
                                                         {Array.from({ length: dept.maxSemesters || 8 }, (_, i) => i + 1).map(sem => (
-                                                            <label key={`${dept.code}-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
+                                                            <label key={`${dept.code}-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-primary)', cursor: 'pointer', background: 'rgba(255,255,255,0.05)', padding: '0.4rem 0.8rem', borderRadius: '8px' }}>
                                                                 <input type="checkbox"
                                                                     checked={formData.eligibleSemesters?.includes(sem)}
                                                                     onChange={(e) => {
@@ -1637,128 +1657,82 @@ const AdminDashboard = () => {
                                                     </div>
                                                 )}
                                             </div>
-                                        )) : <p>Loading Departments or None Found...</p>}
+                                        )) : <p style={{ color: 'var(--text-muted)' }}>Awaiting department data...</p>}
                                     </div>
                                 </div>
 
-                                {/* Email Notification Toggle */}
-                                <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <div>
-                                            <label style={{ fontWeight: '600', color: 'white', marginBottom: '0.25rem', display: 'block' }}>
-                                                <i className="fas fa-envelope" style={{ marginRight: '0.5rem' }}></i>
-                                                Email Notifications
-                                            </label>
-                                            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-                                                Send email alerts to all students when a new job is posted
-                                            </p>
-                                        </div>
-                                        <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px' }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={sendEmailNotifications}
-                                                onChange={(e) => setSendEmailNotifications(e.target.checked)}
-                                                style={{ opacity: 0, width: 0, height: 0 }}
-                                            />
-                                            <span style={{
-                                                position: 'absolute',
-                                                cursor: 'pointer',
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                backgroundColor: sendEmailNotifications ? '#22c55e' : '#64748b',
-                                                transition: '0.4s',
-                                                borderRadius: '30px'
-                                            }}>
-                                                <span style={{
-                                                    position: 'absolute',
-                                                    content: '""',
-                                                    height: '22px',
-                                                    width: '22px',
-                                                    left: sendEmailNotifications ? '34px' : '4px',
-                                                    bottom: '4px',
-                                                    backgroundColor: 'white',
-                                                    transition: '0.4s',
-                                                    borderRadius: '50%'
-                                                }}></span>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
-                                    <button type="button" className="btn btn-secondary" onClick={fillSampleData}>
-                                        <i className="fas fa-magic"></i> Fill Sample
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2.5rem' }}>
+                                    <button type="button" className="btn-premium" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', boxShadow: 'none' }} onClick={fillSampleData}>
+                                        <i className="fas fa-magic"></i> Magic Fill
                                     </button>
-                                    <button type="button" className="btn btn-warning" onClick={() => { clearForm(); setEditingJob(null); }}>
-                                        <i className="fas fa-eraser"></i> Clear
+                                    <button type="button" className="btn-premium" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', boxShadow: 'none' }} onClick={() => { clearForm(); setEditingJob(null); }}>
+                                        <i className="fas fa-eraser"></i> Reset Form
                                     </button>
-                                    <button type="submit" className="btn btn-primary">
-                                        <i className="fas fa-save"></i> {editingJob ? 'Update Job' : 'Post Job'}
+                                    <button type="submit" className="btn-premium">
+                                        <i className="fas fa-save"></i> {editingJob ? 'Update Deployment' : 'Launch Job Posting'}
                                     </button>
-                                    {editingJob && (
-                                        <button type="button" className="btn btn-secondary" onClick={() => { setEditingJob(null); clearForm(); }}>
-                                            Cancel
-                                        </button>
-                                    )}
                                 </div>
                             </form>
                         </section>
 
-                        <section className="card surface-glow">
+                        <section className="card animate-slide-up">
                             <div className="card-header">
-                                <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
+                                <h3><i className="fas fa-briefcase"></i> Active Vacancies Registry</h3>
                                 {isSuperAdmin && jobs.length > 0 && (
                                     <button
                                         onClick={handleDeleteAllJobs}
-                                        className="btn btn-danger"
-                                        style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}
+                                        className="btn-premium"
+                                        style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', fontSize: '0.85rem', padding: '0.6rem 1.2rem' }}
                                     >
-                                        <i className="fas fa-trash-alt"></i> Delete All
+                                        <i className="fas fa-trash-alt"></i> Purge All
                                     </button>
                                 )}
                             </div>
-                            {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
+                            {loadingJobs && <div className="loader-container"><div className="pulse-loader"></div><p>Syncing job database...</p></div>}
                             {!loadingJobs && (
-                                <div className="table-responsive">
-                                    {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
-                                        <table id="jobsTable">
+                                <div className="table-container">
+                                    {jobs.length === 0 ? <p style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Registry is currently empty.</p> : (
+                                        <table className="modern-table">
                                             <thead>
-                                                <tr><th>Title</th><th>Company</th><th>Last Date</th><th>Salary</th><th>Actions</th></tr>
+                                                <tr><th>Position</th><th>Organization</th><th>Deadline</th><th>Package</th><th style={{ textAlign: 'right' }}>Actions</th></tr>
                                             </thead>
-                                            <tbody id="jobsList">
+                                            <tbody>
                                                 {jobs.map(job => (
-                                                    <tr key={job.id}>
-                                                        <td>{job.title}</td>
+                                                    <tr key={job.id} className="row-hover">
+                                                        <td><div style={{ fontWeight: '700', color: 'var(--primary)' }}>{job.title}</div></td>
                                                         <td>{job.company_name}</td>
-                                                        <td>{new Date(job.last_date).toLocaleDateString('en-IN')}</td>
+                                                        <td>{new Date(job.last_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                                                         <td>₹{job.salary.toLocaleString()}</td>
-                                                        <td className="action-btns">
-                                                            {(!isCompanyAdmin || job.company_name === myCompanyName) ? (
-                                                                <>
-                                                                    <button className="btn btn-secondary" onClick={() => startEditJob(job)} style={{ marginRight: '0.5rem' }}>
-                                                                        <i className="fas fa-edit"></i>
-                                                                    </button>
-                                                                    <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
-                                                                        <i className="fas fa-trash"></i>
-                                                                    </button>
-                                                                </>
-                                                            ) : (
-                                                                <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
-                                                            )}
+                                                        <td style={{ textAlign: 'right' }}>
+                                                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                                                {(!isCompanyAdmin || job.company_name === myCompanyName) ? (
+                                                                    <>
+                                                                        <button className="action-btn-modern edit-btn" title="Edit Position" onClick={() => startEditJob(job)}>
+                                                                            <i className="fas fa-pencil-alt"></i>
+                                                                        </button>
+                                                                        <button className="action-btn-modern delete-btn" title="Remove Position" onClick={() => deleteJob(job.id)}>
+                                                                            <i className="fas fa-trash-alt"></i>
+                                                                        </button>
+                                                                    </>
+                                                                ) : (
+                                                                    <span className="badge-role" style={{ opacity: 0.5, background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>Proprietary</span>
+                                                                )}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
+                                            )}
+                                        </div>
                                     )}
+                                </section>
+                                </section>
                                 </div>
-                            )}
-                        </section>
-                    </>
+                            </>
                 );
-            case 'users':
+            }
+            case 'users': {
                 const filteredUsers = users.filter(user => {
                     if (role === 'DEPT_ADMIN') {
                         const myBranch = localStorage.getItem('adminBranch');
@@ -1768,23 +1742,24 @@ const AdminDashboard = () => {
                 });
 
                 return (
-                    <div className="users-management-page animate-in">
+                    <>
+                        <div className="users-management-page animate-in">
                         {!isCompanyAdmin && (
-                            <section className="card surface-glow-premium" style={{ marginBottom: '2.5rem', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <section className="card surface-glow-premium">
+                                <div className="card-header">
+                                    <h3>
                                         <i className={`fas ${editingUser ? 'fa-user-edit' : 'fa-user-plus'}`} style={{ color: 'var(--primary)' }}></i>
-                                        {editingUser ? 'Update Professional Account' : 'Onboard New User'}
+                                        {editingUser ? 'Update Professional Credentials' : 'Onboard New Identity'}
                                     </h3>
                                     {editingUser && (
-                                        <button className="btn btn-outline-sm" onClick={() => { setEditingUser(null); clearUserForm(); }}>
+                                        <button className="btn btn-outline" onClick={() => { setEditingUser(null); clearUserForm(); }}>
                                             <i className="fas fa-times"></i> Cancel Edit
                                         </button>
                                     )}
                                 </div>
-                                <div className="card-body" style={{ padding: '2rem' }}>
+                                <div className="card-body" style={{ padding: '0.5rem 0 0' }}>
                                     {message.text && (
-                                        <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'} animate-pulse-subtle`} style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', borderRadius: '12px', background: message.type === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)', border: `1px solid ${message.type === 'success' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`, color: message.type === 'success' ? '#22c55e' : '#ef4444' }}>
+                                        <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '2rem' }}>
                                             <i className={`fas ${message.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`}></i>
                                             {message.text}
                                         </div>
@@ -1792,29 +1767,29 @@ const AdminDashboard = () => {
                                     <form onSubmit={handleUserSubmit}>
                                         <div className="form-grid-modern">
                                             <div className="form-group-modern">
-                                                <label><i className="fas fa-at"></i> Username</label>
+                                                <label><i className="fas fa-at"></i> Identity Handle (Username)</label>
                                                 <input
                                                     type="text"
                                                     className="form-control-modern"
-                                                    placeholder="@hack-2-hired"
+                                                    placeholder="@username"
                                                     required
                                                     value={userForm.username}
                                                     onChange={e => setUserForm({ ...userForm, username: e.target.value })}
                                                 />
                                             </div>
                                             <div className="form-group-modern">
-                                                <label><i className="fas fa-envelope"></i> Email Address</label>
+                                                <label><i className="fas fa-envelope"></i> Secure Email</label>
                                                 <input
                                                     type="email"
                                                     className="form-control-modern"
-                                                    placeholder="depabhijain@gmail.com"
+                                                    placeholder="identity@institution.edu"
                                                     required
                                                     value={userForm.email}
                                                     onChange={e => setUserForm({ ...userForm, email: e.target.value })}
                                                 />
                                             </div>
                                             <div className="form-group-modern">
-                                                <label><i className="fas fa-key"></i> Password {editingUser && '(Leave blank to retain)'}</label>
+                                                <label><i className="fas fa-key"></i> Access Key {editingUser && '(Leave blank to retain)'}</label>
                                                 <input
                                                     type="password"
                                                     className="form-control-modern"
@@ -1825,7 +1800,7 @@ const AdminDashboard = () => {
                                                 />
                                             </div>
                                             <div className="form-group-modern">
-                                                <label><i className="fas fa-user-tag"></i> Role</label>
+                                                <label><i className="fas fa-user-tag"></i> System Permissions</label>
                                                 <select
                                                     className="form-control-modern"
                                                     value={userForm.role}
@@ -1840,41 +1815,41 @@ const AdminDashboard = () => {
                                                         }));
                                                     }}
                                                 >
-                                                    <option value="USER">STUDENT / USER</option>
-                                                    <option value="ADMIN">ADMIN</option>
-                                                    <option value="SUPER_ADMIN">SUPER ADMIN</option>
-                                                    <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
-                                                    <option value="DEPT_ADMIN">DEPT ADMIN</option>
+                                                    <option value="USER">STUDENT / REGULAR USER</option>
+                                                    <option value="ADMIN">INSTITUTIONAL ADMIN</option>
+                                                    <option value="SUPER_ADMIN">ROOT / SYSTEM OWNER</option>
+                                                    <option value="COMPANY_ADMIN">CORPORATE PARTNER</option>
+                                                    <option value="DEPT_ADMIN">DEPARTMENTAL HEAD</option>
                                                 </select>
                                             </div>
 
                                             {userForm.role === 'USER' && (
                                                 <>
                                                     <div className="form-group-modern animate-slide-up">
-                                                        <label><i className="fas fa-barcode"></i> Computer Code</label>
+                                                        <label><i className="fas fa-barcode"></i> Academic Enrollment ID</label>
                                                         <input
                                                             type="text"
                                                             className="form-control-modern"
                                                             value={userForm.computerCode}
                                                             onChange={e => setUserForm({ ...userForm, computerCode: e.target.value })}
-                                                            placeholder="Unique ID (e.g. 59500)"
+                                                            placeholder="University Code (e.g. 59500)"
                                                         />
                                                     </div>
                                                     <div className="form-group-modern animate-slide-up">
-                                                        <label><i className="fas fa-graduation-cap"></i> Branch</label>
+                                                        <label><i className="fas fa-graduation-cap"></i> Departmental Specialization</label>
                                                         <select
                                                             className="form-control-modern"
                                                             value={userForm.branch}
                                                             onChange={e => setUserForm({ ...userForm, branch: e.target.value })}
                                                         >
-                                                            <option value="">Select Department</option>
+                                                            <option value="">Select Domain</option>
                                                             {departments.map(d => (
                                                                 <option key={d.id} value={d.code}>{d.name}</option>
                                                             ))}
                                                         </select>
                                                     </div>
                                                     <div className="form-group-modern animate-slide-up">
-                                                        <label><i className="fas fa-users"></i> Batch (Passout)</label>
+                                                        <label><i className="fas fa-users"></i> Graduation Cohort</label>
                                                         <select
                                                             className="form-control-modern"
                                                             value={userForm.batch}
@@ -1890,46 +1865,46 @@ const AdminDashboard = () => {
                                             )}
 
                                             {userForm.role === 'DEPT_ADMIN' && (
-                                                <div className="form-group-modern full-width animate-slide-up" style={{ background: 'rgba(0, 212, 255, 0.05)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                                    <label style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Admin Branch (Department to Manage) *</label>
+                                                <div className="form-group-modern full-width animate-slide-up" style={{ background: 'rgba(0, 212, 255, 0.05)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--primary-glow)' }}>
+                                                    <label style={{ color: 'var(--primary)', fontWeight: '800' }}>AUTHORIZED DEPARTMENTAL DOMAIN *</label>
                                                     <select
                                                         className="form-control-modern"
                                                         required
                                                         value={userForm.adminBranch || ''}
                                                         onChange={e => setUserForm({ ...userForm, adminBranch: e.target.value })}
-                                                        style={{ marginTop: '0.5rem' }}
+                                                        style={{ marginTop: '0.75rem' }}
                                                     >
-                                                        <option value="">Select Branch to Manage</option>
+                                                        <option value="">Select Branch to Oversee</option>
                                                         {departments.map(d => (
                                                             <option key={d.id} value={d.code}>{d.name} ({d.code})</option>
                                                         ))}
                                                     </select>
-                                                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem', margin: '0.5rem 0 0' }}>
-                                                        <i className="fas fa-info-circle"></i> This admin will have restricted access to manage only the selected department's data.
+                                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.75rem' }}>
+                                                        <i className="fas fa-shield-alt"></i> Access restricted to data within the selected departmental scope.
                                                     </p>
                                                 </div>
                                             )}
 
                                             {userForm.role === 'COMPANY_ADMIN' && (
-                                                <div className="form-group-modern full-width animate-slide-up" style={{ background: 'rgba(255, 71, 123, 0.05)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(255, 71, 123, 0.2)' }}>
-                                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
+                                                <div className="form-group-modern full-width animate-slide-up" style={{ background: 'rgba(255, 71, 123, 0.05)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255, 71, 123, 0.2)' }}>
+                                                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 1fr) 2fr', gap: '2rem' }}>
                                                         <div>
-                                                            <label style={{ color: 'var(--accent)', fontWeight: 'bold' }}>Company Name *</label>
+                                                            <label style={{ color: 'var(--accent)', fontWeight: '800' }}>PARTNER ORGANIZATION *</label>
                                                             <input
                                                                 type="text"
                                                                 className="form-control-modern"
                                                                 required
                                                                 value={userForm.companyName || ''}
                                                                 onChange={e => setUserForm({ ...userForm, companyName: e.target.value })}
-                                                                placeholder="e.g. Google, Amazon"
-                                                                style={{ marginTop: '0.5rem' }}
+                                                                placeholder="e.g. Google India"
+                                                                style={{ marginTop: '0.75rem' }}
                                                             />
                                                         </div>
                                                         <div>
-                                                            <label style={{ color: 'var(--accent)', fontWeight: 'bold' }}>Allowed Hiring Channels *</label>
-                                                            <div className="dept-checkbox-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '0.5rem', marginTop: '0.5rem' }}>
+                                                            <label style={{ color: 'var(--accent)', fontWeight: '800' }}>AUTHORIZED TALENT CHANNELS *</label>
+                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: '0.75rem' }}>
                                                                 {departments.map(dept => (
-                                                                    <label key={dept.id} className="custom-checkbox-container">
+                                                                    <label key={dept.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', background: 'rgba(255,255,255,0.05)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.85rem' }}>
                                                                         <input
                                                                             type="checkbox"
                                                                             checked={userForm.allowedDepartments.includes(dept.code)}
@@ -1940,7 +1915,6 @@ const AdminDashboard = () => {
                                                                                 setUserForm({ ...userForm, allowedDepartments: depts });
                                                                             }}
                                                                         />
-                                                                        <span className="checkmark"></span>
                                                                         {dept.code}
                                                                     </label>
                                                                 ))}
@@ -1950,10 +1924,10 @@ const AdminDashboard = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                        <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'flex-end' }}>
                                             <button type="submit" className="btn-premium">
-                                                <span>{editingUser ? 'Update Professional Account' : 'Initialize Account'}</span>
-                                                <i className="fas fa-chevron-right"></i>
+                                                <span>{editingUser ? 'Commit Registry Updates' : 'Authorize Identity Onboarding'}</span>
+                                                <i className="fas fa-fingerprint"></i>
                                             </button>
                                         </div>
                                     </form>
@@ -1961,12 +1935,12 @@ const AdminDashboard = () => {
                             </section>
                         )}
 
-                        <section className="card surface-glow" style={{ border: '1px solid rgba(255,255,255,0.05)' }}>
-                            <div className="card-header" style={{ padding: '1.5rem 2rem' }}>
+                        <section className="card animate-slide-up">
+                            <div className="card-header">
                                 <div>
-                                    <h3 style={{ margin: 0 }}>Registered Workforce</h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '5px 0 0' }}>
-                                        {role === 'DEPT_ADMIN' ? `Displaying students from ${localStorage.getItem('adminBranch')}` : 'Full access to system registry'}
+                                    <h3><i className="fas fa-users-cog"></i> Workforce Intelligence Registry</h3>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '4px' }}>
+                                        {role === 'DEPT_ADMIN' ? `Scoped visibility: ${localStorage.getItem('adminBranch')}` : 'Global system-wide registry access'}
                                     </p>
                                 </div>
                                 <div style={{ display: 'flex', gap: '1rem' }}>
@@ -1974,12 +1948,12 @@ const AdminDashboard = () => {
                                         <i className="fas fa-search"></i>
                                         <input
                                             type="text"
-                                            placeholder="Search accounts..."
+                                            placeholder="Query secure registry..."
                                             value={userSearch}
                                             onChange={(e) => setUserSearch(e.target.value)}
                                         />
                                     </div>
-                                    <button className="btn-icon" title="Refresh List" onClick={loadUsers}>
+                                    <button className="btn-icon" title="Synchronize Records" onClick={loadUsers}>
                                         <i className="fas fa-sync-alt"></i>
                                     </button>
                                 </div>
@@ -1988,7 +1962,7 @@ const AdminDashboard = () => {
                             {loadingUsers ? (
                                 <div className="loader-container">
                                     <div className="pulse-loader"></div>
-                                    <p>Retrieving secure registry...</p>
+                                    <p>Syncing secure metadata...</p>
                                 </div>
                             ) : (
                                 <div className="table-container">
@@ -1999,17 +1973,16 @@ const AdminDashboard = () => {
                                         u.role?.toLowerCase().includes(userSearch.toLowerCase())
                                     ).length === 0 ? (
                                         <div className="empty-state">
-                                            <i className="fas fa-user-slash"></i>
-                                            <p>No matching users found in registry.</p>
+                                            <i className="fas fa-user-secret" style={{ fontSize: '3rem', opacity: 0.1, marginBottom: '1rem' }}></i>
+                                            <p>No identities matched your encryption query.</p>
                                         </div>
                                     ) : (
                                         <table className="modern-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Identify</th>
-                                                    <th>Account Credentials</th>
-                                                    <th>Professional Role</th>
-                                                    <th>Assignment</th>
+                                                    <th>Account Identity</th>
+                                                    <th>Assigned Role</th>
+                                                    <th>Scope / Domain</th>
                                                     <th style={{ textAlign: 'right' }}>Management</th>
                                                 </tr>
                                             </thead>
@@ -2022,13 +1995,15 @@ const AdminDashboard = () => {
                                                 ).map(user => (
                                                     <tr key={user.id} className="row-hover">
                                                         <td>
-                                                            <div className="user-avatar-small">
-                                                                {user.username.charAt(0).toUpperCase()}
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                                <div className="user-avatar-small">
+                                                                    {user.username.charAt(0).toUpperCase()}
+                                                                </div>
+                                                                <div>
+                                                                    <div style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{user.username}</div>
+                                                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user.email}</div>
+                                                                </div>
                                                             </div>
-                                                        </td>
-                                                        <td>
-                                                            <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{user.username}</div>
-                                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.email}</div>
                                                         </td>
                                                         <td>
                                                             <span className={`badge-role role-${user.role.toLowerCase().replace('_', '-')}`}>
@@ -2036,33 +2011,35 @@ const AdminDashboard = () => {
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <div style={{ fontSize: '0.9rem' }}>
+                                                            <div style={{ fontSize: '0.85rem' }}>
                                                                 {user.companyName ? (
                                                                     <span style={{ color: 'var(--accent)' }}><i className="fas fa-building"></i> {user.companyName}</span>
                                                                 ) : user.adminBranch ? (
-                                                                    <span style={{ color: 'var(--primary)' }}><i className="fas fa-university"></i> {user.adminBranch}</span>
+                                                                    <span style={{ color: 'var(--primary)' }}><i className="fas fa-shield"></i> {user.adminBranch} Admin</span>
                                                                 ) : user.branch ? (
-                                                                    <span>{user.branch} {user.batch ? `'${user.batch.toString().slice(-2)}` : ''}</span>
+                                                                    <span>{user.branch} <span style={{ opacity: 0.5 }}>{user.batch ? `Class of '${user.batch.toString().slice(-2)}` : ''}</span></span>
                                                                 ) : (
-                                                                    <span style={{ opacity: 0.5 }}>System Wide</span>
+                                                                    <span style={{ opacity: 0.4 }}>Omni-Access</span>
                                                                 )}
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td style={{ textAlign: 'right' }}>
                                                             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
                                                                 <button
                                                                     className="action-btn-modern edit-btn"
+                                                                    title="Modify Identity"
                                                                     onClick={() => startEditUser(user)}
                                                                     disabled={isCompanyAdmin}
                                                                 >
-                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                    <i className="fas fa-user-edit"></i>
                                                                 </button>
                                                                 <button
                                                                     className="action-btn-modern delete-btn"
+                                                                    title="Revoke Access"
                                                                     onClick={() => deleteUser(user.id)}
                                                                     disabled={isCompanyAdmin || user.role === 'SUPER_ADMIN'}
                                                                 >
-                                                                    <i className="fas fa-trash-alt"></i>
+                                                                    <i className="fas fa-user-minus"></i>
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -2074,346 +2051,374 @@ const AdminDashboard = () => {
                                 </div>
                             )}
                         </section>
-                    </div>
+                        </div>
+                    </>
                 );
+            }
             case 'profile-details':
                 return renderProfileDetails();
             case 'applications':
                 return (
-                    <section className="card surface-glow">
-                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
+                    <div className="animate-in">
+                        <section className="card surface-glow-premium">
+                            <div className="card-header">
+                                <h3><i className="fas fa-file-invoice"></i> Talent Pipeline Registry</h3>
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <div className="search-box-modern">
+                                        <i className="fas fa-search"></i>
+                                        <input
+                                            type="text"
+                                            placeholder="Quick scan applicants..."
+                                            value={appSearch}
+                                            onChange={(e) => setAppSearch(e.target.value)}
+                                        />
+                                    </div>
+                                    <button className="btn-premium" style={{ padding: '0.6rem 1.2rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', color: 'var(--success)' }} onClick={() => downloadCSV(applications, 'talent_pipeline.csv')}>
+                                        <i className="fas fa-file-csv"></i> Export Data
+                                    </button>
+                                </div>
                             </div>
-                            <div style={{ display: 'flex', gap: '1rem' }}>
+                            {loadingApplications ? (
+                                <div className="loader-container"><div className="pulse-loader"></div><p>Syncing application records...</p></div>
+                            ) : applications.length > 0 ? (
+                                <div className="table-container">
+                                    <table className="modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Applicant Identity</th>
+                                                <th>Contact Info</th>
+                                                <th>Target Position</th>
+                                                <th>Applied At</th>
+                                                <th>Resume</th>
+                                                <th>Status</th>
+                                                <th style={{ textAlign: 'right' }}>Update Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {applications.filter(app =>
+                                                app.applicantName?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                                                app.companyName?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                                                app.jobTitle?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                                                app.applicantEmail?.toLowerCase().includes(appSearch.toLowerCase())
+                                            ).map(app => (
+                                                <tr key={app.id} className="row-hover">
+                                                    <td><div style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{app.applicantName}</div></td>
+                                                    <td style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{app.applicantEmail}</td>
+                                                    <td>
+                                                        <div style={{ fontWeight: '600', color: 'var(--primary)' }}>{app.jobTitle}</div>
+                                                        <div style={{ fontSize: '0.75rem', color: 'var(--accent)', opacity: 0.8 }}>{app.companyName}</div>
+                                                    </td>
+                                                    <td><span style={{ fontSize: '0.85rem' }}>{new Date(app.appliedAt).toLocaleDateString('en-IN')}</span></td>
+                                                    <td>
+                                                        {app.resumePath ? (
+                                                            <button
+                                                                className="action-btn-modern edit-btn"
+                                                                onClick={() => {
+                                                                    const filename = app.resumePath.split('/').pop();
+                                                                    window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
+                                                                }}
+                                                                title="Review Resume"
+                                                            >
+                                                                <i className="fas fa-file-pdf"></i>
+                                                            </button>
+                                                        ) : <span style={{ opacity: 0.4, fontSize: '0.8rem' }}>Not Provided</span>}
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'REJECTED' ? 'super-admin' : 'admin'}`}>
+                                                            {app.status}
+                                                        </span>
+                                                    </td>
+                                                    <td style={{ textAlign: 'right' }}>
+                                                        <select
+                                                            value={app.status}
+                                                            onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+                                                            className="form-control-modern"
+                                                            style={{ width: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+                                                        >
+                                                            <option value="PENDING">Pending Review</option>
+                                                            <option value="SHORTLISTED">Shortlist</option>
+                                                            <option value="REJECTED">Reject</option>
+                                                            <option value="SELECTED">Hire/Select</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="empty-state" style={{ padding: '4rem' }}>
+                                    <i className="fas fa-folder-open" style={{ fontSize: '3rem', opacity: 0.2, marginBottom: '1.5rem' }}></i>
+                                    <p>No applications have been submitted for review yet.</p>
+                                </div>
+                            )}
+                        </section>
+                    </div>
+                );
+            case 'interviews':
+                return (
+                    <div className="animate-in">
+                        <section className="card surface-glow-premium">
+                            <div className="card-header">
+                                <h3><i className={editingInterview ? "fas fa-edit" : "fas fa-calendar-plus"}></i> {editingInterview ? 'Update Session Parameters' : 'Orchestrate New Interview Drive'}</h3>
+                                {editingInterview && (
+                                    <button className="btn btn-outline" onClick={() => { setEditingInterview(null); clearInterviewForm(); }}>
+                                        Cancel Orchestration
+                                    </button>
+                                )}
+                            </div>
+                            <form onSubmit={handleInterviewSubmit}>
+                                <div className="form-grid-modern">
+                                    <div className="form-group-modern">
+                                        <label><i className="fas fa-building"></i> Host Organization</label>
+                                        <input type="text" className="form-control-modern" placeholder="e.g. Microsoft India" required value={interviewForm.company} onChange={e => setInterviewForm({ ...interviewForm, company: e.target.value })} />
+                                    </div>
+                                    <div className="form-group-modern">
+                                        <label><i className="fas fa-calendar-day"></i> Session Date</label>
+                                        <input type="date" className="form-control-modern" required value={interviewForm.date} onChange={e => setInterviewForm({ ...interviewForm, date: e.target.value })} />
+                                    </div>
+                                    <div className="form-group-modern">
+                                        <label><i className="fas fa-clock"></i> Temporal Window</label>
+                                        <input type="text" className="form-control-modern" placeholder="09:00 AM - 05:00 PM" required value={interviewForm.time} onChange={e => setInterviewForm({ ...interviewForm, time: e.target.value })} />
+                                    </div>
+                                    <div className="form-group-modern">
+                                        <label><i className="fas fa-map-marker-alt"></i> Physical/Virtual Gateway</label>
+                                        <input type="text" className="form-control-modern" placeholder="e.g. Virtual via Zoom / Seminar Hall 2" required value={interviewForm.venue} onChange={e => setInterviewForm({ ...interviewForm, venue: e.target.value })} />
+                                    </div>
+                                    <div className="form-group-modern" style={{ gridColumn: 'span 2' }}>
+                                        <label><i className="fas fa-list-ol"></i> Target Designations</label>
+                                        <input type="text" className="form-control-modern" placeholder="Software Engineer II, Product Manager, Analyst..." required value={interviewForm.positions} onChange={e => setInterviewForm({ ...interviewForm, positions: e.target.value })} />
+                                    </div>
+                                    <div className="form-group-modern" style={{ gridColumn: 'span 2' }}>
+                                        <label><i className="fas fa-shield-alt"></i> Baseline Eligibility</label>
+                                        <input type="text" className="form-control-modern" placeholder="CGPA > 8.0, 0 active backlogs, Tech Stack residency..." required value={interviewForm.eligibility} onChange={e => setInterviewForm({ ...interviewForm, eligibility: e.target.value })} />
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem', justifyContent: 'flex-end' }}>
+                                    <button type="button" className="btn-premium" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', boxShadow: 'none' }} onClick={fillInterviewSampleData}>
+                                        <i className="fas fa-magic"></i> Auto-Fill
+                                    </button>
+                                    <button type="button" className="btn-premium" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', boxShadow: 'none' }} onClick={() => { clearInterviewForm(); setEditingInterview(null); }}>
+                                        <i className="fas fa-eraser"></i> Purge Form
+                                    </button>
+                                    <button type="submit" className="btn-premium">
+                                        <i className="fas fa-rocket"></i> {editingInterview ? 'Commit Updates' : 'Launch Interview Drive'}
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+
+                        <section className="card animate-slide-up">
+                            <div className="card-header">
+                                <h3><i className="fas fa-calendar-check"></i> Scheduled Engagement Registry</h3>
+                            </div>
+                            <div className="table-container">
+                                <table className="modern-table">
+                                    <thead>
+                                        <tr><th>Organization</th><th>Engagement Date</th><th>Deployment Venue</th><th style={{ textAlign: 'right' }}>Administrative Actions</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        {interviews.map(interview => (
+                                            <tr key={interview.id} className="row-hover">
+                                                <td><div style={{ fontWeight: '700', color: 'var(--primary)' }}>{interview.company}</div></td>
+                                                <td><span style={{ fontSize: '0.9rem' }}>{new Date(interview.date).toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short' })}</span></td>
+                                                <td><span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{interview.venue}</span></td>
+                                                <td style={{ textAlign: 'right' }}>
+                                                    <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                                        {(!isCompanyAdmin || interview.company === myCompanyName) ? (
+                                                            <>
+                                                                <button className="action-btn-modern edit-btn" title="Modify Session" onClick={() => startEditInterview(interview)}>
+                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                                <button className="action-btn-modern delete-btn" title="Cancel Session" onClick={() => deleteInterview(interview.id)}>
+                                                                    <i className="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <span className="badge-role" style={{ opacity: 0.5, background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>Locked</span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {interviews.length === 0 && <tr><td colSpan="4" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No interviews currently scheduled in the pipeline.</td></tr>}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                );
+            }
+            case 'interview-applications': {
+                return (
+                    <div className="animate-in">
+                        <section className="card surface-glow-premium">
+                            <div className="card-header">
+                                <h3><i className="fas fa-id-badge"></i> Interview Drive Logistics</h3>
                                 <div className="search-box-modern">
                                     <i className="fas fa-search"></i>
                                     <input
                                         type="text"
-                                        placeholder="Search apps..."
-                                        value={appSearch}
-                                        onChange={(e) => setAppSearch(e.target.value)}
+                                        placeholder="Filtered identity search..."
+                                        value={interviewSearch}
+                                        onChange={(e) => setInterviewSearch(e.target.value)}
                                     />
                                 </div>
-                                <button className="btn-secondary" onClick={() => downloadCSV(applications, 'job_applications.csv')}>
-                                    <i className="fas fa-file-csv"></i> Export
-                                </button>
                             </div>
-                        </div>
-                        {loadingApplications ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
-                        ) : applications.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Student</th>
-                                            <th>Contact</th>
-                                            <th>Job/Company</th>
-                                            <th>Applied</th>
-                                            <th>Resume</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {applications.filter(app =>
-                                            app.applicantName?.toLowerCase().includes(appSearch.toLowerCase()) ||
-                                            app.companyName?.toLowerCase().includes(appSearch.toLowerCase()) ||
-                                            app.jobTitle?.toLowerCase().includes(appSearch.toLowerCase()) ||
-                                            app.applicantEmail?.toLowerCase().includes(appSearch.toLowerCase())
-                                        ).map(app => (
-                                            <tr key={app.id}>
-                                                <td><strong>{app.applicantName}</strong></td>
-                                                <td style={{ fontSize: '0.8rem' }}>{app.applicantEmail}</td>
-                                                <td>
-                                                    <div style={{ fontWeight: '500' }}>{app.jobTitle}</div>
-                                                    <div style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>{app.companyName}</div>
-                                                </td>
-                                                <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
-                                                <td>
-                                                    {app.resumePath ? (
+                            {loadingInterviewApps ? (
+                                <div className="loader-container">
+                                    <div className="pulse-loader"></div>
+                                    <p>Decrypting logistics layer...</p>
+                                </div>
+                            ) : interviewApplications.length > 0 ? (
+                                <div className="table-container">
+                                    <table className="modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Applicant Identity</th>
+                                                <th>Organization</th>
+                                                <th>Session Date</th>
+                                                <th>Resume</th>
+                                                <th>Current Status</th>
+                                                <th style={{ textAlign: 'right' }}>Update Registry</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {interviewApplications.filter(app =>
+                                                app.applicantName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
+                                                app.companyName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
+                                                app.applicantEmail?.toLowerCase().includes(interviewSearch.toLowerCase())
+                                            ).map(app => (
+                                                <tr key={app.id} className="row-hover">
+                                                    <td>
+                                                        <div style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{app.applicantName}</div>
+                                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{app.applicantEmail}</div>
+                                                    </td>
+                                                    <td><div style={{ color: 'var(--primary)', fontWeight: '600' }}>{app.companyName}</div></td>
+                                                    <td><span style={{ fontSize: '0.85rem' }}>{new Date(app.interviewDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span></td>
+                                                    <td>
                                                         <button
                                                             className="action-btn-modern edit-btn"
                                                             onClick={() => {
                                                                 const filename = app.resumePath.split('/').pop();
                                                                 window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
                                                             }}
+                                                            title="Download Resume"
                                                         >
                                                             <i className="fas fa-file-pdf"></i>
                                                         </button>
-                                                    ) : <span style={{ opacity: 0.5 }}>None</span>}
-                                                </td>
-                                                <td>
-                                                    <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'REJECTED' ? 'super-admin' : 'admin'}`}>
-                                                        {app.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <select
-                                                        value={app.status}
-                                                        onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
-                                                        className="form-control"
-                                                        style={{ width: 'auto', padding: '0.4rem' }}
-                                                    >
-                                                        <option value="PENDING">Pending</option>
-                                                        <option value="SHORTLISTED">Shortlist</option>
-                                                        <option value="REJECTED">Reject</option>
-                                                        <option value="SELECTED">Select</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No applications yet.</p>
-                        )}
-                    </section>
-                );
-            case 'interviews':
-                return (
-                    <>
-                        <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className={editingInterview ? "fas fa-edit" : "fas fa-calendar-plus"}></i> {editingInterview ? 'Edit Interview' : 'Post New Interview'}</h3>
-                            </div>
-                            <form onSubmit={handleInterviewSubmit}>
-                                <div className="form-grid">
-                                    <div className="form-group">
-                                        <label>Company Name</label>
-                                        <input type="text" className="form-control" required value={interviewForm.company} onChange={e => setInterviewForm({ ...interviewForm, company: e.target.value })} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Date</label>
-                                        <input type="date" className="form-control" required value={interviewForm.date} onChange={e => setInterviewForm({ ...interviewForm, date: e.target.value })} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Time (e.g., 10:00 AM - 2:00 PM)</label>
-                                        <input type="text" className="form-control" required value={interviewForm.time} onChange={e => setInterviewForm({ ...interviewForm, time: e.target.value })} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Venue / Mode</label>
-                                        <input type="text" className="form-control" required value={interviewForm.venue} onChange={e => setInterviewForm({ ...interviewForm, venue: e.target.value })} />
-                                    </div>
-                                    <div className="form-group full-width">
-                                        <label>Positions (comma separated)</label>
-                                        <input type="text" className="form-control" required value={interviewForm.positions} onChange={e => setInterviewForm({ ...interviewForm, positions: e.target.value })} />
-                                    </div>
-                                    <div className="form-group full-width">
-                                        <label>Eligibility (e.g., CGPA &gt; 7.0)</label>
-                                        <input type="text" className="form-control" required value={interviewForm.eligibility} onChange={e => setInterviewForm({ ...interviewForm, eligibility: e.target.value })} />
-                                    </div>
-                                </div>
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
-                                    <button type="button" className="btn btn-secondary" onClick={fillInterviewSampleData}>
-                                        <i className="fas fa-magic"></i> Fill Sample
-                                    </button>
-                                    <button type="button" className="btn btn-warning" onClick={() => { clearInterviewForm(); setEditingInterview(null); }}>
-                                        <i className="fas fa-eraser"></i> Clear
-                                    </button>
-                                    <button type="submit" className="btn btn-primary">
-                                        <i className="fas fa-save"></i> {editingInterview ? 'Update Interview' : 'Post Interview'}
-                                    </button>
-                                    {editingInterview && (
-                                        <button type="button" className="btn btn-secondary" onClick={() => { setEditingInterview(null); clearInterviewForm(); }}>
-                                            Cancel
-                                        </button>
-                                    )}
-                                </div>
-                            </form>
-                        </section>
-
-                        <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-calendar-check"></i> Scheduled Interviews</h3>
-                            </div>
-                            <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr><th>Company</th><th>Date</th><th>Venue</th><th>Actions</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        {interviews.map(interview => (
-                                            <tr key={interview.id}>
-                                                <td>{interview.company}</td>
-                                                <td>{new Date(interview.date).toLocaleDateString()}</td>
-                                                <td>{interview.venue}</td>
-                                                <td className="action-btns">
-                                                    {(!isCompanyAdmin || interview.company === myCompanyName) ? (
-                                                        <>
-                                                            <button className="btn btn-secondary" onClick={() => startEditInterview(interview)} style={{ marginRight: '0.5rem' }}>
-                                                                <i className="fas fa-edit"></i>
-                                                            </button>
-                                                            <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
-                                                                <i className="fas fa-trash"></i>
-                                                            </button>
-                                                        </>
-                                                    ) : (
-                                                        <span className="badge badge-secondary" style={{ opacity: 0.7 }}>View Only</span>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </>
-                );
-            case 'interview-applications':
-                return (
-                    <section className="card surface-glow">
-                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h3><i className="fas fa-user-check"></i> Interview Drive Applications</h3>
-                            <div className="search-box-modern">
-                                <i className="fas fa-search"></i>
-                                <input
-                                    type="text"
-                                    placeholder="Search interview apps..."
-                                    value={interviewSearch}
-                                    onChange={(e) => setInterviewSearch(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        {loadingInterviewApps ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
-                        ) : interviewApplications.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Applicant Name</th>
-                                            <th>Company</th>
-                                            <th>Date</th>
-                                            <th>Resume</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {interviewApplications.filter(app =>
-                                            app.applicantName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
-                                            app.companyName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
-                                            app.applicantEmail?.toLowerCase().includes(interviewSearch.toLowerCase())
-                                        ).map(app => (
-                                            <tr key={app.id}>
-                                                <td>
-                                                    <div style={{ fontWeight: '600' }}>{app.applicantName}</div>
-                                                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{app.applicantEmail}</div>
-                                                </td>
-                                                <td>{app.companyName}</td>
-                                                <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
-                                                <td>
-                                                    <button
-                                                        className="action-btn-modern edit-btn"
-                                                        onClick={() => {
-                                                            const filename = app.resumePath.split('/').pop();
-                                                            window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
-                                                        }}
-                                                        title="Download Resume"
-                                                    >
-                                                        <i className="fas fa-file-pdf"></i>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'SHORTLISTED' ? 'admin' : app.status === 'REJECTED' ? 'super-admin' : 'dept-admin'}`}>
-                                                        {app.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <select
-                                                        value={app.status}
-                                                        onChange={(e) => updateInterviewAppStatus(app.id, e.target.value)}
-                                                        className="form-control"
-                                                        style={{ width: 'auto', padding: '0.5rem' }}
-                                                    >
-                                                        <option value="PENDING">Pending</option>
-                                                        <option value="SHORTLISTED">Shortlist</option>
-                                                        <option value="REJECTED">Reject</option>
-                                                        <option value="SELECTED">Select</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No interview applications received yet.</p>
-                        )}
-                    </section>
-                );
-            case 'gallery':
-                return (
-                    <section className="card surface-glow">
-                        <div className="card-header">
-                            <h3><i className="fas fa-images"></i> Gallery Management</h3>
-                        </div>
-                        {loadingGallery ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading gallery items...</p>
-                        ) : galleryItems.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Type</th>
-                                            <th>Uploaded By</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {galleryItems.map(item => (
-                                            <tr key={item.id}>
-                                                <td>
-                                                    {item.title}
-                                                    {item.description && <div style={{ fontSize: '0.8rem', color: '#888' }}>{item.description.substring(0, 50)}...</div>}
-                                                </td>
-                                                <td>{item.type}</td>
-                                                <td>{item.uploadedBy}</td>
-                                                <td>
-                                                    <span className={`status-badge status-${item.status.toLowerCase()}`}>
-                                                        {item.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'SHORTLISTED' ? 'admin' : app.status === 'REJECTED' ? 'super-admin' : 'dept-admin'}`}>
+                                                            {app.status}
+                                                        </span>
+                                                    </td>
+                                                    <td style={{ textAlign: 'right' }}>
                                                         <select
-                                                            value={item.status}
-                                                            onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
-                                                            className="form-control"
-                                                            style={{ width: 'auto', padding: '0.4rem', fontSize: '0.85rem' }}
+                                                            value={app.status}
+                                                            onChange={(e) => updateInterviewAppStatus(app.id, e.target.value)}
+                                                            className="form-control-modern"
+                                                            style={{ width: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
                                                         >
                                                             <option value="PENDING">Pending</option>
-                                                            <option value="ACCEPTED">Accept</option>
+                                                            <option value="SHORTLISTED">Shortlist</option>
                                                             <option value="REJECTED">Reject</option>
+                                                            <option value="SELECTED">Hire/Select</option>
                                                         </select>
-                                                        <button className="action-btn-modern delete-btn" onClick={() => deleteGalleryItem(item.id)} title="Delete Item">
-                                                            <i className="fas fa-trash"></i>
-                                                        </button>
-                                                        <button
-                                                            className="action-btn-modern edit-btn"
-                                                            onClick={() => window.open(item.url, '_blank')}
-                                                            title="View Image"
-                                                        >
-                                                            <i className="fas fa-eye"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No gallery items found.</p>
-                        )}
-                    </section>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="empty-state" style={{ padding: '4rem' }}>
+                                    <i className="fas fa-user-clock" style={{ fontSize: '3rem', opacity: 0.1, marginBottom: '1.5rem' }}></i>
+                                    <p>Logistics queue is currently empty.</p>
+                                </div>
+                            )}
+                        </section>
+                    </div>
                 );
-            case 'companies':
+            }
+            case 'gallery': {
+                return (
+                    <div className="animate-in">
+                        <section className="card surface-glow-premium">
+                            <div className="card-header">
+                                <h3><i className="fas fa-cloud-upload-alt"></i> Visual Assets Registry</h3>
+                            </div>
+                            {loadingGallery ? (
+                                <div className="loader-container">
+                                    <div className="pulse-loader"></div>
+                                    <p>Fetching visual metadata...</p>
+                                </div>
+                            ) : galleryItems.length > 0 ? (
+                                <div className="table-container">
+                                    <table className="modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Asset Identity</th>
+                                                <th>Format</th>
+                                                <th>Origin Entity</th>
+                                                <th>Persistence State</th>
+                                                <th style={{ textAlign: 'right' }}>Administrative Orchestration</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {galleryItems.map(item => (
+                                                <tr key={item.id} className="row-hover">
+                                                    <td>
+                                                        <div style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{item.title}</div>
+                                                        {item.description && <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{item.description.substring(0, 45)}...</div>}
+                                                    </td>
+                                                    <td><span className="badge-role" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.1)' }}>{item.type}</span></td>
+                                                    <td><div style={{ fontSize: '0.85rem' }}><i className="fas fa-user-circle"></i> {item.uploadedBy}</div></td>
+                                                    <td>
+                                                        <span className={`status-badge status-${item.status.toLowerCase()}`}>
+                                                            {item.status}
+                                                        </span>
+                                                    </td>
+                                                    <td style={{ textAlign: 'right' }}>
+                                                        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                                            <select
+                                                                value={item.status}
+                                                                onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
+                                                                className="form-control-modern"
+                                                                style={{ width: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+                                                            >
+                                                                <option value="PENDING">Pending</option>
+                                                                <option value="ACCEPTED">Authorize</option>
+                                                                <option value="REJECTED">Purge Access</option>
+                                                            </select>
+                                                            <button className="action-btn-modern delete-btn" onClick={() => deleteGalleryItem(item.id)} title="Delete Permanently">
+                                                                <i className="fas fa-trash-alt"></i>
+                                                            </button>
+                                                            <button
+                                                                className="action-btn-modern edit-btn"
+                                                                onClick={() => window.open(item.url, '_blank')}
+                                                                title="Visualize Asset"
+                                                            >
+                                                                <i className="fas fa-external-link-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="empty-state" style={{ padding: '5rem' }}>
+                                    <i className="fas fa-images" style={{ fontSize: '3rem', opacity: 0.1, marginBottom: '1.5rem' }}></i>
+                                    <p>No visual assets discovered in system repository.</p>
+                                </div>
+                            )}
+                        </section>
+                    </div>
+                );
+            }
+            case 'companies': {
                 const companyAdmins = users.filter(u => u.role === 'COMPANY_ADMIN');
 
                 const toggleCompanyStatus = async (userId) => {
@@ -2426,171 +2431,210 @@ const AdminDashboard = () => {
                         if (response.ok) {
                             const data = await response.json();
                             setMessage({ text: data.message, type: 'success' });
-                            loadUsers(); // Reload users to get updated status
+                            loadUsers();
                             setTimeout(() => setMessage({ text: '', type: '' }), 3000);
                         } else {
-                            setMessage({ text: 'Failed to toggle company status', type: 'error' });
+                            setMessage({ text: 'Access revocation failed', type: 'error' });
                         }
                     } catch (error) {
-                        setMessage({ text: 'Error toggling company status', type: 'error' });
+                        setMessage({ text: 'Error modifiying corporate state', type: 'error' });
                     }
                 };
 
                 return (
-                    <section className="card surface-glow">
-                        <div className="card-header">
-                            <h3><i className="fas fa-building"></i> Company Management</h3>
-                            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                                Enable or disable company accounts. Disabled companies cannot post jobs or interviews.
-                            </p>
-                        </div>
-                        {loadingUsers ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading companies...</p>
-                        ) : companyAdmins.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Company Name</th>
-                                            <th>Admin Username</th>
-                                            <th>Email</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {companyAdmins.map(company => (
-                                            <tr key={company.id}>
-                                                <td>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                                        <i className="fas fa-building" style={{ color: 'var(--primary)' }}></i>
-                                                        <strong>{company.companyName || 'N/A'}</strong>
-                                                    </div>
-                                                </td>
-                                                <td>{company.username}</td>
-                                                <td>{company.email}</td>
-                                                <td>
-                                                    <span style={{
-                                                        padding: '0.25rem 0.75rem',
-                                                        borderRadius: '12px',
-                                                        fontSize: '0.85rem',
-                                                        fontWeight: '600',
-                                                        background: company.enabled ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                                                        color: company.enabled ? '#22c55e' : '#ef4444'
-                                                    }}>
-                                                        {company.enabled ? 'Enabled' : 'Disabled'}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        onClick={() => toggleCompanyStatus(company.id)}
-                                                        className="btn"
-                                                        style={{
-                                                            padding: '0.5rem 1rem',
-                                                            background: company.enabled ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                                                            border: `1px solid ${company.enabled ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
-                                                            color: company.enabled ? '#ef4444' : '#22c55e'
-                                                        }}
-                                                    >
-                                                        <i className={`fas fa-${company.enabled ? 'ban' : 'check-circle'}`}></i>
-                                                        {company.enabled ? ' Disable' : ' Enable'}
-                                                    </button>
-                                                </td>
+                    <div className="animate-in">
+                        <section className="card surface-glow-premium">
+                            <div className="card-header">
+                                <div>
+                                    <h3><i className="fas fa-city"></i> Specialized Partner Entities</h3>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                        Manage corporate clearance. Revoked partners are prohibited from active recruitment workflows.
+                                    </p>
+                                </div>
+                            </div>
+                            {loadingUsers ? (
+                                <div className="loader-container"><div className="pulse-loader"></div><p>Syncing partner registry...</p></div>
+                            ) : companyAdmins.length > 0 ? (
+                                <div className="table-container">
+                                    <table className="modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Corporate Identity</th>
+                                                <th>Liaison Handle</th>
+                                                <th>Communication Core</th>
+                                                <th>Operational State</th>
+                                                <th style={{ textAlign: 'right' }}>Clearance Protocols</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No company admins found.</p>
-                        )}
-                    </section>
-                );
-            case 'departments':
-                return (
-                    <section className="card surface-glow">
-                        <div className="card-header">
-                            <h3><i className="fas fa-university"></i> Manage Departments</h3>
-                        </div>
-                        <div className="form-grid" style={{ marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                            <div style={{ display: 'flex', gap: '1rem', mb: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
-                                <button type="button" onClick={() => setDeptMode('single')} className={`btn ${deptMode === 'single' ? 'btn-primary' : 'btn-secondary'}`}>Single Dept</button>
-                                <button type="button" onClick={() => setDeptMode('bulk')} className={`btn ${deptMode === 'bulk' ? 'btn-primary' : 'btn-secondary'}`}>Bulk Program (e.g. B.Tech)</button>
-                            </div>
-
-                            {deptMode === 'single' ? (
-                                <form onSubmit={handleDeptSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%', marginTop: '1rem' }}>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Dept Name</label>
-                                        <input type="text" className="form-control" placeholder="e.g. Master of Computer Applications" required value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Dept Code (Unique)</label>
-                                        <input type="text" className="form-control" placeholder="e.g. MCA" required value={deptForm.code} onChange={e => setDeptForm({ ...deptForm, code: e.target.value.toUpperCase() })} />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>HOD Name</label>
-                                        <input type="text" className="form-control" placeholder="HOD Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Semesters</label>
-                                        <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} />
-                                    </div>
-                                    <button type="submit" className="btn btn-primary" style={{ height: '42px' }}>
-                                        <i className={`fas fa-${editingDept ? 'save' : 'plus'}`}></i> {editingDept ? 'Update Dept' : 'Add Dept'}
-                                    </button>
-                                    {editingDept && (
-                                        <button type="button" className="btn btn-secondary" style={{ height: '42px' }} onClick={() => { setEditingDept(null); setDeptForm({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 }); }}>
-                                            <i className="fas fa-times"></i> Cancel
-                                        </button>
-                                    )}
-                                </form>
+                                        </thead>
+                                        <tbody>
+                                            {companyAdmins.map(company => (
+                                                <tr key={company.id} className="row-hover">
+                                                    <td>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--glass-white)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
+                                                                <i className="fas fa-building"></i>
+                                                            </div>
+                                                            <strong style={{ color: 'var(--text-primary)' }}>{company.companyName || 'Unknown Entity'}</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td><code style={{ fontSize: '0.85rem', color: 'var(--accent)' }}>@{company.username}</code></td>
+                                                    <td><span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{company.email}</span></td>
+                                                    <td>
+                                                        <span style={{
+                                                            padding: '0.3rem 0.8rem',
+                                                            borderRadius: '8px',
+                                                            fontSize: '0.75rem',
+                                                            fontWeight: '800',
+                                                            letterSpacing: '0.5px',
+                                                            textTransform: 'uppercase',
+                                                            background: company.enabled ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                                                            color: company.enabled ? '#34d399' : '#f87171',
+                                                            border: `1px solid ${company.enabled ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`
+                                                        }}>
+                                                            {company.enabled ? 'Operational' : 'Restricted'}
+                                                        </span>
+                                                    </td>
+                                                    <td style={{ textAlign: 'right' }}>
+                                                        <button
+                                                            onClick={() => toggleCompanyStatus(company.id)}
+                                                            className="btn-premium"
+                                                            style={{
+                                                                padding: '0.5rem 1rem',
+                                                                fontSize: '0.8rem',
+                                                                background: company.enabled ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                                                border: `1px solid ${company.enabled ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)'}`,
+                                                                color: company.enabled ? '#f87171' : '#34d399',
+                                                                boxShadow: 'none'
+                                                            }}
+                                                        >
+                                                            <i className={`fas fa-${company.enabled ? 'user-slash' : 'user-check'}`}></i>
+                                                            {company.enabled ? ' Restrict Access' : ' Grant Access'}
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             ) : (
-                                <form onSubmit={handleBulkSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%', marginTop: '1rem' }}>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Category</label>
-                                        <input type="text" className="form-control" placeholder="e.g. Engineering" required value={bulkForm.category} onChange={e => setBulkForm({ ...bulkForm, category: e.target.value })} />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Degree</label>
-                                        <input type="text" className="form-control" placeholder="e.g. B.Tech" required value={bulkForm.degree} onChange={e => setBulkForm({ ...bulkForm, degree: e.target.value })} />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Duration (Semesters)</label>
-                                        <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={bulkForm.maxSemesters} onChange={e => setBulkForm({ ...bulkForm, maxSemesters: parseInt(e.target.value) })} />
-                                    </div>
-                                    <div className="form-group full-width" style={{ margin: 0, gridColumn: '1 / -1' }}>
-                                        <label>Branches (Comma Separated)</label>
-                                        <textarea className="form-control" rows="2" placeholder="e.g. CSE Core, AIML, Civil, Electrical, Mechanical, Cyber Security" required value={bulkForm.branches} onChange={e => setBulkForm({ ...bulkForm, branches: e.target.value })}></textarea>
-                                        <small style={{ color: 'rgba(255,255,255,0.5)' }}>Used to generate: "B.Tech in CSE Core" (Code: BTECH_CSE_CORE)</small>
-                                    </div>
-                                    <button type="submit" className="btn btn-success" style={{ height: '42px', gridColumn: '1 / -1' }}><i className="fas fa-layer-group"></i> Create Program & Branches</button>
-                                </form>
+                                <div className="empty-state" style={{ padding: '5rem' }}>
+                                    <i className="fas fa-building" style={{ fontSize: '3rem', opacity: 0.1, marginBottom: '1.5rem' }}></i>
+                                    <p>No corporate partner entities detected in registry.</p>
+                                </div>
                             )}
-                        </div>
-
-                        {loadingDepts ? <div className="loading-indicator">Loading Departments...</div> : (
-                            <div className="table-responsive">
-                                <table className="table">
-                                    <thead><tr><th>Code</th><th>Name</th><th>HOD</th><th>Actions</th></tr></thead>
-                                    <tbody>
-                                        {departments.length === 0 ? <tr><td colSpan="4" style={{ textAlign: 'center' }}>No departments found.</td></tr> : departments.map(d => (
-                                            <tr key={d.id}>
-                                                <td><span className="badge badge-primary">{d.code}</span></td>
-                                                <td>{d.name}</td>
-                                                <td>{d.hodName || '-'}</td>
-                                                <td>
-                                                    <button className="btn btn-primary btn-sm" onClick={() => startEditDept(d)} style={{ marginRight: '0.5rem' }}><i className="fas fa-edit"></i> Edit</button>
-                                                    <button className="btn btn-danger btn-sm" onClick={() => deleteDept(d.id)}><i className="fas fa-trash"></i> Delete</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                    </section>
+                        </section>
+                    </div>
                 );
+            }
+            case 'departments': {
+                return (
+                    <div className="animate-in">
+                        <section className="card surface-glow-premium">
+                            <div className="card-header">
+                                <h3><i className="fas fa-sitemap"></i> Institutional Architecture</h3>
+                            </div>
+                            <div className="card-body">
+                                <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '14px', width: 'fit-content' }}>
+                                    <button type="button" onClick={() => setDeptMode('single')} className={`btn-premium ${deptMode === 'single' ? '' : 'inactive-tab'}`} style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem', boxShadow: deptMode === 'single' ? 'var(--primary-glow)' : 'none' }}>
+                                        <i className="fas fa-building"></i> Atomic Department
+                                    </button>
+                                    <button type="button" onClick={() => setDeptMode('bulk')} className={`btn-premium ${deptMode === 'bulk' ? '' : 'inactive-tab'}`} style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem', boxShadow: deptMode === 'bulk' ? 'var(--primary-glow)' : 'none' }}>
+                                        <i className="fas fa-cubes"></i> Bulk Program Stream
+                                    </button>
+                                </div>
+
+                                {deptMode === 'single' ? (
+                                    <form onSubmit={handleDeptSubmit} className="animate-in">
+                                        <div className="form-grid-modern">
+                                            <div className="form-group-modern">
+                                                <label>Department Name</label>
+                                                <input type="text" className="form-control-modern" placeholder="e.g. Master of Computer Applications" required value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label>Department Code</label>
+                                                <input type="text" className="form-control-modern" placeholder="e.g. MCA" required value={deptForm.code} onChange={e => setDeptForm({ ...deptForm, code: e.target.value.toUpperCase() })} />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label>Director/HOD Identity</label>
+                                                <input type="text" className="form-control-modern" placeholder="Identity Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label>Total Semester Span</label>
+                                                <input type="number" className="form-control-modern" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} />
+                                            </div>
+                                        </div>
+                                        <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                                            {editingDept && (
+                                                <button type="button" className="btn-premium" style={{ background: 'rgba(255,255,255,0.05)', boxShadow: 'none' }} onClick={() => { setEditingDept(null); setDeptForm({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 }); }}>
+                                                    <i className="fas fa-times"></i> Cancel
+                                                </button>
+                                            )}
+                                            <button type="submit" className="btn-premium">
+                                                <i className={`fas fa-${editingDept ? 'fingerprint' : 'plus-circle'}`}></i> {editingDept ? 'Commit Architecture Update' : 'Initialize Department'}
+                                            </button>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <form onSubmit={handleBulkSubmit} className="animate-in">
+                                        <div className="form-grid-modern">
+                                            <div className="form-group-modern">
+                                                <label>Institutional Category</label>
+                                                <input type="text" className="form-control-modern" placeholder="e.g. Engineering and Technology" required value={bulkForm.category} onChange={e => setBulkForm({ ...bulkForm, category: e.target.value })} />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label>Degree Classification</label>
+                                                <input type="text" className="form-control-modern" placeholder="e.g. B.Tech" required value={bulkForm.degree} onChange={e => setBulkForm({ ...bulkForm, degree: e.target.value })} />
+                                            </div>
+                                            <div className="form-group-modern">
+                                                <label>Standard Stream Duration (Semesters)</label>
+                                                <input type="number" className="form-control-modern" placeholder="8" min="1" max="14" required value={bulkForm.maxSemesters} onChange={e => setBulkForm({ ...bulkForm, maxSemesters: parseInt(e.target.value) })} />
+                                            </div>
+                                            <div className="form-group-modern full-width" style={{ gridColumn: '1 / -1' }}>
+                                                <label>Parallel Branches (CSV)</label>
+                                                <textarea className="form-control-modern" rows="3" placeholder="CSE, AI, Robotics, Civil, Thermal Mechanical, Cloud Computing..." required value={bulkForm.branches} onChange={e => setBulkForm({ ...bulkForm, branches: e.target.value })}></textarea>
+                                                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.75rem' }}>Auto-generates nested department IDs: {bulkForm.degree.toUpperCase()}_NAME</p>
+                                            </div>
+                                        </div>
+                                        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                            <button type="submit" className="btn-premium">
+                                                <i className="fas fa-layer-group"></i> Deploy Collective Stream
+                                            </button>
+                                        </div>
+                                    </form>
+                                )}
+                            </div>
+                        </section>
+
+                        <section className="card animate-slide-up">
+                            <div className="card-header">
+                                <h3><i className="fas fa-microchip"></i> Domain Registry</h3>
+                            </div>
+                            <div className="table-container">
+                                {loadingDepts ? <div className="loader-container"><div className="pulse-loader"></div></div> : (
+                                    <table className="modern-table">
+                                        <thead><tr><th>Unique Code</th><th>Formal Identity</th><th>Executive Head</th><th style={{ textAlign: 'right' }}>Management</th></tr></thead>
+                                        <tbody>
+                                            {departments.length === 0 ? <tr><td colSpan="4" style={{ textAlign: 'center', padding: '3rem', opacity: 0.5 }}>No departmental nodes identified.</td></tr> : departments.map(d => (
+                                                <tr key={d.id} className="row-hover">
+                                                    <td><span className="badge-role" style={{ background: 'var(--primary-glow)', border: '1px solid var(--primary)', color: 'white' }}>{d.code}</span></td>
+                                                    <td style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{d.name}</td>
+                                                    <td style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{d.hodName || 'Pending Assignment'}</td>
+                                                    <td style={{ textAlign: 'right' }}>
+                                                        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                                            <button className="action-btn-modern edit-btn" onClick={() => startEditDept(d)} title="Modify Node"><i className="fas fa-pencil-alt"></i></button>
+                                                            <button className="action-btn-modern delete-btn" onClick={() => deleteDept(d.id)} title="Decommission Node"><i className="fas fa-trash-alt"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
+                        </section>
+                    </div>
+                );
+            }
             case 'question-papers':
                 return (
                     <>
@@ -2620,14 +2664,12 @@ const AdminDashboard = () => {
 
     return (
         <div className="admin-container animate-in">
-            <button className="mobile-menu-toggle" onClick={toggleSidebar}>
-                <i className={`fas ${isSidebarOpen ? 'fa-times' : 'fa-bars'}`}></i>
-            </button>
-
             <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
                 <div className="sidebar-header">
-                    <div className="logo-glow"></div>
-                    <h2><i className="fas fa-shield-alt"></i> AntiHired <span>Admin</span></h2>
+                    <div className="logo-icon">
+                        <i className="fas fa-shield-alt" style={{ color: 'white' }}></i>
+                    </div>
+                    <h2>AntiHired</h2>
                 </div>
 
                 <nav className="sidebar-menu">
@@ -2643,31 +2685,31 @@ const AdminDashboard = () => {
                                     }}
                                     className={`nav-btn-modern ${activeTab === item.id ? 'active' : ''}`}
                                 >
+                                    {activeTab === item.id && <div className="active-indicator"></div>}
                                     <div className="nav-icon-wrapper">
                                         <i className={`fas ${item.icon}`}></i>
                                     </div>
                                     <span>{item.label}</span>
-                                    {activeTab === item.id && <div className="active-indicator"></div>}
                                 </button>
                             </li>
                         ))}
                     </ul>
                 </nav>
 
-                <div className="sidebar-footer">
-                    <div className="user-info-mini" style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border-color)', margin: '0 1rem 1.5rem' }}>
-                        <div className="mini-avatar" style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))', width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                <div className="sidebar-footer" style={{ padding: '1rem' }}>
+                    <div className="user-info-mini" style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center' }}>
+                        <div className="mini-avatar" style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))', width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'white' }}>
                             {role.charAt(0)}
                         </div>
-                        <div className="mini-details" style={{ marginLeft: '1rem' }}>
-                            <div className="mini-name" style={{ fontWeight: '600', fontSize: '0.95rem' }}>{localStorage.getItem('username') || 'Admin'}</div>
-                            <div className="mini-role" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{role.replace('_', ' ')}</div>
+                        <div className="mini-details" style={{ marginLeft: '1rem', overflow: 'hidden' }}>
+                            <div className="mini-name" style={{ fontWeight: '600', fontSize: '0.9rem', color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{localStorage.getItem('username') || 'Admin'}</div>
+                            <div className="mini-role" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{role.replace('_', ' ')}</div>
                         </div>
                     </div>
                 </div>
             </aside>
 
-            <main className="admin-main">
+            <main className="main-content">
                 <header className="main-header">
                     <div className="header-left">
                         <h1>{menuItems.find(i => i.id === activeTab)?.label}</h1>
@@ -2677,17 +2719,14 @@ const AdminDashboard = () => {
                             <i className="fas fa-search"></i>
                             <input
                                 type="text"
-                                placeholder="Universal Search..."
+                                placeholder="Refine your view..."
                                 value={globalSearch}
                                 onChange={(e) => {
                                     const val = e.target.value;
                                     setGlobalSearch(val);
                                     if (val.length > 2) {
-                                        // Logic to switch tabs if something specific is found
                                         if (val.toLowerCase().includes('job')) setActiveTab('jobs');
                                         if (val.toLowerCase().includes('user') || val.toLowerCase().includes('student')) setActiveTab('users');
-
-                                        // Update child filters
                                         setUserSearch(val);
                                         setJobSearch(val);
                                         setAppSearch(val);
