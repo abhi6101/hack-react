@@ -96,6 +96,15 @@ body {
     padding: 2.5rem;
     min-height: 100vh;
     transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers children horizontally */
+}
+
+.content-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* --- 4. Sidebar Components --- */
@@ -200,10 +209,12 @@ body {
 
 /* --- 5. Header & Controls --- */
 .main-header {
+    width: 100%;
+    max-width: 1200px; /* Aligns with content-container */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2.5rem;
+    margin: 0 auto 2.5rem; /* Center header too */
     background: rgba(17, 24, 39, 0.4);
     backdrop-filter: var(--glass-blur);
     padding: 1rem 2rem;
@@ -372,8 +383,11 @@ body {
     border-radius: 24px;
     padding: 2rem;
     display: flex;
-    align-items: center;
-    gap: 1.5rem;
+    flex-direction: column; /* Stacked for better centering */
+    align-items: center;     /* Horizontal center */
+    justify-content: center; /* Vertical center */
+    text-align: center;
+    gap: 1.25rem;
     transition: var(--transition-smooth);
     cursor: default;
 }
