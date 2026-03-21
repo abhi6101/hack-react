@@ -96,15 +96,14 @@ body {
     padding: 2.5rem;
     min-height: 100vh;
     transition: var(--transition-smooth);
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centers children horizontally */
+    position: relative;
+    /* Removed flex centering that caused overlap */
 }
 
 .content-container {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 auto; /* Properly centers content without overlap */
 }
 
 /* --- 4. Sidebar Components --- */
