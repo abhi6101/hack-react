@@ -1,9 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const StarBackground = () => {
     const canvasRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        // Set a 30-second timer to show the background
+        const timer = setTimeout(() => {
+            setIsVisible(true);
+        }, 30000); // 30,000ms = 30 seconds
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    useEffect(() => {
+        if (!isVisible) return;
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let animationFrameId;
@@ -25,15 +37,15 @@ const StarBackground = () => {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5, // Distinct circles
+                radius: Math.random() * 1.5,
                 alpha: Math.random() * 0.7 + 0.3,
-                velocity: Math.random() * 0.4 + 0.1 // Consistent upward drift
+                velocity: Math.random() * 0.4 + 0.1
             });
         }
 
         // Code Particle properties
         const codeParticles = [];
-        const numCodeParticles = 40; // Fewer than stars
+        const numCodeParticles = 40;
         const symbols = ['{', '}', '</>', '&&', '||', '!=', ';', '[]', '()', '=>', '*'];
 
         // Initialize code particles
@@ -42,22 +54,21 @@ const StarBackground = () => {
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 text: symbols[Math.floor(Math.random() * symbols.length)],
-                size: Math.random() * 10 + 8, // 8px to 18px
-                alpha: Math.random() * 0.3 + 0.1, // Faint
+                size: Math.random() * 10 + 8,
+                alpha: Math.random() * 0.3 + 0.1,
                 velocity: Math.random() * 0.2 + 0.05
             });
         }
 
         // Animation Loop
         const render = () => {
-            // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 1. PURE BLACK BACKGROUND
+            // Black background (inside the canvas)
             ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Draw Moving Stars (Circles)
+            // Draw Stars
             stars.forEach(star => {
                 star.y -= star.velocity;
                 if (star.y < 0) {
@@ -70,7 +81,7 @@ const StarBackground = () => {
                 ctx.fill();
             });
 
-            // 3. Draw Floating Code Particles
+            // Draw Floating Code Particles
             ctx.font = '12px "Courier New", monospace';
             ctx.textAlign = 'center';
             codeParticles.forEach(p => {
@@ -78,11 +89,10 @@ const StarBackground = () => {
                 if (p.y < 0) {
                     p.y = canvas.height;
                     p.x = Math.random() * canvas.width;
-                    p.text = symbols[Math.floor(Math.random() * symbols.length)]; // Randomize on reset
+                    p.text = symbols[Math.floor(Math.random() * symbols.length)];
                 }
 
-                // Draw Symbol
-                ctx.fillStyle = `rgba(14, 165, 233, ${p.alpha})`; // Cyan tinted symbols
+                ctx.fillStyle = `rgba(14, 165, 233, ${p.alpha})`;
                 ctx.font = `${p.size}px monospace`;
                 ctx.fillText(p.text, p.x, p.y);
             });
@@ -96,18 +106,21 @@ const StarBackground = () => {
             window.removeEventListener('resize', handleResize);
             cancelAnimationFrame(animationFrameId);
         };
-    }, []);
+    }, [isVisible]);
+
+    if (!isVisible) return null;
 
     return (
         <canvas
             ref={canvasRef}
+            className="fade-in"
             style={{
                 position: 'fixed',
                 top: 0,
                 left: 0,
                 width: '100%',
                 height: '100%',
-                zIndex: -50, // Far behind
+                zIndex: -50,
                 pointerEvents: 'none'
             }}
         />
