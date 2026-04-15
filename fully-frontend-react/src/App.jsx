@@ -35,7 +35,7 @@ import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
 import { ToastProvider } from './components/Toast';
 import './styles/interaction.css';
-import StarBackground from './components/StarBackground';
+
 
 
 import { AlertProvider } from './components/CustomAlert';
@@ -80,7 +80,7 @@ function App() {
         <CustomToastProvider>
             <AlertProvider>
                 <ToastProvider>
-                    <StarBackground />
+
                     <Router>
                         <Layout>
                             <Routes>
