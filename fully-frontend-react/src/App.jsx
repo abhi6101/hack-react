@@ -36,7 +36,7 @@ import './styles/animations.css'; // Import animations
 import { ToastProvider } from './components/Toast';
 import './styles/interaction.css';
 import CustomCursor from './components/CustomCursor';
-import StarBackground from './components/StarBackground';
+
 import { AlertProvider } from './components/CustomAlert';
 import { ToastProvider as CustomToastProvider } from './components/CustomToast';
 
@@ -79,7 +79,7 @@ function App() {
         <CustomToastProvider>
             <AlertProvider>
                 <ToastProvider>
-                    <StarBackground />
+
                     <Router>
                         <Layout>
                             <Routes>
