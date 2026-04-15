@@ -4,7 +4,11 @@ import com.abhi.authProject.model.Paper;
 import com.abhi.authProject.repo.PaperRepository;
 import com.abhi.authProject.service.FileStorageService;
 import com.abhi.authProject.service.PaperBulkUploadService;
+import com.abhi.authProject.repo.UserRepo;
+import com.abhi.authProject.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -30,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 public class PaperController {
 
     private final PaperRepository paperRepository;
+    private final UserRepo userRepo;
     private final FileStorageService fileStorageService;
     private final PaperBulkUploadService bulkUploadService;
 
@@ -37,9 +42,11 @@ public class PaperController {
     private String uploadDir;
 
     @Autowired
-    public PaperController(PaperRepository paperRepository, FileStorageService fileStorageService,
+    public PaperController(PaperRepository paperRepository, UserRepo userRepo,
+            FileStorageService fileStorageService,
             PaperBulkUploadService bulkUploadService) {
         this.paperRepository = paperRepository;
+        this.userRepo = userRepo;
         this.fileStorageService = fileStorageService;
         this.bulkUploadService = bulkUploadService;
     }
@@ -52,6 +59,29 @@ public class PaperController {
     public ResponseEntity<List<Paper>> getAllPapers(
             @RequestParam(required = false) Integer semester,
             @RequestParam(required = false) String branch) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || 
+                               a.getAuthority().equals("ROLE_SUPER_ADMIN") || 
+                               a.getAuthority().equals("ROLE_DEPT_ADMIN"));
+
+        // STRICT SECURITY FOR STUDENTS
+        if (!isAdmin) {
+            String username = auth.getName();
+            Users user = userRepo.findByUsername(username).orElse(null);
+            
+            if (user != null) {
+                // Force semester and branch to match student profile
+                semester = user.getSemester();
+                branch = user.getBranch();
+                
+                // If student hasn't set their semester/branch yet, they see nothing
+                if (semester == null || branch == null) {
+                    return ResponseEntity.ok(java.util.Collections.emptyList());
+                }
+            }
+        }
 
         if (semester != null && branch != null) {
             return ResponseEntity.ok(paperRepository.findBySemesterAndBranchOrderByYearDesc(semester, branch));
@@ -187,6 +217,19 @@ public class PaperController {
             @RequestParam int semester,
             @RequestParam(required = false) String subject) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || 
+                               a.getAuthority().equals("ROLE_SUPER_ADMIN") || 
+                               a.getAuthority().equals("ROLE_DEPT_ADMIN"));
+
+        if (!isAdmin) {
+            Users user = userRepo.findByUsername(auth.getName()).orElse(null);
+            if (user == null || !user.getBranch().equals(branch) || !user.getSemester().equals(semester)) {
+                return ResponseEntity.status(403).build(); // Forbidden
+            }
+        }
+
         List<Paper> papers;
         if (subject != null && !subject.isEmpty()) {
             papers = paperRepository.findBySemesterAndBranchAndSubjectOrderByYearDesc(semester, branch, subject);
@@ -297,6 +340,20 @@ public class PaperController {
     public ResponseEntity<Resource> proxyDownload(@PathVariable Long id) {
         try {
             Paper paper = paperRepository.findById(id).orElseThrow(() -> new RuntimeException("Paper not found"));
+            
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = auth.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || 
+                                   a.getAuthority().equals("ROLE_SUPER_ADMIN") || 
+                                   a.getAuthority().equals("ROLE_DEPT_ADMIN"));
+
+            if (!isAdmin) {
+                Users user = userRepo.findByUsername(auth.getName()).orElse(null);
+                if (user == null || !user.getBranch().equals(paper.getBranch()) || !user.getSemester().equals(paper.getSemester())) {
+                    return ResponseEntity.status(403).build();
+                }
+            }
+
             String fileUrl = paper.getPdfUrl();
 
             System.out.println("Streaming secure content for ID: " + id);
