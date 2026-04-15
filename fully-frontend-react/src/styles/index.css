@@ -52,8 +52,7 @@ html {
 }
 
 body {
-    background-color: transparent;
-    /* Changed from var(--dark-bg) to allow StarBackground */
+    background-color: #0B0F1A; /* Stable Deep Navy Background */
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.6;
