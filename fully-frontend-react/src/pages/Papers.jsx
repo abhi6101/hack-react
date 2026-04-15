@@ -33,11 +33,13 @@ const Papers = () => {
     const deptFullName = deptList.find(d => d.code === branch)?.name || branch;
 
     useEffect(() => {
-        fetchDepartments();
         fetchUserProfile();
     }, []);
 
     const fetchDepartments = async () => {
+        // Students don't need the department list and aren't allowed to fetch it
+        if (userRole === 'STUDENT') return;
+        
         try {
             const res = await fetch(`${API_BASE_URL}/admin/departments`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -63,6 +65,8 @@ const Papers = () => {
                 setUserSemester(data.semester);
                 if (data.role === 'STUDENT' && data.branch) {
                     setBranch(data.branch);
+                } else if (data.role !== 'STUDENT') {
+                    fetchDepartments();
                 }
             }
         } catch (e) {
