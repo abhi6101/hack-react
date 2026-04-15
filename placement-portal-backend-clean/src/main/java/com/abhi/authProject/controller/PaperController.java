@@ -225,7 +225,8 @@ public class PaperController {
 
         if (!isAdmin) {
             Users user = userRepo.findByUsername(auth.getName()).orElse(null);
-            if (user == null || !user.getBranch().equals(branch) || !user.getSemester().equals(semester)) {
+            if (user == null || user.getBranch() == null || user.getSemester() == null || 
+                !user.getBranch().equalsIgnoreCase(branch) || !user.getSemester().equals(semester)) {
                 return ResponseEntity.status(403).build(); // Forbidden
             }
         }
@@ -349,7 +350,9 @@ public class PaperController {
 
             if (!isAdmin) {
                 Users user = userRepo.findByUsername(auth.getName()).orElse(null);
-                if (user == null || !user.getBranch().equals(paper.getBranch()) || !user.getSemester().equals(paper.getSemester())) {
+                if (user == null || user.getBranch() == null || user.getSemester() == null || 
+                    !user.getBranch().equalsIgnoreCase(paper.getBranch()) || 
+                    !user.getSemester().equals(paper.getSemester())) {
                     return ResponseEntity.status(403).build();
                 }
             }
