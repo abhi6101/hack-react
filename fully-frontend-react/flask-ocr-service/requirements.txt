@@ -1,6 +1,0 @@
-flask
-flask-cors
-pytesseract
-pillow
-opencv-python-headless
-numpy
