@@ -25,6 +25,8 @@ const Papers = () => {
     const [isDeptOpen, setIsDeptOpen] = useState(false);
     const [viewPdfUrl, setViewPdfUrl] = useState(null);
     const [currentPaper, setCurrentPaper] = useState(null); // For SEO Filename
+    const [userRole, setUserRole] = useState(null);
+    const [userSemester, setUserSemester] = useState(null);
 
     const getToken = () => localStorage.getItem("authToken");
 
@@ -32,6 +34,7 @@ const Papers = () => {
 
     useEffect(() => {
         fetchDepartments();
+        fetchUserProfile();
     }, []);
 
     const fetchDepartments = async () => {
@@ -46,6 +49,24 @@ const Papers = () => {
             }
         } catch (e) {
             console.error(e);
+        }
+    };
+
+    const fetchUserProfile = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/auth/me`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setUserRole(data.role);
+                setUserSemester(data.semester);
+                if (data.role === 'STUDENT' && data.branch) {
+                    setBranch(data.branch);
+                }
+            }
+        } catch (e) {
+            console.error("Failed to fetch user profile", e);
         }
     };
 
@@ -98,7 +119,14 @@ const Papers = () => {
             });
             if (res.ok) {
                 const all = await res.json();
-                const sems = [...new Set(all.map(p => p.semester))].sort((a, b) => a - b);
+                let sems = [...new Set(all.map(p => p.semester))].sort((a, b) => a - b);
+                
+                // --- STRICT FILTER FOR STUDENTS ---
+                if (userRole === 'STUDENT' && userSemester) {
+                    // Only show their current semester box
+                    sems = [userSemester];
+                }
+                
                 setAvailableSems(sems);
             } else if (res.status === 401) {
                 localStorage.clear();
@@ -415,7 +443,7 @@ const Papers = () => {
 
             <header className="papers-hero">
                 <AnimatePresence>
-                    {!selectedSemester && (
+                    {!selectedSemester && userRole !== 'STUDENT' && (
                         <motion.div
                             className="dept-selector-container"
                             initial={{ opacity: 0, y: -10 }}
