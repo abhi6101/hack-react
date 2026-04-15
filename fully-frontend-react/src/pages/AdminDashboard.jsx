@@ -1322,73 +1322,99 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="dashboard-overview animate-in">
+                        {/* 1. Hero Welcome Header */}
+                        <div className="welcome-banner surface-glow" style={{ marginBottom: '2.5rem', padding: '3rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+                            <div className="glow-effect" style={{ position: 'absolute', top: '-50%', left: '50%', transform: 'translateX(-50%)', width: '300px', height: '300px', background: 'var(--primary)', filter: 'blur(120px)', opacity: 0.15, borderRadius: '50%', pointerEvents: 'none' }}></div>
+                            <h1 style={{ fontSize: '2.8rem', fontWeight: '900', letterSpacing: '-1px', marginBottom: '0.5rem', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                                Welcome, {localStorage.getItem('username')?.split(' ')[0] || 'Administrator'}
+                            </h1>
+                            <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
+                                Your placement portal is performing at peak efficiency. Here is a summary of active operations.
+                            </p>
+                        </div>
+
+                        {/* 2. Unified Hero Stats Row */}
                         <div className="stats-grid" style={{ marginBottom: '2.5rem' }}>
                             <div className="stat-card-modern primary">
                                 <div className="stat-icon"><i className="fas fa-briefcase"></i></div>
                                 <div className="stat-details">
-                                    <h3>Total Vacancies</h3>
+                                    <h3>Open Vacancies</h3>
                                     <div className="stat-value">{loadingJobs ? '...' : jobs.length}</div>
                                 </div>
                             </div>
                             <div className="stat-card-modern accent">
                                 <div className="stat-icon"><i className="fas fa-user-graduate"></i></div>
                                 <div className="stat-details">
-                                    <h3>Students Enrolled</h3>
+                                    <h3>Students Registry</h3>
                                     <div className="stat-value">{loadingUsers ? '...' : totalStudents}</div>
                                 </div>
                             </div>
                             <div className="stat-card-modern warning">
-                                <div className="stat-icon"><i className="fas fa-user-check"></i></div>
+                                <div className="stat-icon"><i className="fas fa-id-card"></i></div>
                                 <div className="stat-details">
-                                    <h3>Pending Verification</h3>
+                                    <h3>Verifications</h3>
                                     <div className="stat-value">{loadingProfiles ? '...' : pendingVerifications}</div>
                                 </div>
                             </div>
                             <div className="stat-card-modern success">
-                                <div className="stat-icon"><i className="fas fa-file-invoice"></i></div>
+                                <div className="stat-icon"><i className="fas fa-file-signature"></i></div>
                                 <div className="stat-details">
-                                    <h3>Job Applications</h3>
+                                    <h3>Active Apps</h3>
                                     <div className="stat-value">{loadingApplications ? '...' : applications.length}</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="dashboard-split-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', marginBottom: '2.5rem' }}>
+                        {/* 3. Balanced 50/50 Body Grid */}
+                        <div className="dashboard-split-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2.5rem' }}>
+                            {/* Left Col: Analytics Perspective */}
                             <div className="analytics-col">
-                                {renderAnalytics()}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                    {renderAnalytics()}
+                                </div>
                             </div>
-                            <div className="activity-col">
-                                <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '20px', height: '100%', border: '1px solid var(--border-color)' }}>
-                                    <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <i className="fas fa-bolt" style={{ color: '#fbbf24' }}></i> Quick Actions
+
+                            {/* Right Col: Operations & Activity */}
+                            <div className="operations-col">
+                                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '24px', border: '1px solid var(--border-color)', height: '100%' }}>
+                                    <h3 style={{ marginBottom: '1.5rem', fontSize: '1.4rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <i className="fas fa-terminal"></i> Strategic Actions
                                     </h3>
-                                    <div className="quick-actions-list" style={{ display: 'grid', gap: '1rem' }}>
-                                        <button className="btn-premium" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setActiveTab('jobs')}>
-                                            <i className="fas fa-plus"></i> Post New Job
+                                    
+                                    <div className="quick-actions-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2.5rem' }}>
+                                        <button className="btn-premium" onClick={() => setActiveTab('jobs')}>
+                                            <i className="fas fa-plus-circle"></i> New Job
                                         </button>
-                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)', justifyContent: 'center' }} onClick={() => setActiveTab('users')}>
-                                            <i className="fas fa-user-plus"></i> Onboard Student
+                                        <button className="btn-premium" style={{ background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)' }} onClick={() => setActiveTab('users')}>
+                                            <i className="fas fa-user-plus"></i> Onboard
                                         </button>
-                                        <button className="btn-premium" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)', justifyContent: 'center' }} onClick={() => setActiveTab('profile-details')}>
-                                            <i className="fas fa-check-double"></i> Verify Profiles
+                                        <button className="btn-premium" style={{ background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)' }} onClick={() => setActiveTab('profile-details')}>
+                                            <i className="fas fa-shield-alt"></i> Verify
+                                        </button>
+                                        <button className="btn-premium" style={{ background: 'rgba(255,255,255,0.05)', boxShadow: 'none', border: '1px solid var(--border-color)' }} onClick={() => setActiveTab('interviews')}>
+                                            <i className="fas fa-calendar-alt"></i> Drives
                                         </button>
                                     </div>
 
-                                    <h3 style={{ marginTop: '2.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <i className="fas fa-history" style={{ color: 'var(--primary)' }}></i> Recent Feed
+                                    <h3 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <i className="fas fa-stream"></i> Operational Feed
                                     </h3>
                                     <div className="activity-feed">
-                                        {recentActivities.map((act, i) => (
-                                            <div key={i} style={{ padding: '0.75rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '1rem', alignItems: 'start' }}>
-                                                <div style={{ padding: '0.5rem', borderRadius: '8px', background: act.type === 'app' ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 71, 123, 0.1)', color: act.type === 'app' ? 'var(--primary)' : 'var(--accent)' }}>
-                                                    <i className={`fas ${act.type === 'app' ? 'fa-file-alt' : 'fa-briefcase'}`}></i>
+                                        {recentActivities.length === 0 ? (
+                                            <p style={{ textAlign: 'center', opacity: 0.5, padding: '2rem' }}>All quiet for now...</p>
+                                        ) : (
+                                            recentActivities.map((act, i) => (
+                                                <div key={i} className="feed-item" style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', marginBottom: '0.75rem', display: 'flex', gap: '1rem', alignItems: 'center', border: '1px solid transparent' }}>
+                                                    <div className="act-type" style={{ width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: act.type === 'app' ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 71, 123, 0.1)', color: act.type === 'app' ? 'var(--primary)' : 'var(--accent)' }}>
+                                                        <i className={`fas ${act.type === 'app' ? 'fa-file-alt' : 'fa-briefcase'}`}></i>
+                                                    </div>
+                                                    <div style={{ flex: 1 }}>
+                                                        <p style={{ fontSize: '0.9rem', margin: 0, fontWeight: '500' }}>{act.text}</p>
+                                                        <small style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>{new Date(act.time).toLocaleDateString()}</small>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p style={{ fontSize: '0.85rem', margin: 0 }}>{act.text}</p>
-                                                    <small style={{ color: 'var(--text-secondary)' }}>{new Date(act.time).toLocaleDateString()}</small>
-                                                </div>
-                                            </div>
-                                        ))}
+                                            ))
+                                        )}
                                     </div>
                                 </div>
                             </div>
