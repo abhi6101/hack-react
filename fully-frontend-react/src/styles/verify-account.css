@@ -1,0 +1,191 @@
+/* === VERIFY ACCOUNT PAGE: PRO-LEVEL STYLESHEET (Corrected) === */
+
+/* --- 1. Root Variables & Global Styles (Consistent with Site) --- */
+:root {
+    --dark-bg: #0A0A10;
+    --surface-bg: #111119;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --primary: #00d4ff;
+    --primary-glow: rgba(0, 212, 255, 0.5);
+    --accent: #ff477b;
+    --text-primary: #ECEFF1;
+    --text-secondary: #90A4AE;
+    --error: #ff477b;
+    --success: #28a745;
+    --font-family: 'Poppins', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
+}
+
+/* --- 2. Navigation (Consistent with Site) --- */
+nav {
+    padding: 1rem 5%;
+    background: rgba(10, 10, 16, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo { font-size: 1.8rem; font-weight: 800; }
+.logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
+nav ul { display: flex; list-style: none; gap: 1.5rem; }
+nav a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+nav a:hover { color: var(--primary); }
+
+/* --- 3. Main Section & Card Layout --- */
+.verification-section {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.verification-card {
+    max-width: 480px;
+    width: 100%;
+    padding: 3rem;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: card-fade-in 0.6s ease-out forwards 0.2s;
+}
+
+@keyframes card-fade-in {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.verification-card h1 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 2.2rem;
+}
+.verification-card .subtitle {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+/* --- 4. Interactive Glowing Border (CORRECTED) --- */
+.surface-glow {
+    background: var(--surface-bg);
+    border-radius: 16px;
+    position: relative;
+}
+.surface-glow::before {
+    content: ''; 
+    position: absolute; 
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: inherit; 
+    padding: 1px;
+    background: conic-gradient(from var(--angle), transparent 20%, var(--primary), var(--accent), transparent 80%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; 
+    mask-composite: exclude;
+    animation: spin 5s linear infinite paused; 
+    opacity: 0; 
+    transition: opacity 0.4s ease;
+    /* THE FIX: This makes the overlay unclickable */
+    pointer-events: none;
+}
+.surface-glow:hover::before { animation-play-state: running; opacity: 1; }
+@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes spin { to { --angle: 360deg; } }
+
+/* --- 5. Form Styling --- */
+form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#verificationCode {
+    text-align: center;
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+    font-weight: 600;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.input-feedback {
+    display: none;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--error);
+}
+
+/* --- 6. Button Styling (Consistent with Site) --- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+    width: 100%;
+    padding: 0.9rem 1.8rem; border-radius: 50px; font-weight: 600;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-primary { background: var(--primary); color: #000; box-shadow: 0 0 25px var(--primary-glow); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 40px var(--primary-glow); }
+
+/* --- 7. Alerts --- */
+#alert-container {
+    margin-bottom: 1.5rem;
+}
+.alert {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    border-left: 4px solid;
+    background-color: var(--surface-bg);
+}
+.alert-error { border-color: var(--error); color: var(--error); }
+.alert-success { border-color: var(--success); color: var(--success); }
+
+/* --- 8. Spinner & Loading State --- */
+.spinner {
+    display: none;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-top-color: #000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin-button 1s linear infinite;
+}
+@keyframes spin-button { to { transform: rotate(360deg); } }
+
+button:disabled { cursor: not-allowed; opacity: 0.7; }
+button.is-loading .button-text { display: none; }
+button.is-loading .spinner { display: block; }

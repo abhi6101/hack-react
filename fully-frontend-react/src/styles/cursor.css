@@ -1,0 +1,22 @@
+/* Base styles for the motion divs */
+.cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px;
+    /* Matched default size */
+    height: 32px;
+    /* Border and blend managed by framer-motion variants now */
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    box-sizing: border-box;
+    will-change: transform, width, height, border;
+}
+
+/* Hide Custom Cursor on Touch Devices */
+@media (hover: none) or (pointer: coarse) {
+    .custom-cursor-container {
+        display: none !important;
+    }
+}
