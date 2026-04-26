@@ -90,19 +90,28 @@ const AdminDashboard = () => {
     const role = normalizedRole || 'USER';
     const myCompanyName = localStorage.getItem('companyName');
 
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
     // Helper function to handle 401 errors
     const handleUnauthorized = () => {
+        if (isLoggingOut) return;
+        setIsLoggingOut(true);
+
         console.error('🚫 Authentication failed - Token invalid or expired');
         showAlert({
             title: 'Session Expired',
             message: 'Your session has expired. Please log in again.',
             type: 'warning',
             actions: [
-                { label: 'Login', primary: true, onClick: () => { localStorage.clear(); navigate('/login'); } }
+                {
+                    label: 'Login', primary: true, onClick: () => {
+                        localStorage.clear();
+                        navigate('/login');
+                    }
+                }
             ]
         });
         localStorage.clear();
-        // Navigation handled by alert action to prevent immediate unmount/remount issues
     };
 
     // Derived states
@@ -206,6 +215,7 @@ const AdminDashboard = () => {
             const res = await fetch(`${ADMIN_API_URL}/stats/companies`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
+            if (res.status === 401) return handleUnauthorized();
             if (res.ok) {
                 const data = await res.json();
                 setCompanyStats(data);
@@ -223,6 +233,7 @@ const AdminDashboard = () => {
             const res = await fetch(`${ADMIN_API_URL}/stats/students`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
+            if (res.status === 401) return handleUnauthorized();
             if (res.ok) {
                 const data = await res.json();
                 setStudentActivity(data);
@@ -240,6 +251,7 @@ const AdminDashboard = () => {
             const res = await fetch(`${API_BASE_URL}/student-profile/admin/all`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
+            if (res.status === 401) return handleUnauthorized();
             if (res.ok) {
                 const data = await res.json();
                 setAllProfiles(data);
@@ -297,12 +309,12 @@ const AdminDashboard = () => {
             const response = await fetch(`${ADMIN_API_URL}/job-applications`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
+            if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to fetch applications');
             const data = await response.json();
             setApplications(data);
         } catch (error) {
             console.error('Error loading applications:', error);
-            setMessage({ text: 'Failed to load applications.', type: 'error' });
         } finally {
             setLoadingApplications(false);
         }
@@ -370,9 +382,13 @@ const AdminDashboard = () => {
             const res = await fetch(`${API_BASE_URL}/admin/departments`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
+            if (res.status === 401) return handleUnauthorized();
             if (res.ok) setDepartments(await res.json());
-        } catch (e) { console.error(e); }
-        finally { setLoadingDepts(false); }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoadingDepts(false);
+        }
     };
 
     const startEditDept = (dept) => {
@@ -652,6 +668,8 @@ const AdminDashboard = () => {
                 body: JSON.stringify(newInterview)
             });
 
+            if (res.status === 401) return handleUnauthorized();
+
             if (res.ok) {
                 const saved = await res.json();
                 if (editingInterview) {
@@ -739,12 +757,12 @@ const AdminDashboard = () => {
         setLoadingJobs(true);
         try {
             const response = await fetch(`${ADMIN_API_URL}/jobs`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+            if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to fetch jobs');
             const data = await response.json();
             setJobs(data);
         } catch (error) {
             console.error('Error loading jobs:', error);
-            setMessage({ text: 'Failed to load jobs.', type: 'error' });
         } finally {
             setLoadingJobs(false);
         }
@@ -754,12 +772,12 @@ const AdminDashboard = () => {
         setLoadingUsers(true);
         try {
             const response = await fetch(`${ADMIN_API_URL}/users`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+            if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to fetch users');
             const data = await response.json();
             setUsers(data);
         } catch (error) {
             console.error('Error loading users:', error);
-            setMessage({ text: 'Failed to load users.', type: 'error' });
         } finally {
             setLoadingUsers(false);
         }
@@ -814,6 +832,8 @@ const AdminDashboard = () => {
                 body: JSON.stringify(payload)
             });
 
+            if (res.status === 401) return handleUnauthorized();
+
             if (res.ok) {
                 console.log('✅ User update successful');
                 setMessage({ text: editingUser ? 'User updated!' : 'User created!', type: 'success' });
@@ -823,7 +843,6 @@ const AdminDashboard = () => {
             } else {
                 const error = await res.text();
                 console.error('❌ Backend error:', error);
-                console.error('Status code:', res.status);
                 setMessage({ text: error, type: 'error' });
             }
         } catch (err) {
@@ -840,6 +859,7 @@ const AdminDashboard = () => {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
+            if (res.status === 401) return handleUnauthorized();
             if (res.ok) {
                 setMessage({ text: 'User deleted successfully', type: 'success' });
                 loadUsers();
@@ -880,6 +900,7 @@ const AdminDashboard = () => {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
 
+            if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to delete job. Please try again.');
 
             loadJobs();
