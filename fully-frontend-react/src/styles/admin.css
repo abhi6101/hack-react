@@ -169,6 +169,9 @@ body {
     min-height: 100vh;
     background: var(--dark-bg);
     overflow-x: hidden;
+    position: relative;
+    z-index: 10;
+    width: 100%;
 }
 
 .content-container {
