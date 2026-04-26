@@ -65,6 +65,25 @@ body {
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
+    overflow-y: auto; /* Enable scrolling for the whole sidebar */
+}
+
+/* Custom Scrollbar for Sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
 }
 
 .sidebar-header {
@@ -93,10 +112,6 @@ body {
 .sidebar-menu {
     flex-grow: 1;
     padding: 2rem 1rem;
-    overflow-y: auto;
-    /* Enable vertical scrolling */
-    overflow-x: hidden;
-    /* Hide horizontal overflow */
 }
 
 .sidebar-menu ul {
