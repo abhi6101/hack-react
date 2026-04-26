@@ -1003,6 +1003,33 @@ const AdminDashboard = () => {
         setTimeout(() => setMessage({ text: '', type: '' }), 2000);
     };
 
+    const handleDeleteAllJobs = async () => {
+        if (!isSuperAdmin) return;
+        if (!window.confirm('🚨 DANGER: This will permanently delete ALL jobs from the system. This action cannot be undone. Are you absolutely sure?')) return;
+        if (!window.confirm('FINAL CONFIRMATION: Perform mass deletion of all job listings?')) return;
+
+        try {
+            const res = await fetch(`${ADMIN_API_URL}/jobs/all`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+
+            if (res.status === 401) return handleUnauthorized();
+
+            if (res.ok) {
+                const msg = await res.text();
+                showToast({ message: msg || 'All jobs deleted successfully', type: 'success' });
+                setJobs([]);
+            } else {
+                const err = await res.text();
+                showToast({ message: err || 'Mass deletion failed', type: 'error' });
+            }
+        } catch (err) {
+            console.error('Mass deletion error:', err);
+            showToast({ message: 'Error performing mass deletion', type: 'error' });
+        }
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
