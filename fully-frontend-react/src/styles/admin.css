@@ -54,17 +54,22 @@ body {
 }
 
 .sidebar {
-    width: 260px;
-    min-width: 260px;
-    height: 100vh;
-    background-color: var(--surface-bg);
-    border-right: 1px solid var(--border-color);
+    width: 280px;
+    min-width: 280px;
+    height: calc(100vh - 3rem); /* Accounting for top/bottom margins */
+    margin: 1.5rem 0 1.5rem 1.5rem; /* Float away from left and bottom edges */
+    background: rgba(15, 15, 22, 0.65); /* Glassmorphism semitransparent bg */
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Crisp outer glass edge */
+    border-radius: 24px; /* Ultra-modern smooth corners */
     position: sticky;
-    top: 0;
+    top: 1.5rem;
     z-index: 100;
     display: flex;
     flex-direction: column;
-    transition: all 0.3s ease;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
@@ -111,45 +116,50 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem 1.2rem;
-    color: var(--text-secondary);
+    padding: 1rem 1.5rem;
+    color: rgba(255, 255, 255, 0.55);
     text-decoration: none;
-    border-radius: 12px;
+    border-radius: 16px; /* Pill curves */
     font-weight: 500;
     font-size: 0.95rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     background: transparent;
-    border: 1px solid transparent;
+    border: none;
 }
 
 .sidebar-menu button:hover,
 .sidebar-menu a:hover {
     color: var(--text-primary);
-    background-color: rgba(255, 255, 255, 0.03);
-    transform: translateX(5px);
-    border-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.06);
+    transform: translateX(8px);
 }
 
 .sidebar-menu button.active,
 .sidebar-menu a.active {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 212, 255, 0.05));
-    color: var(--primary);
-    font-weight: 600;
-    border-left: 4px solid var(--primary);
-    box-shadow: 10px 0 20px rgba(0, 212, 255, 0.05);
+    background: var(--primary); /* Glowing pill */
+    color: #050505; /* Deep contrast text */
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 0 25px var(--primary-glow), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    transform: scale(1.02);
 }
 
 .sidebar-menu i {
-    font-size: 1.2rem;
-    width: 30px;
+    font-size: 1.25rem;
+    width: 32px;
     text-align: center;
-    transition: transform 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sidebar-menu button:hover i {
-    transform: scale(1.2);
+    transform: scale(1.15) rotate(-5deg);
     color: var(--primary);
+}
+
+.sidebar-menu button.active i,
+.sidebar-menu a.active i {
+    color: #050505; /* Ensure active icon perfectly matches deep text */
+    transform: scale(1.1);
 }
 
 
