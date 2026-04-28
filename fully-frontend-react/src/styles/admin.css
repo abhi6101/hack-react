@@ -92,7 +92,6 @@ body {
 
 .sidebar-menu {
     flex-grow: 1;
-    padding: 2rem 1rem;
     overflow-y: auto;   /* Scroll inside the menu */
     overflow-x: hidden;
     min-height: 0;      /* CRITICAL for flexbox scrolling to work */
@@ -121,6 +120,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    padding: 2rem 1rem; /* Padding moved here to prevent flex-scroll cutoffs */
 }
 
 .sidebar-menu li {
