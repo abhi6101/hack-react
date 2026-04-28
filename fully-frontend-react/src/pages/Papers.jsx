@@ -165,34 +165,13 @@ const Papers = () => {
         }
     };
 
-    const handleDownload = async (paper) => {
+    const handleDownload = (paper) => {
         try {
-            // 1. Fetch the blob securely
-            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}`, {
-                method: 'GET'
-                // Removed strict Authorization headers because the public endpoint serves the file directly
-            });
-
-            if (res.ok) {
-                // 2. Create a Blob from the PDF data
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-
-                // 3. Open in Modal (In-App Viewer)
-                setCurrentPaper(paper);
-                setViewPdfUrl(url); // Triggers the modal
-            } else {
-                if (res.status === 401) {
-                    showAlert({
-                        title: 'Access Denied',
-                        message: 'Please log in to view this paper.',
-                        type: 'error'
-                    });
-                    navigate('/login');
-                } else {
-                    showToast({ message: 'Error loading paper. Please try again.', type: 'error' });
-                }
-            }
+            // Because the backend performs a 302 Redirect to Google Drive, 
+            // we cannot use fetch() due to Google Drive strict CORS policies.
+            // Opening in a new tab works flawlessly and is what the Admin dashboard uses.
+            const url = `${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
         } catch (e) {
             console.error("Download error:", e);
             showToast({ message: 'Failed to access document.', type: 'error' });
