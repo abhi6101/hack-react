@@ -2700,7 +2700,6 @@ const AdminDashboard = () => {
 
             <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
                 <div className="sidebar-header">
-                    <div className="logo-glow"></div>
                     <h2><i className="fas fa-shield-alt"></i> AntiHired <span>Admin</span></h2>
                 </div>
 
