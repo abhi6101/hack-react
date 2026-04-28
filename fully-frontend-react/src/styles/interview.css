@@ -2,7 +2,10 @@
 
 .interview-page {
     min-height: 100vh;
-    padding-top: 60px;
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 /* Top Filter Section - Below Navbar */
@@ -16,20 +19,20 @@
     max-width: 100%;
 }
 
-.search-bar {
+.int-search-bar {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.search-bar i {
+.int-search-bar i {
     position: absolute;
     left: 1.5rem;
     color: var(--text-secondary);
     font-size: 1.1rem;
 }
 
-.search-bar input {
+.int-search-bar input {
     width: 100%;
     padding: 1rem 1rem 1rem 3.5rem;
     background: rgba(255, 255, 255, 0.05);
@@ -40,17 +43,17 @@
     transition: all 0.3s ease;
 }
 
-.search-bar input:focus {
+.int-search-bar input:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
 }
 
-.search-bar input::placeholder {
+.int-search-bar input::placeholder {
     color: var(--text-muted);
 }
 
-.filter-bar {
+.int-filter-bar {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -60,7 +63,7 @@
     padding: 0 1.5rem;
 }
 
-.filter-bar label {
+.int-filter-bar label {
     color: var(--text-secondary);
     font-size: 0.9rem;
     display: flex;
@@ -69,7 +72,7 @@
     white-space: nowrap;
 }
 
-.filter-bar select {
+.int-filter-bar select {
     flex: 1;
     background: transparent;
     border: none;
@@ -79,11 +82,11 @@
     cursor: pointer;
 }
 
-.filter-bar select:focus {
+.int-filter-bar select:focus {
     outline: none;
 }
 
-.filter-bar select option {
+.int-filter-bar select option {
     background: var(--dark-bg);
     color: white;
 }
@@ -95,7 +98,7 @@
     gap: 2rem;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 3rem 1rem 2rem 1rem;
 }
 
 /* Left Sidebar - Statistics */

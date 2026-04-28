@@ -316,7 +316,7 @@ const Interview = () => {
         <div className="interview-page">
             {/* Search and Filter - Top */}
             <section className="top-filter-section">
-                <div className="search-bar">
+                <div className="int-search-bar">
                     <i className="fas fa-search"></i>
                     <input
                         type="text"
@@ -325,7 +325,7 @@ const Interview = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <div className="filter-bar">
+                <div className="int-filter-bar">
                     <label><i className="fas fa-filter"></i> Location:</label>
                     <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)}>
                         {locations.map(loc => (
