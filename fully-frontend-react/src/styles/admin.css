@@ -755,7 +755,6 @@ td {
 .btn-premium:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow: 0 15px 30px rgba(0, 212, 255, 0.4);
-    background: #fff;
 }
 
 .modern-table {
