@@ -71,6 +71,7 @@ const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [loadingJobs, setLoadingJobs] = useState(true);
     const [loadingUsers, setLoadingUsers] = useState(true);
+    const [expandedMenu, setExpandedMenu] = useState('Overview');
     const [message, setMessage] = useState({ text: '', type: '' });
     const [formData, setFormData] = useState({
         jobTitle: '',
@@ -2692,6 +2693,14 @@ const AdminDashboard = () => {
         { id: 'companies', label: 'Companies', icon: 'fa-city', roles: ['SUPER_ADMIN'] }
     ];
 
+    const menuGroups = [
+        { title: 'Overview', icon: 'fa-home', items: ['dashboard', 'users'] },
+        { title: 'Recruitment', icon: 'fa-bullhorn', items: ['jobs', 'applications', 'interviews', 'interview-applications'] },
+        { title: 'Students', icon: 'fa-user-graduate', items: ['students', 'profile-details'] },
+        { title: 'Resources', icon: 'fa-layer-group', items: ['gallery', 'question-papers'] },
+        { title: 'System', icon: 'fa-cog', items: ['departments', 'companies'] }
+    ];
+
     return (
         <div className="admin-container animate-in">
             <button className="mobile-menu-toggle" onClick={toggleSidebar}>
@@ -2702,26 +2711,48 @@ const AdminDashboard = () => {
 
 
                 <nav className="sidebar-menu">
-                    <ul>
-                        {menuItems.filter(item => item.roles.includes(role)).map(item => (
-                            <li key={item.id}>
-                                <button
-                                    onClick={() => {
-                                        setActiveTab(item.id);
-                                        if (item.id === 'applications') loadApplications();
-                                        if (item.id === 'interview-applications') loadInterviewApplications();
-                                        if (item.id === 'gallery') loadGalleryItems();
-                                    }}
-                                    className={`nav-btn-modern ${activeTab === item.id ? 'active' : ''}`}
-                                >
-                                    <div className="nav-icon-wrapper">
-                                        <i className={`fas ${item.icon}`}></i>
-                                    </div>
-                                    <span>{item.label}</span>
-                                    {activeTab === item.id && <div className="active-indicator"></div>}
-                                </button>
-                            </li>
-                        ))}
+                    <ul className="accordion-menu">
+                        {menuGroups.map(group => {
+                            const groupItems = menuItems.filter(item => group.items.includes(item.id) && item.roles.includes(role));
+                            if (groupItems.length === 0) return null;
+                            const isExpanded = expandedMenu === group.title;
+                            
+                            return (
+                                <li key={group.title} className="menu-group-container">
+                                    <button 
+                                        className={`accordion-trigger ${isExpanded ? 'expanded' : ''}`}
+                                        onClick={() => setExpandedMenu(isExpanded ? null : group.title)}
+                                    >
+                                        <div className="accordion-title">
+                                            <i className={`fas ${group.icon}`}></i>
+                                            <span>{group.title}</span>
+                                        </div>
+                                        <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'} accordion-arrow`}></i>
+                                    </button>
+                                    
+                                    {isExpanded && (
+                                        <ul className="accordion-children">
+                                            {groupItems.map(item => (
+                                                <li key={item.id}>
+                                                    <button
+                                                        onClick={() => {
+                                                            setActiveTab(item.id);
+                                                            if (item.id === 'applications') loadApplications();
+                                                            if (item.id === 'interview-applications') loadInterviewApplications();
+                                                            if (item.id === 'gallery') loadGalleryItems();
+                                                        }}
+                                                        className={`sidebar-child-btn ${activeTab === item.id ? 'active' : ''}`}
+                                                    >
+                                                        <i className={`fas ${item.icon}`}></i>
+                                                        <span>{item.label}</span>
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </li>
+                            );
+                        })}
                     </ul>
                 </nav>
 
