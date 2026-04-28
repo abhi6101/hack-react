@@ -2699,9 +2699,7 @@ const AdminDashboard = () => {
             </button>
 
             <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
-                <div className="sidebar-header">
-                    <h2>AntiHired <span>Admin</span></h2>
-                </div>
+
 
                 <nav className="sidebar-menu">
                     <ul>
