@@ -167,10 +167,10 @@ const Papers = () => {
 
     const handleDownload = async (paper) => {
         try {
-            // 1. Fetch the blob securely using the token
-            const res = await fetch(`${API_BASE_URL}/papers/proxy/${paper.id}`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${getToken()}` }
+            // 1. Fetch the blob securely
+            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}`, {
+                method: 'GET'
+                // Removed strict Authorization headers because the public endpoint serves the file directly
             });
 
             if (res.ok) {
