@@ -45,26 +45,28 @@ const ResumeBuilder = () => {
     };
 
     const dummyData = {
-        name: 'NIHAL SAHU',
-        email: 'nihalsahu1290@gmail.com',
-        phone: '+91 93433 51746',
-        location: 'Indore, Madhya Pradesh, India',
-        linkedin: '',
-        github: '',
-        summary: 'Motivated Electrical & Electronics Engineering student (B.Tech 2024–2028) seeking an internship or entry-level role in electrical systems or circuit design. Eager to apply academic knowledge of electrical machines, circuit analysis, and hands-on project experience to real-world engineering challenges while growing within a dynamic and collaborative organization.',
+        name: 'ALEX JOHNSON',
+        email: 'alex.johnson@example.com',
+        phone: '+1 555-0123-456',
+        location: 'San Francisco, CA, USA',
+        linkedin: 'linkedin.com/in/alexj',
+        github: 'github.com/alexcodex',
+        summary: 'Highly motivated Full Stack Developer with 2 years of experience building scalable web applications. Proficient in React, Node.js, and Cloud technologies. Eager to solve complex software engineering challenges and deliver high-quality code in a fast-paced agile environment.',
         education: [
-            { institution: 'IES IPS Academy, Indore', degree: 'B.Tech - Electrical & Electronics Engineering', year: '2024 - 2028 (Ongoing)', score: '8.6 / 10' },
-            { institution: 'Little Flower Convent HSS', degree: 'Higher Secondary Certificate - Science (PCM)', year: '2023', score: '86.8%' },
-            { institution: 'Maharishi Vidya Mandir, Seoni', degree: 'Secondary School Certificate', year: '2021', score: '70%' }
+            { institution: 'Tech University, California', degree: 'B.S. - Computer Science', year: '2020 - 2024', score: '3.8 / 4.0 GPA' },
+            { institution: 'City High School', degree: 'High School Diploma (Science)', year: '2020', score: '95%' }
         ],
-        experience: [],
+        experience: [
+            { company: 'Innovate Tech', role: 'Frontend Developer', duration: 'June 2024 - Present', description: 'Developed responsive UI components using React and Redux architectures.\nImproved site performance by 30% through comprehensive code splitting and lazy loading techniques.' },
+            { company: 'Startup Hub', role: 'Backend Intern', duration: 'Jan 2024 - May 2024', description: 'Assisted in building scalable RESTful APIs using Node.js and Express.\nCollaborated directly with the UX team to implement precise pixel-perfect layouts.' }
+        ],
         projects: [
-            { title: 'Basic Household Electrical Wiring System', techStack: 'Switch, Bulb, Socket, Wire, MCB, Hand Tools', description: 'Designed & implemented a residential wiring layout (switch, socket, bulb) with MCB for overcurrent protection.\nApplied load distribution principles and standard wiring safety protocols using basic electrical tools.' },
-            { title: 'LED Circuit Design with Arduino UNO', techStack: 'LED, Resistor, Battery, Breadboard, Arduino UNO', description: 'Built a breadboard LED circuit; applied Ohm\'s Law for current-limiting resistor calculation and verified with multimeter.\nIntegrated Arduino UNO for control logic, gaining hands-on exposure to embedded systems and microcontroller programming.' }
+            { title: 'E-Commerce Platform', techStack: 'MERN Stack, Redux, Stripe', description: 'Built a full-featured e-commerce site with user authentication, product search, and secure payment processing.\nImplemented caching and database indexing to handle over 1,000 concurrent active users seamlessly.' },
+            { title: 'Task Manager Collaborative App', techStack: 'React, Firebase, TailwindCSS', description: 'Engineered a real-time task management application featuring drag-and-drop workflow columns.\nIntegrated instant websocket team collaboration features reducing communication latency across tasks.' }
         ],
-        skills: 'Electrical: Electrical Machines, Circuit Analysis, Power Systems Fundamentals, Wiring & Connections\nInstruments: Multimeter, Breadboard, Soldering Iron, MCB, Basic Electrical Hand Tools\nMicrocontroller: Arduino UNO - Basic Programming, Circuit Interfacing, Embedded Systems Concepts\nSoftware: MS Word, MS Excel (Basic), Basic Circuit Simulation Tools',
-        achievements: 'Scored 86.8% in Class 12 Science (PCM) — strong foundation in Physics and Mathematics.\nMaintaining CGPA 8.6/10 in B.Tech Electrical & Electronics Engineering.\nCompleted hands-on wiring and circuit projects; active in college technical workshops and lab sessions.\nDeveloped analytical and problem-solving skills through independent circuit builds and testing exercises.',
-        strengths: 'Quick Learner, Team Player, Attention to Detail, Punctual & Disciplined, Adaptable, Strong Work Ethic',
+        skills: 'Frontend: React.js, JavaScript, HTML5, CSS3, TailwindCSS\nBackend: Node.js, Express, Java, Spring Boot, Python\nDatabases: MySQL, PostgreSQL, MongoDB, Redis\nTools & Deployments: Git, Docker, AWS (EC2/S3), CI/CD Actions',
+        achievements: 'Awarded 1st place out of 50 teams at the Regional University Hackathon 2023.\nMaintained Dean\'s List Scholar honors for 6 consecutive academic semesters.\nPublished a technical article on state management reaching over 10,000 individual reads on Dev.to.',
+        strengths: 'Analytical Problem Solver, Self-Motivated, Team Collaboration, Agile Adaptable, Effective Communicator',
         template: 'sde',
     };
 
