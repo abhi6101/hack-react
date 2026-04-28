@@ -117,14 +117,13 @@ body {
 
 .sidebar-menu ul {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
     padding: 2rem 1rem; /* Padding moved here to prevent flex-scroll cutoffs */
+    display: block;
 }
 
 .sidebar-menu li {
     width: 100%;
+    margin-bottom: 0.8rem;
 }
 
 .sidebar-menu button,
