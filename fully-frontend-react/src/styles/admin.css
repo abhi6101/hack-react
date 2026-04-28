@@ -174,11 +174,7 @@ body {
     color: var(--primary);
 }
 
-.sidebar-footer {
-    padding: 1.5rem;
-    border-top: 1px solid var(--border-color);
-    background: rgba(0,0,0,0.2);
-}
+
 
 .admin-main {
     flex: 1;

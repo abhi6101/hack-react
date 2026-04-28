@@ -2728,17 +2728,7 @@ const AdminDashboard = () => {
                     </ul>
                 </nav>
 
-                <div className="sidebar-footer">
-                    <div className="user-info-mini" style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border-color)', margin: '0 1rem 1.5rem' }}>
-                        <div className="mini-avatar" style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))', width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                            {role.charAt(0)}
-                        </div>
-                        <div className="mini-details" style={{ marginLeft: '1rem' }}>
-                            <div className="mini-name" style={{ fontWeight: '600', fontSize: '0.95rem' }}>{localStorage.getItem('username') || 'Admin'}</div>
-                            <div className="mini-role" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{role.replace('_', ' ')}</div>
-                        </div>
-                    </div>
-                </div>
+
             </aside>
 
             <main className="admin-main">
