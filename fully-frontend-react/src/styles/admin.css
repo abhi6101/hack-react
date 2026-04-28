@@ -728,6 +728,12 @@ td {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Force options to use dark background to prevent text becoming invisible */
+.form-control-modern option {
+    background-color: #1a1a24;
+    color: var(--text-primary);
+}
+
 .form-control-modern:focus {
     background: rgba(255, 255, 255, 0.05);
     border-color: var(--primary);
