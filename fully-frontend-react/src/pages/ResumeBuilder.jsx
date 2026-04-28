@@ -12,6 +12,7 @@ const ResumeBuilder = () => {
         name: '',
         email: '',
         phone: '',
+        location: '',
         linkedin: '',
         github: '',
         summary: '',
@@ -19,6 +20,8 @@ const ResumeBuilder = () => {
         experience: [{ company: '', role: '', duration: '', description: '' }],
         projects: [{ title: '', description: '', techStack: '' }],
         skills: '', // Comma separated
+        achievements: '',
+        strengths: '',
         template: 'sde', // Default to SDE format
     });
 
@@ -28,6 +31,7 @@ const ResumeBuilder = () => {
         name: '',
         email: '',
         phone: '',
+        location: '',
         linkedin: '',
         github: '',
         summary: '',
@@ -35,29 +39,32 @@ const ResumeBuilder = () => {
         experience: [{ company: '', role: '', duration: '', description: '' }],
         projects: [{ title: '', description: '', techStack: '' }],
         skills: '',
+        achievements: '',
+        strengths: '',
         template: 'sde',
     };
 
     const dummyData = {
-        name: 'Alex Johnson',
-        email: 'alex.johnson@example.com',
-        phone: '+1 555-0123-456',
-        linkedin: 'linkedin.com/in/alexj',
-        github: 'github.com/alexcodex',
-        summary: 'Passionate Full Stack Developer with 2 years of experience building scalable web applications. Proficient in React, Node.js, and Cloud technologies. Eager to solve complex problems and deliver high-quality code.',
+        name: 'NIHAL SAHU',
+        email: 'nihalsahu1290@gmail.com',
+        phone: '+91 93433 51746',
+        location: 'Indore, Madhya Pradesh, India',
+        linkedin: '',
+        github: '',
+        summary: 'Motivated Electrical & Electronics Engineering student (B.Tech 2024–2028) seeking an internship or entry-level role in electrical systems or circuit design. Eager to apply academic knowledge of electrical machines, circuit analysis, and hands-on project experience to real-world engineering challenges while growing within a dynamic and collaborative organization.',
         education: [
-            { institution: 'Tech University', degree: 'B.Tech in Computer Science', year: '2023', score: '8.5 CGPA' },
-            { institution: 'City High School', degree: 'Senior Secondary', year: '2019', score: '92%' }
+            { institution: 'IES IPS Academy, Indore', degree: 'B.Tech - Electrical & Electronics Engineering', year: '2024 - 2028 (Ongoing)', score: '8.6 / 10' },
+            { institution: 'Little Flower Convent HSS', degree: 'Higher Secondary Certificate - Science (PCM)', year: '2023', score: '86.8%' },
+            { institution: 'Maharishi Vidya Mandir, Seoni', degree: 'Secondary School Certificate', year: '2021', score: '70%' }
         ],
-        experience: [
-            { company: 'Innovate Tech', role: 'Frontend Developer', duration: 'June 2023 - Present', description: 'Developed responsive UI components using React and Redux. Improved site performance by 30% through code splitting and lazy loading.' },
-            { company: 'Startup Hub', role: 'Intern', duration: 'Jan 2023 - May 2023', description: 'Assisted in building RESTful APIs using Node.js and Express. Collaborated with the design team to implement pixel-perfect layouts.' }
-        ],
+        experience: [],
         projects: [
-            { title: 'E-Commerce Platform', techStack: 'MERN Stack, Redux, Stripe', description: 'Built a full-featured e-commerce site with user authentication, product search, and secure payment processing.' },
-            { title: 'Task Manager App', techStack: 'React, Firebase', description: 'Real-time task management application with drag-and-drop functionality and team collaboration features.' }
+            { title: 'Basic Household Electrical Wiring System', techStack: 'Switch, Bulb, Socket, Wire, MCB, Hand Tools', description: 'Designed & implemented a residential wiring layout (switch, socket, bulb) with MCB for overcurrent protection.\nApplied load distribution principles and standard wiring safety protocols using basic electrical tools.' },
+            { title: 'LED Circuit Design with Arduino UNO', techStack: 'LED, Resistor, Battery, Breadboard, Arduino UNO', description: 'Built a breadboard LED circuit; applied Ohm\'s Law for current-limiting resistor calculation and verified with multimeter.\nIntegrated Arduino UNO for control logic, gaining hands-on exposure to embedded systems and microcontroller programming.' }
         ],
-        skills: 'JavaScript, React.js, Node.js, Java, Spring Boot, SQL, MongoDB, Git, Docker, AWS',
+        skills: 'Electrical: Electrical Machines, Circuit Analysis, Power Systems Fundamentals, Wiring & Connections\nInstruments: Multimeter, Breadboard, Soldering Iron, MCB, Basic Electrical Hand Tools\nMicrocontroller: Arduino UNO - Basic Programming, Circuit Interfacing, Embedded Systems Concepts\nSoftware: MS Word, MS Excel (Basic), Basic Circuit Simulation Tools',
+        achievements: 'Scored 86.8% in Class 12 Science (PCM) — strong foundation in Physics and Mathematics.\nMaintaining CGPA 8.6/10 in B.Tech Electrical & Electronics Engineering.\nCompleted hands-on wiring and circuit projects; active in college technical workshops and lab sessions.\nDeveloped analytical and problem-solving skills through independent circuit builds and testing exercises.',
+        strengths: 'Quick Learner, Team Player, Attention to Detail, Punctual & Disciplined, Adaptable, Strong Work Ethic',
         template: 'sde',
     };
 
@@ -129,100 +136,125 @@ const ResumeBuilder = () => {
             const margin = 15;
             let yPos = 20;
 
-            // Helper to add text and update yPos
-            const addText = (text, x, y, options = {}) => {
-                doc.text(text, x, y, options);
-            };
-
             const addSectionHeader = (title) => {
+                if(yPos > 270) { doc.addPage(); yPos = 20; }
                 yPos += 5;
-                doc.setFontSize(12);
+                doc.setFontSize(11);
                 doc.setFont("helvetica", "bold");
+                doc.setTextColor(31, 78, 121);
                 doc.text(title.toUpperCase(), margin, yPos);
 
-                // Draw line under header
                 yPos += 2;
-                doc.setLineWidth(0.5);
+                doc.setDrawColor(31, 78, 121);
+                doc.setLineWidth(0.8);
                 doc.line(margin, yPos, pageWidth - margin, yPos);
                 yPos += 5;
                 doc.setFont("helvetica", "normal");
-                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(9.5);
+            };
+
+            const autoPageBreak = (spaceNeeded) => {
+                if (yPos + spaceNeeded > 285) {
+                    doc.addPage();
+                    yPos = 20;
+                }
             };
 
             // --- HEADER ---
-            doc.setFontSize(22);
+            doc.setFontSize(24);
             doc.setFont("helvetica", "bold");
-            doc.text(formData.name || "YOUR NAME", pageWidth / 2, yPos, { align: "center" });
+            doc.setTextColor(31, 78, 121);
+            doc.text((formData.name || "YOUR NAME").toUpperCase(), pageWidth / 2, yPos, { align: "center" });
 
-            yPos += 7;
-            doc.setFontSize(10);
+            yPos += 6;
+            doc.setFontSize(9);
             doc.setFont("helvetica", "normal");
+            doc.setTextColor(80, 80, 80);
 
-            // Build contact line: Email | Phone | LinkedIn | GitHub
             const contacts = [];
             if (formData.email) contacts.push(formData.email);
             if (formData.phone) contacts.push(formData.phone);
             if (formData.linkedin) contacts.push(formData.linkedin.replace('https://', '').replace('www.', ''));
             if (formData.github) contacts.push(formData.github.replace('https://', '').replace('www.', ''));
+            if (formData.location) contacts.push(formData.location);
 
             doc.text(contacts.join("  |  "), pageWidth / 2, yPos, { align: "center" });
 
-            yPos += 10;
+            yPos += 4;
+            doc.setDrawColor(31, 78, 121);
+            doc.setLineWidth(1.2);
+            doc.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 5;
+            
+            doc.setTextColor(0,0,0);
 
-            // --- SUMMARY ---
+            // --- CAREER OBJECTIVE ---
             if (formData.summary) {
-                // Determine layout
+                addSectionHeader("CAREER OBJECTIVE");
                 const splitSummary = doc.splitTextToSize(formData.summary, pageWidth - (margin * 2));
+                autoPageBreak(splitSummary.length * 4.5);
                 doc.text(splitSummary, margin, yPos);
-                yPos += (splitSummary.length * 5) + 5;
+                yPos += (splitSummary.length * 4.5) + 2;
             }
 
             // --- EDUCATION ---
             if (formData.education && formData.education.length > 0 && formData.education[0].institution) {
                 addSectionHeader("EDUCATION");
-
                 formData.education.forEach(edu => {
-                    // Institution & Year
+                    autoPageBreak(12);
                     doc.setFont("helvetica", "bold");
-                    doc.text(edu.institution, margin, yPos);
+                    doc.setFontSize(9.5);
+                    doc.text(edu.degree, margin, yPos);
+                    yPos += 4.5;
 
                     doc.setFont("helvetica", "normal");
-                    if (edu.year) {
-                        doc.text(edu.year, pageWidth - margin, yPos, { align: "right" });
-                    }
-                    yPos += 5;
-
-                    // Degree & Score
-                    const degreeLine = `${edu.degree}${edu.score ? ` (${edu.score})` : ''}`;
-                    doc.setFont("helvetica", "italic");
-                    doc.text(degreeLine, margin, yPos);
-                    yPos += 6;
+                    doc.setFontSize(9);
+                    doc.setTextColor(100, 100, 100);
+                    const eduParts = [];
+                    if(edu.institution) eduParts.push(edu.institution);
+                    if(edu.year) eduParts.push(edu.year);
+                    if(edu.score) eduParts.push(`CGPA/Score: ${edu.score}`);
+                    
+                    doc.text(eduParts.join("  |  "), margin + 2, yPos);
+                    doc.setTextColor(0,0,0);
+                    yPos += 5.5;
                 });
             }
 
-            // --- EXPERIENCE ---
+            // --- WORK EXPERIENCE ---
             if (formData.experience && formData.experience.length > 0 && formData.experience[0].company) {
                 addSectionHeader("EXPERIENCE");
-
                 formData.experience.forEach(exp => {
+                    autoPageBreak(20);
                     doc.setFont("helvetica", "bold");
-                    doc.text(exp.company, margin, yPos);
-
-                    doc.setFont("helvetica", "normal");
-                    if (exp.duration) {
-                        doc.text(exp.duration, pageWidth - margin, yPos, { align: "right" });
-                    }
-                    yPos += 5;
-
-                    doc.setFont("helvetica", "italic");
+                    doc.setFontSize(9.5);
                     doc.text(exp.role, margin, yPos);
-                    yPos += 5;
-
+                    yPos += 4.5;
+                    
                     doc.setFont("helvetica", "normal");
+                    doc.setFontSize(9);
+                    doc.setTextColor(100, 100, 100);
+                    const expParts = [];
+                    if(exp.company) expParts.push(exp.company);
+                    if(exp.duration) expParts.push(exp.duration);
+                    
+                    doc.text(expParts.join("  |  "), margin + 2, yPos);
+                    doc.setTextColor(0,0,0);
+                    yPos += 4.5;
+
+                    doc.setFontSize(9);
                     if (exp.description) {
-                        const splitDesc = doc.splitTextToSize(exp.description, pageWidth - (margin * 2));
-                        doc.text(splitDesc, margin, yPos);
-                        yPos += (splitDesc.length * 4) + 3;
+                        const bullets = exp.description.split('\n');
+                        bullets.forEach(bullet => {
+                            if(bullet.trim()) {
+                                const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 6 - margin);
+                                autoPageBreak(splitBullet.length * 4.5);
+                                doc.text(splitBullet, margin + 4, yPos);
+                                yPos += (splitBullet.length * 4.5);
+                            }
+                        });
+                        yPos += 2;
                     }
                 });
             }
@@ -230,24 +262,34 @@ const ResumeBuilder = () => {
             // --- PROJECTS ---
             if (formData.projects && formData.projects.length > 0 && formData.projects[0].title) {
                 addSectionHeader("PROJECTS");
-
                 formData.projects.forEach(proj => {
+                    autoPageBreak(20);
                     doc.setFont("helvetica", "bold");
+                    doc.setFontSize(9.5);
                     doc.text(proj.title, margin, yPos);
-
+                    yPos += 4.5;
+                    
                     if (proj.techStack) {
-                        doc.setFont("helvetica", "italic");
-                        const techText = `[ ${proj.techStack} ]`;
-                        const textWidth = doc.getTextWidth(proj.title);
-                        doc.text(techText, margin + textWidth + 2, yPos);
+                        doc.setFont("helvetica", "normal");
+                        doc.setFontSize(8.5);
+                        doc.setTextColor(120, 120, 120);
+                        doc.text(`Components/Tech: ${proj.techStack}`, margin + 2, yPos);
+                        yPos += 4.5;
                     }
-                    yPos += 5;
 
-                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(0,0,0);
+                    doc.setFontSize(9);
                     if (proj.description) {
-                        const splitDesc = doc.splitTextToSize(proj.description, pageWidth - (margin * 2));
-                        doc.text(splitDesc, margin, yPos);
-                        yPos += (splitDesc.length * 4) + 3;
+                        const bullets = proj.description.split('\n');
+                        bullets.forEach(bullet => {
+                            if(bullet.trim()) {
+                                const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 6 - margin);
+                                autoPageBreak(splitBullet.length * 4.5);
+                                doc.text(splitBullet, margin + 4, yPos);
+                                yPos += (splitBullet.length * 4.5);
+                            }
+                        });
+                        yPos += 2;
                     }
                 });
             }
@@ -255,11 +297,57 @@ const ResumeBuilder = () => {
             // --- SKILLS ---
             if (formData.skills) {
                 addSectionHeader("TECHNICAL SKILLS");
-                doc.setFont("helvetica", "normal");
-                const splitSkills = doc.splitTextToSize(formData.skills, pageWidth - (margin * 2));
-                doc.text(splitSkills, margin, yPos);
-                yPos += (splitSkills.length * 5);
+                const lines = formData.skills.split('\n');
+                lines.forEach(line => {
+                    if (line.includes(':')) {
+                        const [boldPart, rest] = line.split(':');
+                        doc.setFont("helvetica", "bold");
+                        doc.text(boldPart + ":", margin, yPos);
+                        doc.setFont("helvetica", "normal");
+                        doc.text(" " + rest, margin + doc.getTextWidth(boldPart + ":"), yPos);
+                        yPos += 5;
+                    } else {
+                        const splitSkills = doc.splitTextToSize(line, pageWidth - (margin * 2));
+                        autoPageBreak(splitSkills.length * 4.5);
+                        doc.text(splitSkills, margin, yPos);
+                        yPos += (splitSkills.length * 4.5) + 0.5;
+                    }
+                });
+                yPos += 2;
             }
+
+            // --- ACHIEVEMENTS & ACTIVITIES ---
+            if (formData.achievements) {
+                addSectionHeader("ACHIEVEMENTS & ACTIVITIES");
+                const bullets = formData.achievements.split('\n');
+                bullets.forEach(bullet => {
+                    if(bullet.trim()) {
+                        const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 4 - margin);
+                        autoPageBreak(splitBullet.length * 4.5);
+                        doc.text(splitBullet, margin + 4, yPos);
+                        yPos += (splitBullet.length * 4.5);
+                    }
+                });
+                yPos += 2;
+            }
+
+            // --- KEY STRENGTHS ---
+            if (formData.strengths) {
+                addSectionHeader("KEY STRENGTHS");
+                autoPageBreak(10);
+                const strengthArr = formData.strengths.split(',').map(s => s.trim()).filter(s => s);
+                doc.text(strengthArr.join('  •  '), pageWidth / 2, yPos, { align: "center" });
+                yPos += 8;
+            }
+
+            // --- DECLARATION ---
+            addSectionHeader("DECLARATION");
+            autoPageBreak(25);
+            doc.setFont("helvetica", "italic");
+            doc.text("I hereby declare that all the information provided above is true and correct to the best of my knowledge and belief.", margin, yPos);
+            yPos += 15;
+            doc.setFont("helvetica", "bold");
+            doc.text((formData.name || "Name").toUpperCase(), pageWidth - margin - 10, yPos, {align: "right"});
 
             // Save the PDF
             doc.save(`${formData.name.replace(/\s+/g, '_')}_Resume.pdf`);
@@ -297,18 +385,19 @@ const ResumeBuilder = () => {
                             <Input label="Full Name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" />
                             <Input label="Email" name="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" />
                             <Input label="Phone" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 9876543210" />
+                            <Input label="Location (City, State)" name="location" value={formData.location} onChange={handleChange} placeholder="Indore, India" />
                             <Input label="LinkedIn URL" name="linkedin" value={formData.linkedin} onChange={handleChange} placeholder="linkedin.com/in/john" />
                             <Input label="GitHub/Portfolio" name="github" value={formData.github} onChange={handleChange} placeholder="github.com/john" />
                         </div>
                         <div style={{ marginTop: '1rem' }}>
-                            <label className="form-label">Professional Summary</label>
+                            <label className="form-label">Career Objective / Summary</label>
                             <textarea
                                 className="form-input"
                                 name="summary"
                                 value={formData.summary}
                                 onChange={handleChange}
                                 rows="3"
-                                placeholder="Brief overview of your skills and experience..."
+                                placeholder="Motivated Engineering student seeking an internship..."
                             ></textarea>
                         </div>
                     </SectionCard>
@@ -318,10 +407,10 @@ const ResumeBuilder = () => {
                         {formData.education.map((edu, index) => (
                             <div key={index} className="repeater-item">
                                 <div className="form-grid-2">
-                                    <Input label="Institution" value={edu.institution} onChange={(e) => handleArrayChange(index, 'institution', e.target.value, 'education')} />
-                                    <Input label="Degree" value={edu.degree} onChange={(e) => handleArrayChange(index, 'degree', e.target.value, 'education')} />
-                                    <Input label="Year" value={edu.year} onChange={(e) => handleArrayChange(index, 'year', e.target.value, 'education')} />
-                                    <Input label="Score/CGPA" value={edu.score} onChange={(e) => handleArrayChange(index, 'score', e.target.value, 'education')} />
+                                    <Input label="Institution" value={edu.institution} onChange={(e) => handleArrayChange(index, 'institution', e.target.value, 'education')} placeholder="IES Academy, Indore" />
+                                    <Input label="Degree / Course" value={edu.degree} onChange={(e) => handleArrayChange(index, 'degree', e.target.value, 'education')} placeholder="B.Tech - Computer Science" />
+                                    <Input label="Year" value={edu.year} onChange={(e) => handleArrayChange(index, 'year', e.target.value, 'education')} placeholder="2024 - 2028" />
+                                    <Input label="Score/CGPA" value={edu.score} onChange={(e) => handleArrayChange(index, 'score', e.target.value, 'education')} placeholder="8.6 / 10" />
                                 </div>
                                 {index > 0 && <button className="btn-remove" onClick={() => removeItem('education', index)}>Remove</button>}
                             </div>
@@ -330,15 +419,15 @@ const ResumeBuilder = () => {
                     </SectionCard>
 
                     {/* 3. Skills */}
-                    <SectionCard title="Skills" icon="code">
-                        <label className="form-label">Technical Skills (Comma separated)</label>
+                    <SectionCard title="Technical Skills" icon="code">
+                        <label className="form-label">Skills (Separate categories by newline. Use 'Category: Skills' format)</label>
                         <textarea
                             className="form-input"
                             name="skills"
                             value={formData.skills}
                             onChange={handleChange}
-                            rows="2"
-                            placeholder="Java, React, Spring Boot, MySQL, Git..."
+                            rows="4"
+                            placeholder="Electrical: Circuit Analysis, Transformers&#10;Software: Java, React, SQL"
                         ></textarea>
                     </SectionCard>
 
@@ -369,12 +458,39 @@ const ResumeBuilder = () => {
                                     <Input label="Tech Stack" value={proj.techStack} onChange={(e) => handleArrayChange(index, 'techStack', e.target.value, 'projects')} />
                                 </div>
                                 <div style={{ marginTop: '0.5rem' }}>
-                                    <Input label="Description" value={proj.description} onChange={(e) => handleArrayChange(index, 'description', e.target.value, 'projects')} placeholder="What did you build?" />
+                                    <label className="form-label">Description (New lines become bullet points)</label>
+                                    <textarea className="form-input" value={proj.description} onChange={(e) => handleArrayChange(index, 'description', e.target.value, 'projects')} placeholder="Designed and implemented...&#10;Applied load distribution..." rows="2" />
                                 </div>
                                 {index > 0 && <button className="btn-remove" onClick={() => removeItem('projects', index)}>Remove</button>}
                             </div>
                         ))}
                         <button className="btn-add" onClick={() => addItem('projects', { title: '', description: '', techStack: '' })}>+ Add Project</button>
+                    </SectionCard>
+
+                    {/* 6. Achievements */}
+                    <SectionCard title="Achievements & Activities" icon="trophy">
+                        <label className="form-label">Achievements (New lines become bullet points)</label>
+                        <textarea
+                            className="form-input"
+                            name="achievements"
+                            value={formData.achievements}
+                            onChange={handleChange}
+                            rows="3"
+                            placeholder="Scored 86.8% in Class 12 Science...&#10;Maintaining CGPA 8.6/10..."
+                        ></textarea>
+                    </SectionCard>
+
+                    {/* 7. Key Strengths */}
+                    <SectionCard title="Key Strengths" icon="star">
+                        <label className="form-label">Key Strengths (Comma separated)</label>
+                        <textarea
+                            className="form-input"
+                            name="strengths"
+                            value={formData.strengths}
+                            onChange={handleChange}
+                            rows="2"
+                            placeholder="Quick Learner, Team Player, Adaptable..."
+                        ></textarea>
                     </SectionCard>
 
                 </div>
