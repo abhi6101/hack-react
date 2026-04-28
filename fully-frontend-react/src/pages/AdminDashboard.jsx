@@ -2758,10 +2758,7 @@ const AdminDashboard = () => {
                                 }}
                             />
                         </div>
-                        <button className="header-icon-btn">
-                            <i className="fas fa-bell"></i>
-                            <span className="notification-dot"></span>
-                        </button>
+
                         <button onClick={() => { localStorage.clear(); navigate('/login'); }} className="logout-btn-modern">
                             <i className="fas fa-sign-out-alt"></i> Logout
                         </button>
