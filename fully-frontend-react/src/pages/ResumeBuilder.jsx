@@ -129,48 +129,47 @@ const ResumeBuilder = () => {
     const generatePDF = async () => {
         setIsGenerating(true);
 
-        // Dynamically import jsPDF to ensure it loads on client side
         const { jsPDF } = await import('jspdf');
 
         try {
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.getWidth();
-            const margin = 15;
-            let yPos = 20;
+            const margin = 12; // Tighter margin
+            let yPos = 15; // Closer to the top edge
 
             const addSectionHeader = (title) => {
-                if(yPos > 270) { doc.addPage(); yPos = 20; }
-                yPos += 5;
-                doc.setFontSize(11);
+                if(yPos > 280) { doc.addPage(); yPos = 15; }
+                yPos += 4;
+                doc.setFontSize(10.5);
                 doc.setFont("helvetica", "bold");
                 doc.setTextColor(31, 78, 121);
                 doc.text(title.toUpperCase(), margin, yPos);
 
-                yPos += 2;
+                yPos += 1.5;
                 doc.setDrawColor(31, 78, 121);
-                doc.setLineWidth(0.8);
+                doc.setLineWidth(0.6);
                 doc.line(margin, yPos, pageWidth - margin, yPos);
-                yPos += 5;
+                yPos += 3.5;
                 doc.setFont("helvetica", "normal");
                 doc.setTextColor(0, 0, 0);
-                doc.setFontSize(9.5);
+                doc.setFontSize(9);
             };
 
             const autoPageBreak = (spaceNeeded) => {
-                if (yPos + spaceNeeded > 285) {
+                if (yPos + spaceNeeded > 288) {
                     doc.addPage();
-                    yPos = 20;
+                    yPos = 15;
                 }
             };
 
             // --- HEADER ---
-            doc.setFontSize(24);
+            doc.setFontSize(20);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(31, 78, 121);
             doc.text((formData.name || "YOUR NAME").toUpperCase(), pageWidth / 2, yPos, { align: "center" });
 
-            yPos += 6;
-            doc.setFontSize(9);
+            yPos += 5.5;
+            doc.setFontSize(8.5);
             doc.setFont("helvetica", "normal");
             doc.setTextColor(80, 80, 80);
 
@@ -183,11 +182,11 @@ const ResumeBuilder = () => {
 
             doc.text(contacts.join("  |  "), pageWidth / 2, yPos, { align: "center" });
 
-            yPos += 4;
+            yPos += 3.5;
             doc.setDrawColor(31, 78, 121);
-            doc.setLineWidth(1.2);
+            doc.setLineWidth(1.0);
             doc.line(margin, yPos, pageWidth - margin, yPos);
-            yPos += 5;
+            yPos += 4;
             
             doc.setTextColor(0,0,0);
 
@@ -195,32 +194,32 @@ const ResumeBuilder = () => {
             if (formData.summary) {
                 addSectionHeader("CAREER OBJECTIVE");
                 const splitSummary = doc.splitTextToSize(formData.summary, pageWidth - (margin * 2));
-                autoPageBreak(splitSummary.length * 4.5);
+                autoPageBreak(splitSummary.length * 3.8);
                 doc.text(splitSummary, margin, yPos);
-                yPos += (splitSummary.length * 4.5) + 2;
+                yPos += (splitSummary.length * 3.8) + 1;
             }
 
             // --- EDUCATION ---
             if (formData.education && formData.education.length > 0 && formData.education[0].institution) {
                 addSectionHeader("EDUCATION");
                 formData.education.forEach(edu => {
-                    autoPageBreak(12);
+                    autoPageBreak(10);
                     doc.setFont("helvetica", "bold");
-                    doc.setFontSize(9.5);
+                    doc.setFontSize(9);
                     doc.text(edu.degree, margin, yPos);
-                    yPos += 4.5;
+                    yPos += 4;
 
                     doc.setFont("helvetica", "normal");
-                    doc.setFontSize(9);
+                    doc.setFontSize(8.5);
                     doc.setTextColor(100, 100, 100);
                     const eduParts = [];
                     if(edu.institution) eduParts.push(edu.institution);
                     if(edu.year) eduParts.push(edu.year);
                     if(edu.score) eduParts.push(`CGPA/Score: ${edu.score}`);
                     
-                    doc.text(eduParts.join("  |  "), margin + 2, yPos);
+                    doc.text(eduParts.join("  |  "), margin + 1.5, yPos);
                     doc.setTextColor(0,0,0);
-                    yPos += 5.5;
+                    yPos += 4.5;
                 });
             }
 
@@ -228,35 +227,35 @@ const ResumeBuilder = () => {
             if (formData.experience && formData.experience.length > 0 && formData.experience[0].company) {
                 addSectionHeader("EXPERIENCE");
                 formData.experience.forEach(exp => {
-                    autoPageBreak(20);
+                    autoPageBreak(15);
                     doc.setFont("helvetica", "bold");
-                    doc.setFontSize(9.5);
+                    doc.setFontSize(9);
                     doc.text(exp.role, margin, yPos);
-                    yPos += 4.5;
+                    yPos += 4;
                     
                     doc.setFont("helvetica", "normal");
-                    doc.setFontSize(9);
+                    doc.setFontSize(8.5);
                     doc.setTextColor(100, 100, 100);
                     const expParts = [];
                     if(exp.company) expParts.push(exp.company);
                     if(exp.duration) expParts.push(exp.duration);
                     
-                    doc.text(expParts.join("  |  "), margin + 2, yPos);
+                    doc.text(expParts.join("  |  "), margin + 1.5, yPos);
                     doc.setTextColor(0,0,0);
-                    yPos += 4.5;
+                    yPos += 4;
 
-                    doc.setFontSize(9);
+                    doc.setFontSize(8.5);
                     if (exp.description) {
                         const bullets = exp.description.split('\n');
                         bullets.forEach(bullet => {
                             if(bullet.trim()) {
-                                const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 6 - margin);
-                                autoPageBreak(splitBullet.length * 4.5);
+                                const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 5 - margin);
+                                autoPageBreak(splitBullet.length * 3.8);
                                 doc.text(splitBullet, margin + 4, yPos);
-                                yPos += (splitBullet.length * 4.5);
+                                yPos += (splitBullet.length * 3.8);
                             }
                         });
-                        yPos += 2;
+                        yPos += 1;
                     }
                 });
             }
@@ -265,33 +264,33 @@ const ResumeBuilder = () => {
             if (formData.projects && formData.projects.length > 0 && formData.projects[0].title) {
                 addSectionHeader("PROJECTS");
                 formData.projects.forEach(proj => {
-                    autoPageBreak(20);
+                    autoPageBreak(15);
                     doc.setFont("helvetica", "bold");
-                    doc.setFontSize(9.5);
+                    doc.setFontSize(9);
                     doc.text(proj.title, margin, yPos);
-                    yPos += 4.5;
+                    yPos += 4;
                     
                     if (proj.techStack) {
                         doc.setFont("helvetica", "normal");
-                        doc.setFontSize(8.5);
+                        doc.setFontSize(8);
                         doc.setTextColor(120, 120, 120);
-                        doc.text(`Components/Tech: ${proj.techStack}`, margin + 2, yPos);
-                        yPos += 4.5;
+                        doc.text(`Components/Tech: ${proj.techStack}`, margin + 1.5, yPos);
+                        yPos += 4;
                     }
 
                     doc.setTextColor(0,0,0);
-                    doc.setFontSize(9);
+                    doc.setFontSize(8.5);
                     if (proj.description) {
                         const bullets = proj.description.split('\n');
                         bullets.forEach(bullet => {
                             if(bullet.trim()) {
-                                const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 6 - margin);
-                                autoPageBreak(splitBullet.length * 4.5);
+                                const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 5 - margin);
+                                autoPageBreak(splitBullet.length * 3.8);
                                 doc.text(splitBullet, margin + 4, yPos);
-                                yPos += (splitBullet.length * 4.5);
+                                yPos += (splitBullet.length * 3.8);
                             }
                         });
-                        yPos += 2;
+                        yPos += 1;
                     }
                 });
             }
@@ -307,15 +306,15 @@ const ResumeBuilder = () => {
                         doc.text(boldPart + ":", margin, yPos);
                         doc.setFont("helvetica", "normal");
                         doc.text(" " + rest, margin + doc.getTextWidth(boldPart + ":"), yPos);
-                        yPos += 5;
+                        yPos += 4.5;
                     } else {
                         const splitSkills = doc.splitTextToSize(line, pageWidth - (margin * 2));
-                        autoPageBreak(splitSkills.length * 4.5);
+                        autoPageBreak(splitSkills.length * 3.8);
                         doc.text(splitSkills, margin, yPos);
-                        yPos += (splitSkills.length * 4.5) + 0.5;
+                        yPos += (splitSkills.length * 3.8);
                     }
                 });
-                yPos += 2;
+                yPos += 1;
             }
 
             // --- ACHIEVEMENTS & ACTIVITIES ---
@@ -325,31 +324,35 @@ const ResumeBuilder = () => {
                 bullets.forEach(bullet => {
                     if(bullet.trim()) {
                         const splitBullet = doc.splitTextToSize(`• ${bullet.trim()}`, pageWidth - margin - 4 - margin);
-                        autoPageBreak(splitBullet.length * 4.5);
-                        doc.text(splitBullet, margin + 4, yPos);
-                        yPos += (splitBullet.length * 4.5);
+                        autoPageBreak(splitBullet.length * 3.8);
+                        doc.text(splitBullet, margin + 3, yPos);
+                        yPos += (splitBullet.length * 3.8);
                     }
                 });
-                yPos += 2;
+                yPos += 1;
             }
 
             // --- KEY STRENGTHS ---
             if (formData.strengths) {
                 addSectionHeader("KEY STRENGTHS");
-                autoPageBreak(10);
+                autoPageBreak(8);
                 const strengthArr = formData.strengths.split(',').map(s => s.trim()).filter(s => s);
                 doc.text(strengthArr.join('  •  '), pageWidth / 2, yPos, { align: "center" });
-                yPos += 8;
+                yPos += 5;
             }
 
             // --- DECLARATION ---
-            addSectionHeader("DECLARATION");
-            autoPageBreak(25);
-            doc.setFont("helvetica", "italic");
-            doc.text("I hereby declare that all the information provided above is true and correct to the best of my knowledge and belief.", margin, yPos);
-            yPos += 15;
-            doc.setFont("helvetica", "bold");
-            doc.text((formData.name || "Name").toUpperCase(), pageWidth - margin - 10, yPos, {align: "right"});
+            if(yPos < 265) {
+                // Only push declaration if space permits
+                addSectionHeader("DECLARATION");
+                autoPageBreak(15);
+                doc.setFont("helvetica", "italic");
+                doc.setFontSize(8.5);
+                doc.text("I hereby declare that all the information provided above is true and correct to the best of my knowledge and belief.", margin, yPos);
+                yPos += 10;
+                doc.setFont("helvetica", "bold");
+                doc.text((formData.name || "Name").toUpperCase(), pageWidth - margin - 6, yPos, {align: "right"});
+            }
 
             // Save the PDF
             doc.save(`${formData.name.replace(/\s+/g, '_')}_Resume.pdf`);
