@@ -2708,7 +2708,15 @@ const AdminDashboard = () => {
             </button>
 
             <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
-
+                <div className="sidebar-brand">
+                    <div className="brand-logo">
+                        <i className="fas fa-bolt"></i>
+                    </div>
+                    <div className="brand-text">
+                        <span>Hack2Hired</span>
+                        <span className="brand-badge">PRO</span>
+                    </div>
+                </div>
 
                 <nav className="sidebar-menu">
                     <ul className="accordion-menu">

@@ -58,18 +58,66 @@ body {
     min-width: 280px;
     height: calc(100vh - 3rem); /* Accounting for top/bottom margins */
     margin: 1.5rem 0 1.5rem 1.5rem; /* Float away from left and bottom edges */
-    background: rgba(15, 15, 22, 0.65); /* Glassmorphism semitransparent bg */
+    background: linear-gradient(180deg, rgba(20, 20, 28, 0.75) 0%, rgba(10, 10, 15, 0.9) 100%);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Crisp outer glass edge */
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Crisp outer glass edge */
     border-radius: 24px; /* Ultra-modern smooth corners */
     position: sticky;
     top: 1.5rem;
     z-index: 100;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.02);
+    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.6), inset 1px 1px 0px rgba(255, 255, 255, 0.05);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-brand {
+    padding: 2.5rem 1.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    margin-bottom: 0.5rem;
+}
+
+.brand-logo {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.3rem;
+    box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3), inset 0 2px 4px rgba(255,255,255,0.4);
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-text span:first-child {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+
+.brand-badge {
+    font-size: 0.65rem;
+    background: rgba(255, 71, 123, 0.2);
+    color: var(--accent);
+    padding: 0.15rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    width: max-content;
+    margin-top: 0.2rem;
+    border: 1px solid rgba(255, 71, 123, 0.3);
 }
 
 
@@ -107,12 +155,12 @@ body {
 
 .accordion-menu {
     list-style: none;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem 2rem 1rem;
     display: block;
 }
 
 .menu-group-container {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .accordion-trigger {
@@ -120,21 +168,22 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 1rem 1.25rem;
-    border-radius: 16px;
-    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 0.85rem 1.25rem;
+    border-radius: 14px;
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 600;
     font-size: 0.95rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
 }
 
 .accordion-trigger:hover, .accordion-trigger.expanded {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
     color: var(--text-primary);
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .accordion-title {
