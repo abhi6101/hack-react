@@ -25,7 +25,6 @@ const Onboarding = () => {
         skills: '',
         resumeFile: null,
         idCardFile: null,
-        aadharFile: null,
         admitCardFile: null,
         collegeName: 'IPS Academy' // Default
     });
@@ -212,11 +211,7 @@ const Onboarding = () => {
                 await fetch(`${API_BASE_URL}/student-profile/upload-id-card`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
             }
 
-            // STEP 4: Upload Aadhar
-            if (formData.aadharFile) {
-                const fd = new FormData(); fd.append('file', formData.aadharFile);
-                await fetch(`${API_BASE_URL}/student-profile/upload-aadhar`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
-            }
+
 
             // STEP 5: Upload Admit Card
             if (formData.admitCardFile) {
@@ -301,18 +296,7 @@ const Onboarding = () => {
                                     </div>
                                 </div>
 
-                                {/* Aadhar Card */}
-                                {(formData.collegeName === 'IPS Academy' || formData.aadharFile) && (
-                                    <div className="form-group fade-in">
-                                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#34d399' }}>
-                                            <i className="fas fa-fingerprint"></i> Aadhar Card (Name Verify) {formData.collegeName === 'IPS Academy' && '*'}
-                                        </label>
-                                        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer', border: '1px dashed #34d399' }} onClick={() => document.getElementById('step1-aadhar').click()}>
-                                            <input type="file" id="step1-aadhar" accept="image/*" onChange={(e) => handleFileChange(e, 'aadharFile')} style={{ display: 'none' }} />
-                                            <span style={{ fontSize: '0.9rem', color: '#fff' }}>{formData.aadharFile ? formData.aadharFile.name : 'Upload Aadhar Card'}</span>
-                                        </div>
-                                    </div>
-                                )}
+
 
                                 {/* Admit Card */}
                                 {(formData.collegeName === 'IPS Academy' || formData.admitCardFile) && (

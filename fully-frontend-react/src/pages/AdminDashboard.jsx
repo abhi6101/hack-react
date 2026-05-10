@@ -186,7 +186,7 @@ const AdminDashboard = () => {
     const [editingJob, setEditingJob] = useState(null);
     const [editingInterview, setEditingInterview] = useState(null);
     const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
-    const [verificationTab, setVerificationTab] = useState('idCard'); // idCard, aadhar, admit // For ID Card Modal
+    const [verificationTab, setVerificationTab] = useState('idCard'); // idCard, admit // For ID Card Modal
     const [applications, setApplications] = useState([]);
     const [loadingApplications, setLoadingApplications] = useState(false);
     const [interviewDetails, setInterviewDetails] = useState({
@@ -2855,12 +2855,11 @@ const AdminDashboard = () => {
                             <div className="document-preview-col">
                                 <div className="doc-tabs">
                                     <button className={verificationTab === 'idCard' ? 'active' : ''} onClick={() => setVerificationTab('idCard')}>ID Card</button>
-                                    <button className={verificationTab === 'aadhar' ? 'active' : ''} onClick={() => setVerificationTab('aadhar')}>Aadhar</button>
                                     <button className={verificationTab === 'admit' ? 'active' : ''} onClick={() => setVerificationTab('admit')}>Admit Card</button>
                                 </div>
                                 <div className="image-frame">
                                     <img
-                                        src={`${API_BASE_URL}/student-profile/${verificationTab === 'idCard' ? 'id-card' : verificationTab === 'aadhar' ? 'aadhar' : 'admit-card'}/${selectedProfileForVerification.id}`}
+                                        src={`${API_BASE_URL}/student-profile/${verificationTab === 'idCard' ? 'id-card' : 'admit-card'}/${selectedProfileForVerification.id}`}
                                         alt="Student Document"
                                         onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
                                     />

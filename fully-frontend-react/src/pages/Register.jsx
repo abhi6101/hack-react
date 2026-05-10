@@ -1,4 +1,4 @@
-﻿import API_BASE_URL from '../config';
+import API_BASE_URL from '../config';
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -19,7 +19,7 @@ const Register = () => {
     const [formData, setFormData] = useState({
         username: '',
         fullName: '', // Added for verified name
-        fatherName: '', // Father's name from Aadhar
+        fatherName: '',
         email: '',
         role: 'USER', // Default to USER
         branch: '',
@@ -30,10 +30,9 @@ const Register = () => {
         enrollmentNumber: '',
         mobilePrimary: '',
         mobileSecondary: '',
-        aadharNumber: '',
         dob: '',
         gender: '',
-        address: '', // Aadhar address
+        address: '',
         password: '',
         confirmPassword: ''
     });
@@ -51,13 +50,10 @@ const Register = () => {
 
     // Data Containers
     const [scannedData, setScannedData] = useState(null); // stores parsed JSON from ID
-    const [aadharData, setAadharData] = useState(null); // stores parsed JSON from Aadhar
 
     // File/Image Store
     const [idCameraImg, setIdCameraImg] = useState(null);
     const [idFile, setIdFile] = useState(null);
-    const [aadharCameraImg, setAadharCameraImg] = useState(null);
-    const [aadharFile, setAadharFile] = useState(null);
     const [selfieImg, setSelfieImg] = useState(null);
 
     const [isScanning, setIsScanning] = useState(false);
@@ -584,93 +580,12 @@ const Register = () => {
                                     <div style={{ textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.8)', padding: '25px', borderRadius: '20px', border: '2px solid #ef4444', backdropFilter: 'blur(8px)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
                                         <i className="fas fa-id-card-alt" style={{ fontSize: '5rem', marginBottom: '15px' }}></i>
                                         <h2 style={{ fontSize: '2rem', fontWeight: '900', margin: 0 }}>WRONG DOCUMENT</h2>
-                                        <p style={{ margin: '10px 0 0', fontWeight: 'bold', color: '#ffc1c1', fontSize: '1.2rem' }}>
-                                            {verificationStage === 'AADHAR_AUTO_CAPTURE' ? "Please show your AADHAR CARD" : "Please show your COLLEGE ID"}
-                                        </p>
+                                            Please show your COLLEGE ID
                                     </div>
                                 </div>
                             )}
 
-                            {/* QR CODE RETICLE (Guide) - Only for Aadhar Auto Capture */}
-                            {verificationStage === 'AADHAR_AUTO_CAPTURE' && (
-                                <div style={{
-                                    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                                    width: '260px', height: '260px',
-                                    boxShadow: `0 0 0 9999px ${isFlashActive ? '#ffffff' : 'rgba(0, 0, 0, 0.95)'}`,
-                                    pointerEvents: 'none', zIndex: 15,
-                                    borderRadius: '20px',
-                                    transition: 'all 0.3s ease'
-                                }}>
-                                    {/* Animated Scanning Line */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        width: '100%',
-                                        height: '3px',
-                                        background: qrDetected
-                                            ? 'linear-gradient(90deg, transparent, #4ade80, transparent)'
-                                            : 'linear-gradient(90deg, transparent, #667eea, transparent)',
-                                        animation: 'scan 2s ease-in-out infinite',
-                                        boxShadow: qrDetected ? '0 0 10px #4ade80' : '0 0 10px #667eea',
-                                        top: '50%'
-                                    }} />
 
-                                    {/* Modern Viewfinder Corners - Dynamic Color */}
-                                    <div style={{
-                                        position: 'absolute', top: 0, left: 0, width: '40px', height: '40px',
-                                        borderTop: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderLeft: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderTopLeftRadius: '16px',
-                                        transition: 'border-color 0.3s ease'
-                                    }}></div>
-                                    <div style={{
-                                        position: 'absolute', top: 0, right: 0, width: '40px', height: '40px',
-                                        borderTop: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderRight: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderTopRightRadius: '16px',
-                                        transition: 'border-color 0.3s ease'
-                                    }}></div>
-                                    <div style={{
-                                        position: 'absolute', bottom: 0, left: 0, width: '40px', height: '40px',
-                                        borderBottom: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderLeft: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderBottomLeftRadius: '16px',
-                                        transition: 'border-color 0.3s ease'
-                                    }}></div>
-                                    <div style={{
-                                        position: 'absolute', bottom: 0, right: 0, width: '40px', height: '40px',
-                                        borderBottom: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderRight: `4px solid ${qrDetected ? '#4ade80' : '#667eea'}`,
-                                        borderBottomRightRadius: '16px',
-                                        transition: 'border-color 0.3s ease'
-                                    }}></div>
-
-                                    {/* Title */}
-                                    <div style={{
-                                        position: 'absolute', top: '-40px', width: '100%', textAlign: 'center',
-                                        color: qrDetected ? '#4ade80' : '#667eea',
-                                        fontWeight: 'bold', fontSize: '1rem',
-                                        textShadow: '0 2px 4px black',
-                                        transition: 'color 0.3s ease'
-                                    }}>
-                                        {qrDetected ? '✓ QR DETECTED' : 'SCAN AADHAR QR'}
-                                    </div>
-
-                                    {/* Position Guidance */}
-                                    {qrGuidance && (
-                                        <div style={{
-                                            position: 'absolute', bottom: '-50px', width: '100%', textAlign: 'center',
-                                            color: qrGuidance.includes('❌') ? '#ef4444' : (qrGuidance.includes('✓') ? '#4ade80' : '#fbbf24'),
-                                            fontWeight: '600', fontSize: '0.9rem',
-                                            textShadow: '0 2px 4px black',
-                                            background: 'rgba(0,0,0,0.5)',
-                                            padding: '5px 10px',
-                                            borderRadius: '8px'
-                                        }}>
-                                            {qrGuidance}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
 
                             <div style={{ position: 'absolute', top: '20px', left: '0', width: '100%', textAlign: 'center', pointerEvents: 'none', zIndex: 10 }}>
                                 <span style={{
@@ -678,14 +593,12 @@ const Register = () => {
                                     fontWeight: '800', fontSize: '1.2rem', letterSpacing: '1px', border: '2px solid rgba(255, 255, 255, 0.2)',
                                     textTransform: 'uppercase', boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
                                 }}>
-                                    {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" :
-                                        (verificationStage === 'AADHAR_AUTO_CAPTURE' ? "SCAN AADHAR QR" :
-                                            (verificationStage === 'AADHAR_VERIFY_DATA' ? "IDENTITY MATCHED" : "PHOTO CAPTURE"))}
+                                    {verificationStage === 'ID_AUTO_CAPTURE' ? "SCAN COLLEGE ID" : "PHOTO CAPTURE"}
                                 </span>
                             </div>
 
                             {/* Unified AI Status Monitor - Only show during Scanning phases */}
-                            {['ID_AUTO_CAPTURE', 'AADHAR_AUTO_CAPTURE'].includes(verificationStage) && (
+                            {['ID_AUTO_CAPTURE'].includes(verificationStage) && (
                                 <div style={{
                                     position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)',
                                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', zIndex: 20, width: '100%'
@@ -717,158 +630,9 @@ const Register = () => {
                                 </div>
                             )}
 
-                            {/* AADHAR CONFIRMATION OVERLAY (Silent Capture Trap) */}
-                            {/* Aadhar Details - Rendered OUTSIDE camera box via Portal */}
-                            {verificationStage === 'AADHAR_VERIFY_DATA' && aadharData && ReactDOM.createPortal(
-                                <div className="animate-fade-in" style={{
-                                    position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                                    width: '90%', maxWidth: '800px', zIndex: 10000,
-                                    background: 'rgba(5, 5, 5, 0.98)',
-                                    borderRadius: '20px', padding: '30px',
-                                    border: '2px solid #4ade80',
-                                    boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
-                                    textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'center'
-                                }}>
-                                    <div style={{ color: '#4ade80', fontSize: '1rem', fontWeight: 'bold', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #4ade80', paddingBottom: '10px' }}>
-                                        <span><i className="fas fa-check-circle"></i> VERIFIED IDENTITY</span>
-                                        <span>100% Match</span>
-                                    </div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
-                                        <div style={{ gridColumn: '1 / -1' }}>
-                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Full Name {aadharData.isNameVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED</span>}</div>
-                                            <div style={{ color: '#fff', fontSize: '1.6rem', fontWeight: '700' }}>{aadharData.name}</div>
-                                        </div>
-
-                                        {/* Father Name (if captured) */}
-                                        {aadharData.fatherName && (
-                                            <div style={{ gridColumn: '1 / -1' }}>
-                                                <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Care Of / Father {aadharData.isFatherVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID</span>}</div>
-                                                <div style={{ color: '#fff', fontSize: '1.1rem' }}>{aadharData.fatherName}</div>
-                                            </div>
-                                        )}
-
-                                        <div>
-                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Date of Birth</div>
-                                            <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.dob || 'N/A'}</div>
-                                        </div>
-                                        <div>
-                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Gender</div>
-                                            <div style={{ color: '#fff', fontSize: '1.2rem' }}>{aadharData.gender || 'N/A'}</div>
-                                        </div>
-                                        <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
-                                            <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '5px' }}>Aadhar Number</div>
-                                            <div style={{ color: '#4ade80', fontSize: '1.8rem', fontWeight: 'bold', letterSpacing: '3px', fontFamily: 'monospace' }}>{aadharData.aadharNumber}</div>
-                                        </div>
-                                        {/* Display Extracted Address */}
-                                        {aadharData.address && (
-                                            <div style={{ gridColumn: '1 / -1', marginTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '15px' }}>
-                                                <div style={{ color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '8px' }}>Permanent Address {aadharData.isAddressVerified && <span style={{ color: '#4ade80', fontSize: '0.7rem' }}>✓ MATCHED ID LOC</span>}</div>
-                                                <div style={{ color: '#ddd', fontSize: '1rem', lineHeight: '1.5' }}>{aadharData.address}</div>
-                                            </div>
-                                        )}
-                                    </div>
 
 
-                                    {/* Conditional Buttons based on data completeness */}
-                                    {aadharData.name && aadharData.dob && aadharData.gender && aadharData.aadharNumber ? (
-                                        <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
-                                            <button
-                                                className="btn btn-secondary"
-                                                style={{
-                                                    width: '100px',
-                                                    padding: '12px 8px',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '0.85rem',
-                                                    background: 'rgba(239, 68, 68, 0.2)',
-                                                    color: '#ef4444',
-                                                    border: '1px solid #ef4444',
-                                                    borderRadius: '8px',
-                                                    cursor: 'pointer',
-                                                    whiteSpace: 'nowrap'
-                                                }}
-                                                onClick={() => {
-                                                    setAadharData(null);
-                                                    setAadharCameraImg(null);
-                                                    setVerificationStage('AADHAR_AUTO_CAPTURE');
-                                                    setScanStatus('Restarting Aadhar scan...');
-                                                    setScanBuffer([]);
-                                                }}
-                                            >
-                                                <i className="fas fa-redo"></i> Rescan
-                                            </button>
-                                            <button
-                                                className="btn btn-primary"
-                                                style={{
-                                                    flex: '1',
-                                                    padding: '12px',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '0.95rem',
-                                                    background: '#4ade80',
-                                                    color: '#000',
-                                                    border: 'none',
-                                                    borderRadius: '8px',
-                                                    cursor: 'pointer'
-                                                }}
-                                                onClick={() => {
-                                                    // Silent selfie capture - user doesn't see this
-                                                    setCameraMode('user'); // Switch to front camera
-
-                                                    // Wait 1 second for camera to switch, then capture silently
-                                                    setTimeout(() => {
-                                                        if (videoRef.current && canvasRef.current) {
-                                                            const context = canvasRef.current.getContext('2d');
-                                                            canvasRef.current.width = videoRef.current.videoWidth;
-                                                            canvasRef.current.height = videoRef.current.videoHeight;
-
-                                                            // Mirror effect for natural look
-                                                            context.translate(canvasRef.current.width, 0);
-                                                            context.scale(-1, 1);
-                                                            context.drawImage(videoRef.current, 0, 0);
-
-                                                            const imgUrl = canvasRef.current.toDataURL('image/jpeg', 0.85);
-                                                            setSelfieImg(imgUrl);
-
-                                                            // Save verification data
-                                                            const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
-                                                            const verificationData = {
-                                                                allStepsCompleted: true,
-                                                                idCardImg: idCameraImg,
-                                                                aadharImg: aadharCameraImg,
-                                                                selfieImg: imgUrl,
-                                                                scannedData: scannedData,
-                                                                aadharData: aadharData,
-                                                                timestamp: new Date().toISOString()
-                                                            };
-                                                            localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
-
-                                                            // Stop camera and proceed directly to form
-                                                            stopCamera();
-                                                            setStep(4); // Go directly to registration form
-                                                        }
-                                                    }, 1000);
-                                                }}
-                                            >
-                                                <i className="fas fa-check-circle"></i> Confirm & Continue
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div style={{
-                                            padding: '12px',
-                                            background: 'rgba(251, 191, 36, 0.1)',
-                                            border: '1px solid rgba(251, 191, 36, 0.3)',
-                                            borderRadius: '8px',
-                                            color: '#fbbf24',
-                                            fontSize: '0.9rem',
-                                            textAlign: 'center'
-                                        }}>
-                                            <i className="fas fa-exclamation-triangle"></i> Scanning in progress... Please wait for all details to be detected.
-                                        </div>
-                                    )}
-                                </div>,
-                                document.body
-                            )}
-
-                            <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black', display: verificationStage === 'AADHAR_VERIFY_DATA' ? 'none' : 'block' }}>
+                            <div style={{ position: 'absolute', bottom: '10px', left: '0', width: '100%', textAlign: 'center', color: '#fff', fontSize: '0.8rem', textShadow: '0 1px 2px black', display: 'block' }}>
                                 {verificationStage === 'SELFIE' ? "Position your face in the center" : "Align document/photo within frame"}
                             </div>
                         </div>,
@@ -891,13 +655,13 @@ const Register = () => {
                     return {
                         title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
                         desc: isIdScanComplete
-                            ? "All details captured successfully. Proceed to Aadhar verification."
+                            ? "All details captured successfully. Proceed to Photo verification."
                             : "Some details were not detected clearly. Auto-rescanning in 2 seconds...",
                         isReview: true,
                         data: scannedData,
                         image: idCameraImg,
                         // CONDITIONAL BUTTON LOGIC
-                        btnText: isIdScanComplete ? "Proceed to Aadhar Scan" : null, // Null text hides button logic below? No, I need to handle null action
+                        btnText: isIdScanComplete ? "Proceed to Photo Scan" : null,
                         btnAction: isIdScanComplete ? () => checkVerificationStatus(scannedData, null, 'ID') : null,
                         secondaryBtnText: isIdScanComplete ? "Incorrect details? Rescan ID" : "Rescan ID Card",
                         secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); }
@@ -909,66 +673,7 @@ const Register = () => {
                         btnText: "Start ID Scan",
                         btnAction: () => { setCameraMode('environment'); startCamera(); }
                     };
-                case 'AADHAR_AUTO_CAPTURE':
-                    return {
-                        title: "Step 2: Scan Aadhar QR Code",
-                        desc: "Point camera at the QR Code on your Aadhar (or Front Side).",
-                        btnText: "Start Aadhar Scan",
-                        btnAction: () => {
-                            setCameraMode('environment');
-                            startCamera();
-                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Please scan the QR code on your Aadhar card."));
-                        }
-                    };
-                case 'AADHAR_VERIFY_DATA':
-                    return {
-                        title: "Identity Matched",
-                        desc: "Aadhar matched against College ID. Proceed to complete registration.",
-                        isReview: true,
-                        data: aadharData,
-                        image: aadharCameraImg,
-                        btnText: "Complete Registration",
-                        btnAction: () => {
-                            // SECURITY: Capture silent selfie immediately and proceed to form
-                            setCameraMode('user'); // Switch to front camera
-                            // Wait 1 second for camera to switch, then capture and proceed
-                            setTimeout(() => {
-                                if (videoRef.current && canvasRef.current) {
-                                    const context = canvasRef.current.getContext('2d');
-                                    canvasRef.current.width = videoRef.current.videoWidth;
-                                    canvasRef.current.height = videoRef.current.videoHeight;
 
-                                    // Mirror effect for natural look
-                                    context.translate(canvasRef.current.width, 0);
-                                    context.scale(-1, 1);
-                                    context.drawImage(videoRef.current, 0, 0);
-
-                                    const imgUrl = canvasRef.current.toDataURL('image/jpeg', 0.85);
-                                    setSelfieImg(imgUrl);
-
-                                    // Save verification data
-                                    const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
-                                    const verificationData = {
-                                        allStepsCompleted: true,
-                                        idCardImg: idCameraImg,
-                                        aadharImg: aadharCameraImg,
-                                        selfieImg: imgUrl,
-                                        scannedData: scannedData,
-                                        aadharData: aadharData,
-                                        timestamp: new Date().toISOString()
-                                    };
-                                    localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
-
-                                    // Stop camera and proceed directly to form
-                                    stopCamera();
-                                    setStep(4);
-                                }
-                            }, 1000);
-                        },
-                        secondaryBtnText: "Wrong Aadhar? Rescan",
-                        secondaryBtnAction: () => { setAadharData(null); setVerificationStage('AADHAR_AUTO_CAPTURE'); },
-                        simpleView: true
-                    };
                 case 'SELFIE_AUTO':
                     return {
                         title: "Step 3: Capturing Photo",
@@ -993,7 +698,6 @@ const Register = () => {
                         btnText: "Capture Photo",
                         btnAction: () => {
                             // Only capture the official profile photo
-                            // Silent audit photo was already captured at Aadhar stage
                             takeSelfie(false);
                         }
                     };
@@ -1436,8 +1140,7 @@ const Register = () => {
 
     const attemptAutoCapture = async () => {
         const isIdStage = verificationStage === 'ID_AUTO_CAPTURE';
-        const isAadharStage = verificationStage === 'AADHAR_AUTO_CAPTURE';
-        if (isScanning || !showCamera || (!isIdStage && !isAadharStage) || !videoRef.current || !canvasRef.current) return;
+        if (isScanning || !showCamera || !isIdStage || !videoRef.current || !canvasRef.current) return;
 
         setIsScanning(true);
         const context = canvasRef.current.getContext('2d');
@@ -1463,194 +1166,7 @@ const Register = () => {
             setIsLowLight(avgBrightness < 60);
         } catch (err) { }
 
-        // -------------------------
-        // QR CODE SCANNING (SECURE BYPASS)
-        // -------------------------
-        if (isAadharStage) {
-            try {
-                const imageData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
 
-                // QR CODE DETECTED (any QR)
-                if (code && code.data) {
-                    setQrDetected(true);
-
-                    // Check QR size and position for guidance
-                    const qrWidth = Math.abs(code.location.bottomRightCorner.x - code.location.topLeftCorner.x);
-                    const qrHeight = Math.abs(code.location.bottomRightCorner.y - code.location.topLeftCorner.y);
-                    const qrCenterX = (code.location.topLeftCorner.x + code.location.bottomRightCorner.x) / 2;
-                    const qrCenterY = (code.location.topLeftCorner.y + code.location.bottomRightCorner.y) / 2;
-                    const frameCenterX = canvasRef.current.width / 2;
-                    const frameCenterY = canvasRef.current.height / 2;
-
-                    const distance = Math.sqrt(
-                        Math.pow(qrCenterX - frameCenterX, 2) +
-                        Math.pow(qrCenterY - frameCenterY, 2)
-                    );
-
-                    // Position guidance
-                    if (qrWidth < 100 || qrHeight < 100) {
-                        setQrGuidance("📱 Move closer");
-                    } else if (qrWidth > 300 || qrHeight > 300) {
-                        setQrGuidance("📱 Move farther");
-                    } else if (distance > 80) {
-                        setQrGuidance("🎯 Center QR code");
-                    } else {
-                        setQrGuidance("✓ Perfect! Hold steady");
-
-                        // QR is well-positioned - capture photo for scanning
-                        if (qrPhotoCount < 5) {
-                            const photoData = canvasRef.current.toDataURL('image/jpeg', 0.95);
-                            setQrPhotos(prev => [...prev, photoData]);
-                            setQrPhotoCount(prev => prev + 1);
-                            setScanStatus(`Capturing photo ${qrPhotoCount + 1}/5...`);
-                            playBeep();
-                        }
-                    }
-
-                    // Check brightness in QR area
-                    try {
-                        const qrAreaData = context.getImageData(
-                            code.location.topLeftCorner.x,
-                            code.location.topLeftCorner.y,
-                            qrWidth,
-                            qrHeight
-                        );
-                        let totalBrightness = 0;
-                        for (let i = 0; i < qrAreaData.data.length; i += 16) {
-                            totalBrightness += (qrAreaData.data[i] + qrAreaData.data[i + 1] + qrAreaData.data[i + 2]) / 3;
-                        }
-                        const avgQrBrightness = totalBrightness / (qrAreaData.data.length / 16);
-
-                        // Auto-suggest flash if QR area is dark
-                        if (avgQrBrightness < 50 && !isFlashActive) {
-                            setQrGuidance("⚡ Turn on flash for better scan");
-                            setIsLowLight(true);
-                        }
-                    } catch (e) { }
-
-                    // Play beep when QR detected
-                    playBeep();
-
-                    // VALIDATE IF IT'S AADHAR QR
-                    if (code.data.includes("uid=") || code.data.includes("</PrintLetterBarcodeData>")) {
-                        console.log("✅ Secure QR Code Found!", code.data);
-                        playSuccessSound(); // Success sound for valid Aadhar QR
-
-                        // 1. EXTRACT XML DATA
-                        let uid = code.data.match(/uid="(\d+)"/)?.[1] || "";
-                        let name = code.data.match(/name="([^"]+)"/)?.[1] || "";
-                        let dob = code.data.match(/dob="([^"]+)"/)?.[1] || code.data.match(/yob="(\d+)"/)?.[1] || "";
-                        let gender = code.data.match(/gender="([^"]+)"/)?.[1] || "";
-
-                        // Extract full address details
-                        let co = code.data.match(/co="([^"]+)"/)?.[1] || "";
-                        let loc = code.data.match(/loc="([^"]+)"/)?.[1] || "";
-                        let vtc = code.data.match(/vtc="([^"]+)"/)?.[1] || "";
-                        let dist = code.data.match(/dist="([^"]+)"/)?.[1] || "";
-                        let state = code.data.match(/state="([^"]+)"/)?.[1] || "";
-                        let pc = code.data.match(/pc="([^"]+)"/)?.[1] || "";
-
-                        const fullAddress = [co, loc, vtc, dist, state, pc].filter(Boolean).join(', ');
-
-                        // 2. NAME MATCH CHECK
-                        const knownName = scannedData?.name || "";
-                        const knownFather = scannedData?.fatherName || "";
-                        const knownAddress = scannedData?.address || "";
-
-                        let nameMatches = false;
-                        let fatherMatches = false;
-                        let addressMatches = false;
-
-                        // Relaxed Name Match
-                        if (knownName && name) {
-                            const knParts = knownName.toLowerCase().split(' ');
-                            const qrParts = name.toLowerCase().split(' ');
-                            nameMatches = knParts.some(k => qrParts.some(q => q.includes(k) && k.length > 2));
-                        }
-
-                        // Father Name Match (Handle "S/O", "D/O" prefixes)
-                        if (knownFather && co) {
-                            const cleanCo = co.toLowerCase().replace("s/o", "").replace("d/o", "").replace("c/o", "").trim();
-                            const cleanFather = knownFather.toLowerCase().replace("mr.", "").trim();
-                            // Check partial match
-                            const fParts = cleanFather.split(' ');
-                            fatherMatches = fParts.some(part => cleanCo.includes(part) && part.length > 3);
-                        }
-
-                        // Address Match (Check City/District/Pincode overlap)
-                        if (knownAddress && fullAddress) {
-                            const kAddr = knownAddress.toLowerCase();
-                            const qAddr = fullAddress.toLowerCase();
-                            // Match if Pincode matches OR City name appears in both
-                            const pincodeMatch = (pc && kAddr.includes(pc));
-                            const cityMatch = (vtc && kAddr.includes(vtc.toLowerCase())) || (dist && kAddr.includes(dist.toLowerCase()));
-                            addressMatches = pincodeMatch || cityMatch;
-                        }
-
-                        // ULTIMATE VERIFICATION LOGIC:
-                        // 1. Name Match (Primary)
-                        // 2. Fallback: If Name fails, check if Father + Address BOTH Match (Strong secondary proof)
-                        const isVerified = nameMatches || (fatherMatches && addressMatches);
-
-                        if (isVerified) {
-                            setScanStatus("✅ Secure QR Verified!");
-                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identity Verified."));
-
-                            // Set Data with Verification Flags
-                            const secureAadhar = {
-                                name: name,
-                                aadharNumber: uid,
-                                dob: dob,
-                                gender: gender === "M" ? "Male" : (gender === "F" ? "Female" : gender),
-                                address: fullAddress,
-                                fatherName: co.replace("S/O", "").replace("D/O", "").trim(),
-                                details: { co, dist, state, pc },
-                                // Verification Flags
-                                isNameVerified: nameMatches,
-                                isFatherVerified: fatherMatches,
-                                isAddressVerified: addressMatches,
-                                isFallbackVerified: !nameMatches // Flag if accepted via fallback
-                            };
-                            setAadharData(secureAadhar);
-
-                            // Auto-disable flash after successful scan
-                            setManualFlash(false);
-                            setIsLowLight(false);
-
-                            // Capture Image for Record
-                            canvasRef.current.toBlob((blob) => {
-                                const reader = new FileReader();
-                                reader.readAsDataURL(blob);
-                                reader.onloadend = () => {
-                                    setAadharCameraImg(reader.result);
-                                    setVerificationStage('AADHAR_VERIFY_DATA');
-                                };
-                            });
-                            setIsScanning(false);
-                            return; // EXIT FUNCTION, SKIP OCR
-                        } else {
-                            // QR Found but Name Mismatch
-                            setScanStatus("⚠️ Verification Failed");
-                            console.warn("QR Name Mismatch:", { qr: name, id: knownName });
-                        }
-                    } else {
-                        // QR detected but NOT Aadhar QR
-                        setQrGuidance("❌ Wrong QR! Show Aadhar card");
-                        playErrorSound();
-                        setQrDetected(false);
-                    }
-                } else {
-                    // No QR detected
-                    setQrDetected(false);
-                    setQrGuidance("");
-                }
-            } catch (qrErr) {
-                console.log("QR Scan Error", qrErr);
-                setQrDetected(false);
-            }
-        }
-        // -------------------------
 
         canvasRef.current.toBlob(async (blob) => {
             if (!blob) { setIsScanning(false); return; }
@@ -1663,21 +1179,13 @@ const Register = () => {
                 const lowerText = text.toLowerCase().replace(/\s+/g, '');
 
                 // 1. SECURITY CHECKS (Negative / Replay Detection)
-                if (isIdStage || isAadharStage) {
+                if (isIdStage) {
                     // ENHANCED: Stronger detection with priority keywords
                     const idStrongKeywords = ["ips", "academy", "ipsacademy", "computer code", "computercode"];
                     const idWeakKeywords = ["session", "course", "branch", "student"];
                     const hasStrongIDIndicator = idStrongKeywords.some(kw => lowerText.includes(kw));
                     const hasWeakIDIndicator = idWeakKeywords.some(kw => lowerText.includes(kw));
                     const isIPSDetected = hasStrongIDIndicator || (hasWeakIDIndicator && text.length > 100);
-
-                    // ENHANCED: Aadhar detection with stronger patterns
-                    const aadharStrongKeywords = ['aadhar', 'aadhaar', 'uidai', 'unique identification'];
-                    const aadharWeakKeywords = ['enroll', 'governmentofindia', 'vid:', 'government of india'];
-                    const aadharNumPattern = /\d{4}\s*\d{4}\s*\d{4}/.test(text); // 12 digits in 4-4-4 format
-                    const hasStrongAadharIndicator = aadharStrongKeywords.some(kw => lowerText.includes(kw));
-                    const hasWeakAadharIndicator = aadharWeakKeywords.some(kw => lowerText.includes(kw));
-                    const isAadharDetected = hasStrongAadharIndicator || (hasWeakAadharIndicator && aadharNumPattern);
 
                     // A. Universal Wrong Document detection
                     if (lowerText.includes("incometax") || lowerText.includes("permanentaccount") || lowerText.includes("pancard")) {
@@ -1688,18 +1196,8 @@ const Register = () => {
                         detectedDocType = "Voter ID";
                     }
 
-                    // B. Stage-specific cross-document detection
-                    if (!detectedDocType) {
-                        if (isIdStage && isAadharDetected && !isIPSDetected) {
-                            detectedDocType = "Aadhar Card";
-                        } else if (isAadharStage && isIPSDetected && !isAadharDetected) {
-                            // Only flag as College ID if it's NOT an Aadhar Card
-                            detectedDocType = "College ID Card";
-                        }
-                    }
-
                     // C. Generic Object detection (applies if no specific doc found)
-                    if (!detectedDocType && !isIPSDetected && !isAadharDetected) {
+                    if (!detectedDocType && !isIPSDetected) {
                         const objectCategories = [
                             { name: "Food/Snack", keywords: ["parle", "britannia", "sunfeast", "cadbury", "lays", "kurkur", "bingo", "haldiram", "maggi", "chocolate", "cookie", "mrp", "flavor", "nutrition"] },
                             { name: "Bottle/Drink", keywords: ["pepsi", "coke", "sprite", "thumsup", "maaza", "bisleri", "aquafina"] },
@@ -1731,31 +1229,21 @@ const Register = () => {
                     window.speechSynthesis.cancel();
                     let alertText = "";
                     if (detectedDocType === "Digital Screenshot") {
-                        alertText = isIdStage
-                            ? "Security Alert. Digital screen detected. Please show your PHYSICAL College ID Card."
-                            : "Security Alert. Digital screen detected. Please show your PHYSICAL Aadhar Card.";
+                        alertText = "Security Alert. Digital screen detected. Please show your PHYSICAL College ID Card.";
                     } else if (detectedDocType === "External Identity Card") {
                         alertText = "Security Alert. Only IPS Academy IDs are permitted. This card is not from our campus.";
-                    } else if (detectedDocType === "College ID Card") {
-                        alertText = "Wrong Document! You are showing your College ID Card. Please show your AADHAR CARD for Step 2.";
-                    } else if (detectedDocType === "Aadhar Card") {
-                        alertText = "Wrong Document! You are showing your Aadhar Card. Please show your COLLEGE ID CARD for Step 1.";
                     } else if (detectedDocType.startsWith("Invalid Item")) {
                         const itemName = detectedDocType.replace("Invalid Item (", "").replace(")", "");
-                        alertText = isIdStage
-                            ? `Wrong Item! You are showing ${itemName}. Please show your College ID Card.`
-                            : `Wrong Item! You are showing ${itemName}. Please show your Aadhar Card.`;
+                        alertText = `Wrong Item! You are showing ${itemName}. Please show your College ID Card.`;
                     } else {
-                        alertText = isIdStage
-                            ? `Wrong Document! You are showing a ${detectedDocType}. Please show your IPS Academy College ID Card.`
-                            : `Wrong Document! You are showing a ${detectedDocType}. Please show your Aadhar Card.`;
+                        alertText = `Wrong Document! You are showing a ${detectedDocType}. Please show your IPS Academy College ID Card.`;
                     }
 
                     window.speechSynthesis.speak(new SpeechSynthesisUtterance(alertText));
                     setErrorFlash(true);
                     setTimeout(() => {
                         setErrorFlash(false);
-                        setScanStatus(isIdStage ? "AI: Waiting for IPS ID..." : "AI: Waiting for Aadhar...");
+                        setScanStatus("AI: Waiting for IPS ID...");
                     }, 4000);
                     setScanBuffer([]); setIsScanning(false); return;
                 }
@@ -1848,73 +1336,6 @@ const Register = () => {
                             bg: bgMatch ? bgMatch[1] : null
                         };
                     }
-                } else if (isAadharStage) {
-                    setScanStatus("Scanning Aadhar...");
-
-                    // Enhanced keyword list with more variations
-                    const aadharKeywords = [
-                        'government', 'india', 'uid', 'aadhar', 'aadhaar', 'uidai',
-                        'dob', 'enroll', 'year', 'address', 'male', 'female',
-                        'father', 'husband', 'income', 'vid', 'भारत', 'सरकार'
-                    ];
-
-                    const score = aadharKeywords.reduce((acc, kw) => lowerText.includes(kw) ? acc + 1 : acc, 0);
-
-                    // ENHANCED: More robust Aadhar Number Detection
-                    let cleanAadharText = text.replace(/O/g, '0').replace(/o/g, '0').replace(/S/g, '5').replace(/I/g, '1').replace(/l/g, '1');
-
-                    // Multiple patterns for Aadhar number
-                    const aadharPattern1 = cleanAadharText.match(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/);
-                    const aadharPattern2 = cleanAadharText.match(/\b\d{12}\b/);
-                    const aadharNumMatch = aadharPattern1 || aadharPattern2;
-
-                    console.log("Aadhar Detection:", {
-                        score,
-                        hasAadharNum: !!aadharNumMatch,
-                        keywords: aadharKeywords.filter(kw => lowerText.includes(kw)),
-                        textLength: text.length
-                    });
-
-                    // LOWERED THRESHOLD: Now triggers on Aadhar number alone OR any keyword
-                    if (score >= 1 || aadharNumMatch || isAadharDetected) {
-                        matchFound = true;
-                        setScanStatus("Scanning Aadhar...");
-
-                        const knownName = scannedData?.name || "";
-                        let matchedName = "Detected Name";
-
-                        // Resilient name matching - check if name exists anywhere in OCR block
-                        const cleanOCR = text.toUpperCase().replace(/[^A-Z]/g, '');
-                        const cleanTarget = knownName.toUpperCase().replace(/[^A-Z]/g, '');
-
-                        if (knownName && (cleanOCR.includes(cleanTarget) || cleanTarget.includes(cleanOCR))) {
-                            matchedName = knownName;
-                        } else if (knownName) {
-                            const firstName = knownName.split(' ')[0].toUpperCase();
-                            if (firstName.length > 2 && cleanOCR.includes(firstName)) matchedName = knownName;
-                        }
-
-                        // Fail-safe for known user
-                        if (matchedName === "Detected Name" && (cleanOCR.includes("ABHI") || cleanOCR.includes("JAIN"))) matchedName = knownName || "ABHI JAIN";
-
-                        // STRICT NAME CHECK (Requested Feature)
-                        // If the name on Aadhar doesn't fuzzy-match the ID Card Name, REJECT the frame.
-                        if (matchedName === "Detected Name") {
-                            // Security: Obscure the reason for rejection so users can't game the system
-                            setScanStatus("⚠️ Align Card / Adjust Lighting");
-                            matchFound = false;
-                        } else {
-                            extracted = {
-                                name: matchedName,
-                                // Standardize: Remove spaces/dashes to get pure 12 digits
-                                aadharNumber: aadharNumMatch ? aadharNumMatch[0].replace(/\D/g, '') : "xxxx-xxxx-xxxx"
-                            };
-                        }
-                    } else {
-                        // Not enough confidence - show helpful message
-                        setScanStatus("⚠️ Hold card steady... Looking for Aadhar details");
-                        console.log("Aadhar not detected. Text preview:", text.substring(0, 100));
-                    }
                 }
 
                 if (matchFound) {
@@ -1930,13 +1351,13 @@ const Register = () => {
                     setFlash(true); setTimeout(() => setFlash(false), 150);
 
                     // Updated to 6 frames for Aadhar as requested
-                    const targetFrames = isIdStage ? TARGET_SCANS : 6;
+                    const targetFrames = TARGET_SCANS;
                     const newBuffer = [...scanBuffer, extracted];
                     setScanBuffer(newBuffer);
                     setScanStatus(`✅ Captured ${newBuffer.length} / ${targetFrames}`);
 
                     if (newBuffer.length >= targetFrames) {
-                        finalizeDeepVerification(newBuffer, blob, isIdStage ? 'ID' : 'AADHAR', text);
+                        finalizeDeepVerification(newBuffer, blob, 'ID', text);
                         // Crucial: Unlock scanning after deep verification is initiated
                         setTimeout(() => setIsScanning(false), 500);
                     } else {
@@ -1966,10 +1387,6 @@ const Register = () => {
                 location: location
             };
 
-            if (checkType === 'AADHAR' && cleanedMatch.aadharNumber) {
-                payload.aadharNumber = cleanedMatch.aadharNumber.replace(/\D/g, '');
-            }
-
             const response = await fetch(`${API_BASE_URL}/verification/check-status`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1992,10 +1409,8 @@ const Register = () => {
                     // User completed verification before, skip to registration form
                     window.speechSynthesis.speak(new SpeechSynthesisUtterance("Verification found. Proceeding to registration."));
                     setScannedData(result.data);
-                    setAadharData({ aadharNumber: result.data.aadharNumber });
                     setSelfieImg(result.data.selfieImageUrl);
                     setIdCameraImg(result.data.idCardImageUrl);
-                    setAadharCameraImg(result.data.aadharImageUrl);
                     setScanBuffer([]); stopCamera();
                     setStep(4); // Skip to registration form
                     break;
@@ -2016,16 +1431,7 @@ const Register = () => {
                             // Auto-check passed (New User). Stay on review screen.
                             console.log("Auto-check: New User detected. Waiting for user confirmation.");
                         } else {
-                            // Manual Proceed click. Move to Aadhar.
-                            setVerificationStage('AADHAR_AUTO_CAPTURE');
-                        }
-                    } else {
-                        if (isAutoCheck) {
-                            // Auto-check passed. Stay on review.
-                            console.log("Auto-check: Aadhar valid.");
-                        } else {
                             // Manual Proceed click. Move to Selfie.
-                            if (checkType === 'AADHAR') captureLocation();
                             setVerificationStage('SELFIE');
                         }
                     }
@@ -2178,210 +1584,12 @@ const Register = () => {
                 // NEW: Check for duplicate account immediately after ID Scan
                 checkVerificationStatus(cleanedMatch, finalBlob, 'ID', true);
             };
-        } else if (type === 'AADHAR') {
-
-            // NEW: Auto-check backend immediately (redirects if exists,                            // ---------------------------------------------------------
-            // AADHAR CARD LOGIC
-            // ---------------------------------------------------------
-            // 1. Granular Parsing Strategy: Split text into lines
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 2);
-            const idNameLower = scannedData?.name?.toLowerCase() || '';
-            const idNameParts = idNameLower.split(' ').filter(p => p.length > 2);
-
-            // 2. Enhanced Name Matching with Fuzzy Logic
-            let verifiedName = null;
-            let maxOverlap = 0;
-            let bestNameLine = null;
-
-            for (const line of lines) {
-                const lowerLine = line.toLowerCase();
-
-                // Enhanced filtering - exclude lines with these patterns
-                if (/(government|india|dob|male|female|yob|birth|aadhar|aadhaar|uid|address|pin|state|district|\d{4}\s*\d{4}|\d{6,})/.test(lowerLine)) continue;
-
-                // Skip very short lines (likely noise)
-                if (line.length < 5) continue;
-
-                // Check overlap with ID Name
-                let overlap = 0;
-                let partialMatches = 0;
-
-                idNameParts.forEach(part => {
-                    if (lowerLine.includes(part)) {
-                        overlap++;
-                    } else {
-                        // Check for partial match (fuzzy matching for OCR errors)
-                        const partChars = part.split('');
-                        let matchCount = 0;
-                        partChars.forEach(char => {
-                            if (lowerLine.includes(char)) matchCount++;
-                        });
-                        if (matchCount / part.length > 0.7) partialMatches++;
-                    }
-                });
-
-                const totalScore = overlap + (partialMatches * 0.5);
-
-                // If this line has significant overlap, it's likely the Name
-                if (totalScore > 0 && totalScore >= maxOverlap) {
-                    maxOverlap = totalScore;
-                    bestNameLine = line;
-                }
-            }
-
-            if (bestNameLine) {
-                verifiedName = cleanOCRName(bestNameLine);
-            }
-
-            // Fallback: If no line matched well, but the ID name is present in the full text
-            if (!verifiedName && text.toLowerCase().includes(idNameLower)) {
-                verifiedName = cleanOCRName(scannedData.name);
-            }
-
-            // 3. Enhanced Field Extraction with Multiple Patterns
-
-            // Aadhar Number - Enhanced validation with multiple patterns
-            let aadharNumber = null;
-
-            // Pattern 1: Standard format with spaces (XXXX XXXX XXXX)
-            const aadharPattern1 = text.match(/\b\d{4}\s+\d{4}\s+\d{4}\b/);
-            // Pattern 2: Without spaces (12 consecutive digits)
-            const aadharPattern2 = text.match(/\b\d{12}\b/);
-            // Pattern 3: With hyphens or other separators
-            const aadharPattern3 = text.match(/\b\d{4}[-\s]\d{4}[-\s]\d{4}\b/);
-
-            if (aadharPattern1) {
-                aadharNumber = aadharPattern1[0];
-            } else if (aadharPattern3) {
-                aadharNumber = aadharPattern3[0].replace(/[-]/g, ' ');
-            } else if (aadharPattern2) {
-                // Format as XXXX XXXX XXXX
-                const num = aadharPattern2[0];
-                aadharNumber = `${num.slice(0, 4)} ${num.slice(4, 8)} ${num.slice(8, 12)}`;
-            }
-
-            // DOB - Enhanced extraction with multiple date formats
-            let dob = null;
-
-            // Pattern 1: DD/MM/YYYY or DD-MM-YYYY
-            const dobPattern1 = text.match(/\b(\d{2}[\/\-]\d{2}[\/\-]\d{4})\b/);
-            // Pattern 2: DD.MM.YYYY
-            const dobPattern2 = text.match(/\b(\d{2}\.\d{2}\.\d{4})\b/);
-            // Pattern 3: YYYY (Year only - common in old Aadhar cards)
-            const dobPattern3 = text.match(/\b(19\d{2}|20\d{2})\b/);
-            // Pattern 4: With text prefix like "DOB:" or "Birth:"
-            const dobPattern4 = text.match(/(?:DOB|Birth|YOB)[:\s]*(\d{2}[\/\-\.]\d{2}[\/\-\.]\d{4})/i);
-
-            if (dobPattern4) {
-                dob = dobPattern4[1].replace(/\./g, '/').replace(/-/g, '/');
-            } else if (dobPattern1) {
-                dob = dobPattern1[1].replace(/-/g, '/');
-            } else if (dobPattern2) {
-                dob = dobPattern2[1].replace(/\./g, '/');
-            } else if (dobPattern3 && !aadharNumber?.includes(dobPattern3[1])) {
-                // Only use year if it's not part of Aadhar number
-                dob = dobPattern3[1];
-            }
-
-            // Gender - Enhanced detection with common OCR mistakes
-            let gender = null;
-
-            // Pattern 1: Direct match
-            const genderPattern1 = text.match(/\b(MALE|FEMALE|M|F|Transgender|Trans)\b/i);
-            // Pattern 2: With common OCR errors (WALE -> MALE, FEMLE -> FEMALE)
-            const genderPattern2 = text.match(/\b(M[A-Z]LE|FEM[A-Z]LE|W[A-Z]LE)\b/i);
-            // Pattern 3: With prefix
-            const genderPattern3 = text.match(/(?:Gender|Sex)[:\s]*(MALE|FEMALE|M|F)/i);
-
-            if (genderPattern3) {
-                const g = genderPattern3[1].toUpperCase();
-                gender = g === 'M' ? 'MALE' : g === 'F' ? 'FEMALE' : g;
-            } else if (genderPattern1) {
-                const g = genderPattern1[0].toUpperCase();
-                gender = g === 'M' ? 'MALE' : g === 'F' ? 'FEMALE' : g;
-            } else if (genderPattern2) {
-                const g = genderPattern2[0].toUpperCase();
-                gender = g.includes('FEM') ? 'FEMALE' : 'MALE';
-            }
-
-            console.log("Aadhar Extraction Logic:", {
-                verifiedName,
-                aadharNumber,
-                dob,
-                gender,
-                nameScore: maxOverlap,
-                linesProcessed: lines.length
-            });
-
-            // 4. Silent Scanning - No granular feedback to prevent manipulation
-            if (!verifiedName) {
-                setScanStatus("Scanning Aadhar...");
-                setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
-                return;
-            }
-            // 4. Silent Scanning - OPTIMIZED FAST PATH
-            if (!aadharNumber) {
-                setScanStatus("Scanning Aadhar Number...");
-                setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
-                return;
-            }
-
-            // SMART FIX: Force ID Card Name if partial match found (Fixes garbage text like 'i FT ATAT')
-            if (scannedData?.name && text) {
-                const idNameParts = scannedData.name.split(' ');
-                // Check if "Abhi" or "Jain" exists in Aadhar text
-                const isPartFound = idNameParts.some(part =>
-                    part.length > 2 && text.toLowerCase().includes(part.toLowerCase())
-                );
-
-                if (isPartFound) {
-                    console.log("Smart Fix: Overriding Aadhar name with ID Name", scannedData.name);
-                    verifiedName = scannedData.name;
-                }
-            }
-
-            // FAST TRACK: If Name & Aadhar Number match, proceed immediately!
-            // We skip strict DOB/Gender check to speed up scanning by 2x-3x.
-            if (!verifiedName) {
-                // If name doesn't match, we try to use other details to confirm it's at least a card
-                if (!dob || !gender) {
-                    setScanStatus("Align Aadhar Card...");
-                    setScanBuffer(prev => [...prev.slice(-4), "Retry"]);
-                    return;
-                }
-            }
-
-            // 5. SUCCESS
-            const bestMatch = {
-                name: verifiedName,
-                dob: dob,
-                gender: gender,
-                aadharNumber: aadharNumber
-            };
-
-            setAadharData(bestMatch);
-
-            // Convert to Base64 for DB Storage
-            const reader = new FileReader();
-            reader.readAsDataURL(finalBlob);
-            reader.onloadend = () => {
-                setAadharCameraImg(reader.result);
-                setScanBuffer([]);
-                // stopCamera(); // <--- REMOVED: Keep camera running for Silent Selfie
-                setScanStatus("✅ Aadhar Verified");
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Aadhar matched. Please confirm details."));
-                setVerificationStage('AADHAR_VERIFY_DATA');
-
-                // NEW: Immediately run backend check
-                checkVerificationStatus(bestMatch, finalBlob, 'AADHAR', true);
-            };
-
         }
     };
 
     useEffect(() => {
         let interval;
-        if (showCamera && (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') && !isScanning) {
+        if (showCamera && verificationStage === 'ID_AUTO_CAPTURE' && !isScanning) {
             interval = setInterval(attemptAutoCapture, 800); // 800ms Interval (Faster Scanning)
         }
         return () => clearInterval(interval);
@@ -2414,10 +1622,8 @@ const Register = () => {
                     const verificationData = {
                         allStepsCompleted: true,
                         idCardImg: idCameraImg,
-                        aadharImg: aadharCameraImg,
                         selfieImg: imgUrl,
                         scannedData: scannedData,
-                        aadharData: aadharData,
                         timestamp: new Date().toISOString()
                     };
                     localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
@@ -2527,15 +1733,7 @@ const Register = () => {
                                         </div>
                                     )}
 
-                                    {/* 2. Aadhar Card */}
-                                    {aadharCameraImg && (
-                                        <div style={{ textAlign: 'center' }}>
-                                            <div style={{ width: '100%', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #aaa', marginBottom: '0.5rem' }}>
-                                                <img src={aadharCameraImg} alt="Aadhar Scan" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                            </div>
-                                            <p style={{ fontSize: '0.75rem', color: '#aaa' }}>Aadhar Card</p>
-                                        </div>
-                                    )}
+
                                 </div>
                                 {scannedData && (
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.9rem', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
@@ -2544,19 +1742,7 @@ const Register = () => {
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>INSTITITE</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.institution}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>SESSION</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>COURSE (BRANCH)</strong><div style={{ fontWeight: '500', color: '#4ade80' }}>{scannedData.branch}</div></div>
-                                        {aadharData && (
-                                            <div>
-                                                <strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>AADHAR NUMBER</strong>
-                                                <div style={{ fontWeight: '500', color: '#4ade80', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                    {aadharData.aadharNumber}
 
-                                                </div>
-                                                <div style={{ display: 'flex', gap: '15px', marginTop: '4px', fontSize: '0.8rem', color: '#ccc' }}>
-                                                    <span><strong>DOB:</strong> {aadharData.dob || 'N/A'}</span>
-                                                    <span><strong>Gender:</strong> {aadharData.gender || 'N/A'}</span>
-                                                </div>
-                                            </div>
-                                        )}
                                         <div style={{ gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
                                             {location && (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Device Location:</span><span style={{ color: '#60a5fa', fontSize: '0.8rem' }}><i className="fas fa-map-marker-alt"></i> {location.lat}, {location.lng}</span></div>)}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Verification Status:</span><span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-check-circle"></i> VERIFIED HUMAN</span></div>
@@ -2576,11 +1762,7 @@ const Register = () => {
                                 <input type="text" id="computerCode" name="computerCode" required placeholder="e.g. 59500" value={formData.computerCode} onChange={handleChange} readOnly={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} />
                                 <small>Your unique college ID/Roll Number. This will be your Login ID.</small>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="aadharNumber">Aadhar Number <i className="fas fa-lock text-green-400" title="Verified from Aadhar Card"></i></label>
-                                <input type="text" id="aadharNumber" name="aadharNumber" required placeholder="Scanned from Aadhar Card" value={formData.aadharNumber?.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ') || ''} readOnly className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
-                                <small style={{ color: '#34d399' }}>✓ Verified from Aadhar Card (Read-only)</small>
-                            </div>
+
                             {formData.dob && (
                                 <div className="form-row" style={{ display: 'flex', gap: '1rem' }}>
                                     <div className="form-group" style={{ flex: 1 }}>
