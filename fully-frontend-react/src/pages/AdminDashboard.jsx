@@ -2796,6 +2796,9 @@ const AdminDashboard = () => {
                             />
                         </div>
 
+                        <button onClick={() => navigate('/')} className="btn-secondary" style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s', marginRight: '10px' }}>
+                            <i className="fas fa-home"></i> Back to Portal
+                        </button>
                         <button onClick={() => { localStorage.clear(); navigate('/login'); }} className="logout-btn-modern">
                             <i className="fas fa-sign-out-alt"></i> Logout
                         </button>
