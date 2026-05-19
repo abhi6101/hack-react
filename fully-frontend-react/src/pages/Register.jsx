@@ -1915,6 +1915,9 @@ const Register = () => {
                                         <select id="branch" name="branch" required value={formData.branch} onChange={handleChange} disabled={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', color: '#fff' } : {}}>
                                             <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Your Branch --</option>
                                             {departments.map(d => (<option key={d.code} value={d.code} style={{ background: '#1e293b', color: '#fff' }}>{d.name} ({d.code})</option>))}
+                                            {scannedData && !departments.some(d => d.code === formData.branch) && (
+                                                <option value={formData.branch} style={{ background: '#1e293b', color: '#fff' }}>{scannedData.branch} ({formData.branch})</option>
+                                            )}
                                         </select>
                                     </div>
                                     {formData.branch && (
