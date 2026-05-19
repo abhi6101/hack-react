@@ -27,6 +27,8 @@ const Papers = () => {
     const [currentPaper, setCurrentPaper] = useState(null); // For SEO Filename
     const [userRole, setUserRole] = useState(null);
     const [userSemester, setUserSemester] = useState(null);
+    const [userProfile, setUserProfile] = useState(null);
+    const [isBlurred, setIsBlurred] = useState(false);
 
     const getToken = () => localStorage.getItem("authToken");
 
@@ -61,6 +63,7 @@ const Papers = () => {
             });
             if (res.ok) {
                 const data = await res.json();
+                setUserProfile(data);
                 setUserRole(data.role);
                 setUserSemester(data.semester);
                 if (data.role === 'STUDENT' && data.branch) {
@@ -108,6 +111,49 @@ const Papers = () => {
             navigate('/login');
         }
     }, [navigate, showAlert]);
+
+    useEffect(() => {
+        const handleBlur = () => {
+            if (viewPdfUrl && userRole === 'STUDENT') {
+                setIsBlurred(true);
+            }
+        };
+        const handleFocus = () => {
+            setIsBlurred(false);
+        };
+
+        window.addEventListener('blur', handleBlur);
+        window.addEventListener('focus', handleFocus);
+
+        const handleKeyDown = (e) => {
+            if (viewPdfUrl && userRole === 'STUDENT') {
+                // Ctrl+P / Cmd+P (Print)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                    e.preventDefault();
+                    showToast({ message: 'Printing is strictly prohibited.', type: 'error' });
+                }
+                // Ctrl+S / Cmd+S (Save)
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    showToast({ message: 'Downloading or saving is strictly prohibited.', type: 'error' });
+                }
+                // PrintScreen / Snip Tool shortcut detection
+                if (e.key === 'PrintScreen' || (e.ctrlKey && e.shiftKey && e.key === 'S')) {
+                    e.preventDefault();
+                    navigator.clipboard.writeText(''); // Wipe clipboard
+                    showToast({ message: 'Screenshots are prohibited on this paper.', type: 'error' });
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('blur', handleBlur);
+            window.removeEventListener('focus', handleFocus);
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [viewPdfUrl, userRole, showToast]);
 
     useEffect(() => {
         if (selectedSemester) {
@@ -651,7 +697,8 @@ const Papers = () => {
                                 background: '#1a1a1a',
                                 borderRadius: '12px',
                                 overflow: 'hidden',
-                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                                position: 'relative'
                             }}
                         >
                             <iframe
@@ -659,9 +706,72 @@ const Papers = () => {
                                 type="application/pdf"
                                 width="100%"
                                 height="100%"
-                                style={{ border: 'none' }}
+                                style={{ border: 'none', filter: isBlurred ? 'blur(20px)' : 'none', transition: 'filter 0.15s ease' }}
                                 title="Secure PDF Viewer"
                             />
+
+                            {/* Blur indicator when snipping tool/focus loss is detected */}
+                            {isBlurred && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'rgba(0,0,0,0.7)',
+                                    color: '#ff4d4d',
+                                    fontSize: '1.5rem',
+                                    fontWeight: 'bold',
+                                    zIndex: 10
+                                }}>
+                                    Content blurred due to screen utility active!
+                                </div>
+                            )}
+
+                            {/* Secure transparent watermark overlay */}
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                pointerEvents: 'none',
+                                zIndex: 9,
+                                overflow: 'hidden'
+                            }}>
+                                {/* Repeating Diagonal Watermark */}
+                                {userRole === 'STUDENT' && userProfile && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        width: '200%',
+                                        height: '200%',
+                                        top: '-50%',
+                                        left: '-50%',
+                                        transform: 'rotate(-30deg)',
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(4, 1fr)',
+                                        gridGap: '80px',
+                                        justifyItems: 'center',
+                                        alignItems: 'center',
+                                        opacity: 0.08,
+                                        userSelect: 'none'
+                                    }}>
+                                        {Array.from({ length: 24 }).map((_, i) => (
+                                            <div key={i} style={{
+                                                color: '#fff',
+                                                fontSize: '1.2rem',
+                                                fontWeight: 'bold',
+                                                whiteSpace: 'nowrap'
+                                            }}>
+                                                {userProfile.fullName} ({userProfile.username}) - CONFIDENTIAL HACK2HIRED
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </motion.div>
                     </motion.div>
                 )}
