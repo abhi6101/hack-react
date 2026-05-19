@@ -127,6 +127,11 @@ const Papers = () => {
 
         const handleKeyDown = (e) => {
             if (viewPdfUrl) {
+                // Instantly blur if they press Windows key (Meta) to prevent Win+PrtScn or Win+Shift+S
+                if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Win') {
+                    setIsBlurred(true);
+                }
+
                 // Ctrl+P / Cmd+P (Print)
                 if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
                     e.preventDefault();
@@ -137,10 +142,13 @@ const Papers = () => {
                     e.preventDefault();
                     showToast({ message: 'Downloading or saving is strictly prohibited.', type: 'error' });
                 }
-                // PrintScreen / Snip Tool shortcut detection
+                // PrintScreen / Snip Tool shortcut detection - Blur instantly!
                 if (e.key === 'PrintScreen' || (e.ctrlKey && e.shiftKey && e.key === 'S')) {
                     e.preventDefault();
-                    navigator.clipboard.writeText(''); // Wipe clipboard
+                    setIsBlurred(true);
+                    try {
+                        navigator.clipboard.writeText(''); // Wipe clipboard
+                    } catch (err) {}
                     showToast({ message: 'Screenshots are prohibited on this paper.', type: 'error' });
                 }
             }
@@ -683,6 +691,11 @@ const Papers = () => {
 
                                         // Block saving/printing inside iframe document
                                         iframeDoc.addEventListener('keydown', (evt) => {
+                                            // Instantly blur on Windows/Meta key to block Win+PrtScn
+                                            if (evt.key === 'Meta' || evt.key === 'OS' || evt.key === 'Win') {
+                                                setIsBlurred(true);
+                                            }
+
                                             // Ctrl+S / Cmd+S
                                             if ((evt.ctrlKey || evt.metaKey) && evt.key === 's') {
                                                 evt.preventDefault();
@@ -697,6 +710,15 @@ const Papers = () => {
                                             if ((evt.ctrlKey || evt.metaKey) && evt.key === 'c') {
                                                 evt.preventDefault();
                                                 showToast({ message: 'Copying content is prohibited.', type: 'error' });
+                                            }
+                                            // PrintScreen / Snip Tool shortcut detection - Blur instantly!
+                                            if (evt.key === 'PrintScreen' || (evt.ctrlKey && evt.shiftKey && evt.key === 'S')) {
+                                                evt.preventDefault();
+                                                setIsBlurred(true);
+                                                try {
+                                                    iframeWin.navigator.clipboard.writeText(''); 
+                                                } catch (err) {}
+                                                showToast({ message: 'Screenshots are prohibited on this paper.', type: 'error' });
                                             }
                                         });
                                     } catch (err) {
