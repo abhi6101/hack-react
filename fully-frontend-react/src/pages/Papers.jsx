@@ -174,22 +174,42 @@ const Papers = () => {
         };
 
         const handleTouchStart = (e) => {
-            if (viewPdfUrl && e.touches.length >= 3) {
+            if (viewPdfUrl) {
+                if (e.touches.length >= 3) {
+                    e.preventDefault();
+                    setIsBlurred(true);
+                    triggerSecurityViolation('Multi-finger screenshot gesture detected');
+                } else if (e.touches.length > 1) {
+                    e.preventDefault(); // Block 2-finger pinch-to-zoom
+                }
+            }
+        };
+
+        const handleWheel = (e) => {
+            if (e.ctrlKey && viewPdfUrl) {
                 e.preventDefault();
-                setIsBlurred(true);
-                triggerSecurityViolation('Multi-finger screenshot gesture detected');
+            }
+        };
+
+        const handleKeyZoom = (e) => {
+            if (viewPdfUrl && (e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '-' || e.key === '+' || e.key === '0')) {
+                e.preventDefault();
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('touchstart', handleTouchStart, { passive: false });
         window.addEventListener('touchmove', handleTouchStart, { passive: false });
+        window.addEventListener('wheel', handleWheel, { passive: false });
+        window.addEventListener('keydown', handleKeyZoom);
 
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('touchstart', handleTouchStart);
             window.removeEventListener('touchmove', handleTouchStart);
+            window.removeEventListener('wheel', handleWheel);
+            window.removeEventListener('keydown', handleKeyZoom);
         };
     }, [viewPdfUrl, userRole, showToast]);
 
@@ -706,7 +726,7 @@ const Papers = () => {
                             }}
                         >
                             <iframe
-                                src={`${viewPdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                                src={`${viewPdfUrl}#toolbar=0&navpanes=0&scrollbar=0&zoom=100`}
                                 type="application/pdf"
                                 width="100%"
                                 height="100%"
@@ -718,7 +738,13 @@ const Papers = () => {
                                         const iframeDoc = e.target.contentDocument || iframeWin.document;
 
                                         // Block right click inside iframe document
-                                        iframeDoc.addEventListener('contextmenu', (evt) => {
+                                        iframeDoc.addEventListener('wheel', (evt) => {
+                                             if (evt.ctrlKey) {
+                                                 evt.preventDefault();
+                                             }
+                                         }, { passive: false });
+
+                                         iframeDoc.addEventListener('contextmenu', (evt) => {
                                             evt.preventDefault();
                                         });
 
@@ -730,7 +756,12 @@ const Papers = () => {
                                             }
 
                                             // Ctrl+S / Cmd+S
-                                            if ((evt.ctrlKey || evt.metaKey) && evt.key === 's') {
+                                            // Block Ctrl+Plus, Ctrl+Minus, Ctrl+Zero keypad zoom
+                                             if ((evt.ctrlKey || evt.metaKey) && (evt.key === '=' || evt.key === '-' || evt.key === '+' || evt.key === '0')) {
+                                                 evt.preventDefault();
+                                             }
+
+                                             if ((evt.ctrlKey || evt.metaKey) && evt.key === 's') {
                                                 evt.preventDefault();
                                                 showToast({ message: 'Saving is strictly prohibited.', type: 'error' });
                                             }
