@@ -261,11 +261,9 @@ const Register = () => {
                     setScannedData(null);
                     setIdCameraImg(null);
                     setVerificationStage('ID_AUTO_CAPTURE');
-                    setScanStatus('Auto-restarting scan...');
+                    setScanStatus('');
                     setScanBuffer([]);
-
-                    setCameraMode('environment');
-                    startCamera('environment');
+                    // Do not auto-start camera anymore, user must upload manually.
                 }, 5000);
 
                 return () => clearTimeout(timer);
@@ -581,7 +579,7 @@ const Register = () => {
                         title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
                         desc: isIdScanComplete
                             ? "All details captured successfully. Proceed to Photo verification."
-                            : "Some details were not detected clearly. Auto-rescanning in 5 seconds...",
+                            : "Some details were not detected clearly. Going back in 5 seconds to re-upload...",
                         isReview: true,
                         data: scannedData,
                         image: idCameraImg,
@@ -592,17 +590,15 @@ const Register = () => {
                             stopCamera();
                             checkVerificationStatus(scannedData, null, 'ID');
                         } : null,
-                        secondaryBtnText: isIdScanComplete ? "Incorrect details? Rescan ID" : "Rescan ID Card",
-                        secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); startCamera('environment'); }
+                        secondaryBtnText: isIdScanComplete ? "Incorrect details? Re-upload ID" : "Re-upload ID Card",
+                        secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); document.getElementById('id-upload-input').click(); }
                     };
                 case 'ID_AUTO_CAPTURE':
                     return {
-                        title: "Step 1: Scan College ID",
-                        desc: "Hold your IPS Academy ID Card. This will be your primary student identity.",
-                        btnText: "Start ID Scan",
-                        btnAction: () => { setCameraMode('environment'); startCamera('environment'); },
-                        secondaryBtnText: "Upload ID Image",
-                        secondaryBtnAction: () => document.getElementById('id-upload-input').click()
+                        title: "Step 1: Upload College ID",
+                        desc: "Upload a clear photo of your IPS Academy ID Card. This will be your primary student identity.",
+                        btnText: "Upload ID Image",
+                        btnAction: () => document.getElementById('id-upload-input').click()
                     };
 
                 case 'SELFIE_AUTO':
