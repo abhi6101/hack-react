@@ -254,8 +254,8 @@ const Register = () => {
                 scannedData?.mobileCount > 0;
 
             if (!isIdScanComplete) {
-                console.log("Incomplete scan detected - auto-rescanning in 2 seconds...");
-                // Incomplete scan detected - auto-rescan after 2 seconds
+                console.log("Incomplete scan detected - auto-rescanning in 5 seconds...");
+                // Incomplete scan detected - auto-rescan after 5 seconds
                 const timer = setTimeout(() => {
                     console.log("Auto-rescan triggered!");
                     setScannedData(null);
@@ -266,7 +266,7 @@ const Register = () => {
 
                     setCameraMode('environment');
                     startCamera('environment');
-                }, 2000);
+                }, 5000);
 
                 return () => clearTimeout(timer);
             }
@@ -579,7 +579,7 @@ const Register = () => {
                         title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
                         desc: isIdScanComplete
                             ? "All details captured successfully. Proceed to Photo verification."
-                            : "Some details were not detected clearly. Auto-rescanning in 2 seconds...",
+                            : "Some details were not detected clearly. Auto-rescanning in 5 seconds...",
                         isReview: true,
                         data: scannedData,
                         image: idCameraImg,
