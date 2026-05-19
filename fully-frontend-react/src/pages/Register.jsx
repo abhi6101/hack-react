@@ -1668,6 +1668,7 @@ const Register = () => {
         }
     }, [step]);
 
+    /* 
     useEffect(() => {
         if (!showCamera && !isScanning) {
             if (verificationStage === 'ID_AUTO_CAPTURE') {
@@ -1677,6 +1678,7 @@ const Register = () => {
             }
         }
     }, [verificationStage]);
+    */
 
     // Auto-Selfie Logic REMOVED/NOT NEEDED - We capture on button click now
 
