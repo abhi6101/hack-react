@@ -18,8 +18,7 @@ const VerifyAccount = () => {
         }
     }, [email, navigate]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const verifyCode = async (codeToVerify) => {
         setLoading(true);
         setError('');
 
@@ -29,7 +28,7 @@ const VerifyAccount = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     identifier: email,
-                    code: code
+                    code: codeToVerify
                 })
             });
 
@@ -47,6 +46,22 @@ const VerifyAccount = () => {
             setLoading(false);
         }
     };
+
+    const handleSubmit = async (e) => {
+        if (e) e.preventDefault();
+        if (code.length === 6) {
+            await verifyCode(code);
+        } else {
+            setError('Please enter a 6-digit verification code');
+        }
+    };
+
+    // Auto-submit when code reaches 6 digits
+    useEffect(() => {
+        if (code.length === 6 && !loading && !success) {
+            verifyCode(code);
+        }
+    }, [code, loading, success]);
 
     return (
         <div className="login-body-wrapper">
