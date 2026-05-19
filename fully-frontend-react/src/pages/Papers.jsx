@@ -135,53 +135,42 @@ const Papers = () => {
     useEffect(() => {
         const handleBlur = () => {
             if (viewPdfUrl) {
-                setIsBlurred(true);
+                triggerSecurityViolation('Screen utility or focus loss detected');
             }
-        };
-        const handleFocus = () => {
-            setIsBlurred(false);
         };
 
         const handleMouseLeave = () => {
             if (viewPdfUrl) {
-                setIsBlurred(true);
-            }
-        };
-
-        const handleMouseEnter = () => {
-            if (viewPdfUrl) {
-                setIsBlurred(false);
+                triggerSecurityViolation('Mouse exited secure boundary');
             }
         };
 
         const handleVisibilityChange = () => {
             if (document.hidden && viewPdfUrl) {
-                setIsBlurred(true);
+                triggerSecurityViolation('Tab switch or minimization detected');
             }
         };
 
         window.addEventListener('blur', handleBlur);
-        window.addEventListener('focus', handleFocus);
         window.addEventListener('mouseleave', handleMouseLeave);
-        window.addEventListener('mouseenter', handleMouseEnter);
         document.addEventListener('visibilitychange', handleVisibilityChange);
 
         const handleKeyDown = (e) => {
             if (viewPdfUrl) {
-                // Instantly blur if they press Windows key (Meta) or Command key to block Win+PrtScn or Win+Shift+S
+                // Instantly redirect if they press Windows key (Meta) or Command key
                 if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Win') {
-                    setIsBlurred(true);
+                    triggerSecurityViolation('System menu shortcut pressed');
                 }
 
                 // Ctrl+P / Cmd+P (Print)
                 if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
                     e.preventDefault();
-                    showToast({ message: 'Printing is strictly prohibited.', type: 'error' });
+                    triggerSecurityViolation('Print attempt detected');
                 }
                 // Ctrl+S / Cmd+S (Save)
                 if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                     e.preventDefault();
-                    showToast({ message: 'Downloading or saving is strictly prohibited.', type: 'error' });
+                    triggerSecurityViolation('Save attempt detected');
                 }
                 // Win+Shift+S / Cmd+Shift+S / PrintScreen / Snip Tool shortcut detection - KICK TO HOME!
                 if (
@@ -212,9 +201,7 @@ const Papers = () => {
 
         return () => {
             window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('focus', handleFocus);
             window.removeEventListener('mouseleave', handleMouseLeave);
-            window.removeEventListener('mouseenter', handleMouseEnter);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('touchstart', handleTouchStart);
