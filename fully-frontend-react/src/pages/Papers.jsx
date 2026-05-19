@@ -708,6 +708,40 @@ const Papers = () => {
                                 height="100%"
                                 style={{ border: 'none', filter: isBlurred ? 'blur(20px)' : 'none', transition: 'filter 0.15s ease' }}
                                 title="Secure PDF Viewer"
+                                onLoad={(e) => {
+                                    try {
+                                        const iframeWin = e.target.contentWindow;
+                                        const iframeDoc = e.target.contentDocument || iframeWin.document;
+
+                                        // Block right click inside iframe document
+                                        iframeDoc.addEventListener('contextmenu', (evt) => {
+                                            evt.preventDefault();
+                                        });
+
+                                        // Block saving/printing inside iframe document
+                                        iframeDoc.addEventListener('keydown', (evt) => {
+                                            if (userRole === 'STUDENT') {
+                                                // Ctrl+S / Cmd+S
+                                                if ((evt.ctrlKey || evt.metaKey) && evt.key === 's') {
+                                                    evt.preventDefault();
+                                                    showToast({ message: 'Saving is strictly prohibited.', type: 'error' });
+                                                }
+                                                // Ctrl+P / Cmd+P
+                                                if ((evt.ctrlKey || evt.metaKey) && evt.key === 'p') {
+                                                    evt.preventDefault();
+                                                    showToast({ message: 'Printing is strictly prohibited.', type: 'error' });
+                                                }
+                                                // Ctrl+C / Cmd+C (Copy)
+                                                if ((evt.ctrlKey || evt.metaKey) && evt.key === 'c') {
+                                                    evt.preventDefault();
+                                                    showToast({ message: 'Copying content is prohibited.', type: 'error' });
+                                                }
+                                            }
+                                        });
+                                    } catch (err) {
+                                        console.warn("Could not inject keyboard listeners inside iframe due to browser PDF plugin sandboxing.", err);
+                                    }
+                                }}
                             />
 
                             {/* Blur indicator when snipping tool/focus loss is detected */}
