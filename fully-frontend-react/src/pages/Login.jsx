@@ -1,6 +1,6 @@
 import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/login.css';
 
@@ -15,6 +15,8 @@ const Login = () => {
     const [countdown, setCountdown] = useState(15);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    const [lockedTimeLeft, setLockedTimeLeft] = useState(0);
 
     // Load remembered credentials based on mode
     useEffect(() => {
@@ -41,6 +43,30 @@ const Login = () => {
         }
     }, [loginMode]);
 
+    // Check if user navigated here while locked out
+    useEffect(() => {
+        if (location.state && location.state.locked && location.state.secondsLeft) {
+            setLockedTimeLeft(location.state.secondsLeft);
+            setError(location.state.message || "Your account is temporarily suspended due to security violations.");
+        }
+    }, [location.state]);
+
+    // Locked timer countdown
+    useEffect(() => {
+        if (lockedTimeLeft <= 0) return;
+        const interval = setInterval(() => {
+            setLockedTimeLeft(prev => {
+                if (prev <= 1) {
+                    setError(''); // Clear error once unlocked
+                    return 0;
+                }
+                setError(`Your account has been locked for 2 minutes due to repeated security violations. Unlocking in ${prev - 1} seconds.`);
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [lockedTimeLeft]);
+
     // Handle identifier input - only digits for student mode
     const handleIdentifierChange = (e) => {
         const value = e.target.value;
@@ -56,6 +82,9 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (lockedTimeLeft > 0) {
+            return;
+        }
         setLoading(true);
         setError('');
         setShowWaitNote(false);
@@ -157,6 +186,9 @@ const Login = () => {
                 }
                 setLoading(false);
             } else {
+                if (data.locked && data.secondsLeft) {
+                    setLockedTimeLeft(data.secondsLeft);
+                }
                 setError(data.message || 'Login failed. Please check your credentials.');
                 setLoading(false);
             }
@@ -332,8 +364,8 @@ const Login = () => {
                             </Link>
                         </div>
 
-                        <button type="submit" id="loginButton" className="btn btn-primary" disabled={loading}>
-                            {loading ? 'Logging in...' : `Login as ${loginMode === 'student' ? 'Student' : 'Admin'} `}
+                        <button type="submit" id="loginButton" className="btn btn-primary" disabled={loading || lockedTimeLeft > 0}>
+                            {loading ? 'Logging in...' : lockedTimeLeft > 0 ? `Locked Out (${lockedTimeLeft}s)` : `Login as ${loginMode === 'student' ? 'Student' : 'Admin'} `}
                         </button>
                     </form>
                     <div className="login-footer">

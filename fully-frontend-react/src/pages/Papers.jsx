@@ -125,10 +125,39 @@ const Papers = () => {
         }
         setViewPdfUrl(null);
 
+        // Notify backend of the security violation
+        const token = localStorage.getItem('token');
+        let lockedOut = false;
+        if (token) {
+            fetch(`${API_BASE_URL}/public/papers/violation`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => {
+                if (res.ok) return res.json();
+                throw new Error("Violation log failed");
+            })
+            .then(data => {
+                if (data.isLocked) {
+                    lockedOut = true;
+                    setSecurityViolationMessage(`CRITICAL VIOLATION: ${data.message} Logging out...`);
+                    setTimeout(() => {
+                        localStorage.clear();
+                        navigate('/login', { state: { locked: true, message: data.message, secondsLeft: data.secondsLeft } });
+                    }, 3000);
+                }
+            })
+            .catch(err => console.error("Error logging security violation:", err));
+        }
+
         setTimeout(() => {
-            setSecurityViolationMessage(null);
-            setIsBlurred(false);
-            navigate('/');
+            if (!lockedOut) {
+                setSecurityViolationMessage(null);
+                setIsBlurred(false);
+                navigate('/');
+            }
         }, 3000);
     };
 
