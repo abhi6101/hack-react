@@ -1707,6 +1707,7 @@ const Register = () => {
                 startYear: startYear,
                 mobilePrimary: scannedData.mobilePrimary || '',
                 mobileSecondary: scannedData.mobileSecondary || '',
+                address: scannedData.address || '',
                 role: 'USER'
             }));
         }
@@ -1778,6 +1779,20 @@ const Register = () => {
                                 <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>
                                 <input type="text" id="fullName" name="fullName" value={formData.fullName} readOnly={true} className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
                                 <small style={{ color: '#34d399' }}>Verified from ID Card</small>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="address">Address <i className={scannedData ? "fas fa-lock text-green-400" : "fas fa-map-marker-alt"} title={scannedData ? "Verified from ID" : "Home Address"}></i></label>
+                                <textarea 
+                                    id="address" 
+                                    name="address" 
+                                    value={formData.address} 
+                                    onChange={handleChange}
+                                    readOnly={!!scannedData} 
+                                    placeholder="Enter your address"
+                                    style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed', width: '100%', minHeight: '80px', color: '#fff', borderRadius: '8px', padding: '0.75rem', border: '1px solid rgba(52,211,153,0.3)', resize: 'vertical' } : { background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%', minHeight: '80px', resize: 'vertical' }} 
+                                />
+                                <small style={scannedData ? { color: '#34d399' } : {}}>{scannedData ? '✓ Verified from ID Card' : 'Provide your permanent address'}</small>
                             </div>
 
                             <div className="form-group">
