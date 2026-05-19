@@ -957,7 +957,6 @@ const Register = () => {
                 computerCode: formData.role === 'USER' ? formData.computerCode : undefined,
                 enrollmentNumber: formData.role === 'USER' ? formData.enrollmentNumber : undefined,
                 startYear: formData.role === 'USER' ? formData.startYear : undefined,
-                aadharNumber: formData.role === 'USER' ? formData.aadharNumber?.replace(/\D/g, '') : undefined,
 
                 // Verified Identity Data (from ID card)
                 fullName: scannedData?.name,
@@ -977,14 +976,12 @@ const Register = () => {
 
                 // Image Mapping for Backend (CRITICAL FIX)
                 idCardImage: idCameraImg,
-                aadharCardImage: aadharCameraImg,
                 profilePictureUrl: selfieImg,
 
 
                 // Verification Metadata
                 verificationData: {
                     idCardImageUrl: idCameraImg, // Base64 or upload to storage first
-                    aadharCardImageUrl: aadharCameraImg,
                     selfieImageUrl: selfieImg,
                     deviceLocation: location,
                     verifiedAt: new Date().toISOString(),
