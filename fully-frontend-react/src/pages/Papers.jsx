@@ -112,6 +112,18 @@ const Papers = () => {
         }
     }, [navigate, showAlert]);
 
+    const triggerSecurityViolation = (reason) => {
+        if (viewPdfUrl) {
+            try {
+                window.URL.revokeObjectURL(viewPdfUrl);
+            } catch (err) {}
+        }
+        setViewPdfUrl(null);
+        setIsBlurred(false);
+        showToast({ message: `Security restriction: ${reason}. Redirecting to home...`, type: 'error' });
+        navigate('/');
+    };
+
     useEffect(() => {
         const handleBlur = () => {
             if (viewPdfUrl) {
@@ -163,7 +175,7 @@ const Papers = () => {
                     e.preventDefault();
                     showToast({ message: 'Downloading or saving is strictly prohibited.', type: 'error' });
                 }
-                // Win+Shift+S / Cmd+Shift+S / PrintScreen / Snip Tool shortcut detection - Blur instantly!
+                // Win+Shift+S / Cmd+Shift+S / PrintScreen / Snip Tool shortcut detection - KICK TO HOME!
                 if (
                     e.key === 'PrintScreen' || 
                     ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 's' || e.key === 'S'))
@@ -173,7 +185,7 @@ const Papers = () => {
                     try {
                         navigator.clipboard.writeText(''); // Wipe clipboard
                     } catch (err) {}
-                    showToast({ message: 'Screenshots are prohibited on this paper.', type: 'error' });
+                    triggerSecurityViolation('Screenshot attempt detected');
                 }
             }
         };
@@ -182,7 +194,7 @@ const Papers = () => {
             if (viewPdfUrl && e.touches.length >= 3) {
                 e.preventDefault();
                 setIsBlurred(true);
-                showToast({ message: 'Multi-finger gestures are restricted on this paper.', type: 'error' });
+                triggerSecurityViolation('Multi-finger screenshot gesture detected');
             }
         };
 
@@ -750,7 +762,7 @@ const Papers = () => {
                                                 evt.preventDefault();
                                                 showToast({ message: 'Copying content is prohibited.', type: 'error' });
                                             }
-                                            // PrintScreen / Snip Tool shortcut detection - Blur instantly!
+                                            // PrintScreen / Snip Tool shortcut detection - KICK TO HOME!
                                             if (
                                                 evt.key === 'PrintScreen' || 
                                                 ((evt.metaKey || evt.ctrlKey) && evt.shiftKey && (evt.key === 's' || evt.key === 'S'))
@@ -760,7 +772,7 @@ const Papers = () => {
                                                 try {
                                                     iframeWin.navigator.clipboard.writeText(''); 
                                                 } catch (err) {}
-                                                showToast({ message: 'Screenshots are prohibited on this paper.', type: 'error' });
+                                                triggerSecurityViolation('Screenshot attempt detected inside secure frame');
                                             }
                                         });
                                     } catch (err) {
