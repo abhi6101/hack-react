@@ -174,42 +174,22 @@ const Papers = () => {
         };
 
         const handleTouchStart = (e) => {
-            if (viewPdfUrl) {
-                if (e.touches.length >= 3) {
-                    e.preventDefault();
-                    setIsBlurred(true);
-                    triggerSecurityViolation('Multi-finger screenshot gesture detected');
-                } else if (e.touches.length > 1) {
-                    e.preventDefault(); // Block 2-finger pinch-to-zoom
-                }
-            }
-        };
-
-        const handleWheel = (e) => {
-            if (e.ctrlKey && viewPdfUrl) {
+            if (viewPdfUrl && e.touches.length >= 3) {
                 e.preventDefault();
-            }
-        };
-
-        const handleKeyZoom = (e) => {
-            if (viewPdfUrl && (e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '-' || e.key === '+' || e.key === '0')) {
-                e.preventDefault();
+                setIsBlurred(true);
+                triggerSecurityViolation('Multi-finger screenshot gesture detected');
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('touchstart', handleTouchStart, { passive: false });
         window.addEventListener('touchmove', handleTouchStart, { passive: false });
-        window.addEventListener('wheel', handleWheel, { passive: false });
-        window.addEventListener('keydown', handleKeyZoom);
 
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('touchstart', handleTouchStart);
             window.removeEventListener('touchmove', handleTouchStart);
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('keydown', handleKeyZoom);
         };
     }, [viewPdfUrl, userRole, showToast]);
 
@@ -738,7 +718,8 @@ const Papers = () => {
                                         const iframeDoc = e.target.contentDocument || iframeWin.document;
 
                                         // Block right click inside iframe document
-                                        iframeDoc.addEventListener('wheel', (evt) => {
+                                        // Disabled wheel listener
+                                         if (false) iframeDoc.addEventListener('wheel', (evt) => {
                                              if (evt.ctrlKey) {
                                                  evt.preventDefault();
                                              }
@@ -757,7 +738,7 @@ const Papers = () => {
 
                                             // Ctrl+S / Cmd+S
                                             // Block Ctrl+Plus, Ctrl+Minus, Ctrl+Zero keypad zoom
-                                             if ((evt.ctrlKey || evt.metaKey) && (evt.key === '=' || evt.key === '-' || evt.key === '+' || evt.key === '0')) {
+                                             if (false && (evt.ctrlKey || evt.metaKey) && (evt.key === '=' || evt.key === '-' || evt.key === '+' || evt.key === '0')) {
                                                  evt.preventDefault();
                                              }
 
