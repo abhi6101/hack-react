@@ -122,12 +122,33 @@ const Papers = () => {
             setIsBlurred(false);
         };
 
+        const handleMouseLeave = () => {
+            if (viewPdfUrl) {
+                setIsBlurred(true);
+            }
+        };
+
+        const handleMouseEnter = () => {
+            if (viewPdfUrl) {
+                setIsBlurred(false);
+            }
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.hidden && viewPdfUrl) {
+                setIsBlurred(true);
+            }
+        };
+
         window.addEventListener('blur', handleBlur);
         window.addEventListener('focus', handleFocus);
+        window.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener('mouseenter', handleMouseEnter);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
 
         const handleKeyDown = (e) => {
             if (viewPdfUrl) {
-                // Instantly blur if they press Windows key (Meta) to prevent Win+PrtScn or Win+Shift+S
+                // Instantly blur if they press Windows key (Meta) or Command key to block Win+PrtScn or Win+Shift+S
                 if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Win') {
                     setIsBlurred(true);
                 }
@@ -142,8 +163,11 @@ const Papers = () => {
                     e.preventDefault();
                     showToast({ message: 'Downloading or saving is strictly prohibited.', type: 'error' });
                 }
-                // PrintScreen / Snip Tool shortcut detection - Blur instantly!
-                if (e.key === 'PrintScreen' || (e.ctrlKey && e.shiftKey && e.key === 'S')) {
+                // Win+Shift+S / Cmd+Shift+S / PrintScreen / Snip Tool shortcut detection - Blur instantly!
+                if (
+                    e.key === 'PrintScreen' || 
+                    ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 's' || e.key === 'S'))
+                ) {
                     e.preventDefault();
                     setIsBlurred(true);
                     try {
@@ -169,6 +193,9 @@ const Papers = () => {
         return () => {
             window.removeEventListener('blur', handleBlur);
             window.removeEventListener('focus', handleFocus);
+            window.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('mouseenter', handleMouseEnter);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('touchstart', handleTouchStart);
             window.removeEventListener('touchmove', handleTouchStart);
@@ -724,7 +751,10 @@ const Papers = () => {
                                                 showToast({ message: 'Copying content is prohibited.', type: 'error' });
                                             }
                                             // PrintScreen / Snip Tool shortcut detection - Blur instantly!
-                                            if (evt.key === 'PrintScreen' || (evt.ctrlKey && evt.shiftKey && evt.key === 'S')) {
+                                            if (
+                                                evt.key === 'PrintScreen' || 
+                                                ((evt.metaKey || evt.ctrlKey) && evt.shiftKey && (evt.key === 's' || evt.key === 'S'))
+                                            ) {
                                                 evt.preventDefault();
                                                 setIsBlurred(true);
                                                 try {
