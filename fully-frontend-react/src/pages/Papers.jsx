@@ -126,8 +126,7 @@ const Papers = () => {
         setViewPdfUrl(null);
 
         // Notify backend of the security violation
-        const token = localStorage.getItem('token');
-        let lockedOut = false;
+        const token = getToken();
         if (token) {
             fetch(`${API_BASE_URL}/public/papers/violation`, {
                 method: 'POST',
@@ -141,24 +140,34 @@ const Papers = () => {
             })
             .then(data => {
                 if (data.isLocked) {
-                    lockedOut = true;
                     setSecurityViolationMessage(`CRITICAL VIOLATION: ${data.message} Logging out...`);
                     setTimeout(() => {
                         localStorage.clear();
                         navigate('/login', { state: { locked: true, message: data.message, secondsLeft: data.secondsLeft } });
                     }, 3000);
+                } else {
+                    setTimeout(() => {
+                        setSecurityViolationMessage(null);
+                        setIsBlurred(false);
+                        navigate('/');
+                    }, 3000);
                 }
             })
-            .catch(err => console.error("Error logging security violation:", err));
-        }
-
-        setTimeout(() => {
-            if (!lockedOut) {
+            .catch(err => {
+                console.error("Error logging security violation:", err);
+                setTimeout(() => {
+                    setSecurityViolationMessage(null);
+                    setIsBlurred(false);
+                    navigate('/');
+                }, 3000);
+            });
+        } else {
+            setTimeout(() => {
                 setSecurityViolationMessage(null);
                 setIsBlurred(false);
                 navigate('/');
-            }
-        }, 3000);
+            }, 3000);
+        }
     };
 
     useEffect(() => {
