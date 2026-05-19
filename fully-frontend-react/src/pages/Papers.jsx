@@ -165,16 +165,20 @@ const Papers = () => {
         }
     };
 
-    const handleDownload = (paper) => {
+    const handleDownload = async (paper) => {
+        setLoading(true);
         try {
-            // Because the backend performs a 302 Redirect to Google Drive, 
-            // we cannot use fetch() due to Google Drive strict CORS policies.
-            // Opening in a new tab works flawlessly and is what the Admin dashboard uses.
-            const url = `${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`;
-            window.open(url, '_blank', 'noopener,noreferrer');
+            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`);
+            if (!res.ok) throw new Error("Failed to load PDF");
+            const blob = await res.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            setViewPdfUrl(blobUrl);
+            setCurrentPaper(paper);
         } catch (e) {
             console.error("Download error:", e);
-            showToast({ message: 'Failed to access document.', type: 'error' });
+            showToast({ message: 'Failed to access document securely.', type: 'error' });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -597,47 +601,50 @@ const Papers = () => {
                         </motion.button>
 
                         {/* SEO Download Button (Added per request) */}
-                        <motion.button
-                            onClick={() => {
-                                const link = document.createElement('a');
-                                link.href = viewPdfUrl;
-                                // SEO Naming: RGPV-IMCA-[Subject]-[Year].pdf
-                                const fileName = `RGPV-IMCA-${currentPaper?.subject?.replace(/\s+/g, '-')}-${currentPaper?.year || 'Unknown'}.pdf`;
-                                link.download = fileName;
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
-                            }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            style={{
-                                position: 'absolute',
-                                top: '2rem',
-                                right: '8rem',
-                                background: 'var(--primary)',
-                                border: 'none',
-                                color: 'black',
-                                padding: '0.8rem 1.5rem',
-                                borderRadius: '30px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.8rem',
-                                fontWeight: '700',
-                                fontSize: '0.9rem',
-                                zIndex: 10000,
-                                boxShadow: '0 0 20px var(--primary-glow)'
-                            }}
-                        >
-                            <i className="fas fa-download"></i>
-                            Download Paper
-                        </motion.button>
+                        {userRole !== 'STUDENT' && (
+                            <motion.button
+                                onClick={() => {
+                                    const link = document.createElement('a');
+                                    link.href = viewPdfUrl;
+                                    // SEO Naming: RGPV-IMCA-[Subject]-[Year].pdf
+                                    const fileName = `RGPV-IMCA-${currentPaper?.subject?.replace(/\s+/g, '-')}-${currentPaper?.year || 'Unknown'}.pdf`;
+                                    link.download = fileName;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                style={{
+                                    position: 'absolute',
+                                    top: '2rem',
+                                    right: '8rem',
+                                    background: 'var(--primary)',
+                                    border: 'none',
+                                    color: 'black',
+                                    padding: '0.8rem 1.5rem',
+                                    borderRadius: '30px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.8rem',
+                                    fontWeight: '700',
+                                    fontSize: '0.9rem',
+                                    zIndex: 10000,
+                                    boxShadow: '0 0 20px var(--primary-glow)'
+                                }}
+                            >
+                                <i className="fas fa-download"></i>
+                                Download Paper
+                            </motion.button>
+                        )}
 
                         {/* PDF Frame */}
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
+                            onContextMenu={(e) => e.preventDefault()}
                             style={{
                                 width: '90%',
                                 height: '90%',
