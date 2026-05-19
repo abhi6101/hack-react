@@ -133,26 +133,12 @@ const Papers = () => {
     };
 
     useEffect(() => {
-        const handleBlur = () => {
-            if (viewPdfUrl) {
-                triggerSecurityViolation('Screen utility or focus loss detected');
-            }
-        };
-
-        const handleMouseLeave = () => {
-            if (viewPdfUrl) {
-                triggerSecurityViolation('Mouse exited secure boundary');
-            }
-        };
-
         const handleVisibilityChange = () => {
             if (document.hidden && viewPdfUrl) {
                 triggerSecurityViolation('Tab switch or minimization detected');
             }
         };
 
-        window.addEventListener('blur', handleBlur);
-        window.addEventListener('mouseleave', handleMouseLeave);
         document.addEventListener('visibilitychange', handleVisibilityChange);
 
         const handleKeyDown = (e) => {
@@ -200,8 +186,6 @@ const Papers = () => {
         window.addEventListener('touchmove', handleTouchStart, { passive: false });
 
         return () => {
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('mouseleave', handleMouseLeave);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('touchstart', handleTouchStart);
