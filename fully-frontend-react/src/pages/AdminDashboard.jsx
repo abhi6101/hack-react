@@ -208,6 +208,11 @@ const AdminDashboard = () => {
     const [allProfiles, setAllProfiles] = useState([]);
     const [loadingProfiles, setLoadingProfiles] = useState(false);
 
+    // Paper View Logs State
+    const [paperViewLogs, setPaperViewLogs] = useState([]);
+    const [loadingPaperLogs, setLoadingPaperLogs] = useState(false);
+    const [paperLogSearch, setPaperLogSearch] = useState('');
+
 
 
     const fetchCompanyStats = async () => {
@@ -261,6 +266,24 @@ const AdminDashboard = () => {
             console.error("Failed to load profiles", err);
         } finally {
             setLoadingProfiles(false);
+        }
+    };
+
+    const loadPaperViewLogs = async () => {
+        setLoadingPaperLogs(true);
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/papers/view-logs`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            if (response.status === 401) return handleUnauthorized();
+            if (!response.ok) throw new Error('Failed to fetch paper view logs');
+            const data = await response.json();
+            setPaperViewLogs(data);
+        } catch (error) {
+            console.error('Error loading paper logs:', error);
+            showToast({ message: 'Failed to load paper view logs.', type: 'error' });
+        } finally {
+            setLoadingPaperLogs(false);
         }
     };
 
@@ -1217,6 +1240,96 @@ const AdminDashboard = () => {
                                             <button className="btn-small btn-primary" onClick={() => setSelectedProfileForVerification(profile)}>
                                                 <i className="fas fa-id-card"></i> Verify
                                             </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
+    );
+
+    const renderPaperViewLogs = () => (
+        <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                    <h2>Paper View Logs</h2>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                        Track and audit which students viewed which question papers in real-time.
+                    </p>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div className="search-box-modern">
+                        <i className="fas fa-search"></i>
+                        <input
+                            type="text"
+                            placeholder="Search by student or paper..."
+                            value={paperLogSearch}
+                            onChange={(e) => setPaperLogSearch(e.target.value)}
+                        />
+                    </div>
+                    <button className="btn-secondary" onClick={() => downloadCSV(paperViewLogs, 'paper_view_logs.csv')}>
+                        <i className="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button className="btn-secondary" onClick={loadPaperViewLogs}>
+                        <i className="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            {loadingPaperLogs ? (
+                <div className="loading-indicator">Loading paper view logs...</div>
+            ) : (
+                <div className="table-container">
+                    <table className="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student Details</th>
+                                <th>Computer Code</th>
+                                <th>Paper Title</th>
+                                <th>Subject / Branch / Sem</th>
+                                <th>Viewed At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {paperViewLogs.length === 0 ? (
+                                <tr><td colSpan="5" style={{ textAlign: 'center' }}>No view logs recorded yet.</td></tr>
+                            ) : (
+                                paperViewLogs.filter(log => {
+                                    const searchLower = paperLogSearch.toLowerCase();
+                                    return (
+                                        (log.studentName && log.studentName.toLowerCase().includes(searchLower)) ||
+                                        (log.username && log.username.toLowerCase().includes(searchLower)) ||
+                                        (log.computerCode && log.computerCode.toLowerCase().includes(searchLower)) ||
+                                        (log.paperTitle && log.paperTitle.toLowerCase().includes(searchLower)) ||
+                                        (log.subject && log.subject.toLowerCase().includes(searchLower))
+                                    );
+                                }).map(log => (
+                                    <tr key={log.id} style={{ transition: 'all 0.2s' }}>
+                                        <td>
+                                            <div style={{ fontWeight: '600', color: '#fff' }}>{log.studentName || 'Unknown Student'}</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>@{log.username}</div>
+                                        </td>
+                                        <td>
+                                            <span className="badge badge-secondary" style={{ fontFamily: 'monospace', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                                {log.computerCode || 'N/A'}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div style={{ fontWeight: '500', color: 'var(--primary)' }}>{log.paperTitle}</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>ID: #{log.paperId}</div>
+                                        </td>
+                                        <td>
+                                            <div style={{ textTransform: 'capitalize' }}>{log.subject}</div>
+                                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                                {log.branch} • Sem {log.semester} ({log.year})
+                                            </div>
+                                        </td>
+                                        <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                            <i className="far fa-clock" style={{ marginRight: '6px' }}></i>
+                                            {log.viewedAt ? new Date(log.viewedAt).toLocaleString() : 'N/A'}
                                         </td>
                                     </tr>
                                 ))
@@ -2666,6 +2779,8 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            case 'paper-logs':
+                return renderPaperViewLogs();
             case 'question-papers':
                 return (
                     <>
@@ -2689,6 +2804,7 @@ const AdminDashboard = () => {
         { id: 'interview-applications', label: 'Interview Apps', icon: 'fa-user-check', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
         { id: 'gallery', label: 'Gallery Management', icon: 'fa-images', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
         { id: 'question-papers', label: 'Question Papers', icon: 'fa-file-pdf', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'paper-logs', label: 'Paper View Logs', icon: 'fa-history', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
         { id: 'departments', label: 'Departments', icon: 'fa-university', roles: ['SUPER_ADMIN'] },
         { id: 'companies', label: 'Companies', icon: 'fa-city', roles: ['SUPER_ADMIN'] }
     ];
@@ -2697,7 +2813,7 @@ const AdminDashboard = () => {
         { title: 'Overview', icon: 'fa-home', items: ['dashboard', 'users'] },
         { title: 'Recruitment', icon: 'fa-bullhorn', items: ['jobs', 'applications', 'interviews', 'interview-applications'] },
         { title: 'Students', icon: 'fa-user-graduate', items: ['students', 'profile-details'] },
-        { title: 'Resources', icon: 'fa-layer-group', items: ['gallery', 'question-papers'] },
+        { title: 'Resources', icon: 'fa-layer-group', items: ['gallery', 'question-papers', 'paper-logs'] },
         { title: 'System', icon: 'fa-cog', items: ['departments', 'companies'] }
     ];
 
@@ -2748,6 +2864,7 @@ const AdminDashboard = () => {
                                                             if (item.id === 'applications') loadApplications();
                                                             if (item.id === 'interview-applications') loadInterviewApplications();
                                                             if (item.id === 'gallery') loadGalleryItems();
+                                                            if (item.id === 'paper-logs') loadPaperViewLogs();
                                                         }}
                                                         className={`sidebar-child-btn ${activeTab === item.id ? 'active' : ''}`}
                                                     >

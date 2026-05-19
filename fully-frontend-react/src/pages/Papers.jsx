@@ -268,7 +268,10 @@ const Papers = () => {
     const handleDownload = async (paper) => {
         setLoading(true);
         try {
-            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`);
+            const token = localStorage.getItem('authToken');
+            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`, {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            });
             if (!res.ok) throw new Error("Failed to load PDF");
             const blob = await res.blob();
             const blobUrl = window.URL.createObjectURL(blob);
