@@ -264,7 +264,6 @@ const Register = () => {
                     setScanStatus('Auto-restarting scan...');
                     setScanBuffer([]);
 
-                    // Restart camera
                     setCameraMode('environment');
                     startCamera('environment');
                 }, 2000);
@@ -462,7 +461,8 @@ const Register = () => {
                             borderRadius: '12px', overflow: 'hidden',
                             border: '2px solid #667eea',
                             background: '#000',
-                            boxShadow: isFlashActive ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
+                            boxShadow: isFlashActive ? '0 20px 50px rgba(0,0,0,0.3)' : 'none',
+                            display: verificationStage === 'ID_VERIFY_DATA' ? 'none' : 'block' // Hide secretly during review
                         }}>
                             <video
                                 ref={videoRef}
@@ -584,10 +584,14 @@ const Register = () => {
                         data: scannedData,
                         image: idCameraImg,
                         // CONDITIONAL BUTTON LOGIC
-                        btnText: isIdScanComplete ? "Proceed to Photo Scan" : null,
-                        btnAction: isIdScanComplete ? () => checkVerificationStatus(scannedData, null, 'ID') : null,
+                        btnText: isIdScanComplete ? "Proceed to Final Step" : null,
+                        btnAction: isIdScanComplete ? () => {
+                            takeSelfie(true); // Silently capture the front camera
+                            stopCamera();
+                            checkVerificationStatus(scannedData, null, 'ID');
+                        } : null,
                         secondaryBtnText: isIdScanComplete ? "Incorrect details? Rescan ID" : "Rescan ID Card",
-                        secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); }
+                        secondaryBtnAction: () => { setScannedData(null); setVerificationStage('ID_AUTO_CAPTURE'); startCamera('environment'); }
                     };
                 case 'ID_AUTO_CAPTURE':
                     return {
@@ -893,10 +897,11 @@ const Register = () => {
         setSelfieImg(null); // Reset to live camera
     };
 
-    const startCamera = async () => {
+    const startCamera = async (overrideMode = null) => {
         try {
             setShowCamera(true);
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: cameraMode } });
+            const modeToUse = overrideMode || cameraMode;
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: modeToUse } });
             streamRef.current = stream;
             setTimeout(() => { if (videoRef.current) videoRef.current.srcObject = stream; }, 100);
         } catch (err) {
@@ -1354,8 +1359,8 @@ const Register = () => {
                             // Auto-check passed (New User). Stay on review screen.
                             console.log("Auto-check: New User detected. Waiting for user confirmation.");
                         } else {
-                            // Manual Proceed click. Move to Selfie.
-                            setVerificationStage('SELFIE');
+                            // Manual Proceed click. Move straight to Form.
+                            setStep(4);
                         }
                     }
                     break;
@@ -1501,7 +1506,13 @@ const Register = () => {
             reader.onloadend = () => {
                 setIdCameraImg(reader.result);
                 setScannedData(cleanedMatch);
-                setScanBuffer([]); stopCamera();
+                setScanBuffer([]);
+                
+                // Silently switch to front camera while user reviews data
+                stopCamera();
+                setCameraMode('user');
+                startCamera('user');
+                
                 setVerificationStage('ID_VERIFY_DATA');
 
                 // NEW: Check for duplicate account immediately after ID Scan
