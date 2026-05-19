@@ -880,12 +880,9 @@ const Register = () => {
         const localVerificationKey = `verification_${scannedData.code}_${deviceFingerprint}`;
         const verificationData = {
             allStepsCompleted: true,
-            scannedData: scannedData,
-            aadharData: aadharData,
             selfieImg: selfieImg,
             auditSelfie: auditSelfie, // Store the silent one too
             idCameraImg: idCameraImg,
-            aadharCameraImg: aadharCameraImg,
             timestamp: new Date().toISOString()
         };
         localStorage.setItem(localVerificationKey, JSON.stringify(verificationData));
@@ -929,13 +926,7 @@ const Register = () => {
             setError('Passwords do not match'); setLoading(false); return;
         }
 
-        // VALIDATION: Check for valid Aadhar Number
-        if (formData.role === 'USER' && formData.aadharNumber && formData.aadharNumber.toLowerCase().includes('x')) {
-            setError('Invalid Aadhar Number (XXXX detected). Verification Failed. Please REFRESH the page to scan carefully.');
-            setLoading(false);
-            window.scrollTo(0, 0);
-            return;
-        }
+        // VALIDATION: No Aadhar required anymore.
 
         try {
             // Prepare complete registration payload with verified identity data
@@ -1581,7 +1572,7 @@ const Register = () => {
 
     useEffect(() => {
         if (!showCamera && !isScanning) {
-            if (verificationStage === 'ID_AUTO_CAPTURE' || verificationStage === 'AADHAR_AUTO_CAPTURE') {
+            if (verificationStage === 'ID_AUTO_CAPTURE') {
                 setCameraMode('environment'); startCamera();
             } else if (verificationStage === 'SELFIE') {
                 setCameraMode('user'); startCamera();
