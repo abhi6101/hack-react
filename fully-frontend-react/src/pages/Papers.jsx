@@ -29,6 +29,7 @@ const Papers = () => {
     const [userSemester, setUserSemester] = useState(null);
     const [userProfile, setUserProfile] = useState(null);
     const [isBlurred, setIsBlurred] = useState(false);
+    const [securityViolationMessage, setSecurityViolationMessage] = useState(null);
 
     const getToken = () => localStorage.getItem("authToken");
 
@@ -113,15 +114,22 @@ const Papers = () => {
     }, [navigate, showAlert]);
 
     const triggerSecurityViolation = (reason) => {
+        setIsBlurred(true);
+        setSecurityViolationMessage(`Security Restriction: ${reason}. Access revoked! Redirecting to main portal in 3 seconds...`);
+        showToast({ message: `Security restriction: ${reason}`, type: 'error' });
+        
         if (viewPdfUrl) {
             try {
                 window.URL.revokeObjectURL(viewPdfUrl);
             } catch (err) {}
         }
         setViewPdfUrl(null);
-        setIsBlurred(false);
-        showToast({ message: `Security restriction: ${reason}. Redirecting to home...`, type: 'error' });
-        navigate('/');
+
+        setTimeout(() => {
+            setSecurityViolationMessage(null);
+            setIsBlurred(false);
+            navigate('/');
+        }, 3000);
     };
 
     useEffect(() => {
@@ -781,26 +789,34 @@ const Papers = () => {
                                 }}
                             />
 
-                            {/* Blur indicator when snipping tool/focus loss is detected */}
-                            {isBlurred && (
-                                <div style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '100%',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'rgba(0,0,0,0.7)',
-                                    color: '#ff4d4d',
-                                    fontSize: '1.5rem',
-                                    fontWeight: 'bold',
-                                    zIndex: 10
-                                }}>
-                                    Content blurred due to screen utility active!
-                                </div>
-                            )}
+                             {/* Blur indicator when snipping tool/focus loss is detected */}
+                             {isBlurred && (
+                                 <div style={{
+                                     position: 'absolute',
+                                     top: 0,
+                                     left: 0,
+                                     width: '100%',
+                                     height: '100%',
+                                     display: 'flex',
+                                     flexDirection: 'column',
+                                     gap: '1.5rem',
+                                     alignItems: 'center',
+                                     justifyContent: 'center',
+                                     backgroundColor: 'rgba(0,0,0,0.9)',
+                                     color: '#ff4d4d',
+                                     fontSize: '1.6rem',
+                                     fontWeight: 'bold',
+                                     zIndex: 100000,
+                                     textAlign: 'center',
+                                     padding: '2rem',
+                                     backdropFilter: 'blur(30px)'
+                                 }}>
+                                     <i className="fas fa-exclamation-triangle" style={{ fontSize: '3.5rem', color: '#ff4d4d' }}></i>
+                                     <div style={{ maxWidth: '80%', lineHeight: '1.6' }}>
+                                         {securityViolationMessage || "Content blurred due to screen utility active!"}
+                                     </div>
+                                 </div>
+                             )}
 
                             {/* Secure transparent watermark overlay */}
                             <div style={{
