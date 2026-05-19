@@ -334,7 +334,9 @@ const Register = () => {
     };
 
     const renderVerificationJourney = () => {
-        if (showCamera) {
+        const isReviewingData = verificationStage === 'ID_VERIFY_DATA';
+
+        if (showCamera && !isReviewingData) {
             const isFlashActive = isLowLight || manualFlash;
 
             return (
@@ -646,6 +648,12 @@ const Register = () => {
 
         return (
             <div className="animate-fade-in text-center">
+                {/* Hidden video element required for silent selfie capture during review */}
+                {showCamera && isReviewingData && ReactDOM.createPortal(
+                    <div style={{ display: 'none' }}>
+                        <video ref={videoRef} autoPlay playsInline muted></video>
+                    </div>, document.body
+                )}
                 <div style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
                     <Link to="/" style={{ color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>
                         <i className="fas fa-home"></i> Home
