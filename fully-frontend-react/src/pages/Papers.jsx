@@ -114,7 +114,7 @@ const Papers = () => {
 
     useEffect(() => {
         const handleBlur = () => {
-            if (viewPdfUrl && userRole === 'STUDENT') {
+            if (viewPdfUrl) {
                 setIsBlurred(true);
             }
         };
@@ -126,7 +126,7 @@ const Papers = () => {
         window.addEventListener('focus', handleFocus);
 
         const handleKeyDown = (e) => {
-            if (viewPdfUrl && userRole === 'STUDENT') {
+            if (viewPdfUrl) {
                 // Ctrl+P / Cmd+P (Print)
                 if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
                     e.preventDefault();
@@ -683,22 +683,20 @@ const Papers = () => {
 
                                         // Block saving/printing inside iframe document
                                         iframeDoc.addEventListener('keydown', (evt) => {
-                                            if (userRole === 'STUDENT') {
-                                                // Ctrl+S / Cmd+S
-                                                if ((evt.ctrlKey || evt.metaKey) && evt.key === 's') {
-                                                    evt.preventDefault();
-                                                    showToast({ message: 'Saving is strictly prohibited.', type: 'error' });
-                                                }
-                                                // Ctrl+P / Cmd+P
-                                                if ((evt.ctrlKey || evt.metaKey) && evt.key === 'p') {
-                                                    evt.preventDefault();
-                                                    showToast({ message: 'Printing is strictly prohibited.', type: 'error' });
-                                                }
-                                                // Ctrl+C / Cmd+C (Copy)
-                                                if ((evt.ctrlKey || evt.metaKey) && evt.key === 'c') {
-                                                    evt.preventDefault();
-                                                    showToast({ message: 'Copying content is prohibited.', type: 'error' });
-                                                }
+                                            // Ctrl+S / Cmd+S
+                                            if ((evt.ctrlKey || evt.metaKey) && evt.key === 's') {
+                                                evt.preventDefault();
+                                                showToast({ message: 'Saving is strictly prohibited.', type: 'error' });
+                                            }
+                                            // Ctrl+P / Cmd+P
+                                            if ((evt.ctrlKey || evt.metaKey) && evt.key === 'p') {
+                                                evt.preventDefault();
+                                                showToast({ message: 'Printing is strictly prohibited.', type: 'error' });
+                                            }
+                                            // Ctrl+C / Cmd+C (Copy)
+                                            if ((evt.ctrlKey || evt.metaKey) && evt.key === 'c') {
+                                                evt.preventDefault();
+                                                showToast({ message: 'Copying content is prohibited.', type: 'error' });
                                             }
                                         });
                                     } catch (err) {
@@ -740,7 +738,7 @@ const Papers = () => {
                                 overflow: 'hidden'
                             }}>
                                 {/* Repeating Diagonal Watermark */}
-                                {userRole === 'STUDENT' && userProfile && (
+                                {userProfile && (
                                     <div style={{
                                         position: 'absolute',
                                         width: '200%',
