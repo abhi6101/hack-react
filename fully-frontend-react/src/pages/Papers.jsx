@@ -154,12 +154,24 @@ const Papers = () => {
             }
         };
 
+        const handleTouchStart = (e) => {
+            if (viewPdfUrl && e.touches.length >= 3) {
+                e.preventDefault();
+                setIsBlurred(true);
+                showToast({ message: 'Multi-finger gestures are restricted on this paper.', type: 'error' });
+            }
+        };
+
         window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('touchstart', handleTouchStart, { passive: false });
+        window.addEventListener('touchmove', handleTouchStart, { passive: false });
 
         return () => {
             window.removeEventListener('blur', handleBlur);
             window.removeEventListener('focus', handleFocus);
             window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchStart);
         };
     }, [viewPdfUrl, userRole, showToast]);
 
