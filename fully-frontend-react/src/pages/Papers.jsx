@@ -181,6 +181,17 @@ const Papers = () => {
 
         const handleKeyDown = (e) => {
             if (viewPdfUrl) {
+                const allowedKeys = [
+                    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+                    'PageUp', 'PageDown', 'Home', 'End', 'Escape', ' ', 'Tab'
+                ];
+
+                if (!allowedKeys.includes(e.key)) {
+                    e.preventDefault();
+                    triggerSecurityViolation(`Keypress prohibited: ${e.key}`);
+                    return;
+                }
+
                 // Instantly redirect if they press Windows key (Meta) or Command key
                 if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Win') {
                     triggerSecurityViolation('System menu shortcut pressed');
@@ -769,6 +780,17 @@ const Papers = () => {
 
                                         // Block saving/printing inside iframe document
                                         iframeDoc.addEventListener('keydown', (evt) => {
+                                            const allowedKeys = [
+                                                'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+                                                'PageUp', 'PageDown', 'Home', 'End', 'Escape', ' ', 'Tab'
+                                            ];
+
+                                            if (!allowedKeys.includes(evt.key)) {
+                                                evt.preventDefault();
+                                                triggerSecurityViolation(`Keypress prohibited: ${evt.key}`);
+                                                return;
+                                            }
+
                                             // Instantly blur on Windows/Meta key to block Win+PrtScn
                                             if (evt.key === 'Meta' || evt.key === 'OS' || evt.key === 'Win') {
                                                 setIsBlurred(true);
