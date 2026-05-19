@@ -374,6 +374,34 @@ const StudentDashboard = () => {
                                     <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.institution || 'Not provided'}</p>
                                 )}
                             </div>
+                            <div style={{
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                padding: '1.25rem',
+                                borderRadius: '12px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                gridColumn: '1 / -1'
+                            }}>
+                                <strong style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Address</strong>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={user?.address || ''}
+                                        readOnly
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '8px',
+                                            padding: '0.5rem',
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                            fontSize: '1rem',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    />
+                                ) : (
+                                    <p style={{ color: '#fff', fontSize: '1.1rem', margin: 0, fontWeight: '500' }}>{user?.address || 'Not provided'}</p>
+                                )}
+                            </div>
                         </div>
                         {user?.idCardImage && (
                             <div style={{ marginTop: '1.5rem' }}>

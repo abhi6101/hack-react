@@ -973,6 +973,7 @@ const Register = () => {
                 // Verified Identity Data (from Aadhar)
                 dob: formData.dob,
                 gender: formData.gender,
+                address: scannedData?.address || formData.address,
 
                 // Image Mapping for Backend (CRITICAL FIX)
                 idCardImage: idCameraImg,
