@@ -128,8 +128,14 @@ public class Users {
     @Column(name = "security_strikes", nullable = false)
     private int securityStrikes = 0;
 
+    @Column(name = "last_strike_time")
+    private LocalDateTime lastStrikeTime;
+
     @Column(name = "locked_until")
     private LocalDateTime lockedUntil;
+
+    @Column(name = "lockout_count", nullable = false)
+    private int lockoutCount = 0;
 
     // Verified Identity Data (from ID card scan)
     @Column(name = "full_name")
@@ -295,5 +301,21 @@ public class Users {
 
     public void setLockedUntil(LocalDateTime lockedUntil) {
         this.lockedUntil = lockedUntil;
+    }
+
+    public LocalDateTime getLastStrikeTime() {
+        return lastStrikeTime;
+    }
+
+    public void setLastStrikeTime(LocalDateTime lastStrikeTime) {
+        this.lastStrikeTime = lastStrikeTime;
+    }
+
+    public int getLockoutCount() {
+        return lockoutCount;
+    }
+
+    public void setLockoutCount(int lockoutCount) {
+        this.lockoutCount = lockoutCount;
     }
 }

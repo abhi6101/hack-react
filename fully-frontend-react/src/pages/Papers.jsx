@@ -172,11 +172,16 @@ const Papers = () => {
                         navigate('/login', { state: { locked: true, message: data.message, secondsLeft: data.secondsLeft } });
                     }, 3000);
                 } else {
+                    const strikes = data.strikes || 0;
+                    const chancesLeft = Math.max(0, 5 - strikes);
+                    setSecurityViolationMessage(`Security Restriction: ${reason}. Strikes used: ${strikes}/5. You have ${chancesLeft} chances left before your account is locked!`);
+                    showToast({ message: `Warning: ${strikes}/5 strikes used. ${chancesLeft} chances left!`, type: 'warning' });
+                    
                     setTimeout(() => {
                         setSecurityViolationMessage(null);
                         setIsBlurred(false);
                         navigate('/');
-                    }, 3000);
+                    }, 5000);
                 }
             })
             .catch(err => {
@@ -197,32 +202,8 @@ const Papers = () => {
     };
 
     useEffect(() => {
-        const handleVisibilityChange = () => {
-            if (document.hidden && viewPdfUrl) {
-                triggerSecurityViolation('Tab switch or minimization detected');
-            }
-        };
-
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-
         const handleKeyDown = (e) => {
             if (viewPdfUrl) {
-                const allowedKeys = [
-                    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
-                    'PageUp', 'PageDown', 'Home', 'End', 'Escape', ' ', 'Tab'
-                ];
-
-                if (!allowedKeys.includes(e.key)) {
-                    e.preventDefault();
-                    triggerSecurityViolation(`Keypress prohibited: ${e.key}`);
-                    return;
-                }
-
-                // Instantly redirect if they press Windows key (Meta) or Command key
-                if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Win') {
-                    triggerSecurityViolation('System menu shortcut pressed');
-                }
-
                 // Ctrl+P / Cmd+P (Print)
                 if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
                     e.preventDefault();
@@ -231,7 +212,7 @@ const Papers = () => {
                 // Ctrl+S / Cmd+S (Save)
                 if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                     e.preventDefault();
-                    triggerSecurityViolation('Save attempt detected');
+                    triggerSecurityViolation('Save/Download attempt detected');
                 }
                 // Win+Shift+S / Cmd+Shift+S / PrintScreen / Snip Tool shortcut detection - KICK TO HOME!
                 if (
@@ -261,7 +242,6 @@ const Papers = () => {
         window.addEventListener('touchmove', handleTouchStart, { passive: false });
 
         return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('touchstart', handleTouchStart);
             window.removeEventListener('touchmove', handleTouchStart);
@@ -757,34 +737,13 @@ const Papers = () => {
                                              }
                                          }, { passive: false });
 
-                                         iframeDoc.addEventListener('contextmenu', (evt) => {
+                                        iframeDoc.addEventListener('contextmenu', (evt) => {
                                             evt.preventDefault();
                                         });
 
                                         // Block saving/printing inside iframe document
                                         iframeDoc.addEventListener('keydown', (evt) => {
-                                            const allowedKeys = [
-                                                'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
-                                                'PageUp', 'PageDown', 'Home', 'End', 'Escape', ' ', 'Tab'
-                                            ];
-
-                                            if (!allowedKeys.includes(evt.key)) {
-                                                evt.preventDefault();
-                                                triggerSecurityViolation(`Keypress prohibited: ${evt.key}`);
-                                                return;
-                                            }
-
-                                            // Instantly blur on Windows/Meta key to block Win+PrtScn
-                                            if (evt.key === 'Meta' || evt.key === 'OS' || evt.key === 'Win') {
-                                                setIsBlurred(true);
-                                            }
-
-                                            // Ctrl+S / Cmd+S
-                                            // Block Ctrl+Plus, Ctrl+Minus, Ctrl+Zero keypad zoom
-                                             if (false && (evt.ctrlKey || evt.metaKey) && (evt.key === '=' || evt.key === '-' || evt.key === '+' || evt.key === '0')) {
-                                                 evt.preventDefault();
-                                             }
-
+                                             // Ctrl+S / Cmd+S
                                              if ((evt.ctrlKey || evt.metaKey) && evt.key === 's') {
                                                 evt.preventDefault();
                                                 showToast({ message: 'Saving is strictly prohibited.', type: 'error' });
