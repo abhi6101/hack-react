@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,11 +11,37 @@ import '../styles/papers.css';
 
 const Papers = () => {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const { showAlert } = useAlert();
     const { showToast } = useToast();
 
-    const [selectedSemester, setSelectedSemester] = useState(null);
-    const [selectedSubject, setSelectedSubject] = useState(null);
+    const selectedSemester = searchParams.get('semester') ? parseInt(searchParams.get('semester'), 10) : null;
+    const selectedSubject = searchParams.get('subject') || null;
+
+    const handleSemesterSelect = (sem) => {
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev);
+            if (sem === null) {
+                next.delete('semester');
+            } else {
+                next.set('semester', sem);
+            }
+            next.delete('subject');
+            return next;
+        });
+    };
+
+    const handleSubjectSelect = (sub) => {
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev);
+            if (sub === null) {
+                next.delete('subject');
+            } else {
+                next.set('subject', sub);
+            }
+            return next;
+        });
+    };
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [availableSems, setAvailableSems] = useState([]);
@@ -246,6 +272,9 @@ const Papers = () => {
         if (selectedSemester) {
             fetchPapers(selectedSemester);
         }
+    }, [selectedSemester, branch]);
+
+    useEffect(() => {
         fetchAvailableMetadata();
     }, [branch]);
 
@@ -276,7 +305,6 @@ const Papers = () => {
 
     const fetchPapers = async (sem) => {
         setLoading(true);
-        setSelectedSemester(sem);
         try {
             const res = await fetch(`${API_BASE_URL}/papers?semester=${sem}&branch=${branch}`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -410,7 +438,7 @@ const Papers = () => {
                         <motion.div
                             key={sem}
                             className="semester-card"
-                            onClick={() => fetchPapers(sem)}
+                            onClick={() => handleSemesterSelect(sem)}
                             style={{ cursor: 'pointer' }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -456,7 +484,7 @@ const Papers = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                         <motion.button
                             className="back-btn"
-                            onClick={() => setSelectedSemester(null)}
+                            onClick={() => handleSemesterSelect(null)}
                             whileHover={{ x: -5 }}
                             whileTap={{ scale: 0.9 }}
                         >
@@ -485,7 +513,7 @@ const Papers = () => {
                                 <motion.div
                                     key={sub}
                                     className="subject-folder"
-                                    onClick={() => setSelectedSubject(sub)}
+                                    onClick={() => handleSubjectSelect(sub)}
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: idx * 0.05 }}
@@ -543,7 +571,7 @@ const Papers = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                             <motion.button
                                 className="back-btn"
-                                onClick={() => { setSelectedSubject(null); setSearchQuery(''); }}
+                                onClick={() => { handleSubjectSelect(null); setSearchQuery(''); }}
                                 whileHover={{ x: -5 }}
                                 whileTap={{ scale: 0.9 }}
                             >
