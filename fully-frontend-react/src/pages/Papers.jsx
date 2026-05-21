@@ -334,41 +334,101 @@ const Papers = () => {
     };
 
     const renderSemesterGrid = () => (
-        <motion.div
-            className="semester-grid"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-        >
-            {availableSems.length === 0 ? (
-                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px' }}>
-                    <i className="fas fa-folder-open" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}></i>
-                    <h3>No Semesters found for {branch}</h3>
-                    <p style={{ color: 'var(--text-secondary)' }}>Try selecting a different department or check back later.</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div className="view-header" style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                background: 'rgba(255,255,255,0.02)',
+                padding: '2rem',
+                borderRadius: '24px',
+                border: '1px solid rgba(255,255,255,0.05)',
+                backdropFilter: 'blur(10px)',
+                flexWrap: 'wrap',
+                gap: '1.5rem'
+            }}>
+                <div>
+                    <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Academic Archive</h2>
+                    <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Select a semester folder to view subject materials</p>
                 </div>
-            ) : (
-                availableSems.map((sem, idx) => (
-                    <motion.div
-                        key={sem}
-                        className="semester-card"
-                        onClick={() => fetchPapers(sem)}
-                        style={{ cursor: 'pointer' }}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                        whileHover={{ scale: 1.02, y: -5 }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        <div className="card-icon">
-                            <i className={`fas fa-folder${selectedSemester === sem ? '-open' : ''}`}></i>
+
+                {userRole !== 'STUDENT' && (
+                    <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100 }}>
+                        <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
+                            <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                                <i className="fas fa-graduation-cap"></i>
+                                <span>{deptFullName}</span>
+                                <i className={`fas fa-chevron-down ${isDeptOpen ? 'open' : ''}`}></i>
+                            </div>
+
+                            <AnimatePresence>
+                                {isDeptOpen && (
+                                    <motion.div
+                                        className="dropdown-menu surface-glow"
+                                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                        style={{ right: 0, left: 'auto' }}
+                                    >
+                                        <div
+                                            className={`dropdown-item ${branch === 'IMCA' ? 'active' : ''}`}
+                                            onClick={() => { setBranch('IMCA'); setIsDeptOpen(false); }}
+                                        >
+                                            IMCA Department
+                                        </div>
+                                        {deptList.filter(d => d.code !== 'IMCA').map(d => (
+                                            <div
+                                                key={d.id}
+                                                className={`dropdown-item ${branch === d.code ? 'active' : ''}`}
+                                                onClick={() => { setBranch(d.code); setIsDeptOpen(false); }}
+                                            >
+                                                {d.name}
+                                            </div>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
-                        <div className="card-content">
-                            <h2>Semester {sem}</h2>
-                        </div>
-                    </motion.div>
-                ))
-            )}
-        </motion.div>
+                    </div>
+                )}
+            </div>
+
+            <motion.div
+                className="semester-grid"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                {availableSems.length === 0 ? (
+                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px' }}>
+                        <i className="fas fa-folder-open" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}></i>
+                        <h3>No Semesters found for {branch}</h3>
+                        <p style={{ color: 'var(--text-secondary)' }}>Try selecting a different department or check back later.</p>
+                    </div>
+                ) : (
+                    availableSems.map((sem, idx) => (
+                        <motion.div
+                            key={sem}
+                            className="semester-card"
+                            onClick={() => fetchPapers(sem)}
+                            style={{ cursor: 'pointer' }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                            whileHover={{ scale: 1.02, y: -5 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <div className="card-icon">
+                                <i className={`fas fa-folder${selectedSemester === sem ? '-open' : ''}`}></i>
+                            </div>
+                            <div className="card-content">
+                                <h2>Semester {sem}</h2>
+                            </div>
+                        </motion.div>
+                    ))
+                )}
+            </motion.div>
+        </div>
     );
 
     const renderSubjectGrid = () => {
@@ -564,112 +624,7 @@ const Papers = () => {
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
 
-            <header className="papers-hero">
-                <AnimatePresence>
-                    {!selectedSemester && userRole !== 'STUDENT' && (
-                        <motion.div
-                            className="dept-selector-container"
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                        >
-                            <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
-                                <div className="dropdown-trigger">
-                                    <i className="fas fa-graduation-cap"></i>
-                                    <span>{deptFullName}</span>
-                                    <i className={`fas fa-chevron-down ${isDeptOpen ? 'open' : ''}`}></i>
-                                </div>
-
-                                <AnimatePresence>
-                                    {isDeptOpen && (
-                                        <motion.div
-                                            className="dropdown-menu surface-glow"
-                                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                        >
-                                            <div
-                                                className={`dropdown-item ${branch === 'IMCA' ? 'active' : ''}`}
-                                                onClick={() => { setBranch('IMCA'); setIsDeptOpen(false); }}
-                                            >
-                                                IMCA Department
-                                            </div>
-                                            {deptList.filter(d => d.code !== 'IMCA').map(d => (
-                                                <div
-                                                    key={d.id}
-                                                    className={`dropdown-item ${branch === d.code ? 'active' : ''}`}
-                                                    onClick={() => { setBranch(d.code); setIsDeptOpen(false); }}
-                                                >
-                                                    {d.name}
-                                                </div>
-                                            ))}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                <motion.div
-                    className="hero-content"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                    whileHover={{ scale: 1.02 }}
-                    style={{
-                        maxWidth: '480px',
-                        margin: '0 auto',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        borderRadius: '24px',
-                        padding: '2rem',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(10px)',
-                        boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-                        position: 'relative'
-                    }}
-                >
-                    <div className="hero-tag" style={{ transform: 'scale(0.9)', marginBottom: '1rem' }}>
-                        <Typewriter text="Digital Library" delay={50} infinite={false} />
-                    </div>
-                    <h1 className="hero-title" style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>
-                        RGPV IMCA Archive & <span className="highlight">Previous Year Papers</span>
-                    </h1>
-                    <p className="hero-subtitle" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>
-                        {selectedSemester
-                            ? `Curated examination materials for Semester ${selectedSemester}`
-                            : "Access a comprehensive collection of previous year question papers and academic resources."}
-                    </p>
-
-                    {/* Floating Icons */}
-                    <motion.div
-                        className="floating-icon"
-                        animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        style={{ position: 'absolute', top: '10%', left: '10%', fontSize: '3rem', color: 'rgba(0, 212, 255, 0.2)', pointerEvents: 'none' }}
-                    >
-                        <i className="fas fa-file-alt"></i>
-                    </motion.div>
-                    <motion.div
-                        className="floating-icon"
-                        animate={{ y: [0, 25, 0], rotate: [0, -15, 0] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                        style={{ position: 'absolute', bottom: '20%', right: '15%', fontSize: '4rem', color: 'rgba(255, 71, 123, 0.2)', pointerEvents: 'none' }}
-                    >
-                        <i className="fas fa-atom"></i>
-                    </motion.div>
-                    <motion.div
-                        className="floating-icon"
-                        animate={{ x: [0, 30, 0], rotate: [0, 20, 0] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                        style={{ position: 'absolute', top: '30%', right: '25%', fontSize: '2.5rem', color: 'rgba(255, 255, 255, 0.1)', pointerEvents: 'none' }}
-                    >
-                        <i className="fas fa-laptop-code"></i>
-                    </motion.div>
-                </motion.div>
-            </header>
-
-            <main className="papers-container" style={{ padding: '0 5% 5rem', position: 'relative', zIndex: 2 }}>
+            <main className="papers-container" style={{ padding: '6.5rem 5% 5rem', position: 'relative', zIndex: 2 }}>
                 <AnimatePresence mode="wait">
                     {selectedSemester === null ? (
                         <div key="sem-grid">{renderSemesterGrid()}</div>
