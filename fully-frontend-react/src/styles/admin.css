@@ -647,6 +647,10 @@ td {
         left: 0;
     }
 
+    .sidebar-menu span {
+        display: inline-block !important;
+    }
+
     .admin-main {
         width: 100%;
         padding: 1.5rem 1rem;
