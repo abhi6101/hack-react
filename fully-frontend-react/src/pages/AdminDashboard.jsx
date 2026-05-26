@@ -367,7 +367,9 @@ const AdminDashboard = () => {
         masterEmailEnabled: false,
         newJobEmailEnabled: false,
         statusUpdateEmailEnabled: false,
-        accountEmailEnabled: false
+        accountEmailEnabled: false,
+        paperDownloadEnabled: false,
+        screenshotRestrictionEnabled: true
     });
     const [loadingSettings, setLoadingSettings] = useState(false);
 
@@ -1683,6 +1685,38 @@ const AdminDashboard = () => {
                                                 checked={emailSettings.accountEmailEnabled}
                                                 onChange={() => toggleEmailSetting('accountEmailEnabled', emailSettings.accountEmailEnabled)}
                                                 disabled={!emailSettings.masterEmailEnabled}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Paper Download Switch */}
+                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.paperDownloadEnabled ? '#00d4ff' : '#ef4444'}` }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>📄 Paper Download Feature</h4>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
+                                                    {emailSettings.paperDownloadEnabled ? 'Students CAN download previous year papers' : 'Students CANNOT download papers (View only)'}
+                                                </p>
+                                            </div>
+                                            <ToggleSwitch
+                                                checked={emailSettings.paperDownloadEnabled}
+                                                onChange={() => toggleEmailSetting('paperDownloadEnabled', emailSettings.paperDownloadEnabled)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Screenshot and Key Restriction Switch */}
+                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.screenshotRestrictionEnabled ? '#22c55e' : '#ef4444'}` }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>📸 Screenshot & Key Restriction</h4>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
+                                                    {emailSettings.screenshotRestrictionEnabled ? 'Screenshot & Print/Save keyboard blocks are ACTIVE' : 'Screenshots and all keyboard shortcuts are ALLOWED'}
+                                                </p>
+                                            </div>
+                                            <ToggleSwitch
+                                                checked={emailSettings.screenshotRestrictionEnabled}
+                                                onChange={() => toggleEmailSetting('screenshotRestrictionEnabled', emailSettings.screenshotRestrictionEnabled)}
                                             />
                                         </div>
                                     </div>

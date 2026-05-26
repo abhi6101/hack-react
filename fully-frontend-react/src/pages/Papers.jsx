@@ -56,13 +56,29 @@ const Papers = () => {
     const [userProfile, setUserProfile] = useState(null);
     const [isBlurred, setIsBlurred] = useState(false);
     const [securityViolationMessage, setSecurityViolationMessage] = useState(null);
+    const [paperDownloadEnabled, setPaperDownloadEnabled] = useState(false);
+    const [screenshotRestrictionEnabled, setScreenshotRestrictionEnabled] = useState(true);
 
     const getToken = () => localStorage.getItem("authToken");
 
     const deptFullName = deptList.find(d => d.code === branch)?.name || branch;
 
+    const fetchPaperSettings = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/public/papers/settings`);
+            if (res.ok) {
+                const data = await res.json();
+                setPaperDownloadEnabled(data.paperDownloadEnabled);
+                setScreenshotRestrictionEnabled(data.screenshotRestrictionEnabled);
+            }
+        } catch (e) {
+            console.error("Failed to fetch paper settings", e);
+        }
+    };
+
     useEffect(() => {
         fetchUserProfile();
+        fetchPaperSettings();
     }, []);
 
     const fetchDepartments = async () => {
@@ -203,6 +219,7 @@ const Papers = () => {
 
     useEffect(() => {
         const handleKeyDown = (e) => {
+            if (!screenshotRestrictionEnabled) return;
             if (viewPdfUrl) {
                 // Ctrl+P / Cmd+P (Print)
                 if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
@@ -230,6 +247,7 @@ const Papers = () => {
         };
 
         const handleTouchStart = (e) => {
+            if (!screenshotRestrictionEnabled) return;
             if (viewPdfUrl && e.touches.length >= 3) {
                 e.preventDefault();
                 setIsBlurred(true);
@@ -321,6 +339,36 @@ const Papers = () => {
         } catch (e) {
             console.error("Download error:", e);
             showToast({ message: 'Failed to access document securely.', type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleActualDownload = async (paper) => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('authToken');
+            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`, {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            });
+            if (!res.ok) throw new Error("Failed to download PDF");
+            const blob = await res.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            
+            const cleanTitle = paper.title.replace(/[^a-zA-Z0-9]/g, "_") || 'paper';
+            link.setAttribute('download', `${cleanTitle}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+            
+            showToast({ message: 'Paper downloaded successfully!', type: 'success' });
+        } catch (e) {
+            console.error("Download error:", e);
+            showToast({ message: 'Failed to download paper.', type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -604,17 +652,35 @@ const Papers = () => {
                                 </div>
                             </div>
 
-                            <motion.button
-                                className="download-btn-premium"
-                                onClick={() => handleDownload(paper)}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <span style={{ flex: 1 }}>View Paper</span>
-                                <div className="btn-icon">
-                                    <i className="fas fa-eye"></i>
-                                </div>
-                            </motion.button>
+                            <div className="card-buttons-container" style={{ display: 'flex', gap: '10px', marginTop: 'auto', width: '100%' }}>
+                                <motion.button
+                                    className="download-btn-premium"
+                                    onClick={() => handleDownload(paper)}
+                                    style={{ flex: 1, marginTop: 0 }}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <span style={{ flex: 1 }}>View Paper</span>
+                                    <div className="btn-icon">
+                                        <i className="fas fa-eye"></i>
+                                    </div>
+                                </motion.button>
+
+                                {paperDownloadEnabled && (
+                                    <motion.button
+                                        className="download-btn-premium"
+                                        onClick={() => handleActualDownload(paper)}
+                                        style={{ flex: 1, marginTop: 0, background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000' }}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <span style={{ flex: 1 }}>Download</span>
+                                        <div className="btn-icon" style={{ background: 'rgba(0,0,0,0.1)' }}>
+                                            <i className="fas fa-download"></i>
+                                        </div>
+                                    </motion.button>
+                                )}
+                            </div>
                         </motion.div>
                     ))}
                 </div>
@@ -706,7 +772,7 @@ const Papers = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            onContextMenu={(e) => e.preventDefault()}
+                            onContextMenu={(e) => { if (screenshotRestrictionEnabled) e.preventDefault(); }}
                             style={{
                                 width: '90%',
                                 height: '90%',
@@ -725,6 +791,7 @@ const Papers = () => {
                                 style={{ border: 'none', filter: isBlurred ? 'blur(20px)' : 'none', transition: 'filter 0.15s ease' }}
                                 title="Secure PDF Viewer"
                                 onLoad={(e) => {
+                                    if (!screenshotRestrictionEnabled) return;
                                     try {
                                         const iframeWin = e.target.contentWindow;
                                         const iframeDoc = e.target.contentDocument || iframeWin.document;

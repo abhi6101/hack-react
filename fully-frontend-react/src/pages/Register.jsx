@@ -578,16 +578,14 @@ const Register = () => {
                     return {
                         title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
                         desc: isIdScanComplete
-                            ? "All details captured successfully. Proceed to Photo verification."
+                            ? "All details captured successfully. Proceed to create your account."
                             : "Some details were not detected clearly. Going back in 5 seconds to re-upload...",
                         isReview: true,
                         data: scannedData,
                         image: idCameraImg,
                         // CONDITIONAL BUTTON LOGIC
-                        btnText: isIdScanComplete ? "Proceed to Final Step" : null,
+                        btnText: isIdScanComplete ? "Proceed to Registration" : null,
                         btnAction: isIdScanComplete ? () => {
-                            takeSelfie(true); // Silently capture the front camera
-                            stopCamera();
                             checkVerificationStatus(scannedData, null, 'ID');
                         } : null,
                         secondaryBtnText: isIdScanComplete ? "Incorrect details? Re-upload ID" : "Re-upload ID Card",
@@ -824,7 +822,7 @@ const Register = () => {
                             <i className={`fas ${verificationStage === 'SELFIE' ? 'fa-user' : 'fa-id-card'} `} style={{ fontSize: '4rem', color: '#667eea' }}></i>
                         </div>
                         <button className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem' }} onClick={content.btnAction} disabled={isScanning}>
-                            <i className="fas fa-camera"></i> {content.btnText}
+                            <i className={verificationStage === 'ID_AUTO_CAPTURE' ? "fas fa-file-upload" : "fas fa-camera"}></i> {content.btnText}
                         </button>
                         {content.secondaryBtnText && (
                             <button className="btn" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#aaa', fontSize: '0.9rem' }} onClick={content.secondaryBtnAction} disabled={isScanning}>
@@ -1599,10 +1597,8 @@ const Register = () => {
                 setScannedData(cleanedMatch);
                 setScanBuffer([]);
                 
-                // Silently switch to front camera while user reviews data
+                // Do not switch to front camera or access camera, stop active camera instead
                 stopCamera();
-                setCameraMode('user');
-                startCamera('user');
                 
                 setVerificationStage('ID_VERIFY_DATA');
 
