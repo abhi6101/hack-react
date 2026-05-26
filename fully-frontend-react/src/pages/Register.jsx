@@ -735,6 +735,14 @@ const Register = () => {
                                     </div>
                                 )}
 
+                                {/* Enrollment Number */}
+                                {content.data?.enrollmentNumber && (
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>Enrollment Number</div>
+                                        <div style={{ color: '#e2e8f0', fontSize: '1rem', fontWeight: '500' }}>: {content.data?.enrollmentNumber}</div>
+                                    </div>
+                                )}
+
                                 {/* Aadhar Number Highlight */}
                                 {content.data?.aadharNumber && (
                                     <div style={{ gridColumn: '1 / -1', margin: '0.5rem 0' }}>
@@ -1092,11 +1100,23 @@ const Register = () => {
                         
                         const lines = text.split('\n').filter(l => l.trim().length > 0);
                         let extractedName = "Detected Name"; let extractedFather = "Detected Father";
+                        
+                        // Try matching using "Name :" label first (Card 2 style)
+                        const nameMatch = text.match(/\bName\s*[:|-]\s*([A-Za-z\s]+)/i);
+                        if (nameMatch) {
+                            extractedName = nameMatch[1].trim().split('\n')[0].trim();
+                        }
+                        
+                        // Father's name parsing (Card 1 style)
                         const fatherLineIdx = lines.findIndex(l => l.toLowerCase().includes('father'));
                         if (fatherLineIdx !== -1) {
                             extractedFather = lines[fatherLineIdx].split(/:|-/)[1]?.trim() || lines[fatherLineIdx];
-                            if (fatherLineIdx > 0) extractedName = lines[fatherLineIdx - 1].replace(/\d+/g, '').trim();
+                            // If name was not found via "Name :" label, fall back to Card 1 style (line before Father)
+                            if (extractedName === "Detected Name" && fatherLineIdx > 0) {
+                                extractedName = lines[fatherLineIdx - 1].replace(/\d+/g, '').trim();
+                            }
                         }
+                        
                         const codeNameMatch = lines.find(l => l.match(/\b\d{5,6}\s+[A-Za-z]+/));
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
@@ -1109,6 +1129,7 @@ const Register = () => {
                         const addressMatch = text.match(/Address\s*[:|-]?\s*([\s\S]+?)(?=\bD\w+\/|\bDirector|\bPrincipal|$)/i);
                         const dobMatch = text.match(/\b\d{2}-\d{2}-\d{4}\b/);
                         const bgMatch = text.match(/BG\s*[:|-]?\s*([A-Za-z+-]+)/i);
+                        const enrollmentMatch = text.match(/Enrollment\s*[:|-]?\s*([A-Za-z0-9]+)/i);
                         
                         const mobilePattern = /(?:Mobile|Mob|Ph|Phone|Contact|Tel)?[:\s]*([6-9]\d{9})/gi;
                         const mobileMatches = [];
@@ -1132,7 +1153,8 @@ const Register = () => {
                             mobileCount: mobileMatches.length,
                             address: addressMatch ? addressMatch[1].trim().replace(/\n/g, ', ') : "Not Detected",
                             dob: dobMatch ? dobMatch[0] : null,
-                            bg: bgMatch ? bgMatch[1] : null
+                            bg: bgMatch ? bgMatch[1] : null,
+                            enrollmentNumber: enrollmentMatch ? enrollmentMatch[1].trim().toUpperCase() : ""
                         };
 
                         // Process the data as if we got 5 good frames
@@ -1301,11 +1323,23 @@ const Register = () => {
                         setScanStatus("Parsing ID...");
                         const lines = text.split('\n').filter(l => l.trim().length > 0);
                         let extractedName = "Detected Name"; let extractedFather = "Detected Father";
+                        
+                        // Try matching using "Name :" label first (Card 2 style)
+                        const nameMatch = text.match(/\bName\s*[:|-]\s*([A-Za-z\s]+)/i);
+                        if (nameMatch) {
+                            extractedName = nameMatch[1].trim().split('\n')[0].trim();
+                        }
+                        
+                        // Father's name parsing (Card 1 style)
                         const fatherLineIdx = lines.findIndex(l => l.toLowerCase().includes('father'));
                         if (fatherLineIdx !== -1) {
                             extractedFather = lines[fatherLineIdx].split(/:|-/)[1]?.trim() || lines[fatherLineIdx];
-                            if (fatherLineIdx > 0) extractedName = lines[fatherLineIdx - 1].replace(/\d+/g, '').trim();
+                            // If name was not found via "Name :" label, fall back to Card 1 style (line before Father)
+                            if (extractedName === "Detected Name" && fatherLineIdx > 0) {
+                                extractedName = lines[fatherLineIdx - 1].replace(/\d+/g, '').trim();
+                            }
                         }
+                        
                         const codeNameMatch = lines.find(l => l.match(/\b\d{5,6}\s+[A-Za-z]+/));
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
@@ -1323,6 +1357,7 @@ const Register = () => {
 
                         // Extract Blood Group (BG)
                         const bgMatch = text.match(/BG\s*[:|-]?\s*([A-Za-z+-]+)/i);
+                        const enrollmentMatch = text.match(/Enrollment\s*[:|-]?\s*([A-Za-z0-9]+)/i);
 
                         // Extract mobile numbers (Indian format: 10 digits starting with 6-9)
                         const mobilePattern = /(?:Mobile|Mob|Ph|Phone|Contact|Tel)?[:\s]*([6-9]\d{9})/gi;
@@ -1350,7 +1385,8 @@ const Register = () => {
                             mobileCount: mobileMatches.length,
                             address: addressMatch ? addressMatch[1].trim().replace(/\n/g, ', ') : "Not Detected",
                             dob: dobMatch ? dobMatch[0] : null,
-                            bg: bgMatch ? bgMatch[1] : null
+                            bg: bgMatch ? bgMatch[1] : null,
+                            enrollmentNumber: enrollmentMatch ? enrollmentMatch[1].trim().toUpperCase() : ""
                         };
                     }
                 }
@@ -1704,6 +1740,7 @@ const Register = () => {
                 mobilePrimary: scannedData.mobilePrimary || '',
                 mobileSecondary: scannedData.mobileSecondary || '',
                 address: scannedData.address || '',
+                enrollmentNumber: scannedData.enrollmentNumber || '',
                 role: 'USER'
             }));
         }
@@ -1758,7 +1795,8 @@ const Register = () => {
                                 {scannedData && (
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.9rem', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FULL NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.name}</div></div>
-                                        <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FATHER'S NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.fatherName}</div></div>
+                                        {scannedData.fatherName && <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FATHER'S NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.fatherName}</div></div>}
+                                        {scannedData.enrollmentNumber && <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>ENROLLMENT NO</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.enrollmentNumber}</div></div>}
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>INSTITITE</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.institution}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>SESSION</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.session || '2023-2027'}</div></div>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>COURSE (BRANCH)</strong><div style={{ fontWeight: '500', color: '#4ade80' }}>{scannedData.branch}</div></div>
