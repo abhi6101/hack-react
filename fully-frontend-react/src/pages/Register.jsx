@@ -1868,7 +1868,16 @@ const Register = () => {
 
                             <div className="form-group">
                                 <label htmlFor="computerCode">Computer Code (Student ID) *</label>
-                                <input type="text" id="computerCode" name="computerCode" required placeholder="e.g. 59500" value={formData.computerCode} onChange={handleChange} readOnly={!!scannedData} style={scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} />
+                                <input 
+                                    type="text" 
+                                    id="computerCode" 
+                                    name="computerCode" 
+                                    required 
+                                    placeholder="e.g. 59500" 
+                                    value={formData.computerCode} 
+                                    onChange={handleChange} 
+                                    style={scannedData ? { background: 'rgba(52, 211, 153, 0.05)', borderColor: 'rgba(52, 211, 153, 0.5)' } : {}} 
+                                />
                                 <small>Your unique college ID/Roll Number. This will be your Login ID.</small>
                             </div>
 
