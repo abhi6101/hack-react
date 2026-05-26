@@ -11,6 +11,17 @@ import '../styles/register.css';
 
 const TARGET_SCANS = 5; // Reduced for faster capture
 
+const correctOCRDigits = (str) => {
+    if (!str) return "";
+    return str
+        .replace(/[OoQqDd]/g, '0')
+        .replace(/[IiTtlL]/g, '1')
+        .replace(/[Zz]/g, '2')
+        .replace(/[Ss]/g, '5')
+        .replace(/[Ggb]/g, '6')
+        .replace(/[B]/g, '8');
+};
+
 const Register = () => {
     const navigate = useNavigate();
     const { showToast } = useToast();
@@ -1092,7 +1103,7 @@ const Register = () => {
                     try {
                         const { data: { text } } = await Tesseract.recognize(blob, 'eng');
                         
-                        const cleanTextForNumbers = text.replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
+                        const cleanTextForNumbers = correctOCRDigits(text);
                         
                         const lines = text.split('\n').filter(l => l.trim().length > 0);
                         let extractedName = "Detected Name"; let extractedFather = "Detected Father";
@@ -1122,10 +1133,11 @@ const Register = () => {
                         const compCodeMatch = text.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*([A-Za-z0-9]+)/i);
                         let validCode = null;
                         if (compCodeMatch) {
-                            const cleaned = compCodeMatch[1].replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
-                            const digitsOnly = cleaned.match(/\d{5,6}/);
-                            if (digitsOnly && !digitsOnly[0].startsWith("452")) {
-                                validCode = digitsOnly[0];
+                            const cleaned = correctOCRDigits(compCodeMatch[1]);
+                            // Strip out any remaining non-digit characters to handle OCR letter substitutions
+                            const digitsOnly = cleaned.replace(/\D/g, '');
+                            if (digitsOnly.length >= 4 && digitsOnly.length <= 6 && !digitsOnly.startsWith("452")) {
+                                validCode = digitsOnly;
                             }
                         }
                         
@@ -1319,7 +1331,7 @@ const Register = () => {
                     const isIPSAcademy = /IPS|Academy|Indore/i.test(text);
 
                     // Smart Clean: Fix common OCR errors in Computer Code (59500 -> S9SOO)
-                    const cleanTextForNumbers = text.replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
+                    const cleanTextForNumbers = correctOCRDigits(text);
                     const codeMatch = cleanTextForNumbers.match(/\d{5,6}/);
 
                     // Allow pass if Keyword found OR Valid Code found
@@ -1358,10 +1370,11 @@ const Register = () => {
                         const compCodeMatch = text.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*([A-Za-z0-9]+)/i);
                         let validCode = null;
                         if (compCodeMatch) {
-                            const cleaned = compCodeMatch[1].replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
-                            const digitsOnly = cleaned.match(/\d{5,6}/);
-                            if (digitsOnly && !digitsOnly[0].startsWith("452")) {
-                                validCode = digitsOnly[0];
+                            const cleaned = correctOCRDigits(compCodeMatch[1]);
+                            // Strip out any remaining non-digit characters to handle OCR letter substitutions
+                            const digitsOnly = cleaned.replace(/\D/g, '');
+                            if (digitsOnly.length >= 4 && digitsOnly.length <= 6 && !digitsOnly.startsWith("452")) {
+                                validCode = digitsOnly;
                             }
                         }
                         
