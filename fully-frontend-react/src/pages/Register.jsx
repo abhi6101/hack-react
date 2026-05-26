@@ -1117,14 +1117,14 @@ const Register = () => {
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
                         
-                        // Prioritize "Computer Code : <Number>" label matching
-                        const compCodeMatch = text.match(/Computer\s*Code\s*[:|-]?\s*(\d{5,6})/i);
+                        // Prioritize "Computer Code : <Number>" label matching (with relaxed spelling/label checks)
+                        const compCodeMatch = cleanTextForNumbers.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*(\d{5,6})/i);
                         let validCode = null;
-                        if (compCodeMatch) {
+                        if (compCodeMatch && !compCodeMatch[1].startsWith("452")) {
                             validCode = compCodeMatch[1];
                         } else {
-                            const allNumbers = text.match(/\d+/g) || [];
-                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n));
+                            const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
+                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
                         }
                         
                         const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
@@ -1346,14 +1346,14 @@ const Register = () => {
                         const codeNameMatch = lines.find(l => l.match(/\b\d{5,6}\s+[A-Za-z]+/));
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
-                        // Prioritize "Computer Code : <Number>" label matching
-                        const compCodeMatch = text.match(/Computer\s*Code\s*[:|-]?\s*(\d{5,6})/i);
+                        // Prioritize "Computer Code : <Number>" label matching (with relaxed spelling/label checks)
+                        const compCodeMatch = cleanTextForNumbers.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*(\d{5,6})/i);
                         let validCode = null;
-                        if (compCodeMatch) {
+                        if (compCodeMatch && !compCodeMatch[1].startsWith("452")) {
                             validCode = compCodeMatch[1];
                         } else {
-                            const allNumbers = text.match(/\d+/g) || [];
-                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n));
+                            const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
+                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
                         }
                         if (extractedName === "Detected Name") { setIsScanning(false); return; }
                         const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
