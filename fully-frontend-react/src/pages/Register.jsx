@@ -1480,6 +1480,16 @@ const Register = () => {
             const rawCode = checkType === 'ID' ? cleanedMatch.code : scannedData?.code;
             const cleanedCode = rawCode ? rawCode.toString().replace(/^0+/, '').trim() : '';
 
+            // If B.Tech and code is empty, skip status check because they will type it manually later!
+            if (!cleanedCode) {
+                console.log("B.Tech or empty computer code - skipping backend status check");
+                setScanStatus("Verification Ready");
+                if (checkType === 'ID' && !isAutoCheck) {
+                    setStep(4);
+                }
+                return;
+            }
+
             // Convert to number for backend (database expects number type)
             const computerCodeNumber = cleanedCode ? parseInt(cleanedCode, 10) : null;
 
