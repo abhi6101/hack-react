@@ -248,10 +248,8 @@ const Register = () => {
         if (verificationStage === 'ID_VERIFY_DATA' && scannedData) {
             // Use the SAME check as renderStageContent
             const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
-                scannedData?.fatherName &&
                 scannedData?.code &&
-                scannedData?.branch &&
-                scannedData?.mobileCount > 0;
+                scannedData?.branch;
 
             if (!isIdScanComplete) {
                 console.log("Incomplete scan detected - auto-rescanning in 5 seconds...");
@@ -570,10 +568,8 @@ const Register = () => {
                 case 'ID_VERIFY_DATA':
                     // Check for missing critical details
                     const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
-                        scannedData?.fatherName &&
                         scannedData?.code &&
-                        scannedData?.branch &&
-                        scannedData?.mobileCount > 0;
+                        scannedData?.branch;
 
                     return {
                         title: isIdScanComplete ? "ID Verified" : "Incomplete Scan",
@@ -1121,8 +1117,15 @@ const Register = () => {
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
                         
-                        const allNumbers = text.match(/\d+/g) || [];
-                        const validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n));
+                        // Prioritize "Computer Code : <Number>" label matching
+                        const compCodeMatch = text.match(/Computer\s*Code\s*[:|-]?\s*(\d{5,6})/i);
+                        let validCode = null;
+                        if (compCodeMatch) {
+                            validCode = compCodeMatch[1];
+                        } else {
+                            const allNumbers = text.match(/\d+/g) || [];
+                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n));
+                        }
                         
                         const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
                         const sessionMatch = text.match(/Session\s*[:|-]?\s*(\d{4}-\d{4})/i);
@@ -1134,7 +1137,7 @@ const Register = () => {
                         const mobilePattern = /(?:Mobile|Mob|Ph|Phone|Contact|Tel)?[:\s]*([6-9]\d{9})/gi;
                         const mobileMatches = [];
                         let mobileMatch;
-                        while ((mobileMatch = mobilePattern.exec(text)) !== null) {
+                        while ((mobileMatch = mobilePattern.exec(cleanTextForNumbers)) !== null) {
                             const number = mobileMatch[1];
                             if (!mobileMatches.includes(number) && number !== validCode && number.length === 10) {
                                 mobileMatches.push(number);
@@ -1343,8 +1346,15 @@ const Register = () => {
                         const codeNameMatch = lines.find(l => l.match(/\b\d{5,6}\s+[A-Za-z]+/));
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
-                        const allNumbers = text.match(/\d+/g) || [];
-                        const validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n));
+                        // Prioritize "Computer Code : <Number>" label matching
+                        const compCodeMatch = text.match(/Computer\s*Code\s*[:|-]?\s*(\d{5,6})/i);
+                        let validCode = null;
+                        if (compCodeMatch) {
+                            validCode = compCodeMatch[1];
+                        } else {
+                            const allNumbers = text.match(/\d+/g) || [];
+                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !text.includes(n + "0") && !text.includes("9" + n));
+                        }
                         if (extractedName === "Detected Name") { setIsScanning(false); return; }
                         const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
                         const sessionMatch = text.match(/Session\s*[:|-]?\s*(\d{4}-\d{4})/i);
@@ -1364,7 +1374,7 @@ const Register = () => {
                         const mobileMatches = [];
                         let mobileMatch;
 
-                        while ((mobileMatch = mobilePattern.exec(text)) !== null) {
+                        while ((mobileMatch = mobilePattern.exec(cleanTextForNumbers)) !== null) {
                             const number = mobileMatch[1];
                             // Avoid duplicates and ensure it's not the computer code
                             if (!mobileMatches.includes(number) && number !== validCode && number.length === 10) {
