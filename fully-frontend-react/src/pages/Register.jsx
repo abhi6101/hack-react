@@ -228,10 +228,13 @@ const Register = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
 
-        if (name === 'branch') {
+        if (name === 'computerCode') {
+            setFormData(prev => ({ ...prev, computerCode: value, username: value }));
+        } else if (name === 'branch') {
             setFormData(prev => ({ ...prev, branch: value, semester: '' }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
 
@@ -259,7 +262,7 @@ const Register = () => {
         if (verificationStage === 'ID_VERIFY_DATA' && scannedData) {
             // Use the SAME check as renderStageContent
             const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
-                scannedData?.code &&
+                (scannedData?.code || scannedData?.branch?.toUpperCase()?.includes("B.TECH")) &&
                 scannedData?.branch;
 
             if (!isIdScanComplete) {
@@ -579,7 +582,7 @@ const Register = () => {
                 case 'ID_VERIFY_DATA':
                     // Check for missing critical details
                     const isIdScanComplete = scannedData?.name && scannedData?.name !== "Detected Name" &&
-                        scannedData?.code &&
+                        (scannedData?.code || scannedData?.branch?.toUpperCase()?.includes("B.TECH")) &&
                         scannedData?.branch;
 
                     return {
@@ -1128,25 +1131,30 @@ const Register = () => {
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
                         
+                        const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
+                        const detectedBranch = courseMatch ? courseMatch[1].trim() : "INTG.MCA";
+                        const isBTech = detectedBranch.toUpperCase().includes("B.TECH");
+
                         // Prioritize "Computer Code : <Number>" label matching (with relaxed spelling/label checks)
                         // Search on raw text first to avoid digit-replacement noise, allowing alphanumeric chars to capture OCR errors
                         const compCodeMatch = text.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*([A-Za-z0-9]+)/i);
                         let validCode = null;
-                        if (compCodeMatch) {
-                            const cleaned = correctOCRDigits(compCodeMatch[1]);
-                            // Strip out any remaining non-digit characters to handle OCR letter substitutions
-                            const digitsOnly = cleaned.replace(/\D/g, '');
-                            if (digitsOnly.length >= 4 && digitsOnly.length <= 6 && !digitsOnly.startsWith("452")) {
-                                validCode = digitsOnly;
+                        if (!isBTech) {
+                            if (compCodeMatch) {
+                                const cleaned = correctOCRDigits(compCodeMatch[1]);
+                                // Strip out any remaining non-digit characters to handle OCR letter substitutions
+                                const digitsOnly = cleaned.replace(/\D/g, '');
+                                if (digitsOnly.length >= 4 && digitsOnly.length <= 6 && !digitsOnly.startsWith("452")) {
+                                    validCode = digitsOnly;
+                                }
+                            }
+                            
+                            if (!validCode) {
+                                const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
+                                validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
                             }
                         }
                         
-                        if (!validCode) {
-                            const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
-                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
-                        }
-                        
-                        const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
                         const sessionMatch = text.match(/Session\s*[:|-]?\s*(\d{4}-\d{4})/i);
                         const addressMatch = text.match(/Address\s*[:|-]?\s*([\s\S]+?)(?=\bD\w+\/|\bDirector|\bPrincipal|$)/i);
                         const dobMatch = text.match(/\b\d{2}-\d{2}-\d{4}\b/);
@@ -1167,9 +1175,9 @@ const Register = () => {
                             institution: "IPS Academy, Indore",
                             name: extractedName,
                             fatherName: extractedFather === "Detected Father" ? "" : extractedFather,
-                            branch: courseMatch ? courseMatch[1].trim() : "INTG.MCA",
+                            branch: detectedBranch,
                             session: sessionMatch ? sessionMatch[1] : (text.match(/\d{4}-\d{4}/)?.[0] || "2022-2027"),
-                            code: validCode || "59500",
+                            code: isBTech ? "" : (validCode || "59500"),
                             mobilePrimary: mobileMatches[0] || null,
                             mobileSecondary: mobileMatches[1] || null,
                             mobileCount: mobileMatches.length,
@@ -1365,25 +1373,30 @@ const Register = () => {
                         const codeNameMatch = lines.find(l => l.match(/\b\d{5,6}\s+[A-Za-z]+/));
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
+                        const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
+                        const detectedBranch = courseMatch ? courseMatch[1].trim() : "INTG.MCA";
+                        const isBTech = detectedBranch.toUpperCase().includes("B.TECH");
+
                         // Prioritize "Computer Code : <Number>" label matching (with relaxed spelling/label checks)
                         // Search on raw text first to avoid digit-replacement noise, allowing alphanumeric chars to capture OCR errors
                         const compCodeMatch = text.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*([A-Za-z0-9]+)/i);
                         let validCode = null;
-                        if (compCodeMatch) {
-                            const cleaned = correctOCRDigits(compCodeMatch[1]);
-                            // Strip out any remaining non-digit characters to handle OCR letter substitutions
-                            const digitsOnly = cleaned.replace(/\D/g, '');
-                            if (digitsOnly.length >= 4 && digitsOnly.length <= 6 && !digitsOnly.startsWith("452")) {
-                                validCode = digitsOnly;
+                        if (!isBTech) {
+                            if (compCodeMatch) {
+                                const cleaned = correctOCRDigits(compCodeMatch[1]);
+                                // Strip out any remaining non-digit characters to handle OCR letter substitutions
+                                const digitsOnly = cleaned.replace(/\D/g, '');
+                                if (digitsOnly.length >= 4 && digitsOnly.length <= 6 && !digitsOnly.startsWith("452")) {
+                                    validCode = digitsOnly;
+                                }
+                            }
+                            
+                            if (!validCode) {
+                                const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
+                                validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
                             }
                         }
-                        
-                        if (!validCode) {
-                            const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
-                            validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
-                        }
                         if (extractedName === "Detected Name") { setIsScanning(false); return; }
-                        const courseMatch = text.match(/Course\s*[:|-]?\s*([A-Za-z\.]+)/i);
                         const sessionMatch = text.match(/Session\s*[:|-]?\s*(\d{4}-\d{4})/i);
 
                         // Extract Address (multiline until Director/Principal or end)
@@ -1413,9 +1426,9 @@ const Register = () => {
                             institution: "IPS Academy, Indore",
                             name: extractedName,
                             fatherName: extractedFather === "Detected Father" ? "" : extractedFather,
-                            branch: courseMatch ? courseMatch[1].trim() : "INTG.MCA",
+                            branch: detectedBranch,
                             session: sessionMatch ? sessionMatch[1] : (text.match(/\d{4}-\d{4}/)?.[0] || "2022-2027"),
-                            code: validCode || "59500",
+                            code: isBTech ? "" : (validCode || "59500"),
                             // Mobile numbers
                             mobilePrimary: mobileMatches[0] || null,
                             mobileSecondary: mobileMatches[1] || null,
