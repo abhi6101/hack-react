@@ -1092,7 +1092,7 @@ const Register = () => {
                     try {
                         const { data: { text } } = await Tesseract.recognize(blob, 'eng');
                         
-                        const cleanTextForNumbers = text.replace(/O/g, '0').replace(/S/g, '5').replace(/l/g, '1').replace(/Z/g, '2');
+                        const cleanTextForNumbers = text.replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
                         
                         const lines = text.split('\n').filter(l => l.trim().length > 0);
                         let extractedName = "Detected Name"; let extractedFather = "Detected Father";
@@ -1118,11 +1118,18 @@ const Register = () => {
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
                         
                         // Prioritize "Computer Code : <Number>" label matching (with relaxed spelling/label checks)
-                        const compCodeMatch = cleanTextForNumbers.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*(\d{5,6})/i);
+                        // Search on raw text first to avoid digit-replacement noise, allowing alphanumeric chars to capture OCR errors
+                        const compCodeMatch = text.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*([A-Za-z0-9]+)/i);
                         let validCode = null;
-                        if (compCodeMatch && !compCodeMatch[1].startsWith("452")) {
-                            validCode = compCodeMatch[1];
-                        } else {
+                        if (compCodeMatch) {
+                            const cleaned = compCodeMatch[1].replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
+                            const digitsOnly = cleaned.match(/\d{5,6}/);
+                            if (digitsOnly && !digitsOnly[0].startsWith("452")) {
+                                validCode = digitsOnly[0];
+                            }
+                        }
+                        
+                        if (!validCode) {
                             const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
                             validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
                         }
@@ -1312,7 +1319,7 @@ const Register = () => {
                     const isIPSAcademy = /IPS|Academy|Indore/i.test(text);
 
                     // Smart Clean: Fix common OCR errors in Computer Code (59500 -> S9SOO)
-                    const cleanTextForNumbers = text.replace(/O/g, '0').replace(/S/g, '5').replace(/l/g, '1').replace(/Z/g, '2');
+                    const cleanTextForNumbers = text.replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
                     const codeMatch = cleanTextForNumbers.match(/\d{5,6}/);
 
                     // Allow pass if Keyword found OR Valid Code found
@@ -1347,11 +1354,18 @@ const Register = () => {
                         if (extractedName === "Detected Name" && codeNameMatch) extractedName = codeNameMatch.replace(/\d+/g, '').trim();
                         if (extractedName === "Detected Name" && (text.toUpperCase().includes("ABHI") || text.toUpperCase().includes("JAIN"))) extractedName = "ABHI JAIN";
                         // Prioritize "Computer Code : <Number>" label matching (with relaxed spelling/label checks)
-                        const compCodeMatch = cleanTextForNumbers.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*(\d{5,6})/i);
+                        // Search on raw text first to avoid digit-replacement noise, allowing alphanumeric chars to capture OCR errors
+                        const compCodeMatch = text.match(/(?:Computer|Code|Comp|Roll|No|No\.)\s*[:|-]?\s*([A-Za-z0-9]+)/i);
                         let validCode = null;
-                        if (compCodeMatch && !compCodeMatch[1].startsWith("452")) {
-                            validCode = compCodeMatch[1];
-                        } else {
+                        if (compCodeMatch) {
+                            const cleaned = compCodeMatch[1].replace(/O/gi, '0').replace(/S/gi, '5').replace(/l/gi, '1').replace(/Z/gi, '2');
+                            const digitsOnly = cleaned.match(/\d{5,6}/);
+                            if (digitsOnly && !digitsOnly[0].startsWith("452")) {
+                                validCode = digitsOnly[0];
+                            }
+                        }
+                        
+                        if (!validCode) {
                             const allNumbers = cleanTextForNumbers.match(/\d+/g) || [];
                             validCode = allNumbers.find(n => n.length >= 5 && n.length <= 6 && !n.startsWith("452") && !cleanTextForNumbers.includes(n + "0") && !cleanTextForNumbers.includes("9" + n));
                         }
