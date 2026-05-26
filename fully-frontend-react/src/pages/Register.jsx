@@ -1890,7 +1890,12 @@ const Register = () => {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="computerCode">Computer Code (Student ID) *</label>
+                                <label htmlFor="computerCode">
+                                    Computer Code (Student ID) *{' '}
+                                    {!!scannedData && !scannedData.branch?.toUpperCase()?.includes("B.TECH") && (
+                                        <i className="fas fa-lock text-green-400" title="Verified from ID"></i>
+                                    )}
+                                </label>
                                 <input 
                                     type="text" 
                                     id="computerCode" 
@@ -1899,9 +1904,19 @@ const Register = () => {
                                     placeholder="e.g. 59500" 
                                     value={formData.computerCode} 
                                     onChange={handleChange} 
-                                    style={scannedData ? { background: 'rgba(52, 211, 153, 0.05)', borderColor: 'rgba(52, 211, 153, 0.5)' } : {}} 
+                                    readOnly={!!scannedData && !scannedData.branch?.toUpperCase()?.includes("B.TECH")}
+                                    className={!!scannedData && !scannedData.branch?.toUpperCase()?.includes("B.TECH") ? "locked-field" : ""}
+                                    style={
+                                        !!scannedData && !scannedData.branch?.toUpperCase()?.includes("B.TECH")
+                                            ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }
+                                            : (scannedData ? { background: 'rgba(52, 211, 153, 0.05)', borderColor: 'rgba(52, 211, 153, 0.5)' } : {})
+                                    }
                                 />
-                                <small>Your unique college ID/Roll Number. This will be your Login ID.</small>
+                                <small style={!!scannedData && !scannedData.branch?.toUpperCase()?.includes("B.TECH") ? { color: '#34d399' } : {}}>
+                                    {!!scannedData && !scannedData.branch?.toUpperCase()?.includes("B.TECH")
+                                        ? "✓ Verified from ID Card"
+                                        : "Your unique college ID/Roll Number. This will be your Login ID."}
+                                </small>
                             </div>
 
                             {formData.dob && (
