@@ -1292,12 +1292,13 @@ const AdminDashboard = () => {
                                 <th>Computer Code</th>
                                 <th>Paper Title</th>
                                 <th>Subject / Branch / Sem</th>
-                                <th>Viewed At</th>
+                                <th>Action</th>
+                                <th>Activity Time</th>
                             </tr>
                         </thead>
                         <tbody>
                             {paperViewLogs.length === 0 ? (
-                                <tr><td colSpan="5" style={{ textAlign: 'center' }}>No view logs recorded yet.</td></tr>
+                                <tr><td colSpan="6" style={{ textAlign: 'center' }}>No view logs recorded yet.</td></tr>
                             ) : (
                                 paperViewLogs.filter(log => {
                                     const searchLower = paperLogSearch.toLowerCase();
@@ -1328,6 +1329,17 @@ const AdminDashboard = () => {
                                             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                                                 {log.branch} • Sem {log.semester} ({log.year})
                                             </div>
+                                        </td>
+                                        <td>
+                                            {log.action === 'DOWNLOAD' ? (
+                                                <span style={{ color: '#22c55e', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '500' }}>
+                                                    <i className="fas fa-download"></i> Downloaded
+                                                </span>
+                                            ) : (
+                                                <span style={{ color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '500' }}>
+                                                    <i className="far fa-eye"></i> Viewed
+                                                </span>
+                                            )}
                                         </td>
                                         <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                                             <i className="far fa-clock" style={{ marginRight: '6px' }}></i>

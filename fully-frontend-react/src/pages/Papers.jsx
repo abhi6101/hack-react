@@ -328,7 +328,7 @@ const Papers = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('authToken');
-            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`, {
+            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?action=VIEW&t=${Date.now()}`, {
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
             });
             if (!res.ok) throw new Error("Failed to load PDF");
@@ -348,7 +348,7 @@ const Papers = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('authToken');
-            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?t=${Date.now()}`, {
+            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?action=DOWNLOAD&t=${Date.now()}`, {
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
             });
             if (!res.ok) throw new Error("Failed to download PDF");
