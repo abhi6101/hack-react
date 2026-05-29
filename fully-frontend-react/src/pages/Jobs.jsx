@@ -238,7 +238,25 @@ const Jobs = () => {
             }
 
             if (!response.ok) {
-                throw new Error('Failed to submit application');
+                let errorMsg = 'Failed to submit application';
+                try {
+                    const text = await response.text();
+                    if (text) {
+                        try {
+                            const errData = JSON.parse(text);
+                            if (errData && errData.message) {
+                                errorMsg = errData.message;
+                            } else if (errData && errData.error) {
+                                errorMsg = errData.error;
+                            }
+                        } catch (jsonErr) {
+                            errorMsg = text;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Could not parse error response:", e);
+                }
+                throw new Error(errorMsg);
             }
 
             showToast({
@@ -262,7 +280,7 @@ const Jobs = () => {
         } catch (error) {
             console.error('Error submitting application:', error);
             showToast({
-                message: 'Failed to submit application. Please try again later.',
+                message: error.message || 'Failed to submit application. Please try again later.',
                 type: 'error'
             });
             setSubmitting(false);
