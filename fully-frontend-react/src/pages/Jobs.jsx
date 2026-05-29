@@ -222,10 +222,11 @@ const Jobs = () => {
 
         try {
             const token = getToken();
+            const cleanToken = token ? token.replace('Bearer ', '') : '';
             const response = await fetch(APPLY_JOB_API_URL, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${cleanToken}`
                 },
                 body: formData
             });
