@@ -58,6 +58,9 @@ const Papers = () => {
     const [securityViolationMessage, setSecurityViolationMessage] = useState(null);
     const [paperDownloadEnabled, setPaperDownloadEnabled] = useState(false);
     const [screenshotRestrictionEnabled, setScreenshotRestrictionEnabled] = useState(true);
+    const [branchPapers, setBranchPapers] = useState([]);
+    const [globalSearchQuery, setGlobalSearchQuery] = useState('');
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     const getToken = () => localStorage.getItem("authToken");
 
@@ -86,16 +89,12 @@ const Papers = () => {
         if (userRole === 'STUDENT') return;
         
         try {
-            const res = await fetch(`${API_BASE_URL}/admin/departments`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            if (res.ok) setDeptList(await res.json());
-            else if (res.status === 401) {
-                localStorage.clear();
-                navigate('/login');
+            const res = await fetch(`${API_BASE_URL}/public/departments`);
+            if (res.ok) {
+                setDeptList(await res.json());
             }
         } catch (e) {
-            console.error(e);
+            console.error("Failed to fetch departments publicly:", e);
         }
     };
 
@@ -122,36 +121,24 @@ const Papers = () => {
 
     useEffect(() => {
         const currentToken = getToken();
-        if (!currentToken) {
-            showAlert({
-                title: 'Login Required',
-                message: 'You must be logged in to view this page.',
-                type: 'login',
-                actions: [
-                    { label: 'Login Now', primary: true, onClick: () => navigate('/login') },
-                    { label: 'Go Home', primary: false, onClick: () => navigate('/') }
-                ]
-            });
-            return;
-        }
-
-        try {
-            const payload = JSON.parse(atob(currentToken.split('.')[1]));
-            if (payload.exp < Date.now() / 1000) {
-                showAlert({
-                    title: 'Session Expired',
-                    message: 'Your session has expired. Please log in again.',
-                    type: 'warning',
-                    actions: [
-                        { label: 'Login', primary: true, onClick: () => { localStorage.clear(); navigate('/login'); } }
-                    ]
-                });
+        if (currentToken) {
+            try {
+                const payload = JSON.parse(atob(currentToken.split('.')[1]));
+                if (payload.exp < Date.now() / 1000) {
+                    showAlert({
+                        title: 'Session Expired',
+                        message: 'Your session has expired. Please log in again.',
+                        type: 'warning',
+                        actions: [
+                            { label: 'Login', primary: true, onClick: () => { localStorage.clear(); navigate('/login'); } }
+                        ]
+                    });
+                    localStorage.clear();
+                }
+            } catch (e) {
+                console.error("Invalid token");
                 localStorage.clear();
             }
-        } catch (e) {
-            console.error("Invalid token");
-            localStorage.clear();
-            navigate('/login');
         }
     }, [navigate, showAlert]);
 
@@ -278,11 +265,14 @@ const Papers = () => {
 
     const fetchAvailableMetadata = async () => {
         try {
+            const token = getToken();
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
             const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
+                headers: headers
             });
             if (res.ok) {
                 const all = await res.json();
+                setBranchPapers(all);
                 let sems = [...new Set(all.map(p => p.semester))].sort((a, b) => a - b);
                 
                 // --- STRICT FILTER FOR STUDENTS ---
@@ -292,7 +282,7 @@ const Papers = () => {
                 }
                 
                 setAvailableSems(sems);
-            } else if (res.status === 401) {
+            } else if (res.status === 401 && token) {
                 localStorage.clear();
                 navigate('/login');
             }
@@ -304,13 +294,15 @@ const Papers = () => {
     const fetchPapers = async (sem) => {
         setLoading(true);
         try {
+            const token = getToken();
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
             const res = await fetch(`${API_BASE_URL}/papers?semester=${sem}&branch=${branch}`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
+                headers: headers
             });
             if (res.ok) {
                 const data = await res.json();
                 setPapers(data);
-            } else if (res.status === 401) {
+            } else if (res.status === 401 && token) {
                 localStorage.clear();
                 navigate('/login');
             } else {
@@ -325,11 +317,16 @@ const Papers = () => {
     };
 
     const handleDownload = async (paper) => {
+        const token = getToken();
+        if (!token) {
+            setShowAuthModal(true);
+            return;
+        }
+
         setLoading(true);
         try {
-            const token = localStorage.getItem('authToken');
             const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?action=VIEW&t=${Date.now()}`, {
-                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error("Failed to load PDF");
             const blob = await res.blob();
@@ -345,11 +342,16 @@ const Papers = () => {
     };
 
     const handleActualDownload = async (paper) => {
+        const token = getToken();
+        if (!token) {
+            setShowAuthModal(true);
+            return;
+        }
+
         setLoading(true);
         try {
-            const token = localStorage.getItem('authToken');
             const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?action=DOWNLOAD&t=${Date.now()}`, {
-                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error("Failed to download PDF");
             const blob = await res.blob();
@@ -446,6 +448,45 @@ const Papers = () => {
                             </AnimatePresence>
                         </div>
                     </div>
+                )}
+            </div>
+
+            <div className="global-search-container" style={{
+                margin: '1rem 0 2rem',
+                position: 'relative',
+                width: '100%',
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.05)',
+                borderRadius: '16px',
+                padding: '0.4rem 1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
+                backdropFilter: 'blur(5px)'
+            }}>
+                <i className="fas fa-search" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem' }}></i>
+                <input
+                    type="text"
+                    placeholder="Search papers by subject, title, course, or year (e.g. Java, Data Structures, BCA, 2024)..."
+                    value={globalSearchQuery}
+                    onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                    style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#fff',
+                        fontSize: '1rem',
+                        width: '100%',
+                        outline: 'none',
+                        padding: '0.6rem 0'
+                    }}
+                />
+                {globalSearchQuery && (
+                    <i 
+                        className="fas fa-times" 
+                        onClick={() => setGlobalSearchQuery('')}
+                        style={{ color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.2rem' }}
+                    ></i>
                 )}
             </div>
 
@@ -660,9 +701,9 @@ const Papers = () => {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    <span style={{ flex: 1 }}>View Paper</span>
+                                    <span style={{ flex: 1 }}>{getToken() ? "View Paper" : "🔒 Login to View"}</span>
                                     <div className="btn-icon">
-                                        <i className="fas fa-eye"></i>
+                                        <i className={getToken() ? "fas fa-eye" : "fas fa-lock"}></i>
                                     </div>
                                 </motion.button>
 
@@ -674,9 +715,9 @@ const Papers = () => {
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                     >
-                                        <span style={{ flex: 1 }}>Download</span>
+                                        <span style={{ flex: 1 }}>{getToken() ? "Download" : "🔒 Login to Download"}</span>
                                         <div className="btn-icon" style={{ background: 'rgba(0,0,0,0.1)' }}>
-                                            <i className="fas fa-download"></i>
+                                            <i className={getToken() ? "fas fa-download" : "fas fa-lock"}></i>
                                         </div>
                                     </motion.button>
                                 )}
@@ -684,6 +725,123 @@ const Papers = () => {
                         </motion.div>
                     ))}
                 </div>
+            </motion.div>
+        );
+    };
+
+    const renderSearchResults = () => {
+        const query = globalSearchQuery.toLowerCase();
+        const filtered = branchPapers.filter(p => 
+            p.title.toLowerCase().includes(query) ||
+            p.subject.toLowerCase().includes(query) ||
+            (p.year && p.year.toLowerCase().includes(query)) ||
+            `semester ${p.semester}`.includes(query) ||
+            p.branch.toLowerCase().includes(query)
+        );
+
+        return (
+            <motion.div
+                className="paper-list-view"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+            >
+                <div className="view-header" style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '3rem',
+                    background: 'rgba(255,255,255,0.02)',
+                    padding: '2rem',
+                    borderRadius: '24px',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    backdropFilter: 'blur(10px)'
+                }}>
+                    <div>
+                        <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Search Results</h2>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                            Found {filtered.length} paper(s) matching "{globalSearchQuery}"
+                        </p>
+                    </div>
+                    <motion.button
+                        className="back-btn"
+                        onClick={() => setGlobalSearchQuery('')}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            color: '#fff',
+                            padding: '0.8rem 1.5rem',
+                            borderRadius: '12px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            fontSize: '0.9rem'
+                        }}
+                    >
+                        <i className="fas fa-times"></i> Clear Search
+                    </motion.button>
+                </div>
+
+                {filtered.length === 0 ? (
+                    <div className="empty-state surface-glow" style={{ textAlign: 'center', padding: '6rem 2rem', borderRadius: '24px' }}>
+                        <i className="fas fa-search" style={{ fontSize: '4rem', color: 'rgba(255,255,255,0.05)', marginBottom: '2rem' }}></i>
+                        <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>No Papers Found</h3>
+                        <p style={{ color: 'var(--text-secondary)' }}>We couldn't find any papers matching your search. Try adjusting your keywords.</p>
+                    </div>
+                ) : (
+                    <div className="papers-grid">
+                        {filtered.map((paper, idx) => (
+                            <motion.div
+                                key={paper.id}
+                                className="paper-card-premium surface-glow"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: idx * 0.05 }}
+                                whileHover={{ y: -10 }}
+                            >
+                                <div className="card-top">
+                                    <div className="file-icon">
+                                        <i className="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div className="year-badge">{paper.year !== "0" ? paper.year : 'N/A'}</div>
+                                </div>
+
+                                <div className="card-body">
+                                    <h4 className="paper-title">{paper.title}</h4>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0.8rem' }}>
+                                        {paper.subject} • Semester {paper.semester}
+                                    </p>
+                                    <div className="tag-group">
+                                        <span className="premium-tag category">{paper.category}</span>
+                                        <span className="premium-tag uni">{paper.university}</span>
+                                        <span className="premium-tag available" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                                            ✓ Available
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="card-buttons-container" style={{ display: 'flex', gap: '10px', marginTop: 'auto', width: '100%' }}>
+                                    <motion.button
+                                        className="download-btn-premium"
+                                        onClick={() => handleDownload(paper)}
+                                        style={{ flex: 1, marginTop: 0 }}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <span style={{ flex: 1 }}>{getToken() ? "View Paper" : "🔒 Login to View"}</span>
+                                        <div className="btn-icon">
+                                            <i className={getToken() ? "fas fa-eye" : "fas fa-lock"}></i>
+                                        </div>
+                                    </motion.button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
             </motion.div>
         );
     };
@@ -700,7 +858,9 @@ const Papers = () => {
 
             <main className="papers-container" style={{ padding: '6.5rem 5% 5rem', position: 'relative', zIndex: 2 }}>
                 <AnimatePresence mode="wait">
-                    {selectedSemester === null ? (
+                    {globalSearchQuery.trim() !== '' ? (
+                        <div key="search-results">{renderSearchResults()}</div>
+                    ) : selectedSemester === null ? (
                         <div key="sem-grid">{renderSemesterGrid()}</div>
                     ) : (
                         selectedSubject === null ? (
@@ -913,6 +1073,148 @@ const Papers = () => {
                                         ))}
                                     </div>
                                 )}
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* AuthPromptModal */}
+            <AnimatePresence>
+                {showAuthModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(0,0,0,0.85)',
+                            backdropFilter: 'blur(8px)',
+                            zIndex: 99999,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '1.5rem'
+                        }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                            style={{
+                                width: '100%',
+                                maxWidth: '480px',
+                                background: 'rgba(22, 22, 34, 0.95)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                borderRadius: '24px',
+                                padding: '2.5rem',
+                                position: 'relative',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)'
+                            }}
+                        >
+                            <i 
+                                className="fas fa-times" 
+                                onClick={() => setShowAuthModal(false)}
+                                style={{
+                                    position: 'absolute',
+                                    top: '1.5rem',
+                                    right: '1.5rem',
+                                    color: 'var(--text-secondary)',
+                                    cursor: 'pointer',
+                                    fontSize: '1.2rem',
+                                    transition: 'color 0.2s'
+                                }}
+                            ></i>
+
+                            <div style={{
+                                width: '80px',
+                                height: '80px',
+                                borderRadius: '50%',
+                                background: 'rgba(14, 165, 233, 0.1)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: '1.5rem',
+                                border: '1px solid rgba(14, 165, 233, 0.2)'
+                            }}>
+                                <i className="fas fa-lock" style={{ fontSize: '2rem', color: 'var(--primary)' }}></i>
+                            </div>
+
+                            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '1rem', color: '#fff' }}>
+                                Unlock Premium Papers!
+                            </h3>
+
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+                                Good News! This paper is available on our platform. Create a free account or log in now to access:
+                            </p>
+
+                            <div style={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.8rem',
+                                textAlign: 'left',
+                                marginBottom: '2.5rem',
+                                background: 'rgba(255,255,255,0.02)',
+                                padding: '1.2rem',
+                                borderRadius: '16px',
+                                border: '1px solid rgba(255,255,255,0.04)'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
+                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> Full PDF Viewer Online
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
+                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> High-Quality PDF Downloads
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
+                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> Save to Favorites & Bookmarks
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
+                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> Get Exclusive Study Notes
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                                <button
+                                    onClick={() => navigate('/login')}
+                                    style={{
+                                        flex: 1,
+                                        padding: '0.9rem',
+                                        borderRadius: '12px',
+                                        border: '1px solid var(--border-color)',
+                                        background: 'transparent',
+                                        color: '#fff',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    Login
+                                </button>
+                                <button
+                                    onClick={() => navigate('/register')}
+                                    style={{
+                                        flex: 1,
+                                        padding: '0.9rem',
+                                        borderRadius: '12px',
+                                        border: 'none',
+                                        background: 'var(--primary)',
+                                        color: '#000',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    Register Free
+                                </button>
                             </div>
                         </motion.div>
                     </motion.div>

@@ -421,20 +421,20 @@ const Home = () => {
 
                     <div className="metrics-grid">
                         <div className="metric-card">
-                            <h3>100+</h3>
-                            <p>Companies</p>
+                            <h3>📚 5,000+</h3>
+                            <p>Previous Year Papers</p>
                         </div>
                         <div className="metric-card">
-                            <h3>1K+</h3>
-                            <p>Job Seekers</p>
+                            <h3>🎓 20+</h3>
+                            <p>Courses</p>
                         </div>
                         <div className="metric-card">
-                            <h3>5K+</h3>
-                            <p>Jobs Posted</p>
+                            <h3>📄 500+</h3>
+                            <p>Subjects</p>
                         </div>
                         <div className="metric-card">
-                            <h3>95%</h3>
-                            <p>Success Rate</p>
+                            <h3>👨‍🎓 10,000+</h3>
+                            <p>Students Served</p>
                         </div>
                     </div>
                 </div>
