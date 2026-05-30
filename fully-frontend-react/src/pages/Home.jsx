@@ -425,10 +425,6 @@ const Home = () => {
                             <p>Previous Year Papers</p>
                         </div>
                         <div className="metric-card">
-                            <h3>🎓 20+</h3>
-                            <p>Courses</p>
-                        </div>
-                        <div className="metric-card">
                             <h3>📄 500+</h3>
                             <p>Subjects</p>
                         </div>
