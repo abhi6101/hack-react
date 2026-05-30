@@ -469,78 +469,95 @@ const Notes = () => {
                 <title>Study Notes Explorer - Hack-2-Hired</title>
             </Helmet>
 
-            {/* Header section */}
-            <div className="papers-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                <motion.h1
-                    initial={{ opacity: 0, y: -25 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="papers-title"
-                >
-                    Study Notes <span>Explorer</span>
-                </motion.h1>
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="papers-subtitle"
-                    style={{ margin: '0 auto', maxWidth: '800px' }}
-                >
-                    Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
-                </motion.p>
-            </div>
+            {/* Unified Header section matching Papers.jsx */}
+            <div className="view-header" style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                background: 'rgba(255,255,255,0.02)',
+                padding: '2rem',
+                borderRadius: '24px',
+                border: '1px solid rgba(255,255,255,0.05)',
+                backdropFilter: 'blur(10px)',
+                flexWrap: 'wrap',
+                gap: '1.5rem',
+                marginBottom: '2rem'
+            }}>
+                <div>
+                    <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
+                    <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '600px', marginTop: '0.4rem' }}>
+                        Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
+                    </p>
+                </div>
 
-            <div className="papers-content-wrapper">
-                {/* Search, Filter, and breadcrumbs section */}
-                {/* Search, Filter, and Upload Controls */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-                    
-                    {/* Left Side: Filters */}
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-
-
-                        <div style={{ position: 'relative', minWidth: '180px' }}>
-                            <select
-                                value={branchFilter}
-                                onChange={(e) => setBranchFilter(e.target.value)}
-                                disabled={userRole === 'STUDENT'}
-                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '0.8rem 3rem 0.8rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
-                            >
-                                <option value="" style={{ color: '#000' }}>All Branches</option>
-                                {deptList.map(dept => (
-                                    <option key={dept.id} value={dept.code} style={{ color: '#000' }}>{dept.name} ({dept.code})</option>
-                                ))}
-                                {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA" style={{ color: '#000' }}>IMCA</option>}
-                            </select>
-                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
-                        </div>
-                    </div>
-
-                    {/* Right Side: Search and Upload */}
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <div style={{ width: '380px', maxWidth: '100%', position: 'relative', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', padding: '0 1rem', transition: 'all 0.3s ease' }}>
-                            <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1.1rem' }}></i>
-                            <input
-                                type="text"
-                                placeholder="Search folders by subject code, title or syllabus topics..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                style={{ width: '100%', background: 'transparent', color: '#fff', border: 'none', outline: 'none', padding: '1rem 0.8rem', fontSize: '0.95rem' }}
-                            />
-                        </div>
-
-                        {isAdmin && (
-                            <motion.button
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                                className="btn btn-primary"
-                                onClick={() => setShowUploadModal(true)}
-                                style={{ borderRadius: '12px', padding: '0.9rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
-                            >
-                                <i className="fas fa-folder-plus"></i> Upload Folder
-                            </motion.button>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <div className="global-search-container" style={{
+                        position: 'relative',
+                        width: '380px',
+                        maxWidth: '100%',
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '14px',
+                        padding: '0 1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.8rem',
+                        transition: 'all 0.3s ease'
+                    }}>
+                        <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
+                        <input
+                            type="text"
+                            placeholder="Search folders by subject code, title or syllabus topics..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#fff',
+                                fontSize: '0.95rem',
+                                width: '100%',
+                                outline: 'none',
+                                padding: '1rem 0'
+                            }}
+                        />
+                        {searchQuery && (
+                            <i 
+                                className="fas fa-times" 
+                                onClick={() => setSearchQuery('')}
+                                style={{ color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
+                            ></i>
                         )}
                     </div>
+
+                    <div style={{ position: 'relative', minWidth: '180px' }}>
+                        <select
+                            value={branchFilter}
+                            onChange={(e) => setBranchFilter(e.target.value)}
+                            disabled={userRole === 'STUDENT'}
+                            style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '0.9rem 3rem 0.9rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
+                        >
+                            <option value="" style={{ color: '#000' }}>All Branches</option>
+                            {deptList.map(dept => (
+                                <option key={dept.id} value={dept.code} style={{ color: '#000' }}>{dept.name} ({dept.code})</option>
+                            ))}
+                            {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA" style={{ color: '#000' }}>IMCA</option>}
+                        </select>
+                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
+                    </div>
+
+                    {isAdmin && (
+                        <motion.button
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="btn btn-primary"
+                            onClick={() => setShowUploadModal(true)}
+                            style={{ borderRadius: '12px', padding: '0.9rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
+                        >
+                            <i className="fas fa-folder-plus"></i> Upload Folder
+                        </motion.button>
+                    )}
                 </div>
+            </div>
 
                 {/* Explorer Display Viewport */}
                 {loading ? (
