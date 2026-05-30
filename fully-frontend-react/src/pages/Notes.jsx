@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -254,7 +255,7 @@ const Notes = () => {
             setUploadPaths(pathsList);
             // Autofill Title with the root directory name
             const firstPath = pathsList[0];
-            if (firstPath && firstPath.contains("/")) {
+            if (firstPath && firstPath.includes("/")) {
                 setUploadTitle(firstPath.substring(0, firstPath.indexOf("/")));
             }
             showToast({ message: `Loaded folder tree with ${filesList.length} files!`, type: 'success' });
@@ -355,7 +356,7 @@ const Notes = () => {
         const token = getToken();
         const vis = note.visibility || 'ALL';
 
-        if ('ALL'.equalsIgnoreCase(vis)) {
+        if (vis?.toUpperCase() === 'ALL') {
             window.open(`${API_BASE_URL}/notes/download/${note.id}`, '_blank');
         } else if (!token) {
             setShowAuthModal(true);
@@ -365,14 +366,14 @@ const Notes = () => {
     };
 
     const getVisibilityLabel = (vis) => {
-        if ('ALL'.equalsIgnoreCase(vis)) return 'All Students';
-        if ('BRANCH'.equalsIgnoreCase(vis)) return 'Branch Only';
+        if (vis?.toUpperCase() === 'ALL') return 'All Students';
+        if (vis?.toUpperCase() === 'BRANCH') return 'Branch Only';
         return 'Admin Private';
     };
 
     const getVisibilityBadgeClass = (vis) => {
-        if ('ALL'.equalsIgnoreCase(vis)) return 'visibility-badge public';
-        if ('BRANCH'.equalsIgnoreCase(vis)) return 'visibility-badge branch';
+        if (vis?.toUpperCase() === 'ALL') return 'visibility-badge public';
+        if (vis?.toUpperCase() === 'BRANCH') return 'visibility-badge branch';
         return 'visibility-badge admin';
     };
 
@@ -614,7 +615,7 @@ const Notes = () => {
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1.2rem' }}>
                                 {currentDirContents.map(item => {
                                     const isDirectory = item.isDirectory;
-                                    const isPublic = !isDirectory && 'ALL'.equalsIgnoreCase(item.visibility);
+                                    const isPublic = !isDirectory && item.visibility?.toUpperCase() === 'ALL';
                                     const token = getToken();
                                     const isLocked = !isDirectory && !isPublic && !token;
 
