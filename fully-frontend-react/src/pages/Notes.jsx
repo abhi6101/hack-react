@@ -491,34 +491,10 @@ const Notes = () => {
 
             <div className="papers-content-wrapper">
                 {/* Search, Filter, and breadcrumbs section */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', marginBottom: '2.5rem' }}>
-                    {/* Top Row: Search and Upload */}
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <div style={{ flex: 1, minWidth: '300px', position: 'relative', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', padding: '0 1rem', transition: 'all 0.3s ease' }}>
-                            <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1.1rem' }}></i>
-                            <input
-                                type="text"
-                                placeholder="Search folders by subject code, title or syllabus topics..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                style={{ width: '100%', background: 'transparent', color: '#fff', border: 'none', outline: 'none', padding: '1rem 0.8rem', fontSize: '1rem' }}
-                            />
-                        </div>
-
-                        {isAdmin && (
-                            <motion.button
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                                className="btn btn-primary"
-                                onClick={() => setShowUploadModal(true)}
-                                style={{ borderRadius: '12px', padding: '0.9rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
-                            >
-                                <i className="fas fa-folder-plus"></i> Upload Folder
-                            </motion.button>
-                        )}
-                    </div>
-
-                    {/* Bottom Row: Filters */}
+                {/* Search, Filter, and Upload Controls */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+                    
+                    {/* Left Side: Filters */}
                     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                         <div style={{ position: 'relative', minWidth: '160px' }}>
                             <select
@@ -549,6 +525,32 @@ const Notes = () => {
                             </select>
                             <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
                         </div>
+                    </div>
+
+                    {/* Right Side: Search and Upload */}
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <div style={{ width: '380px', maxWidth: '100%', position: 'relative', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', padding: '0 1rem', transition: 'all 0.3s ease' }}>
+                            <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1.1rem' }}></i>
+                            <input
+                                type="text"
+                                placeholder="Search folders by subject code, title or syllabus topics..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{ width: '100%', background: 'transparent', color: '#fff', border: 'none', outline: 'none', padding: '1rem 0.8rem', fontSize: '0.95rem' }}
+                            />
+                        </div>
+
+                        {isAdmin && (
+                            <motion.button
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="btn btn-primary"
+                                onClick={() => setShowUploadModal(true)}
+                                style={{ borderRadius: '12px', padding: '0.9rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
+                            >
+                                <i className="fas fa-folder-plus"></i> Upload Folder
+                            </motion.button>
+                        )}
                     </div>
                 </div>
 
