@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
+import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
 
 const ResumeBuilder = () => {
@@ -26,6 +27,7 @@ const ResumeBuilder = () => {
     });
 
     const [isGenerating, setIsGenerating] = useState(false);
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     const initialData = {
         name: '',
@@ -84,25 +86,9 @@ const ResumeBuilder = () => {
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            showAlert({
-                title: 'Login Required',
-                message: 'You must be logged in to use the Resume Builder.',
-                type: 'login',
-                actions: [
-                    {
-                        label: 'Login Now',
-                        primary: true,
-                        onClick: () => navigate('/login')
-                    },
-                    {
-                        label: 'Go Home',
-                        primary: false,
-                        onClick: () => navigate('/')
-                    }
-                ]
-            });
+            setShowAuthModal(true);
         }
-    }, [navigate, showAlert]);
+    }, []);
 
 
     const handleChange = (e) => {
@@ -659,6 +645,16 @@ const ResumeBuilder = () => {
                     }
                 }
             `}</style>
+            <AuthPromptModal
+                isOpen={showAuthModal}
+                onClose={() => {
+                    setShowAuthModal(false);
+                    navigate('/');
+                }}
+                title="🔒 Login Required"
+                subtitle="This service is available on our platform."
+                description="Please login or create an account to use the Resume Builder."
+            />
         </div>
     );
 };

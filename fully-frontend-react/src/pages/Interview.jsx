@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import ApplicationModal from '../components/ApplicationModal';
+import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
 import '../styles/interview.css';
 
@@ -50,22 +51,15 @@ const Interview = () => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const { showToast } = useToast();
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     const getToken = () => localStorage.getItem('authToken');
 
     useEffect(() => {
         if (!getToken()) {
-            showAlert({
-                title: 'Login Required',
-                message: 'You must be logged in to view interview schedules.',
-                type: 'login',
-                actions: [
-                    { label: 'Login Now', primary: true, onClick: () => navigate('/login') },
-                    { label: 'Go Home', primary: false, onClick: () => navigate('/') }
-                ]
-            });
+            setShowAuthModal(true);
         }
-    }, [navigate, showAlert]);
+    }, []);
 
     const [interviews, setInterviews] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
@@ -442,6 +436,16 @@ const Interview = () => {
                     onSubmit={handleApplicationSubmit}
                 />
             )}
+            <AuthPromptModal
+                isOpen={showAuthModal}
+                onClose={() => {
+                    setShowAuthModal(false);
+                    navigate('/');
+                }}
+                title="🔒 Login Required"
+                subtitle="This service is available on our platform."
+                description="Please login or create an account to view interview schedules."
+            />
         </div>
     );
 };

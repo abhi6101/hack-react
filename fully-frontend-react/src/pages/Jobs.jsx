@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
+import AuthPromptModal from '../components/AuthPromptModal';
 import '../styles/jobs.css';
 import '../styles/skeleton.css';
 
@@ -583,129 +584,16 @@ const Jobs = () => {
             )}
 
             {/* Custom Login Prompt Modal */}
-            <AnimatePresence>
-                {showLoginPrompt && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            background: 'rgba(0, 0, 0, 0.8)',
-                            backdropFilter: 'blur(10px)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 10000
-                        }}
-                        onClick={() => {
-                            setShowLoginPrompt(false);
-                            navigate('/');
-                        }}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.8, y: 50 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.8, y: 50 }}
-                            transition={{ type: 'spring', damping: 25 }}
-                            onClick={(e) => e.stopPropagation()}
-                            style={{
-                                background: 'rgba(10, 10, 20, 0.95)',
-                                backdropFilter: 'blur(20px)',
-                                border: '1px solid rgba(14, 165, 233, 0.3)',
-                                borderRadius: '24px',
-                                padding: '3rem',
-                                maxWidth: '500px',
-                                width: '90%',
-                                textAlign: 'center',
-                                boxShadow: '0 20px 60px rgba(14, 165, 233, 0.2)'
-                            }}
-                        >
-                            <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: 0.2, type: 'spring' }}
-                                style={{
-                                    width: '80px',
-                                    height: '80px',
-                                    margin: '0 auto 1.5rem',
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    borderRadius: '50%',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '2.5rem'
-                                }}
-                            >
-                                🔒
-                            </motion.div>
-                            <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'white' }}>
-                                Login Required
-                            </h2>
-                            <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: 1.6 }}>
-                                You must be logged in to view job opportunities and apply for positions.
-                            </p>
-                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                                <Link
-                                    to="/login"
-                                    style={{
-                                        padding: '1rem 2rem',
-                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                        color: 'white',
-                                        borderRadius: '50px',
-                                        textDecoration: 'none',
-                                        fontWeight: 600,
-                                        fontSize: '1.1rem',
-                                        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.4)',
-                                        transition: 'all 0.3s ease'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.target.style.transform = 'translateY(-3px)';
-                                        e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.6)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.transform = 'translateY(0)';
-                                        e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.4)';
-                                    }}
-                                >
-                                    Login Now
-                                </Link>
-                                <button
-                                    onClick={() => {
-                                        setShowLoginPrompt(false);
-                                        navigate('/');
-                                    }}
-                                    style={{
-                                        padding: '1rem 2rem',
-                                        background: 'transparent',
-                                        color: 'var(--text-secondary)',
-                                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                                        borderRadius: '50px',
-                                        fontWeight: 600,
-                                        fontSize: '1.1rem',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s ease'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.target.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-                                        e.target.style.color = 'white';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                                        e.target.style.color = 'var(--text-secondary)';
-                                    }}
-                                >
-                                    Go Home
-                                </button>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <AuthPromptModal
+                isOpen={showLoginPrompt}
+                onClose={() => {
+                    setShowLoginPrompt(false);
+                    navigate('/');
+                }}
+                title="🔒 Login Required"
+                subtitle="This service is available on our platform."
+                description="Please login or create an account to view job opportunities and apply for positions."
+            />
         </div>
     );
 };
