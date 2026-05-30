@@ -404,91 +404,93 @@ const Papers = () => {
                 border: '1px solid rgba(255,255,255,0.05)',
                 backdropFilter: 'blur(10px)',
                 flexWrap: 'wrap',
-                gap: '1.5rem'
+                gap: '1.5rem',
+                marginBottom: '2rem'
             }}>
                 <div>
                     <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Academic Archive</h2>
                     <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Select a semester folder to view subject materials</p>
                 </div>
 
-                {userRole !== 'STUDENT' && (
-                    <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100 }}>
-                        <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
-                            <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <i className="fas fa-graduation-cap"></i>
-                                <span>{deptFullName}</span>
-                                <i className={`fas fa-chevron-down ${isDeptOpen ? 'open' : ''}`}></i>
-                            </div>
-
-                            <AnimatePresence>
-                                {isDeptOpen && (
-                                    <motion.div
-                                        className="dropdown-menu surface-glow"
-                                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                        style={{ right: 0, left: 'auto' }}
-                                    >
-                                        <div
-                                            className={`dropdown-item ${branch === 'IMCA' ? 'active' : ''}`}
-                                            onClick={() => { setBranch('IMCA'); setIsDeptOpen(false); }}
-                                        >
-                                            IMCA Department
-                                        </div>
-                                        {deptList.filter(d => d.code !== 'IMCA').map(d => (
-                                            <div
-                                                key={d.id}
-                                                className={`dropdown-item ${branch === d.code ? 'active' : ''}`}
-                                                onClick={() => { setBranch(d.code); setIsDeptOpen(false); }}
-                                            >
-                                                {d.name}
-                                            </div>
-                                        ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <div className="global-search-container" style={{
+                        position: 'relative',
+                        width: '380px',
+                        maxWidth: '100%',
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '14px',
+                        padding: '0 1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.8rem',
+                        transition: 'all 0.3s ease'
+                    }}>
+                        <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
+                        <input
+                            type="text"
+                            placeholder="Search papers by subject, title, course, or year..."
+                            value={globalSearchQuery}
+                            onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#fff',
+                                fontSize: '0.95rem',
+                                width: '100%',
+                                outline: 'none',
+                                padding: '1rem 0'
+                            }}
+                        />
+                        {globalSearchQuery && (
+                            <i 
+                                className="fas fa-times" 
+                                onClick={() => setGlobalSearchQuery('')}
+                                style={{ color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
+                            ></i>
+                        )}
                     </div>
-                )}
-            </div>
 
-            <div className="global-search-container" style={{
-                margin: '1rem 0 2rem',
-                position: 'relative',
-                width: '100%',
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(255,255,255,0.05)',
-                borderRadius: '16px',
-                padding: '0.4rem 1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
-                backdropFilter: 'blur(5px)'
-            }}>
-                <i className="fas fa-search" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem' }}></i>
-                <input
-                    type="text"
-                    placeholder="Search papers by subject, title, course, or year (e.g. Java, Data Structures, BCA, 2024)..."
-                    value={globalSearchQuery}
-                    onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                    style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#fff',
-                        fontSize: '1rem',
-                        width: '100%',
-                        outline: 'none',
-                        padding: '0.6rem 0'
-                    }}
-                />
-                {globalSearchQuery && (
-                    <i 
-                        className="fas fa-times" 
-                        onClick={() => setGlobalSearchQuery('')}
-                        style={{ color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.2rem' }}
-                    ></i>
-                )}
+                    {userRole !== 'STUDENT' && (
+                        <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100 }}>
+                            <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
+                                <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                                    <i className="fas fa-graduation-cap"></i>
+                                    <span>{deptFullName}</span>
+                                    <i className={`fas fa-chevron-down ${isDeptOpen ? 'open' : ''}`}></i>
+                                </div>
+
+                                <AnimatePresence>
+                                    {isDeptOpen && (
+                                        <motion.div
+                                            className="dropdown-menu surface-glow"
+                                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                            style={{ right: 0, left: 'auto' }}
+                                        >
+                                            <div
+                                                className={`dropdown-item ${branch === 'IMCA' ? 'active' : ''}`}
+                                                onClick={() => { setBranch('IMCA'); setIsDeptOpen(false); }}
+                                            >
+                                                IMCA Department
+                                            </div>
+                                            {deptList.filter(d => d.code !== 'IMCA').map(d => (
+                                                <div
+                                                    key={d.id}
+                                                    className={`dropdown-item ${branch === d.code ? 'active' : ''}`}
+                                                    onClick={() => { setBranch(d.code); setIsDeptOpen(false); }}
+                                                >
+                                                    {d.name}
+                                                </div>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
 
             <motion.div
