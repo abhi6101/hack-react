@@ -92,6 +92,7 @@ const Notes = () => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const { showToast } = useToast();
+    const fileInputRef = useRef(null);
 
     // Data States
     const [notes, setNotes] = useState([]);
@@ -328,7 +329,7 @@ const Notes = () => {
         }
 
         setUploading(true);
-        setUploadProgress({ current: 0, total: uploadFiles.length });
+        setUploadProgress({ current: 0, total: uploadFiles.length, currentFileName: '' });
         let failed = 0;
 
         try {
@@ -336,6 +337,8 @@ const Notes = () => {
             for (let i = 0; i < uploadFiles.length; i++) {
                 const file = uploadFiles[i];
                 const path = uploadPaths[i];
+                
+                setUploadProgress({ current: i, total: uploadFiles.length, currentFileName: file.name });
 
                 const formData = new FormData();
                 formData.append('title', uploadTitle);
@@ -357,7 +360,7 @@ const Notes = () => {
                     failed++;
                 }
 
-                setUploadProgress({ current: i + 1, total: uploadFiles.length });
+                setUploadProgress({ current: i + 1, total: uploadFiles.length, currentFileName: file.name });
             }
 
             if (failed === 0) {
@@ -374,13 +377,14 @@ const Notes = () => {
             setUploadVisibility('ALL');
             setUploadFiles([]);
             setUploadPaths([]);
-            setUploadProgress({ current: 0, total: 0 });
+            setUploadProgress({ current: 0, total: 0, currentFileName: '' });
+            if (fileInputRef.current) fileInputRef.current.value = "";
             fetchNotes();
         } catch (e) {
             showToast({ message: 'Network error occurred during folder upload', type: 'error' });
         } finally {
             setUploading(false);
-            setUploadProgress({ current: 0, total: 0 });
+            setUploadProgress({ current: 0, total: 0, currentFileName: '' });
         }
     };
 
@@ -748,6 +752,7 @@ const Notes = () => {
                                     onDragOver={handleDrag}
                                     onDragLeave={handleDrag}
                                     onDrop={handleDrop}
+                                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
                                     style={{
                                         border: `2px dashed ${dragActive ? 'var(--primary)' : 'rgba(255,255,255,0.15)'}`,
                                         background: dragActive ? 'rgba(0, 212, 255, 0.05)' : 'rgba(255,255,255,0.01)',
@@ -808,43 +813,43 @@ const Notes = () => {
                                     ) : (
                                         <>
                                             <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Drag & Drop Complete Study Folders Here</span>
-                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Supports nested folders — entire hierarchy preserved</span>
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Or click to browse (supports nested folders)</span>
                                         </>
                                     )}
                                 </div>
 
-                                <div className="input-group">
-                                    <label>Directory Selection Input</label>
-                                    <input
-                                        type="file"
-                                        webkitdirectory="true"
-                                        directory="true"
-                                        multiple
-                                        required={uploadFiles.length === 0}
-                                        onChange={(e) => {
-                                            const files = Array.from(e.target.files);
-                                            // Only select PDF notes
-                                            const pdfFiles = files.filter(f => f.name.toLowerCase().endsWith('.pdf'));
-                                            if (pdfFiles.length > 0) {
-                                                setUploadFiles(pdfFiles);
-                                                setUploadPaths(pdfFiles.map(f => f.webkitRelativePath || f.name));
-                                                // Preload directory title
-                                                const firstPath = pdfFiles[0].webkitRelativePath || pdfFiles[0].name;
-                                                if (firstPath && firstPath.includes("/")) {
-                                                    setUploadTitle(firstPath.substring(0, firstPath.indexOf("/")));
-                                                }
-                                            } else {
-                                                showToast({ message: 'No PDF notes found in selected directory.', type: 'warning' });
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    webkitdirectory="true"
+                                    directory="true"
+                                    multiple
+                                    onChange={(e) => {
+                                        const files = Array.from(e.target.files);
+                                        // Only select PDF notes
+                                        const pdfFiles = files.filter(f => f.name.toLowerCase().endsWith('.pdf'));
+                                        if (pdfFiles.length > 0) {
+                                            setUploadFiles(pdfFiles);
+                                            setUploadPaths(pdfFiles.map(f => f.webkitRelativePath || f.name));
+                                            // Preload directory title
+                                            const firstPath = pdfFiles[0].webkitRelativePath || pdfFiles[0].name;
+                                            if (firstPath && firstPath.includes("/")) {
+                                                setUploadTitle(firstPath.substring(0, firstPath.indexOf("/")));
                                             }
-                                        }}
-                                        style={{ border: 'none', padding: '0.2rem 0' }}
-                                    />
-                                </div>
+                                        } else {
+                                            showToast({ message: 'No PDF notes found in selected directory.', type: 'warning' });
+                                        }
+                                    }}
+                                    style={{ display: 'none' }}
+                                />
 
                                 {uploading && uploadProgress.total > 0 && (
                                     <div style={{ margin: '0.5rem 0', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', padding: '0.8rem 1rem' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-                                            <span><i className="fas fa-cloud-upload-alt" style={{ color: 'var(--primary)', marginRight: '0.4rem' }}></i>Uploading files...</span>
+                                            <span>
+                                                <i className="fas fa-cloud-upload-alt" style={{ color: 'var(--primary)', marginRight: '0.4rem' }}></i>
+                                                Uploading: <span style={{ color: '#fff', fontWeight: '500' }}>{uploadProgress.currentFileName || '...'}</span>
+                                            </span>
                                             <span style={{ fontWeight: 'bold', color: '#fff' }}>{uploadProgress.current} / {uploadProgress.total}</span>
                                         </div>
                                         <div style={{ height: '6px', borderRadius: '99px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
