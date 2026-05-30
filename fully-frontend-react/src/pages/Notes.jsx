@@ -13,7 +13,17 @@ const TreeNode = ({ node, level, handleViewFile, getToken }) => {
     
     if (!node.isDirectory) {
         const token = getToken();
-        const isLocked = !token; // All PDFs require login to view now
+        const isLocked = !token; // All files require login to view now
+
+        // Determine icon and color based on file extension
+        let fileIcon = 'fa-file-alt';
+        let iconColor = '#9CA3AF'; // Default gray
+        const ext = node.name.substring(node.name.lastIndexOf('.')).toLowerCase();
+        if (ext === '.pdf') { fileIcon = 'fa-file-pdf'; iconColor = '#EF4444'; }
+        else if (ext === '.ppt' || ext === '.pptx') { fileIcon = 'fa-file-powerpoint'; iconColor = '#F97316'; }
+        else if (ext === '.doc' || ext === '.docx') { fileIcon = 'fa-file-word'; iconColor = '#3B82F6'; }
+        else if (ext === '.xls' || ext === '.xlsx' || ext === '.csv') { fileIcon = 'fa-file-excel'; iconColor = '#10B981'; }
+        else if (ext === '.txt') { fileIcon = 'fa-file-lines'; iconColor = '#D1D5DB'; }
         
         return (
             <motion.div
@@ -35,7 +45,7 @@ const TreeNode = ({ node, level, handleViewFile, getToken }) => {
                 {/* Vertical tree line */}
                 {level > 0 && <div style={{ position: 'absolute', left: `${((level - 1) * 1.5) + 1.8}rem`, top: 0, bottom: 0, width: '1px', background: 'rgba(255,255,255,0.06)' }}></div>}
                 
-                <i className="fas fa-file-pdf" style={{ color: '#EF4444', fontSize: '1.2rem', filter: 'drop-shadow(0 2px 4px rgba(239, 68, 68, 0.2))', zIndex: 1 }}></i>
+                <i className={`fas ${fileIcon}`} style={{ color: iconColor, fontSize: '1.2rem', filter: `drop-shadow(0 2px 4px ${iconColor}40)`, zIndex: 1 }}></i>
                 <span style={{ flex: 1, fontSize: '0.95rem', fontWeight: '500' }}>{node.name}</span>
                 {isLocked ? (
                     <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -283,18 +293,20 @@ const Notes = () => {
 
     const handleDrop = async (e) => {
         e.preventDefault();
-        e.stopPropagation();
         setDragActive(false);
 
         const items = e.dataTransfer.items;
+        if (!items) return;
+
         const filesList = [];
         const pathsList = [];
+        const allowedExtensions = ['.pdf', '.ppt', '.pptx', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv'];
 
-        const traverseFileTree = async (item, path = "") => {
+        const traverseFileTree = async (item, path = '') => {
             if (item.isFile) {
                 const file = await new Promise((resolve, reject) => item.file(resolve, reject));
-                // Only support PDF notes
-                if (file.name.toLowerCase().endsWith('.pdf')) {
+                const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+                if (allowedExtensions.includes(ext)) {
                     filesList.push(file);
                     pathsList.push(path + file.name);
                 }
@@ -319,9 +331,9 @@ const Notes = () => {
         if (filesList.length > 0) {
             setUploadFiles(prev => [...prev, ...filesList]);
             setUploadPaths(prev => [...prev, ...pathsList]);
-            showToast({ message: `Queued ${filesList.length} PDFs from dropped folder(s)!`, type: 'success' });
+            showToast({ message: `Queued ${filesList.length} files from dropped folder(s)!`, type: 'success' });
         } else {
-            showToast({ message: 'No PDF notes found inside dropped directory.', type: 'warning' });
+            showToast({ message: 'No supported study files (PDF, Word, PPT, Excel) found inside dropped directory.', type: 'warning' });
         }
     };
 
@@ -344,7 +356,8 @@ const Notes = () => {
                 
                 setUploadProgress({ current: i, total: uploadFiles.length, currentFileName: file.name });
 
-                const currentTitle = path && path.includes("/") ? path.substring(0, path.indexOf("/")) : file.name.replace('.pdf', '');
+                const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+                const currentTitle = path && path.includes("/") ? path.substring(0, path.indexOf("/")) : file.name.replace(ext, '');
 
                 const formData = new FormData();
                 formData.append('title', currentTitle);
@@ -818,14 +831,19 @@ const Notes = () => {
                                     multiple
                                     onChange={(e) => {
                                         const files = Array.from(e.target.files);
-                                        // Only select PDF notes
-                                        const pdfFiles = files.filter(f => f.name.toLowerCase().endsWith('.pdf'));
-                                        if (pdfFiles.length > 0) {
-                                            setUploadFiles(prev => [...prev, ...pdfFiles]);
-                                            setUploadPaths(prev => [...prev, ...pdfFiles.map(f => f.webkitRelativePath || f.name)]);
-                                            showToast({ message: `Queued ${pdfFiles.length} PDFs!`, type: 'success' });
+                                        const allowedExtensions = ['.pdf', '.ppt', '.pptx', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv'];
+                                        
+                                        const validFiles = files.filter(f => {
+                                            const ext = f.name.substring(f.name.lastIndexOf('.')).toLowerCase();
+                                            return allowedExtensions.includes(ext);
+                                        });
+
+                                        if (validFiles.length > 0) {
+                                            setUploadFiles(prev => [...prev, ...validFiles]);
+                                            setUploadPaths(prev => [...prev, ...validFiles.map(f => f.webkitRelativePath || f.name)]);
+                                            showToast({ message: `Queued ${validFiles.length} files!`, type: 'success' });
                                         } else {
-                                            showToast({ message: 'No PDF notes found in selected directory.', type: 'warning' });
+                                            showToast({ message: 'No supported study files found in selected directory.', type: 'warning' });
                                         }
                                     }}
                                     style={{ display: 'none' }}
