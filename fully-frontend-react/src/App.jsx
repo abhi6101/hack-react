@@ -17,6 +17,7 @@ import Jobs from './pages/Jobs';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Interview from './pages/Interview';
 import Papers from './pages/Papers';
+import Notes from './pages/Notes';
 import Quiz from './pages/Quiz';
 import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
@@ -99,6 +100,7 @@ function App() {
                                 <Route path="/resume-builder" element={<ResumeBuilder />} />
                                 <Route path="/interview" element={<Interview />} />
                                 <Route path="/papers" element={<Papers />} />
+                                <Route path="/notes" element={<Notes />} />
                                 <Route path="/quiz" element={<Quiz />} />
                                 <Route path="/admin" element={<AdminDashboard />} />
                                 <Route path="/dashboard" element={<StudentDashboard />} />

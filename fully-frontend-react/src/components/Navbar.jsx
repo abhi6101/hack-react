@@ -45,6 +45,7 @@ const Navbar = () => {
 
                 <Link to="/interview" className={isActive('/interview')}><i className="fas fa-comments"></i> Interviews</Link>
                 <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Previous Year</Link>
+                <Link to="/notes" className={isActive('/notes')}><i className="fas fa-sticky-note"></i> Study Notes</Link>
 
                 {/* Show dropdown menus only if authenticated */}
                 {localStorage.getItem('authToken') && (
