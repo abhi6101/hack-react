@@ -12,9 +12,8 @@ const TreeNode = ({ node, level, handleViewFile, getToken }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     
     if (!node.isDirectory) {
-        const isPublic = node.visibility?.toUpperCase() === 'ALL';
         const token = getToken();
-        const isLocked = !isPublic && !token;
+        const isLocked = !token; // All PDFs require login to view now
         
         return (
             <motion.div
@@ -415,15 +414,14 @@ const Notes = () => {
 
     const handleViewFile = (note) => {
         const token = getToken();
-        const vis = note.visibility || 'ALL';
 
-        if (vis?.toUpperCase() === 'ALL') {
-            window.open(`${API_BASE_URL}/notes/download/${note.id}`, '_blank');
-        } else if (!token) {
+        if (!token) {
             setShowAuthModal(true);
-        } else {
-            window.open(`${API_BASE_URL}/notes/download/${note.id}?token=${token}`, '_blank');
+            return;
         }
+
+        // Token exists, proceed to open PDF
+        window.open(`${API_BASE_URL}/notes/download/${note.id}?token=${token}`, '_blank');
     };
 
     const getVisibilityLabel = (vis) => {
