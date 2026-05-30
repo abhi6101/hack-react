@@ -8,6 +8,86 @@ import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
 import '../styles/papers.css'; // Reuses the unified glassmorphic layout
 
+const TreeNode = ({ node, level, handleViewFile, getToken }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    
+    if (!node.isDirectory) {
+        const isPublic = node.visibility?.toUpperCase() === 'ALL';
+        const token = getToken();
+        const isLocked = !isPublic && !token;
+        
+        return (
+            <motion.div
+                whileHover={{ background: 'rgba(255,255,255,0.05)' }}
+                onClick={() => handleViewFile(node)}
+                style={{
+                    padding: `0.5rem 1rem`,
+                    paddingLeft: `${(level * 1.5) + 1.5}rem`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.8rem',
+                    cursor: 'pointer',
+                    color: 'var(--text-secondary)',
+                    borderBottom: '1px solid rgba(255,255,255,0.02)',
+                    transition: 'color 0.2s'
+                }}
+            >
+                <i className="fas fa-file-pdf" style={{ color: '#EF4444', fontSize: '1.2rem' }}></i>
+                <span style={{ flex: 1, fontSize: '0.95rem' }}>{node.name}</span>
+                {isLocked ? (
+                    <i className="fas fa-lock" style={{ color: '#EF4444', fontSize: '0.8rem' }}></i>
+                ) : (
+                    <i className="fas fa-eye" style={{ color: '#10B981', fontSize: '0.8rem' }}></i>
+                )}
+            </motion.div>
+        );
+    }
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <motion.div
+                whileHover={{ background: 'rgba(255,255,255,0.05)' }}
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{
+                    padding: `0.6rem 1rem`,
+                    paddingLeft: `${(level * 1.5) + 1.5}rem`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.8rem',
+                    cursor: 'pointer',
+                    background: isExpanded ? 'rgba(255,255,255,0.03)' : 'transparent',
+                    borderBottom: '1px solid rgba(255,255,255,0.02)'
+                }}
+            >
+                <i className={`fas fa-chevron-${isExpanded ? 'down' : 'right'}`} style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', width: '12px', textAlign: 'center' }}></i>
+                <i className={`fas fa-folder${isExpanded ? '-open' : ''}`} style={{ color: '#ffd700', fontSize: '1.2rem' }}></i>
+                <span style={{ color: '#fff', fontWeight: '600', fontSize: '0.95rem' }}>{node.name}</span>
+            </motion.div>
+            
+            <AnimatePresence>
+                {isExpanded && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        style={{ overflow: 'hidden' }}
+                    >
+                        {Object.values(node.children).map(child => (
+                            <TreeNode 
+                                key={child.name} 
+                                node={child} 
+                                level={level + 1} 
+                                handleViewFile={handleViewFile} 
+                                getToken={getToken}
+                            />
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
 const Notes = () => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
@@ -20,10 +100,6 @@ const Notes = () => {
     const [semesterFilter, setSemesterFilter] = useState('');
     const [branchFilter, setBranchFilter] = useState('');
     const [deptList, setDeptList] = useState([]);
-
-    // File Explorer Navigation States
-    const [activeRoot, setActiveRoot] = useState(null); // String: the active root folder being browsed
-    const [currentPath, setCurrentPath] = useState([]); // Array of strings: active nested directories path
 
     // UI & Modal States
     const [showAuthModal, setShowAuthModal] = useState(false);
@@ -169,41 +245,7 @@ const Notes = () => {
         return matchesQuery && matchesSemester && matchesBranch;
     });
 
-    // File Explorer Navigation Logic
-    const handleFolderClick = (folderName) => {
-        setActiveRoot(folderName);
-        setCurrentPath([]);
-    };
 
-    const navigateToSubfolder = (subfolderName) => {
-        setCurrentPath(prev => [...prev, subfolderName]);
-    };
-
-    const handleBreadcrumbClick = (index) => {
-        if (index === 0) {
-            // "Study Notes" root clicked -> exit explorer
-            setActiveRoot(null);
-            setCurrentPath([]);
-        } else if (index === 1) {
-            // Root folder clicked
-            setCurrentPath([]);
-        } else {
-            // Subfolder in breadcrumbs clicked -> slice path up to that segment
-            setCurrentPath(currentPath.slice(0, index - 1));
-        }
-    };
-
-    // Get current directory contents
-    let currentDir = activeRoot ? directoryTree[activeRoot] : null;
-    if (currentDir) {
-        currentPath.forEach(segment => {
-            if (currentDir && currentDir.children[segment]) {
-                currentDir = currentDir.children[segment];
-            }
-        });
-    }
-
-    const currentDirContents = currentDir ? Object.values(currentDir.children) : [];
 
     // Helper: read ALL entries from a DirectoryReader (browser caps readEntries at 100 per call)
     const readAllEntries = async (dirReader) => {
@@ -361,10 +403,6 @@ const Notes = () => {
                             });
                             if (res.ok) {
                                 showToast({ message: 'Notes directory deleted successfully', type: 'success' });
-                                if (activeRoot === rootFolder) {
-                                    setActiveRoot(null);
-                                    setCurrentPath([]);
-                                }
                                 fetchNotes();
                             } else {
                                 showToast({ message: 'Failed to delete directory', type: 'error' });
@@ -433,97 +471,60 @@ const Notes = () => {
             <div className="papers-content-wrapper">
                 {/* Search, Filter, and breadcrumbs section */}
                 <div className="papers-search-section">
-                    {!activeRoot ? (
-                        <>
-                            <div className="search-bar-container">
-                                <i className="fas fa-search search-icon"></i>
-                                <input
-                                    type="text"
-                                    placeholder="Search folders by subject code, title or syllabus topics..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="papers-search-input"
-                                />
-                            </div>
+                    <div className="search-bar-container">
+                        <i className="fas fa-search search-icon"></i>
+                        <input
+                            type="text"
+                            placeholder="Search folders by subject code, title or syllabus topics..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="papers-search-input"
+                        />
+                    </div>
 
-                            <div className="filters-grid" style={{ display: 'flex', gap: '1rem', marginTop: '1.2rem', flexWrap: 'wrap' }}>
-                                <div className="filter-select-wrapper" style={{ flex: 1, minWidth: '150px' }}>
-                                    <select
-                                        value={semesterFilter}
-                                        onChange={(e) => setSemesterFilter(e.target.value)}
-                                        className="papers-search-input"
-                                        style={{ padding: '0.8rem 1rem' }}
-                                    >
-                                        <option value="">All Semesters</option>
-                                        {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                                            <option key={sem} value={sem.toString()}>Semester {sem}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div className="filter-select-wrapper" style={{ flex: 1, minWidth: '180px' }}>
-                                    <select
-                                        value={branchFilter}
-                                        onChange={(e) => setBranchFilter(e.target.value)}
-                                        className="papers-search-input"
-                                        style={{ padding: '0.8rem 1rem' }}
-                                        disabled={userRole === 'STUDENT'}
-                                    >
-                                        <option value="">All Branches</option>
-                                        {deptList.map(dept => (
-                                            <option key={dept.id} value={dept.code}>{dept.name} ({dept.code})</option>
-                                        ))}
-                                        {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA">IMCA</option>}
-                                    </select>
-                                </div>
-
-                                {isAdmin && (
-                                    <motion.button
-                                        whileHover={{ scale: 1.03 }}
-                                        whileTap={{ scale: 0.97 }}
-                                        className="btn btn-primary"
-                                        onClick={() => setShowUploadModal(true)}
-                                        style={{ borderRadius: '12px', padding: '0.8rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}
-                                    >
-                                        <i className="fas fa-folder-plus"></i> Upload Folder
-                                    </motion.button>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        /* Native Desktop File Explorer Breadcrumb navigation header */
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            flexWrap: 'wrap',
-                            background: 'rgba(255,255,255,0.03)',
-                            padding: '0.8rem 1.2rem',
-                            borderRadius: '16px',
-                            border: '1px solid rgba(255,255,255,0.05)'
-                        }}>
-                            <span onClick={() => handleBreadcrumbClick(0)} style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 'bold' }}>
-                                <i className="fas fa-hdd"></i> Notes Hub
-                            </span>
-                            <i className="fas fa-chevron-right" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.2)' }}></i>
-
-                            <span onClick={() => handleBreadcrumbClick(1)} style={{ cursor: 'pointer', color: '#fff', fontWeight: '600' }}>
-                                {activeRoot}
-                            </span>
-
-                            {currentPath.map((folder, index) => (
-                                <React.Fragment key={index}>
-                                    <i className="fas fa-chevron-right" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.2)' }}></i>
-                                    <span
-                                        onClick={() => handleBreadcrumbClick(index + 2)}
-                                        style={{ cursor: 'pointer', color: 'var(--text-secondary)' }}
-                                    >
-                                        {folder}
-                                    </span>
-                                </React.Fragment>
-                            ))}
+                    <div className="filters-grid" style={{ display: 'flex', gap: '1rem', marginTop: '1.2rem', flexWrap: 'wrap' }}>
+                        <div className="filter-select-wrapper" style={{ flex: 1, minWidth: '150px' }}>
+                            <select
+                                value={semesterFilter}
+                                onChange={(e) => setSemesterFilter(e.target.value)}
+                                className="papers-search-input"
+                                style={{ padding: '0.8rem 1rem' }}
+                            >
+                                <option value="">All Semesters</option>
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
+                                    <option key={sem} value={sem.toString()}>Semester {sem}</option>
+                                ))}
+                            </select>
                         </div>
-                    )}
+
+                        <div className="filter-select-wrapper" style={{ flex: 1, minWidth: '180px' }}>
+                            <select
+                                value={branchFilter}
+                                onChange={(e) => setBranchFilter(e.target.value)}
+                                className="papers-search-input"
+                                style={{ padding: '0.8rem 1rem' }}
+                                disabled={userRole === 'STUDENT'}
+                            >
+                                <option value="">All Branches</option>
+                                {deptList.map(dept => (
+                                    <option key={dept.id} value={dept.code}>{dept.name} ({dept.code})</option>
+                                ))}
+                                {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA">IMCA</option>}
+                            </select>
+                        </div>
+
+                        {isAdmin && (
+                            <motion.button
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="btn btn-primary"
+                                onClick={() => setShowUploadModal(true)}
+                                style={{ borderRadius: '12px', padding: '0.8rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}
+                            >
+                                <i className="fas fa-folder-plus"></i> Upload Folder
+                            </motion.button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Explorer Display Viewport */}
@@ -532,167 +533,90 @@ const Notes = () => {
                         <div className="premium-loader-spinner" style={{ width: '40px', height: '40px', borderWidth: '3px' }}></div>
                         <p style={{ marginTop: '1.2rem', color: 'var(--text-secondary)' }}>Analyzing directory hierarchy...</p>
                     </div>
-                ) : !activeRoot ? (
-                    /* 1. Root Directories Catalog List */
-                    filteredRoots.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '4rem 2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', margin: '2rem 0' }}>
-                            <i className="fas fa-folder-open" style={{ fontSize: '3.2rem', color: 'var(--text-secondary)', marginBottom: '1rem', opacity: 0.5 }}></i>
-                            <h3>No Directories Available</h3>
-                            <p style={{ color: 'var(--text-secondary)' }}>Check your filters or upload a folder structure to begin.</p>
-                        </div>
-                    ) : (
-                        <div className="papers-grid" style={{ marginTop: '2rem' }}>
-                            {filteredRoots.map(folder => (
-                                <motion.div
-                                    key={folder.name}
-                                    layout
-                                    className="paper-card"
-                                    whileHover={{ y: -6, boxShadow: '0 12px 30px rgba(0, 212, 255, 0.15)' }}
-                                    style={{
-                                        background: 'rgba(22, 22, 34, 0.75)',
-                                        border: '1px solid rgba(255,255,255,0.05)',
-                                        borderRadius: '20px',
-                                        padding: '1.6rem',
-                                        cursor: 'pointer',
-                                        position: 'relative'
-                                    }}
-                                    onClick={() => handleFolderClick(folder.name)}
-                                >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.2rem' }}>
-                                        <i className="fas fa-folder" style={{ fontSize: '2.5rem', color: '#ffd700', filter: 'drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3))' }}></i>
-                                        <span className={getVisibilityBadgeClass(folder.meta.visibility)}>
-                                            {getVisibilityLabel(folder.meta.visibility)}
-                                        </span>
-                                    </div>
-
-                                    <h3 style={{ fontSize: '1.25rem', color: '#fff', fontWeight: '700', marginBottom: '0.8rem' }}>
-                                        {folder.name}
-                                    </h3>
-
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
-                                        {folder.meta.subject && <div><i className="fas fa-book"></i> Subject: {folder.meta.subject.toUpperCase()}</div>}
-                                        {folder.meta.semester ? <div><i className="fas fa-university"></i> Semester {folder.meta.semester}</div> : null}
-                                        {folder.meta.branch ? <div><i className="fas fa-graduation-cap"></i> Target: {folder.meta.branch}</div> : null}
-                                    </div>
-
-                                    <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <span style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 'bold' }}>
-                                            Open Directory <i className="fas fa-chevron-right" style={{ fontSize: '0.75rem', marginLeft: '0.2rem' }}></i>
-                                        </span>
-
-                                        {isAdmin && (
-                                            <button
-                                                onClick={(e) => handleDeleteRootFolder(folder.name, e)}
-                                                className="action-btn delete-btn"
-                                                style={{
-                                                    borderRadius: '8px',
-                                                    padding: '0.5rem',
-                                                    border: 'none',
-                                                    background: 'rgba(239, 68, 68, 0.1)',
-                                                    color: '#EF4444',
-                                                    cursor: 'pointer'
-                                                }}
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </button>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    )
+                ) : filteredRoots.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '4rem 2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', margin: '2rem 0' }}>
+                        <i className="fas fa-folder-open" style={{ fontSize: '3.2rem', color: 'var(--text-secondary)', marginBottom: '1rem', opacity: 0.5 }}></i>
+                        <h3>No Directories Available</h3>
+                        <p style={{ color: 'var(--text-secondary)' }}>Check your filters or upload a folder structure to begin.</p>
+                    </div>
                 ) : (
-                    /* 2. Hierarchical File Explorer Viewport */
-                    <div style={{
-                        background: 'rgba(22, 22, 34, 0.65)',
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        borderRadius: '24px',
-                        padding: '2rem',
-                        marginTop: '2rem',
-                        minHeight: '400px'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
-                            <h3 style={{ color: '#fff', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                                <i className="fas fa-folder-open" style={{ color: '#ffd700' }}></i>
-                                {currentPath.length > 0 ? currentPath[currentPath.length - 1] : activeRoot}
-                            </h3>
-                            <button
-                                onClick={() => handleBreadcrumbClick(currentPath.length)}
+                    <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        {filteredRoots.map(folder => (
+                            <div
+                                key={folder.name}
                                 style={{
-                                    background: 'rgba(255,255,255,0.05)',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    padding: '0.5rem 1rem',
-                                    color: 'var(--text-primary)',
-                                    fontSize: '0.85rem',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.4rem'
+                                    background: 'rgba(22, 22, 34, 0.75)',
+                                    border: '1px solid rgba(255,255,255,0.05)',
+                                    borderRadius: '20px',
+                                    overflow: 'hidden'
                                 }}
                             >
-                                <i className="fas fa-level-up-alt"></i> Back Up
-                            </button>
-                        </div>
-
-                        {currentDirContents.length === 0 ? (
-                            <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '3rem 0' }}>This folder is empty.</p>
-                        ) : (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1.2rem' }}>
-                                {currentDirContents.map(item => {
-                                    const isDirectory = item.isDirectory;
-                                    const isPublic = !isDirectory && item.visibility?.toUpperCase() === 'ALL';
-                                    const token = getToken();
-                                    const isLocked = !isDirectory && !isPublic && !token;
-
-                                    return (
-                                        <motion.div
-                                            key={item.name}
-                                            whileHover={{ scale: 1.04, background: 'rgba(255,255,255,0.04)' }}
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={() => isDirectory ? navigateToSubfolder(item.name) : handleViewFile(item)}
+                                {/* Root Folder Header */}
+                                <div style={{ 
+                                    padding: '1.6rem', 
+                                    borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    background: 'rgba(255,255,255,0.02)'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                                        <i className="fas fa-archive" style={{ fontSize: '2.5rem', color: '#00d4ff', filter: 'drop-shadow(0 2px 8px rgba(0, 212, 255, 0.3))' }}></i>
+                                        <div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.4rem' }}>
+                                                <h3 style={{ fontSize: '1.3rem', color: '#fff', margin: 0 }}>{folder.name}</h3>
+                                                <span className={getVisibilityBadgeClass(folder.meta.visibility)}>
+                                                    {getVisibilityLabel(folder.meta.visibility)}
+                                                </span>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '1.5rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                                {folder.meta.subject && <span><i className="fas fa-book"></i> {folder.meta.subject.toUpperCase()}</span>}
+                                                {folder.meta.semester ? <span><i className="fas fa-university"></i> Semester {folder.meta.semester}</span> : null}
+                                                {folder.meta.branch ? <span><i className="fas fa-graduation-cap"></i> {folder.meta.branch}</span> : null}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {isAdmin && (
+                                        <button
+                                            onClick={(e) => handleDeleteRootFolder(folder.name, e)}
+                                            className="action-btn delete-btn"
                                             style={{
-                                                background: 'rgba(255,255,255,0.02)',
-                                                border: '1px solid rgba(255,255,255,0.04)',
-                                                borderRadius: '16px',
-                                                padding: '1.2rem',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                textAlign: 'center',
+                                                borderRadius: '8px',
+                                                padding: '0.6rem 1rem',
+                                                border: 'none',
+                                                background: 'rgba(239, 68, 68, 0.1)',
+                                                color: '#EF4444',
                                                 cursor: 'pointer',
-                                                position: 'relative'
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem',
+                                                fontWeight: 'bold'
                                             }}
                                         >
-                                            {isDirectory ? (
-                                                <>
-                                                    <i className="fas fa-folder" style={{ fontSize: '3rem', color: '#ffd700', marginBottom: '0.8rem', filter: 'drop-shadow(0 2px 6px rgba(255, 215, 0, 0.2))' }}></i>
-                                                    <span style={{ fontSize: '0.9rem', color: '#fff', fontWeight: '600', wordBreak: 'break-word' }}>
-                                                        {item.name}
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <i className="fas fa-file-pdf" style={{ fontSize: '3rem', color: '#EF4444', marginBottom: '0.8rem', filter: 'drop-shadow(0 2px 6px rgba(239, 68, 68, 0.2))' }}></i>
-                                                    <span style={{ fontSize: '0.9rem', color: '#ECEFF1', fontWeight: '500', wordBreak: 'break-word', marginBottom: '0.4rem' }}>
-                                                        {item.name}
-                                                    </span>
-                                                    {isLocked ? (
-                                                        <span style={{ fontSize: '0.75rem', color: '#EF4444', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-                                                            <i className="fas fa-lock"></i> Locked
-                                                        </span>
-                                                    ) : (
-                                                        <span style={{ fontSize: '0.75rem', color: '#10B981', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-                                                            <i className="fas fa-eye"></i> View PDF
-                                                        </span>
-                                                    )}
-                                                </>
-                                            )}
-                                        </motion.div>
-                                    );
-                                })}
+                                            <i className="fas fa-trash-alt"></i> Delete Subject
+                                        </button>
+                                    )}
+                                </div>
+                                
+                                {/* Root Folder Tree Contents */}
+                                <div style={{ padding: '0.5rem 0' }}>
+                                    {Object.values(folder.children).length === 0 ? (
+                                        <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem 0' }}>This subject folder is empty.</p>
+                                    ) : (
+                                        Object.values(folder.children).map(child => (
+                                            <TreeNode 
+                                                key={child.name} 
+                                                node={child} 
+                                                level={0} 
+                                                handleViewFile={handleViewFile} 
+                                                getToken={getToken} 
+                                            />
+                                        ))
+                                    )}
+                                </div>
                             </div>
-                        )}
+                        ))}
                     </div>
                 )}
             </div>
