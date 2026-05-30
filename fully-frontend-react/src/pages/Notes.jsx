@@ -205,6 +205,19 @@ const Notes = () => {
 
     const currentDirContents = currentDir ? Object.values(currentDir.children) : [];
 
+    // Helper: read ALL entries from a DirectoryReader (browser caps readEntries at 100 per call)
+    const readAllEntries = async (dirReader) => {
+        const allEntries = [];
+        while (true) {
+            const batch = await new Promise((resolve, reject) =>
+                dirReader.readEntries(resolve, reject)
+            );
+            if (batch.length === 0) break; // Empty batch = all entries read
+            allEntries.push(...batch);
+        }
+        return allEntries;
+    };
+
     // Drag-and-drop directory parsing using HTML5 Directory FileSystem API
     const handleDrag = (e) => {
         e.preventDefault();
@@ -227,7 +240,7 @@ const Notes = () => {
 
         const traverseFileTree = async (item, path = "") => {
             if (item.isFile) {
-                const file = await new Promise((resolve) => item.file(resolve));
+                const file = await new Promise((resolve, reject) => item.file(resolve, reject));
                 // Only support PDF notes
                 if (file.name.toLowerCase().endsWith('.pdf')) {
                     filesList.push(file);
@@ -235,21 +248,21 @@ const Notes = () => {
                 }
             } else if (item.isDirectory) {
                 const dirReader = item.createReader();
-                const entries = await new Promise((resolve) => dirReader.readEntries(resolve));
+                // Use repeated readEntries calls — browser only returns ≤100 entries per call
+                const entries = await readAllEntries(dirReader);
                 for (const entry of entries) {
                     await traverseFileTree(entry, path + item.name + "/");
                 }
             }
         };
 
-        const promises = [];
+        // Process all dropped items sequentially to preserve structure
         for (let i = 0; i < items.length; i++) {
             const entry = items[i].webkitGetAsEntry();
             if (entry) {
-                promises.push(traverseFileTree(entry));
+                await traverseFileTree(entry);
             }
         }
-        await Promise.all(promises);
 
         if (filesList.length > 0) {
             setUploadFiles(filesList);
@@ -259,7 +272,7 @@ const Notes = () => {
             if (firstPath && firstPath.includes("/")) {
                 setUploadTitle(firstPath.substring(0, firstPath.indexOf("/")));
             }
-            showToast({ message: `Loaded folder tree with ${filesList.length} files!`, type: 'success' });
+            showToast({ message: `Loaded ${filesList.length} PDFs from folder tree!`, type: 'success' });
         } else {
             showToast({ message: 'No PDF notes found inside dropped directory.', type: 'warning' });
         }
@@ -827,13 +840,51 @@ const Notes = () => {
                                 >
                                     <i className="fas fa-folder-open" style={{ fontSize: '2.5rem', color: dragActive ? 'var(--primary)' : 'var(--text-secondary)' }}></i>
                                     {uploadFiles.length > 0 ? (
-                                        <span style={{ color: '#10B981', fontWeight: 'bold' }}>
-                                            ✓ {uploadFiles.length} notes staged for upload
-                                        </span>
+                                        <div style={{ width: '100%', textAlign: 'left' }}>
+                                            <span style={{ color: '#10B981', fontWeight: 'bold', display: 'block', marginBottom: '0.6rem', textAlign: 'center' }}>
+                                                ✓ {uploadFiles.length} PDFs detected — folder tree:
+                                            </span>
+                                            {/* Folder Tree Preview */}
+                                            <div style={{
+                                                background: 'rgba(0,0,0,0.3)',
+                                                borderRadius: '10px',
+                                                padding: '0.8rem 1rem',
+                                                fontFamily: 'monospace',
+                                                fontSize: '0.75rem',
+                                                maxHeight: '160px',
+                                                overflowY: 'auto',
+                                                color: 'var(--text-secondary)'
+                                            }}>
+                                                {(() => {
+                                                    // Build folder tree from paths for preview
+                                                    const folderMap = {};
+                                                    uploadPaths.forEach(p => {
+                                                        const parts = p.split('/');
+                                                        const folder = parts.length > 1 ? parts.slice(0, -1).join('/') : '(root)';
+                                                        if (!folderMap[folder]) folderMap[folder] = [];
+                                                        folderMap[folder].push(parts[parts.length - 1]);
+                                                    });
+                                                    return Object.entries(folderMap).map(([folder, files]) => (
+                                                        <div key={folder} style={{ marginBottom: '0.4rem' }}>
+                                                            <div style={{ color: '#ffd700', fontWeight: 'bold' }}>
+                                                                <i className="fas fa-folder" style={{ marginRight: '0.4rem', fontSize: '0.7rem' }}></i>
+                                                                {folder}
+                                                            </div>
+                                                            {files.map(f => (
+                                                                <div key={f} style={{ paddingLeft: '1.4rem', color: '#EF4444' }}>
+                                                                    <i className="fas fa-file-pdf" style={{ marginRight: '0.35rem', fontSize: '0.65rem' }}></i>
+                                                                    {f}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ));
+                                                })()}
+                                            </div>
+                                        </div>
                                     ) : (
                                         <>
                                             <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Drag & Drop Complete Study Folders Here</span>
-                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>or select directory using input below</span>
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Supports nested folders — entire hierarchy preserved</span>
                                         </>
                                     )}
                                 </div>
