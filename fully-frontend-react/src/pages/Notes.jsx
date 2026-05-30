@@ -8,7 +8,7 @@ import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
 import '../styles/papers.css'; // Reuses the unified glassmorphic layout
 
-const TreeNode = ({ node, level, handleViewFile, getToken }) => {
+const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, getToken, notesDownloadEnabled }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     
     if (!node.isDirectory) {
@@ -52,8 +52,21 @@ const TreeNode = ({ node, level, handleViewFile, getToken }) => {
                         <i className="fas fa-lock"></i> Locked
                     </div>
                 ) : (
-                    <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#10B981', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <i className="fas fa-eye"></i> View
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <div 
+                            onClick={(e) => { e.stopPropagation(); handleViewFile(node); }}
+                            style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#10B981', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                        >
+                            <i className="fas fa-eye"></i> View
+                        </div>
+                        {notesDownloadEnabled && ext === '.pdf' && (
+                            <div 
+                                onClick={(e) => { e.stopPropagation(); handleDownloadFile(node); }}
+                                style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#3B82F6', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                            >
+                                <i className="fas fa-download"></i> Download
+                            </div>
+                        )}
                     </div>
                 )}
             </motion.div>
@@ -99,7 +112,9 @@ const TreeNode = ({ node, level, handleViewFile, getToken }) => {
                                 node={child} 
                                 level={level + 1} 
                                 handleViewFile={handleViewFile} 
+                                handleDownloadFile={handleDownloadFile}
                                 getToken={getToken}
+                                notesDownloadEnabled={notesDownloadEnabled}
                             />
                         ))}
                     </motion.div>
@@ -136,6 +151,7 @@ const Notes = () => {
     const [uploadVisibility, setUploadVisibility] = useState('ALL'); // ALL (All students), BRANCH (Targeted branch/sem), ADMIN (Private)
     const [uploadFiles, setUploadFiles] = useState([]); // Array of files
     const [uploadPaths, setUploadPaths] = useState([]); // Array of relative paths matching files
+    const [notesDownloadEnabled, setNotesDownloadEnabled] = useState(false);
 
     // Profile States
     const [userRole, setUserRole] = useState(null);
@@ -143,10 +159,23 @@ const Notes = () => {
 
     const getToken = () => localStorage.getItem("authToken");
 
+    const fetchSettings = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/public/papers/settings`);
+            if (res.ok) {
+                const data = await res.json();
+                setNotesDownloadEnabled(data.notesDownloadEnabled);
+            }
+        } catch (e) {
+            console.error("Failed to fetch settings", e);
+        }
+    };
+
     useEffect(() => {
         fetchUserProfile();
         fetchNotes();
         fetchDepartments();
+        fetchSettings();
     }, []);
 
     const fetchUserProfile = async () => {
@@ -449,6 +478,17 @@ const Notes = () => {
         window.open(`${API_BASE_URL}/notes/download/${note.id}?token=${token}`, '_blank');
     };
 
+    const handleDownloadFile = (note) => {
+        const token = getToken();
+
+        if (!token) {
+            setShowAuthModal(true);
+            return;
+        }
+
+        window.open(`${API_BASE_URL}/notes/download/${note.id}?token=${token}&action=DOWNLOAD`, '_blank');
+    };
+
     const getVisibilityLabel = (vis) => {
         if (vis?.toUpperCase() === 'ALL') return 'All Students';
         if (vis?.toUpperCase() === 'BRANCH') return 'Branch Only';
@@ -648,7 +688,9 @@ const Notes = () => {
                                                 node={child} 
                                                 level={0} 
                                                 handleViewFile={handleViewFile} 
+                                                handleDownloadFile={handleDownloadFile}
                                                 getToken={getToken} 
+                                                notesDownloadEnabled={notesDownloadEnabled}
                                             />
                                         ))
                                     )}

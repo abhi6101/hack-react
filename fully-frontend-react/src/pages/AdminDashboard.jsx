@@ -370,6 +370,7 @@ const AdminDashboard = () => {
         statusUpdateEmailEnabled: false,
         accountEmailEnabled: false,
         paperDownloadEnabled: false,
+        notesDownloadEnabled: false,
         screenshotRestrictionEnabled: true
     });
     const [loadingSettings, setLoadingSettings] = useState(false);
@@ -1718,6 +1719,22 @@ const AdminDashboard = () => {
                                         </div>
                                     </div>
 
+                                    {/* Notes Download Switch */}
+                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.notesDownloadEnabled ? '#00d4ff' : '#ef4444'}`, marginTop: '1rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>📚 Study Notes Download Feature</h4>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
+                                                    {emailSettings.notesDownloadEnabled ? 'Students CAN download PDF notes' : 'Students CANNOT download notes (View only)'}
+                                                </p>
+                                            </div>
+                                            <ToggleSwitch
+                                                checked={emailSettings.notesDownloadEnabled}
+                                                onChange={() => toggleEmailSetting('notesDownloadEnabled', emailSettings.notesDownloadEnabled)}
+                                            />
+                                        </div>
+                                    </div>
+
                                     {/* Screenshot and Key Restriction Switch */}
                                     <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.screenshotRestrictionEnabled ? '#22c55e' : '#ef4444'}` }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -2892,7 +2909,12 @@ const AdminDashboard = () => {
                             const isExpanded = expandedMenu === group.title;
                             
                             return (
-                                <li key={group.title} className="menu-group-container">
+                                <li 
+                                    key={group.title} 
+                                    className="menu-group-container"
+                                    onMouseEnter={() => setExpandedMenu(group.title)}
+                                    onMouseLeave={() => setExpandedMenu(null)}
+                                >
                                     <button 
                                         className={`accordion-trigger ${isExpanded ? 'expanded' : ''}`}
                                         onClick={() => setExpandedMenu(isExpanded ? null : group.title)}
@@ -2940,31 +2962,27 @@ const AdminDashboard = () => {
                         <h1>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
                     <div className="header-right">
-                        <div className="header-search">
-                            <i className="fas fa-search"></i>
-                            <input
-                                type="text"
-                                placeholder="Universal Search..."
-                                value={globalSearch}
-                                onChange={(e) => {
-                                    const val = e.target.value;
-                                    setGlobalSearch(val);
-                                    if (val.length > 2) {
-                                        // Logic to switch tabs if something specific is found
-                                        if (val.toLowerCase().includes('job')) setActiveTab('jobs');
-                                        if (val.toLowerCase().includes('user') || val.toLowerCase().includes('student')) setActiveTab('users');
-
-                                        // Update child filters
-                                        setUserSearch(val);
-                                        setJobSearch(val);
-                                        setAppSearch(val);
-                                    }
-                                }}
-                            />
-                        </div>
-
-                        <button onClick={() => navigate('/')} className="btn-secondary" style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s', marginRight: '10px' }}>
-                            <i className="fas fa-home"></i> Back to Portal
+                        <button 
+                            onClick={() => navigate('/')} 
+                            style={{ 
+                                padding: '8px 18px', 
+                                borderRadius: '12px', 
+                                border: '1px solid rgba(255,255,255,0.1)', 
+                                background: 'rgba(255,255,255,0.05)', 
+                                color: '#fff', 
+                                cursor: 'pointer', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '8px', 
+                                transition: 'all 0.3s ease', 
+                                marginRight: '15px', 
+                                fontWeight: '500', 
+                                backdropFilter: 'blur(10px)' 
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                        >
+                            <i className="fas fa-home" style={{ color: 'var(--primary)' }}></i> Back to Portal
                         </button>
                         <button onClick={() => { localStorage.clear(); navigate('/login'); }} className="logout-btn-modern">
                             <i className="fas fa-sign-out-alt"></i> Logout
