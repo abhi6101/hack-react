@@ -5,7 +5,7 @@ import { useEffect } from 'react';
  * Usage: <SEO title="Page Title" description="Page description" keywords="keyword1, keyword2" />
  */
 const SEO = ({
-    title = "Hack2Hired | Placement Portal",
+    title = "Hack-2-Hired",
     description = "Your gateway to top-tier job placements, resume mastery, and interview excellence. Prepare for placements with jobs, resume builder, interview prep, and more.",
     keywords = "placement portal, job portal, resume builder, interview preparation, campus placement, job search, career guidance",
     ogImage = "/images/og-image.jpg",

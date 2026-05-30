@@ -853,7 +853,7 @@ const Papers = () => {
     return (
         <div className="papers-page-wrapper">
             <Helmet>
-                <title>RGPV IMCA Question Papers | Download Previous Year Papers | Hack2Hired</title>
+                <title>Hack-2-Hired</title>
                 <meta name="description" content="Download exclusive RGPV Integrated MCA (IMCA) question papers. Access the complete collection of 1st to 10th semester papers to ace your exams." />
             </Helmet>
 
