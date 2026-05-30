@@ -59,7 +59,7 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, getToken, n
                         >
                             <i className="fas fa-eye"></i> View
                         </div>
-                        {notesDownloadEnabled && ext === '.pdf' && (
+                        {notesDownloadEnabled && (
                             <div 
                                 onClick={(e) => { e.stopPropagation(); handleDownloadFile(node); }}
                                 style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#3B82F6', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
