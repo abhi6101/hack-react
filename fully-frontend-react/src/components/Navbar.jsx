@@ -41,11 +41,11 @@ const Navbar = () => {
             <div className={`nav-links ${isMenuOpen ? 'active' : ''}`} id="navLinks">
                 <Link to="/" className={isActive('/')}><i className="fas fa-home"></i> Home</Link>
                 <Link to="/jobs" className={isActive('/jobs')}><i className="fas fa-briefcase"></i> Jobs</Link>
-                <Link to="/resume-builder" className={isActive('/resume-builder')}><i className="fas fa-file-alt"></i> Resume Builder</Link>
+                <Link to="/resume-builder" className={isActive('/resume-builder')}><i className="fas fa-file-alt"></i> Resume</Link>
 
                 <Link to="/interview" className={isActive('/interview')}><i className="fas fa-comments"></i> Interviews</Link>
-                <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Previous Year</Link>
-                <Link to="/notes" className={isActive('/notes')}><i className="fas fa-sticky-note"></i> Study Notes</Link>
+                <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Papers</Link>
+                <Link to="/notes" className={isActive('/notes')}><i className="fas fa-sticky-note"></i> Notes</Link>
 
                 {/* Show dropdown menus only if authenticated */}
                 {localStorage.getItem('authToken') && (
@@ -82,10 +82,10 @@ const Navbar = () => {
                 )}
 
                 {['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN'].includes(localStorage.getItem('userRole')) && (
-                    <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin Dashboard</Link>
+                    <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin</Link>
                 )}
                 {localStorage.getItem('authToken') && localStorage.getItem('userRole') === 'USER' && (
-                    <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> My Dashboard</Link>
+                    <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> Dashboard</Link>
                 )}
             </div>
 
