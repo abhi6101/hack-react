@@ -2913,7 +2913,6 @@ const AdminDashboard = () => {
                                     key={group.title} 
                                     className="menu-group-container"
                                     onMouseEnter={() => setExpandedMenu(group.title)}
-                                    onMouseLeave={() => setExpandedMenu(null)}
                                 >
                                     <button 
                                         className={`accordion-trigger ${isExpanded ? 'expanded' : ''}`}
