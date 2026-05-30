@@ -554,7 +554,7 @@ const Notes = () => {
                 {/* Explorer Display Viewport */}
                 {loading ? (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '4rem 0' }}>
-                        <div className="premium-loader-spinner" style={{ width: '40px', height: '40px', borderWidth: '3px' }}></div>
+                        <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '3rem', color: 'var(--primary)' }}></i>
                         <p style={{ marginTop: '1.2rem', color: 'var(--text-secondary)' }}>Analyzing directory hierarchy...</p>
                     </div>
                 ) : filteredRoots.length === 0 ? (
