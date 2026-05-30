@@ -699,7 +699,6 @@ const Notes = () => {
                         ))}
                     </div>
                 )}
-            </div>
 
             {/* Custom Modal: UPLOAD NOTES DIRECTORY FOLDER */}
             <AnimatePresence>
