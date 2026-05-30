@@ -15,7 +15,8 @@ const Footer = () => {
                 <div className="footer-column">
                     <h3>Resources</h3>
                     <ul>
-                        <li><Link to="/resume">Resume Builder</Link></li>
+                        <li><Link to="/resume-builder">Resume Builder</Link></li>
+                        <li><Link to="/resume">AI Resume Analyzer</Link></li>
                         <li><Link to="/interview">Interview Prep</Link></li>
                     </ul>
                 </div>
