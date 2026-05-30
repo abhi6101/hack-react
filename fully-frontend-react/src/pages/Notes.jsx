@@ -496,19 +496,7 @@ const Notes = () => {
                     
                     {/* Left Side: Filters */}
                     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                        <div style={{ position: 'relative', minWidth: '160px' }}>
-                            <select
-                                value={semesterFilter}
-                                onChange={(e) => setSemesterFilter(e.target.value)}
-                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '0.8rem 3rem 0.8rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
-                            >
-                                <option value="" style={{ color: '#000' }}>All Semesters</option>
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                                    <option key={sem} value={sem.toString()} style={{ color: '#000' }}>Semester {sem}</option>
-                                ))}
-                            </select>
-                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
-                        </div>
+
 
                         <div style={{ position: 'relative', minWidth: '180px' }}>
                             <select
