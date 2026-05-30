@@ -687,9 +687,12 @@ const Papers = () => {
 
                             <div className="card-body">
                                 <h4 className="paper-title">{paper.title}</h4>
-                                <div className="tag-group">
+                                <div className="tag-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.5rem' }}>
                                     <span className="premium-tag category">{paper.category}</span>
                                     <span className="premium-tag uni">{paper.university}</span>
+                                    <span className="premium-tag available" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.2)', fontSize: '0.8rem', padding: '0.2rem 0.5rem', borderRadius: '4px', fontWeight: '500' }}>
+                                        PDF Available ✓
+                                    </span>
                                 </div>
                             </div>
 
@@ -701,13 +704,13 @@ const Papers = () => {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    <span style={{ flex: 1 }}>{getToken() ? "View Paper" : "🔒 Login to View"}</span>
+                                    <span style={{ flex: 1 }}>View Paper</span>
                                     <div className="btn-icon">
-                                        <i className={getToken() ? "fas fa-eye" : "fas fa-lock"}></i>
+                                        <i className="fas fa-eye"></i>
                                     </div>
                                 </motion.button>
 
-                                {paperDownloadEnabled && (
+                                {getToken() && paperDownloadEnabled && (
                                     <motion.button
                                         className="download-btn-premium"
                                         onClick={() => handleActualDownload(paper)}
@@ -715,9 +718,9 @@ const Papers = () => {
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                     >
-                                        <span style={{ flex: 1 }}>{getToken() ? "Download" : "🔒 Login to Download"}</span>
+                                        <span style={{ flex: 1 }}>Download</span>
                                         <div className="btn-icon" style={{ background: 'rgba(0,0,0,0.1)' }}>
-                                            <i className={getToken() ? "fas fa-download" : "fas fa-lock"}></i>
+                                            <i className="fas fa-download"></i>
                                         </div>
                                     </motion.button>
                                 )}
@@ -815,11 +818,11 @@ const Papers = () => {
                                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0.8rem' }}>
                                         {paper.subject} • Semester {paper.semester}
                                     </p>
-                                    <div className="tag-group">
+                                    <div className="tag-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                                         <span className="premium-tag category">{paper.category}</span>
                                         <span className="premium-tag uni">{paper.university}</span>
-                                        <span className="premium-tag available" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-                                            ✓ Available
+                                        <span className="premium-tag available" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.2)', fontSize: '0.8rem', padding: '0.2rem 0.5rem', borderRadius: '4px', fontWeight: '500' }}>
+                                            PDF Available ✓
                                         </span>
                                     </div>
                                 </div>
@@ -832,9 +835,9 @@ const Papers = () => {
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                     >
-                                        <span style={{ flex: 1 }}>{getToken() ? "View Paper" : "🔒 Login to View"}</span>
+                                        <span style={{ flex: 1 }}>View Paper</span>
                                         <div className="btn-icon">
-                                            <i className={getToken() ? "fas fa-eye" : "fas fa-lock"}></i>
+                                            <i className="fas fa-eye"></i>
                                         </div>
                                     </motion.button>
                                 </div>
@@ -1148,39 +1151,17 @@ const Papers = () => {
                                 <i className="fas fa-lock" style={{ fontSize: '2rem', color: 'var(--primary)' }}></i>
                             </div>
 
-                            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '1rem', color: '#fff' }}>
-                                Unlock Premium Papers!
+                            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '1.5rem', color: '#fff' }}>
+                                🔒 Login Required
                             </h3>
 
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2rem' }}>
-                                Good News! This paper is available on our platform. Create a free account or log in now to access:
+                            <p style={{ color: '#fff', fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.8rem' }}>
+                                This paper is available on our platform.
                             </p>
 
-                            <div style={{
-                                width: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '0.8rem',
-                                textAlign: 'left',
-                                marginBottom: '2.5rem',
-                                background: 'rgba(255,255,255,0.02)',
-                                padding: '1.2rem',
-                                borderRadius: '16px',
-                                border: '1px solid rgba(255,255,255,0.04)'
-                            }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
-                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> Full PDF Viewer Online
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
-                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> High-Quality PDF Downloads
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
-                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> Save to Favorites & Bookmarks
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
-                                    <i className="fas fa-check-circle" style={{ color: '#22c55e' }}></i> Get Exclusive Study Notes
-                                </div>
-                            </div>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2.5rem' }}>
+                                Please login or create an account to view and download the paper.
+                            </p>
 
                             <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
                                 <button
