@@ -490,24 +490,40 @@ const Notes = () => {
 
             <div className="papers-content-wrapper">
                 {/* Search, Filter, and breadcrumbs section */}
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
-                    <div style={{ flex: 1, minWidth: '300px', position: 'relative', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', padding: '0 1rem', transition: 'all 0.3s ease' }}>
-                        <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1.1rem' }}></i>
-                        <input
-                            type="text"
-                            placeholder="Search folders by subject code, title or syllabus topics..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={{ width: '100%', background: 'transparent', color: '#fff', border: 'none', outline: 'none', padding: '1rem 0.8rem', fontSize: '1rem' }}
-                        />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', marginBottom: '2.5rem' }}>
+                    {/* Top Row: Search and Upload */}
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <div style={{ flex: 1, minWidth: '300px', position: 'relative', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', padding: '0 1rem', transition: 'all 0.3s ease' }}>
+                            <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1.1rem' }}></i>
+                            <input
+                                type="text"
+                                placeholder="Search folders by subject code, title or syllabus topics..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{ width: '100%', background: 'transparent', color: '#fff', border: 'none', outline: 'none', padding: '1rem 0.8rem', fontSize: '1rem' }}
+                            />
+                        </div>
+
+                        {isAdmin && (
+                            <motion.button
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="btn btn-primary"
+                                onClick={() => setShowUploadModal(true)}
+                                style={{ borderRadius: '12px', padding: '0.9rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
+                            >
+                                <i className="fas fa-folder-plus"></i> Upload Folder
+                            </motion.button>
+                        )}
                     </div>
 
+                    {/* Bottom Row: Filters */}
                     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                         <div style={{ position: 'relative', minWidth: '160px' }}>
                             <select
                                 value={semesterFilter}
                                 onChange={(e) => setSemesterFilter(e.target.value)}
-                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '1rem 3rem 1rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
+                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '0.8rem 3rem 0.8rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
                             >
                                 <option value="" style={{ color: '#000' }}>All Semesters</option>
                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
@@ -522,7 +538,7 @@ const Notes = () => {
                                 value={branchFilter}
                                 onChange={(e) => setBranchFilter(e.target.value)}
                                 disabled={userRole === 'STUDENT'}
-                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '1rem 3rem 1rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
+                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '0.8rem 3rem 0.8rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
                             >
                                 <option value="" style={{ color: '#000' }}>All Branches</option>
                                 {deptList.map(dept => (
@@ -532,18 +548,6 @@ const Notes = () => {
                             </select>
                             <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
                         </div>
-
-                        {isAdmin && (
-                            <motion.button
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                                className="btn btn-primary"
-                                onClick={() => setShowUploadModal(true)}
-                                style={{ borderRadius: '12px', padding: '0.8rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}
-                            >
-                                <i className="fas fa-folder-plus"></i> Upload Folder
-                            </motion.button>
-                        )}
                     </div>
                 </div>
 
