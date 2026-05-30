@@ -38,8 +38,8 @@ public class NoteController {
     }
 
     /**
-     * Retrieves all study notes filtered dynamically by visibility criteria
-     * matching the user's login session.
+     * Retrieves all study notes filtered dynamically by target audience visibility criteria
+     * matching the student's branch and semester parameters.
      */
     @GetMapping("/notes")
     public ResponseEntity<List<Note>> getNotes() {
@@ -49,9 +49,9 @@ public class NoteController {
         List<Note> allNotes = noteRepository.findAllByOrderByUploadedAtDesc();
 
         if (!isAuthenticated) {
-            // Unauthenticated Guest: Can ONLY see PUBLIC notes
+            // Unauthenticated Guest: Can ONLY see PUBLIC/ALL notes
             List<Note> guestNotes = allNotes.stream()
-                    .filter(note -> "PUBLIC".equalsIgnoreCase(note.getVisibility()))
+                    .filter(note -> "ALL".equalsIgnoreCase(note.getVisibility()))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(guestNotes);
         }
@@ -64,7 +64,7 @@ public class NoteController {
                                a.getAuthority().equals("ROLE_DEPT_ADMIN"));
 
         if (isAdmin) {
-            // Admins can see absolutely all notes (including ADMIN drafts)
+            // Admins can see absolutely all notes
             return ResponseEntity.ok(allNotes);
         }
 
@@ -73,7 +73,7 @@ public class NoteController {
         if (student == null) {
             // Fallback if user profile not resolved
             List<Note> guestNotes = allNotes.stream()
-                    .filter(note -> "PUBLIC".equalsIgnoreCase(note.getVisibility()))
+                    .filter(note -> "ALL".equalsIgnoreCase(note.getVisibility()))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(guestNotes);
         }
@@ -84,15 +84,18 @@ public class NoteController {
         List<Note> studentNotes = allNotes.stream()
                 .filter(note -> {
                     String vis = note.getVisibility();
-                    if ("PUBLIC".equalsIgnoreCase(vis) || "STUDENT".equalsIgnoreCase(vis)) {
+                    if ("ALL".equalsIgnoreCase(vis)) {
                         return true;
                     }
                     if ("BRANCH".equalsIgnoreCase(vis)) {
-                        // Check if note belongs to student's branch/semester (or has no specific filters)
-                        boolean branchMatch = note.getBranch() == null || note.getBranch().isEmpty() ||
-                                             (studentBranch != null && studentBranch.trim().equalsIgnoreCase(note.getBranch().trim()));
+                        // Check if student matches the branch
+                        boolean branchMatch = note.getBranch() != null && studentBranch != null &&
+                                             studentBranch.trim().equalsIgnoreCase(note.getBranch().trim());
+                        
+                        // Check if student matches the semester (if Note has a semester set)
                         boolean semMatch = note.getSemester() == null || note.getSemester().equals(0) ||
                                            (studentSem != null && studentSem.equals(note.getSemester()));
+                        
                         return branchMatch && semMatch;
                     }
                     return false; // ADMIN only drafts are hidden from students
@@ -103,44 +106,72 @@ public class NoteController {
     }
 
     /**
-     * Uploads notes PDF to Google Drive and creates note meta record (Admin only).
+     * Uploads folder files, preserving directories exactly, to Google Drive (Admin only).
      */
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN') or hasRole('DEPT_ADMIN') or hasRole('COMPANY_ADMIN')")
-    @PostMapping(value = "/notes/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadNote(
+    @PostMapping(value = "/notes/upload-folder", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadNotesFolder(
             @RequestParam("title") String title,
             @RequestParam("subject") String subject,
             @RequestParam(value = "semester", required = false) Integer semester,
             @RequestParam(value = "branch", required = false) String branch,
             @RequestParam("visibility") String visibility,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("files") MultipartFile[] files,
+            @RequestParam("paths") String[] paths) {
+        
+        java.util.List<Note> savedNotes = new java.util.ArrayList<>();
         try {
-            // Upload to Google Drive using existing FileStorageService
-            String downloadUrl = fileStorageService.uploadFileToDrive(file);
+            for (int i = 0; i < files.length; i++) {
+                MultipartFile file = files[i];
+                String preservedPath = paths[i]; // e.g. "Soft Computing/Neural Networks/Notes-1.pdf"
 
-            Note note = new Note(title, subject, semester, branch, visibility, downloadUrl);
-            Note savedNote = noteRepository.save(note);
-            return ResponseEntity.ok(savedNote);
+                // Upload to Google Drive using existing FileStorageService
+                String downloadUrl = fileStorageService.uploadFileToDrive(file);
+
+                // Dynamically resolve rootFolder name from the top level folder segment
+                String rootFolder = title;
+                if (preservedPath != null && preservedPath.contains("/")) {
+                    rootFolder = preservedPath.substring(0, preservedPath.indexOf("/"));
+                }
+
+                Note note = new Note(
+                        file.getOriginalFilename(),
+                        subject,
+                        semester,
+                        branch,
+                        visibility,
+                        downloadUrl,
+                        preservedPath,
+                        rootFolder
+                );
+                savedNotes.add(noteRepository.save(note));
+            }
+            return ResponseEntity.ok(savedNotes);
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Failed to upload notes PDF: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Failed to upload notes folder structure: " + e.getMessage());
         }
     }
 
     /**
-     * Deletes a notes meta record (Admin only).
+     * Deletes all note records belonging to a specific root folder structure (Admin only).
      */
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN') or hasRole('DEPT_ADMIN') or hasRole('COMPANY_ADMIN')")
-    @DeleteMapping("/notes/{id}")
-    public ResponseEntity<?> deleteNote(@PathVariable Long id) {
-        if (!noteRepository.existsById(id)) {
+    @DeleteMapping("/notes/root/{rootFolder}")
+    public ResponseEntity<?> deleteNotesFolder(@PathVariable String rootFolder) {
+        List<Note> folderNotes = noteRepository.findAll().stream()
+                .filter(n -> n.getRootFolder() != null && n.getRootFolder().trim().equalsIgnoreCase(rootFolder.trim()))
+                .collect(Collectors.toList());
+
+        if (folderNotes.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        noteRepository.deleteById(id);
+
+        noteRepository.deleteAll(folderNotes);
         return ResponseEntity.ok().build();
     }
 
     /**
-     * Streams the note PDF content securely, verifying visibility clearance.
+     * Streams the note PDF content securely, verifying access.
      */
     @GetMapping("/notes/download/{id}")
     public ResponseEntity<?> downloadNote(@PathVariable Long id) {
@@ -156,7 +187,7 @@ public class NoteController {
 
         boolean hasAccess = false;
 
-        if ("PUBLIC".equalsIgnoreCase(vis)) {
+        if ("ALL".equalsIgnoreCase(vis)) {
             hasAccess = true;
         } else if (isAuthenticated) {
             boolean isAdmin = auth.getAuthorities().stream()
@@ -171,14 +202,12 @@ public class NoteController {
                 // Registered Student
                 Users student = userRepo.findByComputerCodeOrUsername(auth.getName()).orElse(null);
                 if (student != null) {
-                    if ("STUDENT".equalsIgnoreCase(vis)) {
-                        hasAccess = true;
-                    } else if ("BRANCH".equalsIgnoreCase(vis)) {
+                    if ("BRANCH".equalsIgnoreCase(vis)) {
                         String studentBranch = student.getBranch();
                         Integer studentSem = student.getSemester();
 
-                        boolean branchMatch = note.getBranch() == null || note.getBranch().isEmpty() ||
-                                             (studentBranch != null && studentBranch.trim().equalsIgnoreCase(note.getBranch().trim()));
+                        boolean branchMatch = note.getBranch() != null && studentBranch != null &&
+                                             studentBranch.trim().equalsIgnoreCase(note.getBranch().trim());
                         boolean semMatch = note.getSemester() == null || note.getSemester().equals(0) ||
                                            (studentSem != null && studentSem.equals(note.getSemester()));
                         hasAccess = branchMatch && semMatch;
@@ -220,7 +249,7 @@ public class NoteController {
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + note.getTitle() + ".pdf\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + note.getTitle() + "\"")
                     .body(resource);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error retrieving file stream: " + e.getMessage());

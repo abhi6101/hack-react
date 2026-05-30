@@ -17,23 +17,27 @@ public class Note {
 
     private String title;
     private String subject;
-    private Integer semester; // can be null for all semesters
-    private String branch;    // can be null for all branches
-    private String visibility; // PUBLIC, STUDENT, BRANCH, ADMIN
+    private Integer semester; // can be null/0 for all semesters
+    private String branch;    // can be null/empty for all branches
+    private String visibility; // ALL, BRANCH, ADMIN
     private String pdfUrl;
+    private String relativePath; // preserved relative directory path, e.g. "Soft Computing/Neural Networks/Notes-1.pdf"
+    private String rootFolder;   // the parent uploaded folder, e.g. "Soft Computing"
     private Date uploadedAt;
 
     public Note() {
         this.uploadedAt = new Date();
     }
 
-    public Note(String title, String subject, Integer semester, String branch, String visibility, String pdfUrl) {
+    public Note(String title, String subject, Integer semester, String branch, String visibility, String pdfUrl, String relativePath, String rootFolder) {
         this.title = title;
         this.subject = subject != null ? subject.toLowerCase() : "";
         this.semester = semester;
         this.branch = branch;
-        this.visibility = visibility != null ? visibility.toUpperCase() : "PUBLIC";
+        this.visibility = visibility != null ? visibility.toUpperCase() : "ALL";
         this.pdfUrl = pdfUrl;
+        this.relativePath = relativePath;
+        this.rootFolder = rootFolder;
         this.uploadedAt = new Date();
     }
 
@@ -93,6 +97,22 @@ public class Note {
         this.pdfUrl = pdfUrl;
     }
 
+    public String getRelativePath() {
+        return relativePath;
+    }
+
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
+    }
+
+    public String getRootFolder() {
+        return rootFolder;
+    }
+
+    public void setRootFolder(String rootFolder) {
+        this.rootFolder = rootFolder;
+    }
+
     public Date getUploadedAt() {
         return uploadedAt;
     }
@@ -111,6 +131,8 @@ public class Note {
                 ", branch='" + branch + '\'' +
                 ", visibility='" + visibility + '\'' +
                 ", pdfUrl='" + pdfUrl + '\'' +
+                ", relativePath='" + relativePath + '\'' +
+                ", rootFolder='" + rootFolder + '\'' +
                 ", uploadedAt=" + uploadedAt +
                 '}';
     }
