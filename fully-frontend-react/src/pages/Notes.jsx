@@ -29,6 +29,7 @@ const Notes = () => {
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
     const [dragActive, setDragActive] = useState(false);
 
     // Form States
@@ -271,48 +272,60 @@ const Notes = () => {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('title', uploadTitle);
-        formData.append('subject', uploadSubject);
-        if (uploadSemester) formData.append('semester', uploadSemester);
-        if (uploadBranch) formData.append('branch', uploadBranch);
-        formData.append('visibility', uploadVisibility);
-
-        uploadFiles.forEach(file => {
-            formData.append('files', file);
-        });
-        uploadPaths.forEach(path => {
-            formData.append('paths', path);
-        });
-
         setUploading(true);
-        try {
-            const res = await fetch(`${API_BASE_URL}/notes/upload-folder`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${getToken()}` },
-                body: formData
-            });
+        setUploadProgress({ current: 0, total: uploadFiles.length });
+        let failed = 0;
 
-            if (res.ok) {
-                showToast({ message: 'Notes folder structure uploaded successfully!', type: 'success' });
-                setShowUploadModal(false);
-                // Reset form fields
-                setUploadTitle('');
-                setUploadSubject('');
-                setUploadSemester('');
-                setUploadBranch('');
-                setUploadVisibility('ALL');
-                setUploadFiles([]);
-                setUploadPaths([]);
-                fetchNotes();
-            } else {
-                const err = await res.text();
-                showToast({ message: `Folder upload failed: ${err}`, type: 'error' });
+        try {
+            // Upload each file individually to avoid Render nginx 413 proxy limit
+            for (let i = 0; i < uploadFiles.length; i++) {
+                const file = uploadFiles[i];
+                const path = uploadPaths[i];
+
+                const formData = new FormData();
+                formData.append('title', uploadTitle);
+                formData.append('subject', uploadSubject);
+                if (uploadSemester) formData.append('semester', uploadSemester);
+                if (uploadBranch) formData.append('branch', uploadBranch);
+                formData.append('visibility', uploadVisibility);
+                formData.append('files', file);
+                formData.append('paths', path);
+
+                try {
+                    const res = await fetch(`${API_BASE_URL}/notes/upload-folder`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${getToken()}` },
+                        body: formData
+                    });
+                    if (!res.ok) failed++;
+                } catch (_) {
+                    failed++;
+                }
+
+                setUploadProgress({ current: i + 1, total: uploadFiles.length });
             }
+
+            if (failed === 0) {
+                showToast({ message: `All ${uploadFiles.length} notes uploaded successfully!`, type: 'success' });
+            } else {
+                showToast({ message: `Upload complete with ${failed} failure(s). Check the folder.`, type: 'warning' });
+            }
+
+            setShowUploadModal(false);
+            setUploadTitle('');
+            setUploadSubject('');
+            setUploadSemester('');
+            setUploadBranch('');
+            setUploadVisibility('ALL');
+            setUploadFiles([]);
+            setUploadPaths([]);
+            setUploadProgress({ current: 0, total: 0 });
+            fetchNotes();
         } catch (e) {
             showToast({ message: 'Network error occurred during folder upload', type: 'error' });
         } finally {
             setUploading(false);
+            setUploadProgress({ current: 0, total: 0 });
         }
     };
 
@@ -853,6 +866,24 @@ const Notes = () => {
                                     />
                                 </div>
 
+                                {uploading && uploadProgress.total > 0 && (
+                                    <div style={{ margin: '0.5rem 0', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', padding: '0.8rem 1rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+                                            <span><i className="fas fa-cloud-upload-alt" style={{ color: 'var(--primary)', marginRight: '0.4rem' }}></i>Uploading files...</span>
+                                            <span style={{ fontWeight: 'bold', color: '#fff' }}>{uploadProgress.current} / {uploadProgress.total}</span>
+                                        </div>
+                                        <div style={{ height: '6px', borderRadius: '99px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+                                            <div style={{
+                                                height: '100%',
+                                                borderRadius: '99px',
+                                                background: 'linear-gradient(90deg, var(--primary), #7c3aed)',
+                                                width: `${(uploadProgress.current / uploadProgress.total) * 100}%`,
+                                                transition: 'width 0.4s ease'
+                                            }} />
+                                        </div>
+                                    </div>
+                                )}
+
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
@@ -873,7 +904,7 @@ const Notes = () => {
                                     {uploading ? (
                                         <>
                                             <span className="premium-loader-spinner"></span>
-                                            <span>Processing Directory Tree ({uploadFiles.length} files)...</span>
+                                            <span>Uploading {uploadProgress.current}/{uploadProgress.total} files...</span>
                                         </>
                                     ) : (
                                         <>
