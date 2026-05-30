@@ -179,11 +179,8 @@ body {
     cursor: pointer;
 }
 
-.accordion-trigger:hover, .accordion-trigger.expanded {
-    background: rgba(255, 255, 255, 0.04);
+.accordion-trigger.expanded {
     color: var(--text-primary);
-    border-color: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .accordion-title {
