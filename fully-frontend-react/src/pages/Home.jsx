@@ -419,20 +419,6 @@ const Home = () => {
                         </div>
                     </div>
 
-                    <div className="metrics-grid">
-                        <div className="metric-card">
-                            <h3>📚 5,000+</h3>
-                            <p>Previous Year Papers</p>
-                        </div>
-                        <div className="metric-card">
-                            <h3>📄 500+</h3>
-                            <p>Subjects</p>
-                        </div>
-                        <div className="metric-card">
-                            <h3>👨‍🎓 10,000+</h3>
-                            <p>Students Served</p>
-                        </div>
-                    </div>
                 </div>
             </section>
 
