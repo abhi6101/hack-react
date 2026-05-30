@@ -470,7 +470,7 @@ const Notes = () => {
             </Helmet>
 
             {/* Header section */}
-            <div className="papers-header">
+            <div className="papers-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
                 <motion.h1
                     initial={{ opacity: 0, y: -25 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -483,6 +483,7 @@ const Notes = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                     className="papers-subtitle"
+                    style={{ margin: '0 auto', maxWidth: '800px' }}
                 >
                     Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
                 </motion.p>
