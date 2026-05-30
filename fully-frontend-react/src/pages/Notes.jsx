@@ -110,8 +110,6 @@ const Notes = () => {
     const [dragActive, setDragActive] = useState(false);
 
     // Form States
-    const [uploadTitle, setUploadTitle] = useState(''); // Groups all files under this root folder
-    const [uploadSubject, setUploadSubject] = useState('');
     const [uploadSemester, setUploadSemester] = useState('');
     const [uploadBranch, setUploadBranch] = useState('');
     const [uploadVisibility, setUploadVisibility] = useState('ALL'); // ALL (All students), BRANCH (Targeted branch/sem), ADMIN (Private)
@@ -308,14 +306,9 @@ const Notes = () => {
         }
 
         if (filesList.length > 0) {
-            setUploadFiles(filesList);
-            setUploadPaths(pathsList);
-            // Autofill Title with the root directory name
-            const firstPath = pathsList[0];
-            if (firstPath && firstPath.includes("/")) {
-                setUploadTitle(firstPath.substring(0, firstPath.indexOf("/")));
-            }
-            showToast({ message: `Loaded ${filesList.length} PDFs from folder tree!`, type: 'success' });
+            setUploadFiles(prev => [...prev, ...filesList]);
+            setUploadPaths(prev => [...prev, ...pathsList]);
+            showToast({ message: `Queued ${filesList.length} PDFs from dropped folder(s)!`, type: 'success' });
         } else {
             showToast({ message: 'No PDF notes found inside dropped directory.', type: 'warning' });
         }
@@ -340,9 +333,11 @@ const Notes = () => {
                 
                 setUploadProgress({ current: i, total: uploadFiles.length, currentFileName: file.name });
 
+                const currentTitle = path && path.includes("/") ? path.substring(0, path.indexOf("/")) : file.name.replace('.pdf', '');
+
                 const formData = new FormData();
-                formData.append('title', uploadTitle);
-                formData.append('subject', uploadSubject);
+                formData.append('title', currentTitle);
+                formData.append('subject', currentTitle);
                 if (uploadSemester) formData.append('semester', uploadSemester);
                 if (uploadBranch) formData.append('branch', uploadBranch);
                 formData.append('visibility', uploadVisibility);
@@ -370,8 +365,6 @@ const Notes = () => {
             }
 
             setShowUploadModal(false);
-            setUploadTitle('');
-            setUploadSubject('');
             setUploadSemester('');
             setUploadBranch('');
             setUploadVisibility('ALL');
@@ -678,27 +671,7 @@ const Notes = () => {
                             </h2>
 
                             <form onSubmit={handleUploadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                                <div className="input-group">
-                                    <label>Root Folder Title</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="e.g. Soft Computing Unit notes"
-                                        value={uploadTitle}
-                                        onChange={(e) => setUploadTitle(e.target.value)}
-                                    />
-                                </div>
 
-                                <div className="input-group">
-                                    <label>Subject / Course Code</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="e.g. Soft Computing, MCA-302"
-                                        value={uploadSubject}
-                                        onChange={(e) => setUploadSubject(e.target.value)}
-                                    />
-                                </div>
 
                                 <div style={{ display: 'flex', gap: '1rem' }}>
                                     <div className="input-group" style={{ flex: 1 }}>
@@ -785,35 +758,38 @@ const Notes = () => {
                                                 color: 'var(--text-secondary)'
                                             }}>
                                                 {(() => {
-                                                    // Build folder tree from paths for preview
+                                                    // Display only the Root Folders and their total file counts
                                                     const folderMap = {};
                                                     uploadPaths.forEach(p => {
-                                                        const parts = p.split('/');
-                                                        const folder = parts.length > 1 ? parts.slice(0, -1).join('/') : '(root)';
-                                                        if (!folderMap[folder]) folderMap[folder] = [];
-                                                        folderMap[folder].push(parts[parts.length - 1]);
+                                                        const root = p.includes("/") ? p.substring(0, p.indexOf("/")) : p;
+                                                        folderMap[root] = (folderMap[root] || 0) + 1;
                                                     });
-                                                    return Object.entries(folderMap).map(([folder, files]) => (
-                                                        <div key={folder} style={{ marginBottom: '0.4rem' }}>
+                                                    return Object.entries(folderMap).map(([root, count]) => (
+                                                        <div key={root} style={{ marginBottom: '0.4rem', display: 'flex', justifyContent: 'space-between' }}>
                                                             <div style={{ color: '#ffd700', fontWeight: 'bold' }}>
                                                                 <i className="fas fa-folder" style={{ marginRight: '0.4rem', fontSize: '0.7rem' }}></i>
-                                                                {folder}
+                                                                {root}
                                                             </div>
-                                                            {files.map(f => (
-                                                                <div key={f} style={{ paddingLeft: '1.4rem', color: '#EF4444' }}>
-                                                                    <i className="fas fa-file-pdf" style={{ marginRight: '0.35rem', fontSize: '0.65rem' }}></i>
-                                                                    {f}
-                                                                </div>
-                                                            ))}
+                                                            <div style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{count} file(s)</div>
                                                         </div>
                                                     ));
                                                 })()}
+                                            </div>
+                                            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.stopPropagation(); fileInputRef.current && fileInputRef.current.click(); }}
+                                                    className="btn btn-outline"
+                                                    style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem', borderRadius: '8px' }}
+                                                >
+                                                    <i className="fas fa-plus"></i> Add Another Folder
+                                                </button>
                                             </div>
                                         </div>
                                     ) : (
                                         <>
                                             <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Drag & Drop Complete Study Folders Here</span>
-                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Or click to browse (supports nested folders)</span>
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Or click to browse (supports queuing multiple folders)</span>
                                         </>
                                     )}
                                 </div>
@@ -829,13 +805,9 @@ const Notes = () => {
                                         // Only select PDF notes
                                         const pdfFiles = files.filter(f => f.name.toLowerCase().endsWith('.pdf'));
                                         if (pdfFiles.length > 0) {
-                                            setUploadFiles(pdfFiles);
-                                            setUploadPaths(pdfFiles.map(f => f.webkitRelativePath || f.name));
-                                            // Preload directory title
-                                            const firstPath = pdfFiles[0].webkitRelativePath || pdfFiles[0].name;
-                                            if (firstPath && firstPath.includes("/")) {
-                                                setUploadTitle(firstPath.substring(0, firstPath.indexOf("/")));
-                                            }
+                                            setUploadFiles(prev => [...prev, ...pdfFiles]);
+                                            setUploadPaths(prev => [...prev, ...pdfFiles.map(f => f.webkitRelativePath || f.name)]);
+                                            showToast({ message: `Queued ${pdfFiles.length} PDFs!`, type: 'success' });
                                         } else {
                                             showToast({ message: 'No PDF notes found in selected directory.', type: 'warning' });
                                         }
