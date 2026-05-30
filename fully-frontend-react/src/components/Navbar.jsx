@@ -85,7 +85,7 @@ const Navbar = () => {
                     <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin Dashboard</Link>
                 )}
                 {localStorage.getItem('authToken') && localStorage.getItem('userRole') === 'USER' && (
-                    <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-tachometer-alt"></i> My Dashboard</Link>
+                    <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> My Dashboard</Link>
                 )}
             </div>
 
