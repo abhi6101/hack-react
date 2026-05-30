@@ -1152,11 +1152,11 @@ const Papers = () => {
                             </div>
 
                             <h3 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '1.5rem', color: '#fff' }}>
-                                🔒 Login Required
+                                Unlock Premium Papers!
                             </h3>
 
                             <p style={{ color: '#fff', fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.8rem' }}>
-                                This paper is available on our platform.
+                                Good News! This paper is available on our platform.
                             </p>
 
                             <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2.5rem' }}>
