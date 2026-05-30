@@ -17,49 +17,61 @@ const TreeNode = ({ node, level, handleViewFile, getToken }) => {
         
         return (
             <motion.div
-                whileHover={{ background: 'rgba(255,255,255,0.05)' }}
+                whileHover={{ background: 'rgba(255,255,255,0.04)' }}
                 onClick={() => handleViewFile(node)}
                 style={{
-                    padding: `0.5rem 1rem`,
+                    padding: `0.7rem 1rem`,
                     paddingLeft: `${(level * 1.5) + 1.5}rem`,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.8rem',
                     cursor: 'pointer',
                     color: 'var(--text-secondary)',
-                    borderBottom: '1px solid rgba(255,255,255,0.02)',
-                    transition: 'color 0.2s'
+                    borderBottom: '1px solid rgba(255,255,255,0.015)',
+                    transition: 'all 0.2s',
+                    position: 'relative'
                 }}
             >
-                <i className="fas fa-file-pdf" style={{ color: '#EF4444', fontSize: '1.2rem' }}></i>
-                <span style={{ flex: 1, fontSize: '0.95rem' }}>{node.name}</span>
+                {/* Vertical tree line */}
+                {level > 0 && <div style={{ position: 'absolute', left: `${((level - 1) * 1.5) + 1.8}rem`, top: 0, bottom: 0, width: '1px', background: 'rgba(255,255,255,0.06)' }}></div>}
+                
+                <i className="fas fa-file-pdf" style={{ color: '#EF4444', fontSize: '1.2rem', filter: 'drop-shadow(0 2px 4px rgba(239, 68, 68, 0.2))', zIndex: 1 }}></i>
+                <span style={{ flex: 1, fontSize: '0.95rem', fontWeight: '500' }}>{node.name}</span>
                 {isLocked ? (
-                    <i className="fas fa-lock" style={{ color: '#EF4444', fontSize: '0.8rem' }}></i>
+                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <i className="fas fa-lock"></i> Locked
+                    </div>
                 ) : (
-                    <i className="fas fa-eye" style={{ color: '#10B981', fontSize: '0.8rem' }}></i>
+                    <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#10B981', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <i className="fas fa-eye"></i> View
+                    </div>
                 )}
             </motion.div>
         );
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            {level > 0 && <div style={{ position: 'absolute', left: `${((level - 1) * 1.5) + 1.8}rem`, top: 0, bottom: 0, width: '1px', background: 'rgba(255,255,255,0.06)' }}></div>}
             <motion.div
-                whileHover={{ background: 'rgba(255,255,255,0.05)' }}
+                whileHover={{ background: 'rgba(255,255,255,0.04)' }}
                 onClick={() => setIsExpanded(!isExpanded)}
                 style={{
-                    padding: `0.6rem 1rem`,
+                    padding: `0.7rem 1rem`,
                     paddingLeft: `${(level * 1.5) + 1.5}rem`,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.8rem',
                     cursor: 'pointer',
-                    background: isExpanded ? 'rgba(255,255,255,0.03)' : 'transparent',
-                    borderBottom: '1px solid rgba(255,255,255,0.02)'
+                    background: isExpanded ? 'rgba(255,255,255,0.02)' : 'transparent',
+                    borderBottom: '1px solid rgba(255,255,255,0.015)',
+                    zIndex: 1
                 }}
             >
-                <i className={`fas fa-chevron-${isExpanded ? 'down' : 'right'}`} style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', width: '12px', textAlign: 'center' }}></i>
-                <i className={`fas fa-folder${isExpanded ? '-open' : ''}`} style={{ color: '#ffd700', fontSize: '1.2rem' }}></i>
+                <div style={{ width: '16px', display: 'flex', justifyContent: 'center' }}>
+                    <i className={`fas fa-chevron-${isExpanded ? 'down' : 'right'}`} style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}></i>
+                </div>
+                <i className={`fas fa-folder${isExpanded ? '-open' : ''}`} style={{ color: '#ffd700', fontSize: '1.2rem', filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.2))' }}></i>
                 <span style={{ color: '#fff', fontWeight: '600', fontSize: '0.95rem' }}>{node.name}</span>
             </motion.div>
             
@@ -465,47 +477,47 @@ const Notes = () => {
 
             <div className="papers-content-wrapper">
                 {/* Search, Filter, and breadcrumbs section */}
-                <div className="papers-search-section">
-                    <div className="search-bar-container">
-                        <i className="fas fa-search search-icon"></i>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+                    <div style={{ flex: 1, minWidth: '300px', position: 'relative', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', padding: '0 1rem', transition: 'all 0.3s ease' }}>
+                        <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1.1rem' }}></i>
                         <input
                             type="text"
                             placeholder="Search folders by subject code, title or syllabus topics..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="papers-search-input"
+                            style={{ width: '100%', background: 'transparent', color: '#fff', border: 'none', outline: 'none', padding: '1rem 0.8rem', fontSize: '1rem' }}
                         />
                     </div>
 
-                    <div className="filters-grid" style={{ display: 'flex', gap: '1rem', marginTop: '1.2rem', flexWrap: 'wrap' }}>
-                        <div className="filter-select-wrapper" style={{ flex: 1, minWidth: '150px' }}>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        <div style={{ position: 'relative', minWidth: '160px' }}>
                             <select
                                 value={semesterFilter}
                                 onChange={(e) => setSemesterFilter(e.target.value)}
-                                className="papers-search-input"
-                                style={{ padding: '0.8rem 1rem' }}
+                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '1rem 3rem 1rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
                             >
-                                <option value="">All Semesters</option>
+                                <option value="" style={{ color: '#000' }}>All Semesters</option>
                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                                    <option key={sem} value={sem.toString()}>Semester {sem}</option>
+                                    <option key={sem} value={sem.toString()} style={{ color: '#000' }}>Semester {sem}</option>
                                 ))}
                             </select>
+                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
                         </div>
 
-                        <div className="filter-select-wrapper" style={{ flex: 1, minWidth: '180px' }}>
+                        <div style={{ position: 'relative', minWidth: '180px' }}>
                             <select
                                 value={branchFilter}
                                 onChange={(e) => setBranchFilter(e.target.value)}
-                                className="papers-search-input"
-                                style={{ padding: '0.8rem 1rem' }}
                                 disabled={userRole === 'STUDENT'}
+                                style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '1rem 3rem 1rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
                             >
-                                <option value="">All Branches</option>
+                                <option value="" style={{ color: '#000' }}>All Branches</option>
                                 {deptList.map(dept => (
-                                    <option key={dept.id} value={dept.code}>{dept.name} ({dept.code})</option>
+                                    <option key={dept.id} value={dept.code} style={{ color: '#000' }}>{dept.name} ({dept.code})</option>
                                 ))}
-                                {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA">IMCA</option>}
+                                {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA" style={{ color: '#000' }}>IMCA</option>}
                             </select>
+                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
                         </div>
 
                         {isAdmin && (
@@ -548,26 +560,32 @@ const Notes = () => {
                             >
                                 {/* Root Folder Header */}
                                 <div style={{ 
-                                    padding: '1.6rem', 
+                                    padding: '1.8rem 2rem', 
                                     borderBottom: '1px solid rgba(255,255,255,0.05)',
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    background: 'rgba(255,255,255,0.02)'
+                                    background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                                    position: 'relative'
                                 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
-                                        <i className="fas fa-archive" style={{ fontSize: '2.5rem', color: '#00d4ff', filter: 'drop-shadow(0 2px 8px rgba(0, 212, 255, 0.3))' }}></i>
+                                    {/* Neon Accent Line */}
+                                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
+                                    
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                                        <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: 'rgba(0, 212, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                            <i className="fas fa-folder-open" style={{ fontSize: '2.2rem', color: '#00d4ff', filter: 'drop-shadow(0 0 10px rgba(0, 212, 255, 0.5))' }}></i>
+                                        </div>
                                         <div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.4rem' }}>
-                                                <h3 style={{ fontSize: '1.3rem', color: '#fff', margin: 0 }}>{folder.name}</h3>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.6rem' }}>
+                                                <h3 style={{ fontSize: '1.4rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{folder.name}</h3>
                                                 <span className={getVisibilityBadgeClass(folder.meta.visibility)}>
                                                     {getVisibilityLabel(folder.meta.visibility)}
                                                 </span>
                                             </div>
-                                            <div style={{ display: 'flex', gap: '1.5rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                                                {folder.meta.subject && <span><i className="fas fa-book"></i> {folder.meta.subject.toUpperCase()}</span>}
-                                                {folder.meta.semester ? <span><i className="fas fa-university"></i> Semester {folder.meta.semester}</span> : null}
-                                                {folder.meta.branch ? <span><i className="fas fa-graduation-cap"></i> {folder.meta.branch}</span> : null}
+                                            <div style={{ display: 'flex', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: '500' }}>
+                                                {folder.meta.subject && <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-book" style={{ color: 'var(--primary)' }}></i> {folder.meta.subject.toUpperCase()}</span>}
+                                                {folder.meta.semester ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Semester {folder.meta.semester}</span> : null}
+                                                {folder.meta.branch ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {folder.meta.branch}</span> : null}
                                             </div>
                                         </div>
                                     </div>
