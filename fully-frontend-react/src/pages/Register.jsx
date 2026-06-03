@@ -836,11 +836,23 @@ const Register = () => {
                     </div>
                 ) : (
                     <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-                        <div style={{ padding: '2rem', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', marginBottom: '1.5rem' }}>
-                            <i className={`fas ${verificationStage === 'SELFIE' ? 'fa-user' : 'fa-id-card'} `} style={{ fontSize: '4rem', color: '#667eea' }}></i>
+                        <div style={{ padding: '2rem', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', marginBottom: '1.5rem', position: 'relative', overflow: 'hidden' }}>
+                            <i className={`fas ${verificationStage === 'SELFIE' ? 'fa-user' : 'fa-id-card'} `} style={{ fontSize: '4rem', color: isScanning ? '#34d399' : '#667eea', transition: 'color 0.3s ease' }}></i>
+                            {isScanning && (
+                                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(transparent, rgba(52, 211, 153, 0.2), transparent)', animation: 'scanline 2s linear infinite' }}></div>
+                            )}
                         </div>
-                        <button className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem' }} onClick={content.btnAction} disabled={isScanning}>
-                            <i className={verificationStage === 'ID_AUTO_CAPTURE' ? "fas fa-file-upload" : "fas fa-camera"}></i> {content.btnText}
+                        <button className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} onClick={content.btnAction} disabled={isScanning}>
+                            {isScanning ? (
+                                <>
+                                    <span style={{ display: 'inline-block', width: '20px', height: '20px', border: '3px solid rgba(255,255,255,0.3)', borderTop: '3px solid white', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
+                                    <span>Processing Image...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <i className={verificationStage === 'ID_AUTO_CAPTURE' ? "fas fa-file-upload" : "fas fa-camera"}></i> {content.btnText}
+                                </>
+                            )}
                         </button>
                         {content.secondaryBtnText && (
                             <button className="btn" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#aaa', fontSize: '0.9rem' }} onClick={content.secondaryBtnAction} disabled={isScanning}>
@@ -849,6 +861,13 @@ const Register = () => {
                         )}
                         {/* Hidden file input for ID upload */}
                         <input type="file" id="id-upload-input" accept="image/*" style={{ display: 'none' }} onChange={handleFileUpload} />
+                        <style>{`
+                            @keyframes scanline {
+                                0% { transform: translateY(-100%); opacity: 0; }
+                                50% { opacity: 1; }
+                                100% { transform: translateY(100%); opacity: 0; }
+                            }
+                        `}</style>
                     </div>
                 )
                 }
