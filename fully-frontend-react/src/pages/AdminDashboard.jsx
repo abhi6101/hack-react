@@ -2484,19 +2484,29 @@ const AdminDashboard = () => {
                 );
             case 'interview-applications':
                 return (
-                    <section className="card surface-glow">
-                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h3><i className="fas fa-user-check"></i> Interview Drive Applications</h3>
-                            <div className="search-box-modern">
-                                <i className="fas fa-search"></i>
-                                <input
-                                    type="text"
-                                    placeholder="Search interview apps..."
-                                    value={interviewSearch}
-                                    onChange={(e) => setInterviewSearch(e.target.value)}
-                                />
-                            </div>
+                    <div className="users-management-page animate-in">
+                        <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+                                Interview Apps
+                            </h2>
                         </div>
+                        <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                            <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                                <div>
+                                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-user-check" style={{ color: 'var(--primary)' }}></i> Interview Drive Applications</h3>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                                    <div className="search-box-modern">
+                                        <i className="fas fa-search"></i>
+                                        <input
+                                            type="text"
+                                            placeholder="Search interview apps..."
+                                            value={interviewSearch}
+                                            onChange={(e) => setInterviewSearch(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         {loadingInterviewApps ? (
                             <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
                         ) : interviewApplications.length > 0 ? (
@@ -2561,9 +2571,13 @@ const AdminDashboard = () => {
                                 </table>
                             </div>
                         ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No interview applications received yet.</p>
+                            <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                                <i className="fas fa-inbox" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
+                                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No interview applications received yet.</p>
+                            </div>
                         )}
-                    </section>
+                        </section>
+                    </div>
                 );
             case 'gallery':
                 return (
