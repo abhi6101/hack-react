@@ -1422,16 +1422,13 @@ const AdminDashboard = () => {
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Branch</th>
-                                <th>Profile Status</th>
-                                <th>Resume Status</th>
                                 <th>Last Active</th>
-                                {isSuperAdmin && <th>Action</th>}
                             </tr>
                         </thead>
                         <tbody>
                             {studentActivity.length === 0 ? (
                                 <tr>
-                                    <td colSpan="7">
+                                    <td colSpan="4">
                                         <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
                                             <i className="fas fa-users-slash" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
                                             <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No students found.</p>
@@ -1441,37 +1438,12 @@ const AdminDashboard = () => {
                             ) : (
                                 studentActivity.map(student => (
                                     <tr key={student.id}>
-                                        <td style={{ fontWeight: '500' }}>{student.name}</td>
+                                        <td style={{ fontWeight: '500' }}>{student.username || student.name || 'Unknown'}</td>
                                         <td style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{student.email}</td>
                                         <td>{student.branch}</td>
-                                        <td>
-                                            {student.profileComplete ?
-                                                <span className="badge-role role-user"><i className="fas fa-check-circle"></i> Complete</span> :
-                                                <span className="badge-role role-super-admin"><i className="fas fa-exclamation-circle"></i> Pending</span>
-                                            }
-                                        </td>
-                                        <td>
-                                            {student.hasResume ?
-                                                <span className="badge-role role-user"><i className="fas fa-file-pdf"></i> Uploaded</span> :
-                                                <span className="badge-role role-super-admin"><i className="fas fa-times"></i> Missing</span>
-                                            }
-                                        </td>
                                         <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                                             {student.lastLoginDate ? new Date(student.lastLoginDate).toLocaleString() : 'Never'}
                                         </td>
-                                        {isSuperAdmin && (
-                                            <td>
-                                                {student.hasResume && (
-                                                    <button
-                                                        className="action-btn-modern edit-btn"
-                                                        onClick={() => viewStudentResume(student.id, student.name)}
-                                                        title="Download Resume"
-                                                    >
-                                                        <i className="fas fa-download"></i>
-                                                    </button>
-                                                )}
-                                            </td>
-                                        )}
                                     </tr>
                                 ))
                             )}
