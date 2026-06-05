@@ -1507,6 +1507,7 @@ const AdminDashboard = () => {
                                     <h3>Students Registry</h3>
                                     <div className="stat-value">{loadingUsers ? '...' : totalStudents}</div>
                                 </div>
+                            </div>
                         </div>
 
                         {/* 3. Balanced 50/50 Body Grid */}
@@ -1976,7 +1977,7 @@ const AdminDashboard = () => {
                         </section>
                     </>
                 );
-            case 'users':
+            case 'users': {
                 const filteredUsers = users.filter(user => {
                     if (role === 'DEPT_ADMIN') {
                         const myBranch = localStorage.getItem('adminBranch');
@@ -2294,6 +2295,7 @@ const AdminDashboard = () => {
                         </section>
                     </div>
                 );
+            }
             case 'profile-details':
                 return renderProfileDetails();
             case 'applications':
