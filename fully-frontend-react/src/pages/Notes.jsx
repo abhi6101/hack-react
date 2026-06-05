@@ -8,7 +8,7 @@ import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
 import '../styles/papers.css'; // Reuses the unified glassmorphic layout
 
-const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, getToken, notesDownloadEnabled }) => {
+const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDeleteFile, isAdmin, getToken, notesDownloadEnabled }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     
     if (!node.isDirectory) {
@@ -67,6 +67,14 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, getToken, n
                                 <i className="fas fa-download"></i> Download
                             </div>
                         )}
+                        {isAdmin && handleDeleteFile && (
+                            <div 
+                                onClick={(e) => { e.stopPropagation(); handleDeleteFile(node); }}
+                                style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                            >
+                                <i className="fas fa-trash-alt"></i> Delete
+                            </div>
+                        )}
                     </div>
                 )}
             </motion.div>
@@ -113,6 +121,8 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, getToken, n
                                 level={level + 1} 
                                 handleViewFile={handleViewFile} 
                                 handleDownloadFile={handleDownloadFile}
+                                handleDeleteFile={handleDeleteFile}
+                                isAdmin={isAdmin}
                                 getToken={getToken}
                                 notesDownloadEnabled={notesDownloadEnabled}
                             />
@@ -434,6 +444,37 @@ const Notes = () => {
         }
     };
 
+    const handleDeleteFile = async (node) => {
+        showAlert({
+            title: 'Delete File',
+            message: `Are you sure you want to permanently delete the file '${node.name}'?`,
+            type: 'danger',
+            actions: [
+                { label: 'Cancel', primary: false },
+                {
+                    label: 'Delete',
+                    primary: true,
+                    onClick: async () => {
+                        try {
+                            const res = await fetch(`${API_BASE_URL}/notes/${node.id}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${getToken()}` }
+                            });
+                            if (res.ok) {
+                                showToast({ message: 'File deleted successfully', type: 'success' });
+                                fetchNotes();
+                            } else {
+                                showToast({ message: 'Failed to delete file', type: 'error' });
+                            }
+                        } catch (e) {
+                            showToast({ message: 'Connection error during deletion', type: 'error' });
+                        }
+                    }
+                }
+            ]
+        });
+    };
+
     const handleDeleteRootFolder = async (rootFolder, e) => {
         e.stopPropagation();
         showAlert({
@@ -689,6 +730,8 @@ const Notes = () => {
                                                 level={0} 
                                                 handleViewFile={handleViewFile} 
                                                 handleDownloadFile={handleDownloadFile}
+                                                handleDeleteFile={handleDeleteFile}
+                                                isAdmin={isAdmin}
                                                 getToken={getToken} 
                                                 notesDownloadEnabled={notesDownloadEnabled}
                                             />
