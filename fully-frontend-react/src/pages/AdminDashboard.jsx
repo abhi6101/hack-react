@@ -1388,25 +1388,6 @@ const AdminDashboard = () => {
                         </ResponsiveContainer>
                     </div>
                 </div>
-
-                <div className="surface-glow" style={{ padding: '2rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
-                    <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <i className="fas fa-tasks" style={{ color: 'var(--accent)' }}></i> Application Pulse
-                    </h3>
-                    <div style={{ height: '300px', width: '100%' }}>
-                        <ResponsiveContainer>
-                            <BarChart data={appData}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                                <XAxis dataKey="name" stroke="#94a3b8" />
-                                <YAxis stroke="#94a3b8" />
-                                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }} />
-                                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                                    {appData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                                </Bar>
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
             </div>
         );
     };
@@ -1526,21 +1507,6 @@ const AdminDashboard = () => {
                                     <h3>Students Registry</h3>
                                     <div className="stat-value">{loadingUsers ? '...' : totalStudents}</div>
                                 </div>
-                            </div>
-                            <div className="stat-card-modern warning">
-                                <div className="stat-icon"><i className="fas fa-id-card"></i></div>
-                                <div className="stat-details">
-                                    <h3>Verifications</h3>
-                                    <div className="stat-value">{loadingProfiles ? '...' : pendingVerifications}</div>
-                                </div>
-                            </div>
-                            <div className="stat-card-modern success">
-                                <div className="stat-icon"><i className="fas fa-file-signature"></i></div>
-                                <div className="stat-details">
-                                    <h3>Active Apps</h3>
-                                    <div className="stat-value">{loadingApplications ? '...' : applications.length}</div>
-                                </div>
-                            </div>
                         </div>
 
                         {/* 3. Balanced 50/50 Body Grid */}
