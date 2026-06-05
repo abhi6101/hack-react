@@ -1197,22 +1197,30 @@ const AdminDashboard = () => {
 
 
     const renderProfileDetails = () => (
-        <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2>All Student Profiles</h2>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className="btn-secondary" onClick={() => downloadCSV(allProfiles, 'student_profiles.csv')}>
-                        <i className="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button className="btn-secondary" onClick={fetchAllProfiles}>
-                        <i className="fas fa-sync-alt"></i> Refresh
-                    </button>
-                </div>
+        <div className="users-management-page animate-in">
+            <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+                    Student Details
+                </h2>
             </div>
+            <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                        <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-id-card" style={{ color: 'var(--primary)' }}></i> All Student Profiles</h3>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        <button className="btn-secondary" onClick={() => downloadCSV(allProfiles, 'student_profiles.csv')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <i className="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <button className="btn-secondary" onClick={fetchAllProfiles} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <i className="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
 
-            {loadingProfiles ? <div className="loading-indicator">Loading profiles...</div> : (
-                <div className="table-container">
-                    <table className="data-table">
+                {loadingProfiles ? <div style={{ padding: '2rem', textAlign: 'center' }}>Loading profiles...</div> : (
+                    <div className="table-responsive" style={{ padding: '1rem' }}>
+                        <table className="table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -1225,7 +1233,14 @@ const AdminDashboard = () => {
                         </thead>
                         <tbody>
                             {allProfiles.length === 0 ? (
-                                <tr><td colSpan="6" style={{ textAlign: 'center' }}>No detailed profiles found.</td></tr>
+                                <tr>
+                                    <td colSpan="6">
+                                        <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                                            <i className="fas fa-id-badge" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
+                                            <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No detailed profiles found.</p>
+                                        </div>
+                                    </td>
+                                </tr>
                             ) : (
                                 allProfiles.map(profile => (
                                     <tr key={profile.id}>
@@ -1235,13 +1250,13 @@ const AdminDashboard = () => {
                                         <td>{profile.batch || 'N/A'}</td>
                                         <td>
                                             {profile.approvalStatus === 'APPROVED' ? (
-                                                <span className="badge badge-success" style={{ background: '#22c55e', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem' }}>Verified</span>
+                                                <span className="badge-role role-user"><i className="fas fa-check-circle"></i> Verified</span>
                                             ) : (
-                                                <span className="badge badge-warning" style={{ background: '#eab308', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', color: '#000' }}>Pending</span>
+                                                <span className="badge-role role-super-admin"><i className="fas fa-exclamation-circle"></i> Pending</span>
                                             )}
                                         </td>
                                         <td>
-                                            <button className="btn-small btn-primary" onClick={() => setSelectedProfileForVerification(profile)}>
+                                            <button className="action-btn-modern view-btn" onClick={() => setSelectedProfileForVerification(profile)}>
                                                 <i className="fas fa-id-card"></i> Verify
                                             </button>
                                         </td>
@@ -1252,6 +1267,7 @@ const AdminDashboard = () => {
                     </table>
                 </div>
             )}
+            </section>
         </div>
     );
 
