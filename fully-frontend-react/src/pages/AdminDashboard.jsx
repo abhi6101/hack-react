@@ -1481,16 +1481,6 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="dashboard-overview animate-in">
-                        {/* 1. Hero Welcome Header */}
-                        <div className="welcome-banner surface-glow" style={{ marginBottom: '2.5rem', padding: '3rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-                            <div className="glow-effect" style={{ position: 'absolute', top: '-50%', left: '50%', transform: 'translateX(-50%)', width: '300px', height: '300px', background: 'var(--primary)', filter: 'blur(120px)', opacity: 0.15, borderRadius: '50%', pointerEvents: 'none' }}></div>
-                            <h1 style={{ fontSize: '2.8rem', fontWeight: '900', letterSpacing: '-1px', marginBottom: '0.5rem', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                                Welcome, {localStorage.getItem('username')?.split(' ')[0] || 'Administrator'}
-                            </h1>
-                            <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
-                                Your placement portal is performing at peak efficiency. Here is a summary of active operations.
-                            </p>
-                        </div>
 
                         {/* 2. Unified Hero Stats Row */}
                         <div className="stats-grid" style={{ marginBottom: '2.5rem' }}>
