@@ -1393,22 +1393,30 @@ const AdminDashboard = () => {
     };
 
     const renderStudentMonitor = () => (
-        <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2>Student Monitor</h2>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className="btn-secondary" onClick={() => downloadCSV(studentActivity, 'student_activity.csv')}>
-                        <i className="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button className="btn-secondary" onClick={fetchStudentActivity}>
-                        <i className="fas fa-sync-alt"></i> Refresh
-                    </button>
-                </div>
+        <div className="users-management-page animate-in">
+            <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+                    Student Monitor
+                </h2>
             </div>
+            <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                        <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-user-graduate" style={{ color: 'var(--primary)' }}></i> Student Monitor</h3>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        <button className="btn-secondary" onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <i className="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <button className="btn-secondary" onClick={fetchStudentActivity} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <i className="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
 
-            {loadingActivity ? <div className="loading-indicator">Loading activity...</div> : (
-                <div className="table-container">
-                    <table className="data-table">
+                {loadingActivity ? <div style={{ padding: '2rem', textAlign: 'center' }}>Loading activity...</div> : (
+                    <div className="table-responsive" style={{ padding: '1rem' }}>
+                        <table className="table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -1422,23 +1430,30 @@ const AdminDashboard = () => {
                         </thead>
                         <tbody>
                             {studentActivity.length === 0 ? (
-                                <tr><td colSpan="7" style={{ textAlign: 'center' }}>No students found.</td></tr>
+                                <tr>
+                                    <td colSpan="7">
+                                        <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                                            <i className="fas fa-users-slash" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
+                                            <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No students found.</p>
+                                        </div>
+                                    </td>
+                                </tr>
                             ) : (
                                 studentActivity.map(student => (
                                     <tr key={student.id}>
                                         <td style={{ fontWeight: '500' }}>{student.name}</td>
-                                        <td style={{ color: 'var(--text-secondary)' }}>{student.email}</td>
+                                        <td style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{student.email}</td>
                                         <td>{student.branch}</td>
                                         <td>
                                             {student.profileComplete ?
-                                                <span className="badge badge-success"><i className="fas fa-check-circle"></i> Complete</span> :
-                                                <span className="badge badge-warning"><i className="fas fa-exclamation-circle"></i> Pending</span>
+                                                <span className="badge-role role-user"><i className="fas fa-check-circle"></i> Complete</span> :
+                                                <span className="badge-role role-super-admin"><i className="fas fa-exclamation-circle"></i> Pending</span>
                                             }
                                         </td>
                                         <td>
                                             {student.hasResume ?
-                                                <span className="badge badge-success"><i className="fas fa-file-pdf"></i> Uploaded</span> :
-                                                <span className="badge badge-danger"><i className="fas fa-times"></i> Missing</span>
+                                                <span className="badge-role role-user"><i className="fas fa-file-pdf"></i> Uploaded</span> :
+                                                <span className="badge-role role-super-admin"><i className="fas fa-times"></i> Missing</span>
                                             }
                                         </td>
                                         <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
@@ -1448,7 +1463,7 @@ const AdminDashboard = () => {
                                             <td>
                                                 {student.hasResume && (
                                                     <button
-                                                        className="action-btn view-btn"
+                                                        className="action-btn-modern edit-btn"
                                                         onClick={() => viewStudentResume(student.id, student.name)}
                                                         title="Download Resume"
                                                     >
@@ -1464,6 +1479,7 @@ const AdminDashboard = () => {
                     </table>
                 </div>
             )}
+            </section>
         </div>
     );
 
