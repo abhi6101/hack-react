@@ -2290,26 +2290,32 @@ const AdminDashboard = () => {
                 return renderProfileDetails();
             case 'applications':
                 return (
-                    <section className="card surface-glow">
-                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <h3><i className="fas fa-file-alt"></i> Job Applications</h3>
-                            </div>
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                <div className="search-box-modern">
-                                    <i className="fas fa-search"></i>
-                                    <input
-                                        type="text"
-                                        placeholder="Search apps..."
-                                        value={appSearch}
-                                        onChange={(e) => setAppSearch(e.target.value)}
-                                    />
-                                </div>
-                                <button className="btn-secondary" onClick={() => downloadCSV(applications, 'job_applications.csv')}>
-                                    <i className="fas fa-file-csv"></i> Export
-                                </button>
-                            </div>
+                    <div className="users-management-page animate-in">
+                        <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+                                Job Applications
+                            </h2>
                         </div>
+                        <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                            <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                                <div>
+                                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-file-alt" style={{ color: 'var(--primary)' }}></i> Job Applications</h3>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                                    <div className="search-box-modern">
+                                        <i className="fas fa-search"></i>
+                                        <input
+                                            type="text"
+                                            placeholder="Search apps..."
+                                            value={appSearch}
+                                            onChange={(e) => setAppSearch(e.target.value)}
+                                        />
+                                    </div>
+                                    <button className="btn-secondary" onClick={() => downloadCSV(applications, 'job_applications.csv')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                        <i className="fas fa-file-csv"></i> Export
+                                    </button>
+                                </div>
+                            </div>
                         {loadingApplications ? (
                             <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
                         ) : applications.length > 0 ? (
@@ -2378,9 +2384,13 @@ const AdminDashboard = () => {
                                 </table>
                             </div>
                         ) : (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>No applications yet.</p>
+                            <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                                <i className="fas fa-inbox" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
+                                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No applications yet.</p>
+                            </div>
                         )}
-                    </section>
+                        </section>
+                    </div>
                 );
             case 'interviews':
                 return (
