@@ -685,7 +685,6 @@ const Papers = () => {
                                 <div className="file-icon">
                                     <i className="fas fa-file-pdf"></i>
                                 </div>
-                                <div className="year-badge">{paper.year !== "0" ? paper.year : 'N/A'}</div>
                             </div>
 
                             <div className="card-body">
@@ -813,7 +812,6 @@ const Papers = () => {
                                     <div className="file-icon">
                                         <i className="fas fa-file-pdf"></i>
                                     </div>
-                                    <div className="year-badge">{paper.year !== "0" ? paper.year : 'N/A'}</div>
                                 </div>
 
                                 <div className="card-body">
