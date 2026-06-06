@@ -547,7 +547,9 @@ const Notes = () => {
     return (
         <div className="papers-container" style={{ minHeight: '90vh', paddingTop: '6.5rem' }}>
             <Helmet>
-                <title>Study Notes Explorer - Hack-2-Hired</title>
+                <title>RGPV IMCA Study Notes | Syllabus & Class Notes | Hack-2-Hired</title>
+                <meta name="description" content="Download high-quality study notes, syllabuses, and subject guides for RGPV Integrated MCA (IMCA) and BCA. Perfect for your exam preparation." />
+                <meta name="keywords" content="RGPV IMCA notes, Integrated MCA study material, IMCA syllabus, BCA notes, Hack2Hired notes, RGPV exam preparation" />
             </Helmet>
 
             {/* Unified Header section matching Papers.jsx */}
