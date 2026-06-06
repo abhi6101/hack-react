@@ -407,9 +407,11 @@ const Papers = () => {
                 gap: '1.5rem',
                 marginBottom: '2rem'
             }}>
-                <div>
-                    <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Academic Archive</h2>
-                    <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Select a semester folder to view subject materials</p>
+                <div style={{ maxWidth: '650px' }}>
+                    <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700', color: 'var(--text-primary)' }}>RGPV Question Papers</h1>
+                    <p style={{ margin: '0.5rem 0 0', color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                        Download the complete archive of <strong>RGPV previous year question papers</strong> for the IMCA (Integrated MCA) program. Unlike other portals that only offer 1 or 2 papers, Hack2Hired provides the full, exclusive collection from Semester 1 to 10.
+                    </p>
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
