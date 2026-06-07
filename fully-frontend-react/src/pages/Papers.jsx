@@ -857,7 +857,7 @@ const Papers = () => {
             <Helmet>
                 <title>RGPV Question Papers | IMCA Previous Year Exams | Hack-2-Hired</title>
                 <meta name="description" content="Download exclusive RGPV question papers and Integrated MCA (IMCA) previous year exams. Access the complete collection of 1st to 10th semester papers." />
-                <meta name="keywords" content="RGPV question papers, RGPV IMCA papers, IMCA 8th sem papers, Integrated MCA question papers, RGPV previous year papers, Hack2Hired" />
+                <meta name="keywords" content="imca previous year question paper, previous pg question papers, rmca lmca imca question papers, imca bca integrated honor solved question papers, RGPV question papers, RGPV IMCA papers, IMCA 8th sem papers, Integrated MCA question papers, RGPV previous year papers, Hack2Hired" />
             </Helmet>
 
             <div className="decorative-blob blob-1"></div>
