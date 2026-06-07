@@ -155,23 +155,6 @@ const ForgotPassword = () => {
                         </button>
                     </form>
 
-                    <div style={{
-                        marginTop: '2rem',
-                        padding: '1rem',
-                        background: 'rgba(255,255,255,0.05)',
-                        borderRadius: '8px',
-                        fontSize: '0.85rem',
-                        color: '#aaa'
-                    }}>
-                        <p style={{ margin: '0 0 0.5rem 0' }}>
-                            <i className="fas fa-info-circle"></i> <strong>What happens next?</strong>
-                        </p>
-                        <ol style={{ margin: 0, paddingLeft: '1.5rem' }}>
-                            <li>We'll send a 6-digit OTP to your email</li>
-                            <li>Enter the OTP to verify your identity</li>
-                            <li>Set a new password or complete verification</li>
-                        </ol>
-                    </div>
                 </div>
             </section>
         </div>
