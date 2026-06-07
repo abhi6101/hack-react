@@ -11,8 +11,6 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [showWaitNote, setShowWaitNote] = useState(false);
-    const [countdown, setCountdown] = useState(15);
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -87,17 +85,6 @@ const Login = () => {
         }
         setLoading(true);
         setError('');
-        setShowWaitNote(false);
-        setCountdown(15);
-
-        let countdownInterval;
-        // Start 8-second timer for wait note
-        const timer = setTimeout(() => {
-            setShowWaitNote(true);
-            countdownInterval = setInterval(() => {
-                setCountdown(prev => (prev > 0 ? prev - 1 : 30));
-            }, 1000);
-        }, 8000);
 
         try {
             console.log('🔐 Login attempt - Mode:', loginMode);
@@ -196,8 +183,6 @@ const Login = () => {
             console.error('Login error:', err);
             setError('Network error. Please try again later.');
         } finally {
-            clearTimeout(timer);
-            if (countdownInterval) clearInterval(countdownInterval);
             setLoading(false);
         }
     };
@@ -291,21 +276,6 @@ const Login = () => {
                             <i className="fas fa-shield-alt"></i> Admin
                         </button>
                     </div>
-
-                    {/* Server Wait Note - Only show after 5 seconds of loading */}
-                    <AnimatePresence>
-                        {loading && showWaitNote && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="server-wait-note"
-                            >
-                                ⏳ {countdown > 15 ? "Cold start detected. Backend is waking up..." : "The server may take 15–20 seconds to start."}
-                                <br />Please wait: <strong>{countdown}s</strong>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
 
                     {error && <div className="alert alert-error" role="alert" style={{ display: 'block' }}>{error}</div>}
 

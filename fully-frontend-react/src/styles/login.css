@@ -78,6 +78,39 @@ nav a:hover {
 .login-body-wrapper {
     background: transparent !important;
     min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-body-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(102,126,234,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: float-blob 15s infinite alternate ease-in-out;
+}
+
+.login-body-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    right: -10%;
+    width: 40vw;
+    height: 40vw;
+    background: radial-gradient(circle, rgba(118,75,162,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: float-blob 20s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes float-blob {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, 50px) scale(1.1); }
 }
 
 .login-section {
@@ -87,6 +120,7 @@ nav a:hover {
     justify-content: center;
     padding: 2rem 1rem;
     background: transparent;
+    z-index: 1;
 }
 
 .login-card {
