@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../components/CustomAlert';
 import '../styles/gallery.css';
@@ -131,6 +132,11 @@ const Gallery = () => {
 
     return (
         <main>
+            <Helmet>
+                <title>Campus Life & Event Gallery | Hack-2-Hired</title>
+                <meta name="description" content="Explore moments and memories from our college campus. View photos of lab sessions, classroom lectures, cultural events, and farewell celebrations." />
+                <meta name="keywords" content="college gallery, campus life, student photos, events, tech fest, farewell" />
+            </Helmet>
             <section className="gallery-page">
                 <div className="gallery-header" style={{
                     display: 'flex',

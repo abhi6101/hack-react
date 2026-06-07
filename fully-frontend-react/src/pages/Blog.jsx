@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import blogPosts from '../data/blogData';
 import '../styles/blog.css';
@@ -18,6 +19,11 @@ const Blog = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Career Insights & Placement Blog | Hack-2-Hired</title>
+                <meta name="description" content="Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career." />
+                <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
+            </Helmet>
             <header className="hero">
                 <div className="hero-content">
                     <h1>Career Insights Blog</h1>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import '../styles/videos.css';
 
 const allVideos = [
@@ -20,6 +21,11 @@ const Videos = () => {
 
     return (
         <main className="videos-page">
+            <Helmet>
+                <title>Curated Study Videos | Hack-2-Hired</title>
+                <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />
+                <meta name="keywords" content="study videos, programming tutorials, MERN stack tutorial, Spring Boot course, online learning" />
+            </Helmet>
             <header className="videos-header">
                 <h1>Curated Study Videos</h1>
                 <p className="subtitle">Enhance your skills with our collection of educational videos from top instructors.</p>

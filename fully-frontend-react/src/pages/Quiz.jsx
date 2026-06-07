@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/CustomToast';
 import '../styles/quiz.css';
@@ -145,6 +146,11 @@ const Quiz = () => {
 
     return (
         <main className="quiz-container">
+            <Helmet>
+                <title>Placement Preparation Quizzes | Hack-2-Hired</title>
+                <meta name="description" content="Test your knowledge with our free placement preparation quizzes. Practice HTML, CSS, JavaScript, React, Java, DSA, and more to ace your technical interviews." />
+                <meta name="keywords" content="placement quiz, technical interview practice, DSA quiz, React quiz, coding test preparation" />
+            </Helmet>
             {step === 'subject-selection' && (
                 <section id="subject-selection" className="quiz-step active">
                     <header className="page-header">

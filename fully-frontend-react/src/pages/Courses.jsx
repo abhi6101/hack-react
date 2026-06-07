@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import coursesData from '../data/courseData';
 import '../styles/courses.css';
@@ -32,6 +33,11 @@ const Courses = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Career-Boosting Courses | Hack-2-Hired</title>
+                <meta name="description" content="Master in-demand skills with our industry-relevant courses and get placement-ready. Explore programming, web dev, and data science courses." />
+                <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
+            </Helmet>
             <header className="courses-hero">
                 <h1>Career-Boosting Courses</h1>
                 <p className="subtitle">Master in-demand skills with our industry-relevant courses and get placement-ready.</p>
