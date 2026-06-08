@@ -12,6 +12,7 @@ const UploadPaper = () => {
     const [error, setError] = useState('');
     const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: '' });
     const fileInputRef = useRef(null);
+    const cameraInputRef = useRef(null);
     const navigate = useNavigate();
 
     const handleFileSelect = (e) => {
@@ -150,18 +151,36 @@ const UploadPaper = () => {
                                     Take photos of an official university exam paper. Ensure the text is clear and legible.
                                 </p>
                                 
-                                <div 
-                                    onClick={() => fileInputRef.current.click()}
-                                    style={{ 
-                                        border: '2px dashed var(--primary)', borderRadius: '12px', padding: '40px 20px', 
-                                        textAlign: 'center', cursor: 'pointer', background: 'rgba(0, 212, 255, 0.05)',
-                                        marginBottom: '20px', transition: 'all 0.3s ease'
-                                    }}
-                                >
-                                    <i className="fas fa-camera" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '15px' }}></i>
-                                    <h3>Tap to Capture or Select Files</h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Supports multiple images</p>
+                                <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+                                    <div 
+                                        onClick={() => cameraInputRef.current.click()}
+                                        style={{ 
+                                            flex: 1, border: '2px dashed var(--primary)', borderRadius: '12px', padding: '25px 10px', 
+                                            textAlign: 'center', cursor: 'pointer', background: 'rgba(0, 212, 255, 0.05)', transition: 'all 0.3s ease'
+                                        }}
+                                    >
+                                        <i className="fas fa-camera" style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: '10px' }}></i>
+                                        <h4 style={{ margin: 0, fontSize: '1rem' }}>Take Photo</h4>
+                                    </div>
+                                    <div 
+                                        onClick={() => fileInputRef.current.click()}
+                                        style={{ 
+                                            flex: 1, border: '2px dashed #10B981', borderRadius: '12px', padding: '25px 10px', 
+                                            textAlign: 'center', cursor: 'pointer', background: 'rgba(16, 185, 129, 0.05)', transition: 'all 0.3s ease'
+                                        }}
+                                    >
+                                        <i className="fas fa-images" style={{ fontSize: '2rem', color: '#10B981', marginBottom: '10px' }}></i>
+                                        <h4 style={{ margin: 0, fontSize: '1rem' }}>Gallery</h4>
+                                    </div>
                                 </div>
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    capture="environment" 
+                                    ref={cameraInputRef} 
+                                    style={{ display: 'none' }} 
+                                    onChange={handleFileSelect} 
+                                />
                                 <input 
                                     type="file" 
                                     multiple 
