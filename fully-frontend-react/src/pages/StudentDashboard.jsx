@@ -172,7 +172,7 @@ const StudentDashboard = () => {
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
                             {/* Profile Picture */}
                             <div style={{
                                 width: '80px',
@@ -192,14 +192,15 @@ const StudentDashboard = () => {
                             </div>
                             <div>
                                 <h1 style={{
-                                    fontSize: '2.5rem',
+                                    fontSize: 'clamp(1.8rem, 6vw, 2.5rem)',
                                     color: '#fff',
                                     margin: 0,
                                     marginBottom: '0.5rem',
                                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent',
-                                    fontWeight: '700'
+                                    fontWeight: '700',
+                                    wordWrap: 'break-word'
                                 }}>
                                     Welcome Back! 👋
                                 </h1>
