@@ -45,15 +45,17 @@ const UploadPaper = () => {
             // Simple heuristics
             let guessedSubject = "";
             let guessedYear = new Date().getFullYear().toString();
-            let guessedBranch = "B.Tech";
-            let guessedSemester = "1";
+            let guessedBranch = "";
+            let guessedSemester = "";
 
+            // Year: "2025"
             const yearMatch = text.match(/\b(20[1-3][0-9])\b/);
             if (yearMatch) guessedYear = yearMatch[1];
             
-            const semMatch = text.match(/(?:semester|sem)\s*([1-8]|i{1,3}|iv|v|vi|vii|viii)/i);
+            // Semester: "VIII Semester" or "Semester 8"
+            const semMatch = text.match(/(?:(?:semester|sem)\s*([1-8]|i{1,3}|iv|v|vi|vii|viii))|(?:([1-8]|i{1,3}|iv|v|vi|vii|viii)\s*(?:semester|sem))/i);
             if (semMatch) {
-                let sem = semMatch[1].toLowerCase();
+                let sem = (semMatch[1] || semMatch[2] || "").toLowerCase();
                 if(sem === 'i') guessedSemester = '1';
                 else if(sem === 'ii') guessedSemester = '2';
                 else if(sem === 'iii') guessedSemester = '3';
@@ -63,6 +65,18 @@ const UploadPaper = () => {
                 else if(sem === 'vii') guessedSemester = '7';
                 else if(sem === 'viii') guessedSemester = '8';
                 else guessedSemester = sem;
+            }
+
+            // Branch: "M.C.A", "B.Tech", etc.
+            const branchMatch = text.match(/\b(B\.?Tech|M\.?C\.?A\.?|B\.?C\.?A\.?|B\.?E\.?|Diploma)\b/i);
+            if (branchMatch) {
+                guessedBranch = branchMatch[1].replace(/\./g, '').toUpperCase();
+            }
+
+            // Subject Code: "MCADD-803", "CS-402"
+            const codeMatch = text.match(/\b([A-Z]{2,5}-\d{3,4})\b/i);
+            if (codeMatch) {
+                guessedSubject = codeMatch[1].toUpperCase();
             }
 
             setAiData({
