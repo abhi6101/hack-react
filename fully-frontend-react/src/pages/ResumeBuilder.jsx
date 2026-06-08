@@ -567,7 +567,7 @@ const ResumeBuilder = () => {
                     border-radius: 6px;
                     padding: 0.7rem;
                     color: #fff;
-                    font-family: inherit;
+                    font-family: inherit; width: 100%; box-sizing: border-box;
                 }
                 .form-input:focus {
                     border-color: var(--primary);

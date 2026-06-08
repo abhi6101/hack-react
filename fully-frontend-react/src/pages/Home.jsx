@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import API_BASE_URL from '../config';
 import FloatingCodeBackground from '../components/FloatingCodeBackground';
 import Typewriter from '../components/Typewriter';
+import LeaderboardComponent from '../components/LeaderboardComponent';
 
 import '../styles/index.css';
 import '../styles/home-interactive.css';
@@ -370,6 +371,10 @@ const Home = () => {
                                     <Link to="/login" className="btn btn-outline">Sign In</Link>
                                 </>
                             )}
+                        </motion.div>
+
+                        <motion.div variants={fadeInUp} style={{ marginTop: '2rem', maxWidth: '400px' }}>
+                            <LeaderboardComponent />
                         </motion.div>
                     </motion.div>
 

@@ -502,7 +502,7 @@ main {
 
 @media (max-width: 768px) {
     .hero-image-side {
-        max-width: 240px;
+        display: none !important;
     }
 
     .hero-main-container {

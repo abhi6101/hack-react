@@ -410,7 +410,7 @@ const Papers = () => {
             }}>
                 <div style={{ maxWidth: '650px' }}>
                     <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700', color: 'var(--text-primary)' }}>RGPV Question Papers</h1>
-                    <p style={{ margin: '0.5rem 0 0', color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                    <p style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
                         Download the complete archive of <strong>RGPV previous year question papers</strong> for the IMCA (Integrated MCA) program. Unlike other portals that only offer 1 or 2 papers, Hack2Hired provides the full, exclusive collection from Semester 1 to 10.
                     </p>
                 </div>
@@ -418,15 +418,17 @@ const Papers = () => {
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
-                        width: '380px',
-                        maxWidth: '100%',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '14px',
-                        padding: '0 1rem',
+                        flex: 1,
+                        minWidth: '280px',
+                        maxWidth: '450px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '50px',
+                        padding: '4px 24px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.8rem',
+                        backdropFilter: 'blur(15px)',
                         transition: 'all 0.3s ease'
                     }}>
                         <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
@@ -442,7 +444,7 @@ const Papers = () => {
                                 fontSize: '0.95rem',
                                 width: '100%',
                                 outline: 'none',
-                                padding: '1rem 0'
+                                padding: '10px 0'
                             }}
                         />
                         {globalSearchQuery && (
@@ -459,7 +461,7 @@ const Papers = () => {
                             <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
                                 <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
                                     <i className="fas fa-graduation-cap"></i>
-                                    <span>{deptFullName}</span>
+                                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>{deptFullName}</span>
                                     <i className={`fas fa-chevron-down ${isDeptOpen ? 'open' : ''}`}></i>
                                 </div>
 

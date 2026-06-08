@@ -59,14 +59,12 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
                         >
                             <i className="fas fa-eye"></i> View
                         </div>
-                        {notesDownloadEnabled && (
-                            <div 
-                                onClick={(e) => { e.stopPropagation(); handleDownloadFile(node); }}
-                                style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#3B82F6', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                            >
-                                <i className="fas fa-download"></i> Download
-                            </div>
-                        )}
+                        <div 
+                            onClick={(e) => { e.stopPropagation(); handleDownloadFile(node); }}
+                            style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#3B82F6', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                        >
+                            <i className="fas fa-download"></i> Download
+                        </div>
                         {isAdmin && handleDeleteFile && (
                             <div 
                                 onClick={(e) => { e.stopPropagation(); handleDeleteFile(node); }}
@@ -545,7 +543,7 @@ const Notes = () => {
     const isAdmin = ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'].includes(userRole);
 
     return (
-        <div className="papers-container" style={{ minHeight: '90vh', paddingTop: '6.5rem' }}>
+        <div className="papers-container" style={{ padding: '6.5rem 5% 5rem', position: 'relative', zIndex: 2, minHeight: '90vh' }}>
             <Helmet>
                 <title>RGPV IMCA Study Notes | Syllabus & Class Notes | Hack-2-Hired</title>
                 <meta name="description" content="Download high-quality study notes, syllabuses, and subject guides for RGPV Integrated MCA (IMCA) and BCA. Perfect for your exam preparation." />
@@ -568,23 +566,24 @@ const Notes = () => {
             }}>
                 <div>
                     <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
-                    <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '600px', marginTop: '0.4rem' }}>
+                    <p style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
                         Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
                     </p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'nowrap', alignItems: 'center', width: '100%', maxWidth: '700px' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
-                        width: '380px',
-                        maxWidth: '100%',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '14px',
-                        padding: '0 1rem',
+                        flex: 1,
+                        minWidth: '200px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '50px',
+                        padding: '4px 20px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.8rem',
+                        backdropFilter: 'blur(15px)',
                         transition: 'all 0.3s ease'
                     }}>
                         <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
@@ -600,7 +599,7 @@ const Notes = () => {
                                 fontSize: '0.95rem',
                                 width: '100%',
                                 outline: 'none',
-                                padding: '1rem 0'
+                                padding: '10px 0'
                             }}
                         />
                         {searchQuery && (
@@ -617,7 +616,7 @@ const Notes = () => {
                             value={branchFilter}
                             onChange={(e) => setBranchFilter(e.target.value)}
                             disabled={userRole === 'STUDENT'}
-                            style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '0.9rem 3rem 0.9rem 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
+                            style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '10px 3rem 10px 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
                         >
                             <option value="" style={{ color: '#000' }}>All Branches</option>
                             {deptList.map(dept => (
