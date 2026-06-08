@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { motion } from 'framer-motion';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
@@ -13,8 +12,11 @@ const LeaderboardAdmin = () => {
     const fetchLeaderboard = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(`${PUBLIC_API_URL}/leaderboard`);
-            setLeaderboard(res.data);
+            const res = await fetch(`${PUBLIC_API_URL}/leaderboard`);
+            if (res.ok) {
+                const data = await res.json();
+                setLeaderboard(data);
+            }
         } catch (err) {
             console.error('Error fetching leaderboard:', err);
         } finally {
@@ -30,13 +32,21 @@ const LeaderboardAdmin = () => {
         if (!window.confirm(`Are you sure you want to reset points for ${username} to 0?`)) return;
 
         try {
-            const token = localStorage.getItem('token');
-            await axios.put(`${ADMIN_API_URL}/users/${userId}/reset-points`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
+            const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+            const response = await fetch(`${ADMIN_API_URL}/users/${userId}/reset-points`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
-            // Update local state instead of refetching to be fast
-            setLeaderboard(prev => prev.filter(user => user.id !== userId));
-            alert(`Points reset to 0 for ${username}.`);
+            
+            if (response.ok) {
+                // Update local state instead of refetching to be fast
+                setLeaderboard(prev => prev.filter(user => user.id !== userId));
+                alert(`Points reset to 0 for ${username}.`);
+            } else {
+                alert('Failed to reset points. Only ADMIN or SUPER_ADMIN can do this.');
+            }
         } catch (err) {
             console.error('Error resetting points:', err);
             alert('Failed to reset points. Only ADMIN or SUPER_ADMIN can do this.');
