@@ -297,6 +297,11 @@
         margin-top: 0.5rem;
         margin-left: 1rem;
         width: calc(100% - 1rem);
+        display: none;
+    }
+
+    .navbar .dropdown-menu.show {
+        display: block;
     }
 
     .navbar .logo {
