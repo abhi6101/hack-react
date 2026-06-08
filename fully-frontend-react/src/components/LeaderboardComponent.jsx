@@ -6,19 +6,21 @@ const LeaderboardComponent = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Mocking the fetch for now, since we haven't built the explicit /leaderboard endpoint in the backend.
-        // In a real scenario, you'd fetch from `${API_BASE_URL}/users/leaderboard`
-        // which sorts users by contributionPoints DESC.
-        
-        // For demonstration, we'll just simulate a slight delay and then show empty or mock data
-        setTimeout(() => {
-            setLeaders([
-                { id: 1, username: 'abhijeet', name: 'Abhijeet Singh', points: 450 },
-                { id: 2, username: 'riya', name: 'Riya Sharma', points: 300 },
-                { id: 3, username: 'rahul', name: 'Rahul Verma', points: 150 }
-            ]);
-            setLoading(false);
-        }, 1000);
+        const fetchLeaderboard = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/public/leaderboard`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setLeaders(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch leaderboard data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchLeaderboard();
     }, []);
 
     if (loading) {
