@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import Tesseract from 'tesseract.js';
 import API_BASE_URL from '../config';
 import '../styles/index.css';
 
@@ -29,34 +30,52 @@ const UploadPaper = () => {
         setError('');
         setStep(2); // Move to scanning step
 
-        const formData = new FormData();
-        files.forEach(file => formData.append('files', file));
-
         try {
-            const token = localStorage.getItem('authToken');
-            const response = await fetch(`${API_BASE_URL}/papers/analyze`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: formData
-            });
+            const firstImage = files[0];
+            
+            // Perform OCR locally using Tesseract.js
+            const result = await Tesseract.recognize(
+                firstImage,
+                'eng'
+            );
 
-            const data = await response.json();
+            const text = result.data.text;
+            
+            // Simple heuristics
+            let guessedSubject = "";
+            let guessedYear = new Date().getFullYear().toString();
+            let guessedBranch = "B.Tech";
+            let guessedSemester = "1";
 
-            if (response.ok) {
-                setAiData({
-                    subject: data.subject || '',
-                    semester: data.semester || '',
-                    branch: data.branch || '',
-                    year: data.year || ''
-                });
-                setStep(3); // Verification step
-            } else {
-                setError(data.message || data || "Analysis failed.");
-                setStep(1); // Go back
+            const yearMatch = text.match(/\b(20[1-3][0-9])\b/);
+            if (yearMatch) guessedYear = yearMatch[1];
+            
+            const semMatch = text.match(/(?:semester|sem)\s*([1-8]|i{1,3}|iv|v|vi|vii|viii)/i);
+            if (semMatch) {
+                let sem = semMatch[1].toLowerCase();
+                if(sem === 'i') guessedSemester = '1';
+                else if(sem === 'ii') guessedSemester = '2';
+                else if(sem === 'iii') guessedSemester = '3';
+                else if(sem === 'iv') guessedSemester = '4';
+                else if(sem === 'v') guessedSemester = '5';
+                else if(sem === 'vi') guessedSemester = '6';
+                else if(sem === 'vii') guessedSemester = '7';
+                else if(sem === 'viii') guessedSemester = '8';
+                else guessedSemester = sem;
             }
+
+            setAiData({
+                subject: guessedSubject,
+                semester: guessedSemester,
+                branch: guessedBranch,
+                year: guessedYear
+            });
+            
+            setStep(3); // Verification step
         } catch (err) {
-            setError("Network error. Please try again.");
-            setStep(1);
+            console.error(err);
+            setError("Local OCR Scan failed. Please enter details manually.");
+            setStep(3); // Go to verification anyway so they can type it in
         } finally {
             setLoading(false);
         }
@@ -160,23 +179,23 @@ const UploadPaper = () => {
                                 )}
 
                                 <button onClick={handleAnalyze} className="btn btn-primary" style={{ width: '100%' }} disabled={files.length === 0}>
-                                    <i className="fas fa-brain"></i> Analyze with Vision AI
+                                    <i className="fas fa-search"></i> Scan First Page
                                 </button>
                             </motion.div>
                         )}
 
                         {step === 2 && (
                             <motion.div key="step2" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '40px 0' }}>
-                                <i className="fas fa-robot fa-spin" style={{ fontSize: '4rem', color: 'var(--primary)', marginBottom: '20px' }}></i>
-                                <h3>AI is analyzing your paper...</h3>
-                                <p style={{ color: 'var(--text-secondary)' }}>Extracting subject, branch, and verifying quality.</p>
+                                <i className="fas fa-search fa-bounce" style={{ fontSize: '4rem', color: 'var(--primary)', marginBottom: '20px' }}></i>
+                                <h3>Scanning Document Locally...</h3>
+                                <p style={{ color: 'var(--text-secondary)' }}>Extracting text on your device. No data is sent to AI servers.</p>
                             </motion.div>
                         )}
 
                         {step === 3 && (
                             <motion.div key="step3" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
                                 <div style={{ background: 'rgba(74, 222, 128, 0.1)', padding: '15px', borderRadius: '8px', color: '#4ade80', marginBottom: '20px', border: '1px solid rgba(74,222,128,0.3)' }}>
-                                    <i className="fas fa-check-circle"></i> Quality Check Passed! Please verify the extracted details below.
+                                    <i className="fas fa-check-circle"></i> OCR Analysis Complete! Please verify the extracted details below.
                                 </div>
                                 
                                 <form onSubmit={handleSubmit}>
