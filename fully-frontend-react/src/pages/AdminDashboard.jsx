@@ -1391,7 +1391,7 @@ const AdminDashboard = () => {
         ].filter(d => d.value > 0);
 
         return (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
+            <div className="desktop-only" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
                 <div className="surface-glow" style={{ padding: '2rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
                     <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <i className="fas fa-chart-pie" style={{ color: 'var(--primary)' }}></i> User Demographics
@@ -1720,7 +1720,7 @@ const AdminDashboard = () => {
                             </div>
                         )}
 
-                        <div className="recent-activity">
+                        <div className="recent-activity desktop-only">
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                                 <h2>Recent Job Postings</h2>
                                 <div className="search-box-modern">
@@ -2954,35 +2954,47 @@ const AdminDashboard = () => {
             </aside>
 
             <main className="admin-main">
-                <header className="main-header">
+                <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'var(--surface-bg)' }}>
                     <div className="header-left">
-                        <h1>{menuItems.find(i => i.id === activeTab)?.label}</h1>
+                        <h1 style={{ fontSize: '1.8rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '800' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
-                    <div className="header-right">
+                    <div className="header-right" style={{ display: 'flex', gap: '10px' }}>
                         <button 
                             onClick={() => navigate('/')} 
                             style={{ 
-                                padding: '8px 18px', 
-                                borderRadius: '12px', 
-                                border: '1px solid rgba(255,255,255,0.1)', 
-                                background: 'rgba(255,255,255,0.05)', 
-                                color: '#fff', 
+                                padding: '8px 12px', 
+                                borderRadius: '10px', 
+                                border: '1px solid rgba(14, 165, 233, 0.2)', 
+                                background: 'rgba(14, 165, 233, 0.05)', 
+                                color: 'var(--primary)', 
                                 cursor: 'pointer', 
                                 display: 'flex', 
                                 alignItems: 'center', 
-                                gap: '8px', 
+                                gap: '6px', 
                                 transition: 'all 0.3s ease', 
-                                marginRight: '15px', 
-                                fontWeight: '500', 
-                                backdropFilter: 'blur(10px)' 
+                                fontWeight: '600', 
+                                fontSize: '0.85rem'
                             }}
-                            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
-                            <i className="fas fa-home" style={{ color: 'var(--primary)' }}></i> Back to Portal
+                            <i className="fas fa-home"></i> <span className="desktop-only">Portal</span>
                         </button>
-                        <button onClick={() => { localStorage.clear(); navigate('/login'); }} className="logout-btn-modern">
-                            <i className="fas fa-sign-out-alt"></i> Logout
+                        <button onClick={() => { localStorage.clear(); navigate('/login'); }} 
+                            style={{ 
+                                padding: '8px 12px', 
+                                borderRadius: '10px', 
+                                border: '1px solid rgba(255, 71, 123, 0.2)', 
+                                background: 'rgba(255, 71, 123, 0.05)', 
+                                color: 'var(--accent)', 
+                                cursor: 'pointer', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '6px', 
+                                transition: 'all 0.3s ease', 
+                                fontWeight: '600', 
+                                fontSize: '0.85rem'
+                            }}
+                        >
+                            <i className="fas fa-sign-out-alt"></i> <span className="desktop-only">Logout</span>
                         </button>
                     </div>
                 </header>
