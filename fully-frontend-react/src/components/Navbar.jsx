@@ -90,11 +90,11 @@ const Navbar = () => {
                 {['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN'].includes(localStorage.getItem('userRole')) && (
                     <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin</Link>
                 )}
+                <Link to="/upload-paper" className={`btn-upload-paper ${isActive('/upload-paper')}`}>
+                    <i className="fas fa-upload"></i> Upload Paper
+                </Link>
                 {localStorage.getItem('authToken') && localStorage.getItem('userRole') === 'USER' && (
                     <>
-                        <Link to="/upload-paper" className={`btn-upload-paper ${isActive('/upload-paper')}`}>
-                            <i className="fas fa-upload"></i> Upload Paper
-                        </Link>
                         <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> Dashboard</Link>
                     </>
                 )}

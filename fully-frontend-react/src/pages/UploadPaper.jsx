@@ -15,6 +15,12 @@ const UploadPaper = () => {
     const cameraInputRef = useRef(null);
     const navigate = useNavigate();
 
+    React.useEffect(() => {
+        if (!localStorage.getItem('authToken')) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
     const handleFileSelect = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             setFiles(prev => [...prev, ...Array.from(e.target.files)]);
