@@ -89,58 +89,50 @@ const StudentDashboard = () => {
     };
 
     const fetchData = async () => {
-        // Fetch user info
-        try {
-            const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            if (userRes.ok) {
-                const userData = await userRes.json();
-                setUser(userData);
-                // Pre-fill editedData for always-on edit mode
-                setEditedData({
-                    fullName: userData.fullName || userData.name || '',
-                    fatherName: userData.fatherName || '',
-                    institution: userData.institution || '',
-                    aadharNumber: userData.aadharNumber || '',
-                    mobilePrimary: userData.mobilePrimary || userData.phone || '',
-                    mobileSecondary: userData.mobileSecondary || '',
-                    enrollmentNumber: userData.enrollmentNumber || '',
-                    startYear: userData.startYear || ''
-                });
-            } else if (userRes.status === 401) {
-                localStorage.clear();
-                navigate('/login');
-            }
-        } catch (err) {
-            console.error('Failed to load user data');
+        const token = getToken();
+        if (!token) {
+            navigate('/login');
+            return;
         }
 
-        // Fetch job applications
-        try {
-            const jobAppsRes = await fetch(`${API_BASE_URL}/job-applications/my`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            if (jobAppsRes.ok) {
-                const jobAppsData = await jobAppsRes.json();
-                setJobApplications(jobAppsData);
-            }
-        } catch (err) {
-            console.error('Failed to load job applications');
-        }
+        const headers = { 'Authorization': `Bearer ${token}` };
 
-        // Fetch interviews
-        try {
-            const interviewRes = await fetch(`${API_BASE_URL}/interview-drives`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
+        // Launch all API requests concurrently
+        const fetchUser = fetch(`${API_BASE_URL}/auth/me`, { headers })
+            .then(async res => {
+                if (res.ok) return await res.json();
+                if (res.status === 401) { localStorage.clear(); navigate('/login'); }
+                return null;
+            })
+            .catch(err => { console.error('Failed to load user data'); return null; });
+
+        const fetchJobs = fetch(`${API_BASE_URL}/job-applications/my`, { headers })
+            .then(async res => res.ok ? await res.json() : [])
+            .catch(err => { console.error('Failed to load job applications'); return []; });
+
+        const fetchInterviews = fetch(`${API_BASE_URL}/interview-drives`, { headers })
+            .then(async res => res.ok ? await res.json() : [])
+            .catch(err => { console.error('Failed to load interviews'); return []; });
+
+        // Wait for all to complete simultaneously
+        const [userData, jobAppsData, interviewData] = await Promise.all([fetchUser, fetchJobs, fetchInterviews]);
+
+        if (userData) {
+            setUser(userData);
+            setEditedData({
+                fullName: userData.fullName || userData.name || '',
+                fatherName: userData.fatherName || '',
+                institution: userData.institution || '',
+                aadharNumber: userData.aadharNumber || '',
+                mobilePrimary: userData.mobilePrimary || userData.phone || '',
+                mobileSecondary: userData.mobileSecondary || '',
+                enrollmentNumber: userData.enrollmentNumber || '',
+                startYear: userData.startYear || ''
             });
-            if (interviewRes.ok) {
-                const interviewData = await interviewRes.json();
-                setInterviews(interviewData);
-            }
-        } catch (err) {
-            console.error('Failed to load interviews');
         }
+        
+        if (jobAppsData) setJobApplications(jobAppsData);
+        if (interviewData) setInterviews(interviewData);
 
         setLoading(false);
     };
