@@ -100,6 +100,17 @@ const PendingPapersAdmin = () => {
                                     </td>
                                     <td>
                                         <div style={{ display: 'flex', gap: '10px' }}>
+                                            {paper.driveFileId && (
+                                                <a 
+                                                    href={paper.driveFileId} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer" 
+                                                    className="btn" 
+                                                    style={{ padding: '5px 15px', fontSize: '0.8rem', borderRadius: '6px', background: 'rgba(0, 212, 255, 0.1)', color: 'var(--primary)', border: '1px solid rgba(0,212,255,0.3)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                                                >
+                                                    <i className="fas fa-eye"></i> View
+                                                </a>
+                                            )}
                                             <button 
                                                 className="btn-primary" 
                                                 style={{ padding: '5px 15px', fontSize: '0.8rem', borderRadius: '6px' }}
