@@ -57,16 +57,16 @@ const ApplicationModal = ({ interview, onClose, onSubmit }) => {
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2>Apply for {interview.company}</h2>
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        <button type="button" className="btn btn-sm btn-outline-info" onClick={fillSampleData} title="Fill Sample Data">
+                <div className="modal-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative' }}>
+                    <h2 style={{ paddingRight: '40px', marginBottom: '15px' }}>Apply for {interview.company}</h2>
+                    <button className="close-btn" onClick={onClose} style={{ position: 'absolute', top: '15px', right: '15px', lineHeight: '1' }}>&times;</button>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                        <button type="button" className="btn btn-sm btn-outline-info" onClick={fillSampleData} title="Fill Sample Data" style={{ padding: '5px 10px', fontSize: '0.85rem', background: 'transparent', color: '#0dcaf0', border: '1px solid #0dcaf0', borderRadius: '4px' }}>
                             <i className="fas fa-magic"></i> Fill Sample
                         </button>
-                        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={clearForm} title="Clear Form">
+                        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={clearForm} title="Clear Form" style={{ padding: '5px 10px', fontSize: '0.85rem', background: 'transparent', color: '#6c757d', border: '1px solid #6c757d', borderRadius: '4px' }}>
                             <i className="fas fa-eraser"></i> Clear
                         </button>
-                        <button className="close-btn" onClick={onClose}>&times;</button>
                     </div>
                 </div>
 

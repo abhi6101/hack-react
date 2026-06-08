@@ -547,9 +547,9 @@
 
 @media (max-width: 768px) {
     .top-filter-section {
-        grid-template-columns: 1.5fr 1fr;
+        grid-template-columns: 1fr;
         padding: 1rem;
-        gap: 0.5rem;
+        gap: 1rem;
     }
 
     .interview-grid {
