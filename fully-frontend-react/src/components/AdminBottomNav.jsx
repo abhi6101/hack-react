@@ -2,40 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../styles/admin-bottom-nav.css';
 
 const AdminBottomNav = ({ activeTab, setActiveTab }) => {
-    const [isVisible, setIsVisible] = useState(true);
-
-    useEffect(() => {
-        let timeoutId;
-
-        const handleScroll = () => {
-            setIsVisible(true);
-            
-            // Clear any existing timeout
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-            
-            // Hide after 5 seconds of inactivity
-            timeoutId = setTimeout(() => {
-                setIsVisible(false);
-            }, 5000);
-        };
-
-        // Initial timeout when component mounts
-        timeoutId = setTimeout(() => {
-            setIsVisible(false);
-        }, 5000);
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-        };
-    }, []);
-
     const navItems = [
         { id: 'dashboard', icon: 'fa-home', label: 'Home' },
         { id: 'users', icon: 'fa-users', label: 'Users' },
@@ -45,7 +11,7 @@ const AdminBottomNav = ({ activeTab, setActiveTab }) => {
     ];
 
     return (
-        <nav className={`admin-bottom-nav ${!isVisible ? 'hidden' : ''}`}>
+        <nav className="admin-bottom-nav">
             {navItems.map(item => (
                 <button 
                     key={item.id}

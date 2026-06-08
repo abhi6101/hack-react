@@ -191,6 +191,31 @@ const AdminDashboard = () => {
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
     const [editingInterview, setEditingInterview] = useState(null);
+
+    // View Toggles
+    const [activeJobsView, setActiveJobsView] = useState('list');
+    const [activeUsersView, setActiveUsersView] = useState('list');
+    const [activeInterviewsView, setActiveInterviewsView] = useState('list');
+    const [activeStudentsView, setActiveStudentsView] = useState('list');
+
+    const ViewToggle = ({ activeView, setActiveView, formLabel, listLabel, formIcon, listIcon }) => (
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
+            <button 
+                className={`btn ${activeView === 'form' ? 'btn-primary' : 'btn-outline'}`} 
+                onClick={() => setActiveView('form')}
+                style={{ flex: 1, minWidth: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+                <i className={formIcon}></i> {formLabel}
+            </button>
+            <button 
+                className={`btn ${activeView === 'list' ? 'btn-primary' : 'btn-outline'}`} 
+                onClick={() => setActiveView('list')}
+                style={{ flex: 1, minWidth: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+                <i className={listIcon}></i> {listLabel}
+            </button>
+        </div>
+    );
     const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
     const [verificationTab, setVerificationTab] = useState('idCard'); // idCard, admit // For ID Card Modal
     const [applications, setApplications] = useState([]);
