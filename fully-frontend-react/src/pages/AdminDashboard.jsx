@@ -3070,7 +3070,7 @@ const AdminDashboard = () => {
                 </div>
             )}
         </div>
-        {isMobile && <AdminBottomNav activeTab={activeTab} setActiveTab={setActiveTab} />}
+        <AdminBottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </>
     );
 };
