@@ -1551,3 +1551,25 @@ td {
         padding: 2.5rem;
     }
 }
+
+/* --- App Shell Interface for Mobile --- */
+@media (max-width: 767px) {
+    .sidebar, .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .admin-main {
+        padding-bottom: 90px !important; /* Space for Bottom Nav */
+    }
+    
+    .main-header {
+        position: sticky;
+        top: 0;
+        background: var(--dark-bg);
+        z-index: 1000;
+        padding-top: 1.5rem;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5);
+    }
+}
