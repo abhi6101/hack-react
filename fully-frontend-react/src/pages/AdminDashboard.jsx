@@ -2881,6 +2881,7 @@ const AdminDashboard = () => {
     ];
 
     return (
+        <>
         <div className="admin-container animate-in">
             <button className="mobile-menu-toggle" onClick={toggleSidebar}>
                 <i className={`fas ${isSidebarOpen ? 'fa-times' : 'fa-bars'}`}></i>
@@ -2989,7 +2990,7 @@ const AdminDashboard = () => {
                 </div>
             </main>
 
-            <AdminBottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+            
 
             {/* Verification Modal */}
             {selectedProfileForVerification && (
@@ -3067,6 +3068,8 @@ const AdminDashboard = () => {
                 </div>
             )}
         </div>
+        {isMobile && <AdminBottomNav activeTab={activeTab} setActiveTab={setActiveTab} />}
+        </>
     );
 };
 
