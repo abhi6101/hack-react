@@ -47,6 +47,7 @@ body {
 /* --- 2. Main Layout Architecture (Flexbox Fix) --- */
 .admin-container {
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
     width: 100%;
     background-color: var(--dark-bg);
@@ -256,6 +257,7 @@ body {
 
 .admin-main {
     flex: 1;
+    min-width: 0;
     padding: 1rem;
     min-height: 100vh;
     background: var(--dark-bg);
@@ -284,6 +286,7 @@ body {
 
 .header-right {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 1.25rem;
     flex-shrink: 0;
@@ -1314,6 +1317,9 @@ td {
 
 /* Laptop */
 @media (min-width: 1024px) {
+    .admin-container {
+        flex-direction: row;
+    }
     .sidebar {
         position: sticky;
         left: 0;
@@ -1457,6 +1463,9 @@ td {
 
 /* Laptop */
 @media (min-width: 1024px) {
+    .admin-container {
+        flex-direction: row;
+    }
     .sidebar {
         position: sticky;
         left: 0;
