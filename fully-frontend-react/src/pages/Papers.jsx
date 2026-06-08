@@ -416,46 +416,6 @@ const Papers = () => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <div className="global-search-container" style={{
-                        position: 'relative',
-                        flex: 1,
-                        minWidth: '280px',
-                        maxWidth: '450px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '50px',
-                        padding: '4px 24px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.8rem',
-                        backdropFilter: 'blur(15px)',
-                        transition: 'all 0.3s ease'
-                    }}>
-                        <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
-                        <input
-                            type="text"
-                            placeholder="Search papers by subject, title, course, or year..."
-                            value={globalSearchQuery}
-                            onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                            style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: '#fff',
-                                fontSize: '0.95rem',
-                                width: '100%',
-                                outline: 'none',
-                                padding: '10px 0'
-                            }}
-                        />
-                        {globalSearchQuery && (
-                            <i 
-                                className="fas fa-times" 
-                                onClick={() => setGlobalSearchQuery('')}
-                                style={{ color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
-                            ></i>
-                        )}
-                    </div>
-
                     {userRole !== 'STUDENT' && (
                         <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100 }}>
                             <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
@@ -569,7 +529,6 @@ const Papers = () => {
                         </motion.button>
                         <div>
                             <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Semester {selectedSemester} Subjects</h2>
-                            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Select a subject folder to view papers</p>
                         </div>
                     </div>
 
@@ -635,44 +594,21 @@ const Papers = () => {
             >
                 <div className="view-header" style={{
                     display: 'flex',
-                    flexDirection: 'column',
+                    alignItems: 'center',
                     gap: '1.5rem',
-                    marginBottom: '3rem',
-                    background: 'rgba(255,255,255,0.02)',
-                    padding: '2rem',
-                    borderRadius: '24px',
-                    border: '1px solid rgba(255,255,255,0.05)',
-                    backdropFilter: 'blur(10px)'
+                    marginBottom: '3rem'
                 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                            <motion.button
-                                className="back-btn"
-                                onClick={() => { handleSubjectSelect(null); setSearchQuery(''); }}
-                                whileHover={{ x: -5 }}
-                                whileTap={{ scale: 0.9 }}
-                            >
-                                <i className="fas fa-chevron-left"></i>
-                            </motion.button>
-                            <div>
-                                <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>{selectedSubject}</h2>
-                                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Semester {selectedSemester} Archive</p>
-                            </div>
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-
-
-                            <div className="search-box-container">
-                                <i className="fas fa-search"></i>
-                                <input
-                                    type="text"
-                                    placeholder="Search by paper title or year..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                            </div>
-                        </div>
+                    <motion.button
+                        className="back-btn"
+                        onClick={() => { handleSubjectSelect(null); setSearchQuery(''); }}
+                        whileHover={{ x: -5 }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <i className="fas fa-chevron-left"></i>
+                    </motion.button>
+                    <div>
+                        <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>{selectedSubject}</h2>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Semester {selectedSemester} Archive</p>
                     </div>
                 </div>
 
@@ -703,7 +639,7 @@ const Papers = () => {
                                 </div>
                             </div>
 
-                            <div className="card-buttons-container" style={{ display: 'flex', gap: '10px', marginTop: 'auto', width: '100%' }}>
+                            <div className="card-buttons-container" style={{ display: 'flex', gap: '10px', marginTop: 'auto', width: '100%', flexWrap: 'wrap' }}>
                                 <motion.button
                                     className="download-btn-premium"
                                     onClick={() => handleDownload(paper)}
@@ -833,7 +769,7 @@ const Papers = () => {
                                     </div>
                                 </div>
 
-                                <div className="card-buttons-container" style={{ display: 'flex', gap: '10px', marginTop: 'auto', width: '100%' }}>
+                                <div className="card-buttons-container" style={{ display: 'flex', gap: '10px', marginTop: 'auto', width: '100%', flexWrap: 'wrap' }}>
                                     <motion.button
                                         className="download-btn-premium"
                                         onClick={() => handleDownload(paper)}
