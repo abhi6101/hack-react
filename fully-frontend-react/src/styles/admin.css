@@ -1573,3 +1573,6 @@ td {
         box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5);
     }
 }
+
+/* Hide scrollbars globally to prevent white lines on mobile simulators */
+::-webkit-scrollbar { display: none; }

@@ -12,7 +12,7 @@
     justify-content: space-around;
     align-items: center;
     z-index: 9999;
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom); border-bottom: none !important;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
 }
 
