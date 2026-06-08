@@ -2958,45 +2958,47 @@ const AdminDashboard = () => {
                     <div className="header-left">
                         <h1 style={{ fontSize: '1.8rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '800' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
-                    <div className="header-right" style={{ display: 'flex', gap: '10px' }}>
-                        <button 
-                            onClick={() => navigate('/')} 
-                            style={{ 
-                                padding: '8px 12px', 
-                                borderRadius: '10px', 
-                                border: '1px solid rgba(14, 165, 233, 0.2)', 
-                                background: 'rgba(14, 165, 233, 0.05)', 
-                                color: 'var(--primary)', 
-                                cursor: 'pointer', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '6px', 
-                                transition: 'all 0.3s ease', 
-                                fontWeight: '600', 
-                                fontSize: '0.85rem'
-                            }}
-                        >
-                            <i className="fas fa-home"></i> <span className="desktop-only">Portal</span>
-                        </button>
-                        <button onClick={() => { localStorage.clear(); navigate('/login'); }} 
-                            style={{ 
-                                padding: '8px 12px', 
-                                borderRadius: '10px', 
-                                border: '1px solid rgba(255, 71, 123, 0.2)', 
-                                background: 'rgba(255, 71, 123, 0.05)', 
-                                color: 'var(--accent)', 
-                                cursor: 'pointer', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '6px', 
-                                transition: 'all 0.3s ease', 
-                                fontWeight: '600', 
-                                fontSize: '0.85rem'
-                            }}
-                        >
-                            <i className="fas fa-sign-out-alt"></i> <span className="desktop-only">Logout</span>
-                        </button>
-                    </div>
+                    {activeTab === 'dashboard' && (
+                        <div className="header-right" style={{ display: 'flex', gap: '10px' }}>
+                            <button 
+                                onClick={() => navigate('/')} 
+                                style={{ 
+                                    padding: '8px 12px', 
+                                    borderRadius: '10px', 
+                                    border: '1px solid rgba(14, 165, 233, 0.2)', 
+                                    background: 'rgba(14, 165, 233, 0.05)', 
+                                    color: 'var(--primary)', 
+                                    cursor: 'pointer', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '6px', 
+                                    transition: 'all 0.3s ease', 
+                                    fontWeight: '600', 
+                                    fontSize: '0.85rem'
+                                }}
+                            >
+                                <i className="fas fa-home"></i> <span className="desktop-only">Portal</span>
+                            </button>
+                            <button onClick={() => { localStorage.clear(); navigate('/login'); }} 
+                                style={{ 
+                                    padding: '8px 12px', 
+                                    borderRadius: '10px', 
+                                    border: '1px solid rgba(255, 71, 123, 0.2)', 
+                                    background: 'rgba(255, 71, 123, 0.05)', 
+                                    color: 'var(--accent)', 
+                                    cursor: 'pointer', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '6px', 
+                                    transition: 'all 0.3s ease', 
+                                    fontWeight: '600', 
+                                    fontSize: '0.85rem'
+                                }}
+                            >
+                                <i className="fas fa-sign-out-alt"></i> <span className="desktop-only">Logout</span>
+                            </button>
+                        </div>
+                    )}
                 </header>
 
                 <div className="content-container">
