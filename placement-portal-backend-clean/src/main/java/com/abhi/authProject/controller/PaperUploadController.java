@@ -2,11 +2,9 @@ package com.abhi.authProject.controller;
 
 import com.abhi.authProject.model.StudentPaper;
 import com.abhi.authProject.model.Users;
-import com.abhi.authProject.model.VisionAIResponseDto;
 import com.abhi.authProject.repo.StudentPaperRepository;
 import com.abhi.authProject.repo.UserRepo;
 import com.abhi.authProject.service.PdfCompilationService;
-import com.abhi.authProject.service.VisionAIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +22,6 @@ import java.util.Optional;
 public class PaperUploadController {
 
     @Autowired
-    private VisionAIService visionAIService;
-
-    @Autowired
     private PdfCompilationService pdfCompilationService;
 
     @Autowired
@@ -35,21 +30,7 @@ public class PaperUploadController {
     @Autowired
     private UserRepo userRepo;
 
-    /**
-     * Step 3: Analyze Images using Vision AI (Gatekeeper)
-     */
-    @PostMapping("/analyze")
-    public ResponseEntity<?> analyzePaperImages(@RequestParam("files") List<MultipartFile> files) {
-        try {
-            VisionAIResponseDto aiResponse = visionAIService.analyzeImages(files);
-            if (!aiResponse.isQualityGood()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(aiResponse.getMessage());
-            }
-            return ResponseEntity.ok(aiResponse);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error analyzing images: " + e.getMessage());
-        }
-    }
+
 
     /**
      * Step 5: Submit verified data and compile PDF
@@ -68,7 +49,7 @@ public class PaperUploadController {
             Users uploader = userRepo.findByUsername(username).orElse(null);
 
             if (uploader == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"User not found\"}");
             }
 
             // Compile PDF
@@ -91,7 +72,7 @@ public class PaperUploadController {
 
             return ResponseEntity.ok("Paper submitted successfully and is pending admin approval.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting paper: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"Error submitting paper: " + e.getMessage().replace("\"", "\\\"") + "\"}");
         }
     }
 
