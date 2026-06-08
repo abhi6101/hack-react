@@ -118,6 +118,7 @@ const Login = () => {
                     return;
                 }
                 if (data.username) localStorage.setItem('username', data.username);
+                if (data.name) localStorage.setItem('name', data.name);
 
                 // Handle Remember Me
                 if (loginMode === 'student') {

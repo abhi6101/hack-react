@@ -291,10 +291,12 @@ const Home = () => {
         const storedUsername = localStorage.getItem('username');
         const storedRole = localStorage.getItem('userRole');
         const token = localStorage.getItem('authToken');
+        const storedName = localStorage.getItem('name');
 
         if (storedUsername && token) {
             setUser({
                 username: storedUsername,
+                name: storedName || storedUsername,
                 role: storedRole || 'User'
             });
         } else {
@@ -348,7 +350,7 @@ const Home = () => {
                                     marginTop: '1rem'
                                 }}
                             >
-                                <h2 style={{ textAlign: 'left' }}>Welcome, <span id="displayUsername">{user.username}</span>!</h2>
+                                <h2 style={{ textAlign: 'left' }}>Welcome, <span id="displayUsername">{user.name || user.username}</span>!</h2>
                                 <p style={{ textAlign: 'left' }}>Account type: <span id="displayRole">{user.role}</span></p>
                             </motion.div>
                         )}
