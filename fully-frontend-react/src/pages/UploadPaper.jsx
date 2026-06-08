@@ -220,6 +220,22 @@ const UploadPaper = () => {
                                 <div style={{ background: 'rgba(74, 222, 128, 0.1)', padding: '15px', borderRadius: '8px', color: '#4ade80', marginBottom: '20px', border: '1px solid rgba(74,222,128,0.3)' }}>
                                     <i className="fas fa-check-circle"></i> OCR Analysis Complete! Please verify the extracted details below.
                                 </div>
+
+                                {files.length > 0 && (
+                                    <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>Reference Image</p>
+                                        <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '10px', justifyContent: files.length === 1 ? 'center' : 'flex-start' }}>
+                                            {files.map((file, idx) => (
+                                                <img 
+                                                    key={idx}
+                                                    src={URL.createObjectURL(file)} 
+                                                    alt={`Scanned paper ${idx + 1}`} 
+                                                    style={{ height: '150px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', objectFit: 'contain', background: '#000' }} 
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                                 
                                 <form onSubmit={handleSubmit}>
                                     <div className="input-group" style={{ marginBottom: '15px' }}>
