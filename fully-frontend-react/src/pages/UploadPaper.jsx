@@ -9,7 +9,8 @@ const UploadPaper = () => {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: new Date().getFullYear().toString() });
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+    const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: new Date().getFullYear().toString(), month: currentMonth });
     const [departments, setDepartments] = useState([]);
     const [existingSubjects, setExistingSubjects] = useState([]);
     const fileInputRef = useRef(null);
@@ -17,13 +18,28 @@ const UploadPaper = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (!localStorage.getItem('authToken')) {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
             navigate('/login');
         } else {
             fetch(`${API_BASE_URL}/public/departments`)
                 .then(r => r.json())
                 .then(d => setDepartments(d))
                 .catch(e => console.error('Failed to fetch departments', e));
+
+            // Fetch user profile to pre-fill branch and semester
+            fetch(`${API_BASE_URL}/student-profile`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+                .then(r => r.ok ? r.json() : {})
+                .then(data => {
+                    setAiData(prev => ({
+                        ...prev,
+                        branch: data.branch || prev.branch,
+                        semester: data.semester || prev.semester
+                    }));
+                })
+                .catch(e => console.error('Failed to fetch user profile', e));
         }
     }, [navigate]);
 
@@ -73,7 +89,7 @@ const UploadPaper = () => {
         formData.append('subject', aiData.subject);
         formData.append('semester', aiData.semester);
         formData.append('branch', aiData.branch);
-        formData.append('year', aiData.year);
+        formData.append('year', `${aiData.month} ${aiData.year}`.trim());
 
         try {
             const token = localStorage.getItem('authToken');
@@ -263,6 +279,15 @@ const UploadPaper = () => {
                                                 </div>
                                             )}
                                         </div>
+                                    </div>
+                                    <div className="input-group" style={{ marginBottom: '15px' }}>
+                                        <label>Exam Month (Session)</label>
+                                        <select value={aiData.month} onChange={e => setAiData({...aiData, month: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px', WebkitAppearance: 'none', appearance: 'none' }}>
+                                            <option value="">Select Month</option>
+                                            {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'May-June', 'Nov-Dec'].map(m => (
+                                                <option key={m} value={m}>{m}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="input-group" style={{ marginBottom: '25px' }}>
                                         <label>Year (e.g., 2025)</label>
