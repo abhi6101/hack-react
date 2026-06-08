@@ -198,6 +198,11 @@
     transform: scale(1.1);
 }
 
+/* ===== MOBILE DRAWER HEADER (HIDDEN ON DESKTOP) ===== */
+.mobile-drawer-header {
+    display: none;
+}
+
 /* ===== MOBILE RESPONSIVE ===== */
 @media (max-width: 768px) {
     .navbar {
