@@ -138,6 +138,7 @@ const AdminDashboard = () => {
     // Close sidebar when tab changes (good for mobile)
     useEffect(() => {
         setIsSidebarOpen(false);
+        window.scrollTo(0, 0);
     }, [activeTab]);
 
     const toggleSidebar = () => {
