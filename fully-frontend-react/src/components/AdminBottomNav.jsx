@@ -11,7 +11,7 @@ const AdminBottomNav = ({ activeTab, setActiveTab }) => {
     ];
 
     return (
-        <nav className="admin-bottom-nav">
+        <nav className="admin-bottom-nav" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 99999 }}>
             {navItems.map(item => (
                 <button 
                     key={item.id}
