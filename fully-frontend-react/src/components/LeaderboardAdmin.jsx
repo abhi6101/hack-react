@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import API_BASE_URL from '../config';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-const ADMIN_API_URL = `${API_URL}/api/admin`;
-const PUBLIC_API_URL = `${API_URL}/api/public`;
+const ADMIN_API_URL = `${API_BASE_URL}/admin`;
+const PUBLIC_API_URL = `${API_BASE_URL}/public`;
 
 const LeaderboardAdmin = () => {
     const [leaderboard, setLeaderboard] = useState([]);
