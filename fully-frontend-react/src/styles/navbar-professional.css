@@ -7,7 +7,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 99999;
+    z-index: 2147483647 !important;
     background: transparent;
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
@@ -191,7 +191,8 @@
     transition: all 0.3s ease;
     background: none;
     border: none;
-}
+}
+
 .navbar .hamburger:hover {
     color: #00d4ff;
     transform: scale(1.1);
@@ -243,9 +244,9 @@
         height: 100vh;
         width: 80%;
         max-width: 400px;
-        background: #0a0f1e;
-        backdrop-filter: blur(30px);
-        -webkit-backdrop-filter: blur(30px);
+        background: #0a0f1e !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
         flex-direction: column;
         justify-content: flex-start;
         padding: 2rem 1.5rem;
@@ -254,7 +255,7 @@
         box-shadow: 10px 0 50px rgba(0, 0, 0, 0.8);
         border-right: 1px solid rgba(99, 102, 241, 0.2);
         border-radius: 0 20px 20px 0;
-        z-index: 99999;
+        z-index: 2147483647 !important;
         overflow-y: auto;
     }
 
