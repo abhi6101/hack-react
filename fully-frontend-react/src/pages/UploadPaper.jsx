@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import Tesseract from 'tesseract.js';
 import API_BASE_URL from '../config';
 import '../styles/index.css';
 
@@ -10,7 +9,7 @@ const UploadPaper = () => {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: '' });
+    const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: new Date().getFullYear().toString() });
     const [departments, setDepartments] = useState([]);
     const [existingSubjects, setExistingSubjects] = useState([]);
     const fileInputRef = useRef(null);
@@ -53,86 +52,21 @@ const UploadPaper = () => {
         }
     };
 
-    const handleAnalyze = async () => {
+    const handleNext = () => {
         if (files.length === 0) {
             setError("Please select at least one image.");
             return;
         }
 
-        setLoading(true);
         setError('');
-        setStep(2); // Move to scanning step
-
-        try {
-            const firstImage = files[0];
-            
-            // Perform OCR locally using Tesseract.js
-            const result = await Tesseract.recognize(
-                firstImage,
-                'eng'
-            );
-
-            const text = result.data.text;
-            
-            // Simple heuristics
-            let guessedSubject = "";
-            let guessedYear = new Date().getFullYear().toString();
-            let guessedBranch = "";
-            let guessedSemester = "";
-
-            // Year: "2025"
-            const yearMatch = text.match(/\b(20[1-3][0-9])\b/);
-            if (yearMatch) guessedYear = yearMatch[1];
-            
-            // Semester: "VIII Semester" or "Semester 8"
-            const semMatch = text.match(/(?:(?:semester|sem)\s*([1-8]|i{1,3}|iv|v|vi|vii|viii))|(?:([1-8]|i{1,3}|iv|v|vi|vii|viii)\s*(?:semester|sem))/i);
-            if (semMatch) {
-                let sem = (semMatch[1] || semMatch[2] || "").toLowerCase();
-                if(sem === 'i') guessedSemester = '1';
-                else if(sem === 'ii') guessedSemester = '2';
-                else if(sem === 'iii') guessedSemester = '3';
-                else if(sem === 'iv') guessedSemester = '4';
-                else if(sem === 'v') guessedSemester = '5';
-                else if(sem === 'vi') guessedSemester = '6';
-                else if(sem === 'vii') guessedSemester = '7';
-                else if(sem === 'viii') guessedSemester = '8';
-                else guessedSemester = sem;
-            }
-
-            // Branch: "M.C.A", "B.Tech", etc.
-            const branchMatch = text.match(/\b(B\.?Tech|M\.?C\.?A\.?|B\.?C\.?A\.?|B\.?E\.?|Diploma)\b/i);
-            if (branchMatch) {
-                guessedBranch = branchMatch[1].replace(/\./g, '').toUpperCase();
-            }
-
-            // Subject Code: "MCADD-803", "CS-402"
-            const codeMatch = text.match(/\b([A-Z]{2,5}-\d{3,4})\b/i);
-            if (codeMatch) {
-                guessedSubject = codeMatch[1].toUpperCase();
-            }
-
-            setAiData({
-                subject: guessedSubject,
-                semester: guessedSemester,
-                branch: guessedBranch,
-                year: guessedYear
-            });
-            
-            setStep(3); // Verification step
-        } catch (err) {
-            console.error(err);
-            setError("Local OCR Scan failed. Please enter details manually.");
-            setStep(3); // Go to verification anyway so they can type it in
-        } finally {
-            setLoading(false);
-        }
+        setStep(2); // Go directly to verification/details form
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
-        setStep(4); // Submitting step
+        setStep(3); // Submitting step
 
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
@@ -150,15 +84,15 @@ const UploadPaper = () => {
             });
 
             if (response.ok) {
-                setStep(5); // Success step
+                setStep(4); // Success step
             } else {
                 const text = await response.text();
                 setError(text || "Submission failed.");
-                setStep(3); // Go back to verification
+                setStep(2); // Go back to form
             }
         } catch (err) {
             setError("Network error. Please try again.");
-            setStep(3);
+            setStep(2);
         } finally {
             setLoading(false);
         }
@@ -172,8 +106,8 @@ const UploadPaper = () => {
                     {/* Progress Bar */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px', position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '2px', background: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
-                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${(step/5)*100}%`, height: '2px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.3s ease' }}></div>
-                        {[1,2,3,4,5].map(num => (
+                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '2px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.3s ease' }}></div>
+                        {[1, 2, 3, 4].map(num => (
                             <div key={num} style={{ 
                                 width: '30px', height: '30px', borderRadius: '50%', 
                                 background: step >= num ? 'var(--primary)' : 'var(--surface-bg)', 
@@ -266,25 +200,14 @@ const UploadPaper = () => {
                                     </div>
                                 )}
 
-                                <button onClick={handleAnalyze} className="btn btn-primary" style={{ width: '100%' }} disabled={files.length === 0}>
-                                    <i className="fas fa-search"></i> Scan First Page
+                                <button onClick={handleNext} className="btn btn-primary" style={{ width: '100%' }} disabled={files.length === 0}>
+                                    Next <i className="fas fa-arrow-right"></i>
                                 </button>
                             </motion.div>
                         )}
 
                         {step === 2 && (
-                            <motion.div key="step2" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '40px 0' }}>
-                                <i className="fas fa-search fa-bounce" style={{ fontSize: '4rem', color: 'var(--primary)', marginBottom: '20px' }}></i>
-                                <h3>Scanning Document Locally...</h3>
-                                <p style={{ color: 'var(--text-secondary)' }}>Extracting text on your device. No data is sent to AI servers.</p>
-                            </motion.div>
-                        )}
-
-                        {step === 3 && (
-                            <motion.div key="step3" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
-                                <div style={{ background: 'rgba(74, 222, 128, 0.1)', padding: '15px', borderRadius: '8px', color: '#4ade80', marginBottom: '20px', border: '1px solid rgba(74,222,128,0.3)' }}>
-                                    <i className="fas fa-check-circle"></i> OCR Analysis Complete! Please verify the extracted details below.
-                                </div>
+                            <motion.div key="step2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
 
                                 {files.length > 0 && (
                                     <div style={{ marginBottom: '20px', textAlign: 'center' }}>
@@ -355,16 +278,16 @@ const UploadPaper = () => {
                             </motion.div>
                         )}
 
-                        {step === 4 && (
-                            <motion.div key="step4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '40px 0' }}>
+                        {step === 3 && (
+                            <motion.div key="step3" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '40px 0' }}>
                                 <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '4rem', color: 'var(--primary)', marginBottom: '20px' }}></i>
-                                <h3>Compiling PDF & Uploading...</h3>
+                                <h3>Uploading & Processing...</h3>
                                 <p style={{ color: 'var(--text-secondary)' }}>Stitching images and applying watermark.</p>
                             </motion.div>
                         )}
 
-                        {step === 5 && (
-                            <motion.div key="step5" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '30px 0' }}>
+                        {step === 4 && (
+                            <motion.div key="step4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '30px 0' }}>
                                 <div style={{ width: '80px', height: '80px', background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: '2.5rem', color: '#fff' }}>
                                     <i className="fas fa-check"></i>
                                 </div>
