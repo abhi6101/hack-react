@@ -478,8 +478,6 @@ const Jobs = () => {
                         );
                     })}
                 </div>
-
-                </div>
             </div>
 
             {/* Application Modal */}
