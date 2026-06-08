@@ -2,9 +2,11 @@ import React, { useEffect, useRef } from 'react';
 
 const FloatingCodeBackground = () => {
     const canvasRef = useRef(null);
+    const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let animationFrameId;
 
@@ -29,9 +31,13 @@ const FloatingCodeBackground = () => {
         let particles = [];
 
         const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles();
+            const width = window.innerWidth;
+            setIsMobile(width <= 768);
+            if (width > 768) {
+                canvas.width = width;
+                canvas.height = window.innerHeight;
+                initParticles();
+            }
         };
 
         const initParticles = () => {
@@ -87,6 +93,10 @@ const FloatingCodeBackground = () => {
             cancelAnimationFrame(animationFrameId);
         };
     }, []);
+
+    if (isMobile) {
+        return null; // Hide on mobile to prevent missing font glyph issues and improve performance
+    }
 
     return (
         <canvas
