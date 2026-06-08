@@ -11,6 +11,8 @@ const UploadPaper = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: '' });
+    const [departments, setDepartments] = useState([]);
+    const [existingSubjects, setExistingSubjects] = useState([]);
     const fileInputRef = useRef(null);
     const cameraInputRef = useRef(null);
     const navigate = useNavigate();
@@ -18,8 +20,32 @@ const UploadPaper = () => {
     React.useEffect(() => {
         if (!localStorage.getItem('authToken')) {
             navigate('/login');
+        } else {
+            fetch(`${API_BASE_URL}/public/departments`)
+                .then(r => r.json())
+                .then(d => setDepartments(d))
+                .catch(e => console.error('Failed to fetch departments', e));
         }
     }, [navigate]);
+
+    React.useEffect(() => {
+        if (aiData.branch && aiData.semester) {
+            const token = localStorage.getItem('authToken');
+            fetch(`${API_BASE_URL}/papers?branch=${aiData.branch}&semester=${aiData.semester}`, {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            })
+                .then(r => r.ok ? r.json() : [])
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        const uniqueSubjects = [...new Set(data.map(p => p.subject))].sort();
+                        setExistingSubjects(uniqueSubjects);
+                    }
+                })
+                .catch(e => console.error('Failed to fetch existing subjects', e));
+        } else {
+            setExistingSubjects([]);
+        }
+    }, [aiData.branch, aiData.semester]);
 
     const handleFileSelect = (e) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -278,16 +304,42 @@ const UploadPaper = () => {
                                 
                                 <form onSubmit={handleSubmit}>
                                     <div className="input-group" style={{ marginBottom: '15px' }}>
+                                        <label>Branch / Department</label>
+                                        <select value={aiData.branch} onChange={e => setAiData({...aiData, branch: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px', WebkitAppearance: 'none', appearance: 'none' }}>
+                                            <option value="">Select Branch</option>
+                                            {departments.length > 0 ? departments.map(d => (
+                                                <option key={d.code} value={d.code}>{d.name} ({d.code})</option>
+                                            )) : <option value="IMCA">IMCA</option>}
+                                        </select>
+                                    </div>
+                                    <div className="input-group" style={{ marginBottom: '15px' }}>
+                                        <label>Semester</label>
+                                        <select value={aiData.semester} onChange={e => setAiData({...aiData, semester: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px', WebkitAppearance: 'none', appearance: 'none' }}>
+                                            <option value="">Select Semester</option>
+                                            {[1,2,3,4,5,6,7,8,9,10].map(s => (
+                                                <option key={s} value={s}>{s}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="input-group" style={{ marginBottom: '15px' }}>
                                         <label>Subject Code/Name</label>
-                                        <input type="text" value={aiData.subject} onChange={e => setAiData({...aiData, subject: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px' }} />
-                                    </div>
-                                    <div className="input-group" style={{ marginBottom: '15px' }}>
-                                        <label>Semester (Number)</label>
-                                        <input type="number" value={aiData.semester} onChange={e => setAiData({...aiData, semester: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px' }} />
-                                    </div>
-                                    <div className="input-group" style={{ marginBottom: '15px' }}>
-                                        <label>Branch (e.g., IMCA)</label>
-                                        <input type="text" value={aiData.branch} onChange={e => setAiData({...aiData, branch: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px' }} />
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                            <input type="text" value={aiData.subject} onChange={e => setAiData({...aiData, subject: e.target.value})} required placeholder="Type subject or select below" style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px' }} />
+                                            {existingSubjects.length > 0 && (
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                                    <div style={{ width: '100%', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Previously uploaded subjects:</div>
+                                                    {existingSubjects.map(sub => (
+                                                        <div 
+                                                            key={sub}
+                                                            onClick={() => setAiData({...aiData, subject: sub})}
+                                                            style={{ padding: '6px 12px', background: aiData.subject === sub ? 'var(--primary)' : 'rgba(255,255,255,0.1)', color: aiData.subject === sub ? '#000' : '#fff', borderRadius: '20px', fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                                                        >
+                                                            {sub}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="input-group" style={{ marginBottom: '25px' }}>
                                         <label>Year (e.g., 2025)</label>
