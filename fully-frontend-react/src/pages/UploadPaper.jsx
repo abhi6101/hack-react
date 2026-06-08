@@ -16,7 +16,7 @@ const UploadPaper = () => {
 
     const handleFileSelect = (e) => {
         if (e.target.files && e.target.files.length > 0) {
-            setFiles(Array.from(e.target.files));
+            setFiles(prev => [...prev, ...Array.from(e.target.files)]);
         }
     };
 
@@ -166,15 +166,38 @@ const UploadPaper = () => {
                                     type="file" 
                                     multiple 
                                     accept="image/*" 
-                                    capture="environment" 
                                     ref={fileInputRef} 
                                     style={{ display: 'none' }} 
                                     onChange={handleFileSelect} 
                                 />
 
                                 {files.length > 0 && (
-                                    <div style={{ marginBottom: '20px' }}>
-                                        <p><strong>{files.length} file(s) selected</strong></p>
+                                    <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                        {files.map((file, index) => (
+                                            <div key={index} style={{ position: 'relative', width: '60px', height: '60px' }}>
+                                                <img 
+                                                    src={URL.createObjectURL(file)} 
+                                                    alt={`preview ${index}`} 
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }} 
+                                                />
+                                                <button 
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setFiles(prev => prev.filter((_, i) => i !== index));
+                                                    }}
+                                                    style={{ 
+                                                        position: 'absolute', top: '-5px', right: '-5px', 
+                                                        background: 'red', color: 'white', border: 'none', 
+                                                        borderRadius: '50%', width: '20px', height: '20px', 
+                                                        fontSize: '12px', cursor: 'pointer', display: 'flex', 
+                                                        alignItems: 'center', justifyContent: 'center', zIndex: 10 
+                                                    }}
+                                                >
+                                                    <i className="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        ))}
                                     </div>
                                 )}
 
