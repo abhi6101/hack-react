@@ -4,6 +4,7 @@ import InterviewRoundsForm from '../components/InterviewRoundsForm';
 import PaperWizard from '../components/PaperWizard';
 import PaperList from '../components/PaperList';
 import PendingPapersAdmin from '../components/PendingPapersAdmin';
+import LeaderboardAdmin from '../components/LeaderboardAdmin';
 import Notes from './Notes';
 import API_BASE_URL from '../config';
 import { useAlert } from '../components/CustomAlert';
@@ -2843,6 +2844,8 @@ const AdminDashboard = () => {
                 );
             case 'pending-papers':
                 return <PendingPapersAdmin />;
+            case 'leaderboard':
+                return <LeaderboardAdmin />;
             default:
                 return <div>Select a tab</div>;
         }
@@ -2854,6 +2857,7 @@ const AdminDashboard = () => {
         { id: 'users', label: 'Manage Users', icon: 'fa-users', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
         { id: 'students', label: 'Student Monitor', icon: 'fa-user-graduate', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { id: 'profile-details', label: 'Student Details', icon: 'fa-id-card', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'leaderboard', label: 'Leaderboard', icon: 'fa-trophy', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { id: 'interviews', label: 'Manage Interviews', icon: 'fa-calendar-alt', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
         { id: 'applications', label: 'Job Applications', icon: 'fa-file-alt', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
         { id: 'interview-applications', label: 'Interview Apps', icon: 'fa-user-check', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
@@ -2869,7 +2873,7 @@ const AdminDashboard = () => {
     const menuGroups = [
         { title: 'Overview', icon: 'fa-home', items: ['dashboard', 'users'] },
         { title: 'Recruitment', icon: 'fa-bullhorn', items: ['jobs', 'applications', 'interviews', 'interview-applications'] },
-        { title: 'Students', icon: 'fa-user-graduate', items: ['students', 'profile-details'] },
+        { title: 'Students', icon: 'fa-user-graduate', items: ['students', 'profile-details', 'leaderboard'] },
         { title: 'Resources', icon: 'fa-layer-group', items: ['gallery', 'question-papers', 'pending-papers', 'study-notes', 'paper-logs'] },
         { title: 'System', icon: 'fa-cog', items: ['departments', 'companies'] }
     ];
