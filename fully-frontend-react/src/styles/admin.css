@@ -606,8 +606,8 @@ td {
         min-width: 80px;
     }
 
-    .sidebar-header h2 span,
-    .sidebar-menu span,
+    .brand-text, .sidebar-header h2 span,
+    .sidebar-menu span, .pending-badge,
     .sidebar-footer .mini-details {
         display: none;
     }
