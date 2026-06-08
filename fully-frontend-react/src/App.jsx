@@ -32,6 +32,7 @@ import Gallery from './pages/Gallery';
 import Videos from './pages/Videos';
 import Contact from './pages/Contact';
 import VerifyAccount from './pages/VerifyAccount';
+import UploadPaper from './pages/UploadPaper';
 import keepAliveService from './services/keepAliveService';
 import './styles/animations.css'; // Import animations
 import { ToastProvider } from './components/Toast';
@@ -100,6 +101,7 @@ function App() {
                                 <Route path="/resume-builder" element={<ResumeBuilder />} />
                                 <Route path="/interview" element={<Interview />} />
                                 <Route path="/papers" element={<Papers />} />
+                                <Route path="/upload-paper" element={<UploadPaper />} />
                                 <Route path="/notes" element={<Notes />} />
                                 <Route path="/quiz" element={<Quiz />} />
                                 <Route path="/admin" element={<AdminDashboard />} />

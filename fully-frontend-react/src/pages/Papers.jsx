@@ -5,6 +5,7 @@ import { useToast } from '../components/CustomToast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import AuthPromptModal from '../components/AuthPromptModal';
+import LeaderboardComponent from '../components/LeaderboardComponent';
 import API_BASE_URL from '../config';
 
 import Typewriter from '../components/Typewriter';
@@ -864,6 +865,14 @@ const Papers = () => {
             <div className="decorative-blob blob-2"></div>
 
             <main className="papers-container" style={{ padding: '6.5rem 5% 5rem', position: 'relative', zIndex: 2 }}>
+                
+                {/* Leaderboard Section - Only show when no search/filter is active to keep it clean */}
+                {globalSearchQuery.trim() === '' && selectedSemester === null && (
+                    <div style={{ marginBottom: '40px' }}>
+                        <LeaderboardComponent />
+                    </div>
+                )}
+
                 <AnimatePresence mode="wait">
                     {globalSearchQuery.trim() !== '' ? (
                         <div key="search-results">{renderSearchResults()}</div>

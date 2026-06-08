@@ -47,9 +47,6 @@ const Navbar = () => {
                 <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Papers</Link>
                 <Link to="/notes" className={isActive('/notes')}><i className="fas fa-sticky-note"></i> Notes</Link>
 
-                {/* Show dropdown menus only if authenticated */}
-                {localStorage.getItem('authToken') && (
-                    <>
                         {/* Resources Dropdown */}
                         <div className="dropdown"
                             onMouseEnter={() => setResourcesOpen(true)}
@@ -78,14 +75,17 @@ const Navbar = () => {
                                 <Link to="/blog" className={isActive('/blog')}><i className="fas fa-blog"></i> Blog</Link>
                             </div>
                         </div>
-                    </>
-                )}
 
                 {['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN'].includes(localStorage.getItem('userRole')) && (
                     <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin</Link>
                 )}
                 {localStorage.getItem('authToken') && localStorage.getItem('userRole') === 'USER' && (
-                    <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> Dashboard</Link>
+                    <>
+                        <Link to="/upload-paper" className={`btn-primary ${isActive('/upload-paper')}`} style={{ padding: '0.5rem 1rem', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <i className="fas fa-upload"></i> Upload Paper
+                        </Link>
+                        <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> Dashboard</Link>
+                    </>
                 )}
             </div>
 

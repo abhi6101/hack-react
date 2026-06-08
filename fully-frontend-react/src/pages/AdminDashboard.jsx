@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import InterviewRoundsForm from '../components/InterviewRoundsForm';
 import PaperWizard from '../components/PaperWizard';
 import PaperList from '../components/PaperList';
+import PendingPapersAdmin from '../components/PendingPapersAdmin';
 import Notes from './Notes';
 import API_BASE_URL from '../config';
 import { useAlert } from '../components/CustomAlert';
@@ -2840,6 +2841,8 @@ const AdminDashboard = () => {
                         <PaperList key={refreshKey} />
                     </>
                 );
+            case 'pending-papers':
+                return <PendingPapersAdmin />;
             default:
                 return <div>Select a tab</div>;
         }
@@ -2856,6 +2859,7 @@ const AdminDashboard = () => {
         { id: 'interview-applications', label: 'Interview Apps', icon: 'fa-user-check', roles: ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'] },
         { id: 'gallery', label: 'Gallery Management', icon: 'fa-images', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
         { id: 'question-papers', label: 'Question Papers', icon: 'fa-file-pdf', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
+        { id: 'pending-papers', label: 'Pending Papers', icon: 'fa-file-signature', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { id: 'study-notes', label: 'Study Notes', icon: 'fa-folder-open', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
         { id: 'paper-logs', label: 'Paper View Logs', icon: 'fa-history', roles: ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'] },
         { id: 'departments', label: 'Departments', icon: 'fa-university', roles: ['SUPER_ADMIN'] },
@@ -2866,7 +2870,7 @@ const AdminDashboard = () => {
         { title: 'Overview', icon: 'fa-home', items: ['dashboard', 'users'] },
         { title: 'Recruitment', icon: 'fa-bullhorn', items: ['jobs', 'applications', 'interviews', 'interview-applications'] },
         { title: 'Students', icon: 'fa-user-graduate', items: ['students', 'profile-details'] },
-        { title: 'Resources', icon: 'fa-layer-group', items: ['gallery', 'question-papers', 'study-notes', 'paper-logs'] },
+        { title: 'Resources', icon: 'fa-layer-group', items: ['gallery', 'question-papers', 'pending-papers', 'study-notes', 'paper-logs'] },
         { title: 'System', icon: 'fa-cog', items: ['departments', 'companies'] }
     ];
 
