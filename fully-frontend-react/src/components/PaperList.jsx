@@ -205,7 +205,7 @@ const PaperList = () => {
                                             <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Sem {p.semester}</span>
                                         </div>
                                     </td>
-                                    <td>{p.university || 'DAVV'}</td>
+                                    <td>{p.university || 'RGPV'}</td>
                                     <td><span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{p.category}</span></td>
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>

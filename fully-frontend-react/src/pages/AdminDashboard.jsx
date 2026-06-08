@@ -2708,9 +2708,6 @@ const AdminDashboard = () => {
                     <section className="card surface-glow">
                         <div className="card-header">
                             <h3><i className="fas fa-building"></i> Company Management</h3>
-                            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                                Enable or disable company accounts. Disabled companies cannot post jobs or interviews.
-                            </p>
                         </div>
                         {loadingUsers ? (
                             <p style={{ padding: '2rem', textAlign: 'center' }}>Loading companies...</p>

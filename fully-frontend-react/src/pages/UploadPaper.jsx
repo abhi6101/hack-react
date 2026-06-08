@@ -10,7 +10,7 @@ const UploadPaper = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-    const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: new Date().getFullYear().toString(), month: currentMonth });
+    const [aiData, setAiData] = useState({ subject: '', semester: '', branch: '', year: new Date().getFullYear().toString(), month: currentMonth, university: 'RGPV' });
     const [departments, setDepartments] = useState([]);
     const [existingSubjects, setExistingSubjects] = useState([]);
     const fileInputRef = useRef(null);
@@ -94,6 +94,7 @@ const UploadPaper = () => {
         formData.append('subject', aiData.subject);
         formData.append('semester', aiData.semester);
         formData.append('branch', aiData.branch);
+        formData.append('university', aiData.university);
         formData.append('year', `${aiData.month} ${aiData.year}`.trim());
 
         try {
@@ -247,6 +248,10 @@ const UploadPaper = () => {
                                 )}
                                 
                                 <form onSubmit={handleSubmit}>
+                                    <div className="input-group" style={{ marginBottom: '15px' }}>
+                                        <label>University</label>
+                                        <input type="text" value={aiData.university} onChange={e => setAiData({...aiData, university: e.target.value})} required placeholder="E.g. RGPV, DAVV" style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px' }} />
+                                    </div>
                                     <div className="input-group" style={{ marginBottom: '15px' }}>
                                         <label>Branch / Department</label>
                                         <select value={aiData.branch} onChange={e => setAiData({...aiData, branch: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px', WebkitAppearance: 'none', appearance: 'none' }}>
