@@ -293,6 +293,15 @@ const UploadPaper = () => {
                                         <label>Year (e.g., 2025)</label>
                                         <input type="text" value={aiData.year} onChange={e => setAiData({...aiData, year: e.target.value})} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', color: '#fff', borderRadius: '8px' }} />
                                     </div>
+                                    <div className="input-group" style={{ marginBottom: '25px' }}>
+                                        <label>Generated File Name</label>
+                                        <input 
+                                            type="text" 
+                                            value={`${aiData.subject || 'Subject'}_${aiData.branch || 'Branch'}_Sem${aiData.semester || 'X'}_${aiData.month || 'Month'}_${aiData.year || 'Year'}.pdf`.replace(/ /g, '_')} 
+                                            readOnly 
+                                            style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px dashed var(--primary)', color: 'var(--primary)', borderRadius: '8px', cursor: 'not-allowed', outline: 'none' }} 
+                                        />
+                                    </div>
                                     <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
                                         <i className="fas fa-paper-plane"></i> Submit Paper
                                     </button>
