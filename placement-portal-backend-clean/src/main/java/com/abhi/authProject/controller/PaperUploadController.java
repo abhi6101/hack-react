@@ -1,9 +1,12 @@
 package com.abhi.authProject.controller;
 
+import com.abhi.authProject.model.Paper;
 import com.abhi.authProject.model.StudentPaper;
 import com.abhi.authProject.model.Users;
+import com.abhi.authProject.repo.PaperRepository;
 import com.abhi.authProject.repo.StudentPaperRepository;
 import com.abhi.authProject.repo.UserRepo;
+import com.abhi.authProject.service.FileStorageService;
 import com.abhi.authProject.service.PdfCompilationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +28,13 @@ public class PaperUploadController {
     private PdfCompilationService pdfCompilationService;
 
     @Autowired
+    private FileStorageService fileStorageService;
+
+    @Autowired
     private StudentPaperRepository studentPaperRepository;
+
+    @Autowired
+    private PaperRepository paperRepository;
 
     @Autowired
     private UserRepo userRepo;
@@ -55,8 +64,10 @@ public class PaperUploadController {
             // Compile PDF
             byte[] compiledPdf = pdfCompilationService.compileImagesToPdf(files, uploader.getName() != null ? uploader.getName() : uploader.getUsername());
 
-            // TODO: Here you would upload compiledPdf to Google Drive and get the driveFileId
-            String driveFileId = "MOCKED_DRIVE_ID_" + System.currentTimeMillis();
+            // Upload compiledPdf to Google Drive
+            String fileName = String.format("%s_%s_Sem%s_%s.pdf", subject, branch, semester, year).replaceAll(" ", "_");
+            java.io.InputStream is = new java.io.ByteArrayInputStream(compiledPdf);
+            String driveFileId = fileStorageService.saveFileFromStream(is, fileName, "");
 
             // Save to Database as PENDING
             StudentPaper paper = new StudentPaper();
@@ -105,6 +116,11 @@ public class PaperUploadController {
             }
 
             StudentPaper paper = optionalPaper.get();
+            
+            if ("APPROVED".equals(paper.getStatus())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Paper is already approved.");
+            }
+
             paper.setStatus("APPROVED");
             paper.setApprovedBy(admin);
             studentPaperRepository.save(paper);
@@ -116,7 +132,33 @@ public class PaperUploadController {
                 userRepo.save(uploader);
             }
 
-            return ResponseEntity.ok("Paper approved and 50 points awarded to " + uploader.getUsername());
+            // Convert to a public Paper
+            try {
+                int extractedYear = 2025; // Default fallback
+                if (paper.getYear() != null) {
+                    String yearStr = paper.getYear().replaceAll("[^0-9]", "");
+                    if (!yearStr.isEmpty()) {
+                        extractedYear = Integer.parseInt(yearStr);
+                    }
+                }
+                String title = paper.getSubject() + " " + extractedYear + " Exam";
+                Paper publicPaper = new Paper(
+                        title,
+                        paper.getSubject(),
+                        extractedYear,
+                        paper.getSemester(),
+                        paper.getBranch(),
+                        "University",
+                        "End-Sem", // Default
+                        "DAVV", // Default
+                        paper.getDriveFileId()
+                );
+                paperRepository.save(publicPaper);
+            } catch (Exception ex) {
+                System.err.println("Failed to create public paper: " + ex.getMessage());
+            }
+
+            return ResponseEntity.ok("Paper approved, converted to public, and 50 points awarded to " + (uploader != null ? uploader.getUsername() : "unknown user"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error approving paper.");
         }
@@ -134,9 +176,26 @@ public class PaperUploadController {
             }
 
             StudentPaper paper = optionalPaper.get();
+            
+            if ("REJECTED".equals(paper.getStatus())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Paper is already rejected.");
+            }
+
+            boolean wasApproved = "APPROVED".equals(paper.getStatus());
+
             paper.setStatus("REJECTED");
             paper.setRejectionReason(reason);
             studentPaperRepository.save(paper);
+
+            // If it was previously approved, we must deduct the 50 points we gave them
+            if (wasApproved) {
+                Users uploader = paper.getUploadedBy();
+                if (uploader != null) {
+                    int newPoints = Math.max(0, uploader.getContributionPoints() - 50);
+                    uploader.setContributionPoints(newPoints);
+                    userRepo.save(uploader);
+                }
+            }
 
             return ResponseEntity.ok("Paper rejected successfully.");
         } catch (Exception e) {
