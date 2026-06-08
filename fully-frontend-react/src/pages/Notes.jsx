@@ -571,18 +571,18 @@ const Notes = () => {
                     </p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'nowrap', alignItems: 'center', width: '100%', maxWidth: '700px' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'nowrap', alignItems: 'center', width: '100%', maxWidth: '700px' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
-                        flex: 1,
-                        minWidth: '200px',
+                        flex: 1.5,
+                        minWidth: '140px',
                         background: 'rgba(255,255,255,0.05)',
                         border: '1px solid rgba(255,255,255,0.1)',
                         borderRadius: '50px',
-                        padding: '4px 20px',
+                        padding: '4px 12px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.8rem',
+                        gap: '0.5rem',
                         backdropFilter: 'blur(15px)',
                         transition: 'all 0.3s ease'
                     }}>
@@ -611,12 +611,12 @@ const Notes = () => {
                         )}
                     </div>
 
-                    <div style={{ position: 'relative', minWidth: '180px' }}>
+                    <div style={{ position: 'relative', flex: 1, minWidth: '100px' }}>
                         <select
                             value={branchFilter}
                             onChange={(e) => setBranchFilter(e.target.value)}
                             disabled={userRole === 'STUDENT'}
-                            style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '10px 3rem 10px 1.2rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
+                            style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '10px 1.5rem 10px 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.85rem' }}
                         >
                             <option value="" style={{ color: '#000' }}>All Branches</option>
                             {deptList.map(dept => (
