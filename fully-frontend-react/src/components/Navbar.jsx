@@ -81,7 +81,7 @@ const Navbar = () => {
                 )}
                 {localStorage.getItem('authToken') && localStorage.getItem('userRole') === 'USER' && (
                     <>
-                        <Link to="/upload-paper" className={`btn-primary ${isActive('/upload-paper')}`} style={{ padding: '0.5rem 1rem', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Link to="/upload-paper" className={`btn-upload-paper ${isActive('/upload-paper')}`}>
                             <i className="fas fa-upload"></i> Upload Paper
                         </Link>
                         <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> Dashboard</Link>
