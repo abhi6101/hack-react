@@ -158,21 +158,21 @@ const StudentDashboard = () => {
                     background: 'rgba(255, 255, 255, 0.05)',
                     backdropFilter: 'blur(10px)',
                     borderRadius: '20px',
-                    padding: '2.5rem',
-                    marginBottom: '2rem',
+                    padding: '1.5rem',
+                    marginBottom: '1.5rem',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                             {/* Profile Picture */}
                             <div style={{
-                                width: '80px',
-                                height: '80px',
+                                width: '60px',
+                                height: '60px',
                                 borderRadius: '50%',
                                 overflow: 'hidden',
-                                border: '3px solid #667eea',
-                                boxShadow: '0 0 20px rgba(102, 126, 234, 0.5)',
+                                border: '2px solid #667eea',
+                                boxShadow: '0 0 15px rgba(102, 126, 234, 0.4)',
                                 background: '#1a1a2e',
                                 flexShrink: 0
                             }}>
@@ -242,38 +242,38 @@ const StudentDashboard = () => {
                         background: 'rgba(102, 126, 234, 0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '20px',
-                        padding: '2rem',
+                        padding: '1.5rem',
                         border: '1px solid rgba(102, 126, 234, 0.3)',
                         boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
                         transition: 'transform 0.3s ease'
                     }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                         onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                     >
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '1rem',
-                            marginBottom: '1.5rem',
-                            paddingBottom: '1rem',
+                            gap: '0.8rem',
+                            marginBottom: '1rem',
+                            paddingBottom: '0.8rem',
                             borderBottom: '2px solid rgba(102, 126, 234, 0.3)'
                         }}>
                             <div style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '12px',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '10px',
                                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                fontSize: '1.5rem',
+                                fontSize: '1.2rem',
                                 color: '#fff',
-                                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
+                                boxShadow: '0 4px 10px rgba(102, 126, 234, 0.3)'
                             }}>
                                 <i className="fas fa-id-card"></i>
                             </div>
                             <h3 style={{
-                                fontSize: '1.5rem',
+                                fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
                                 color: '#667eea',
                                 margin: 0,
                                 fontWeight: '600'
@@ -422,38 +422,38 @@ const StudentDashboard = () => {
                         background: 'rgba(251, 191, 36, 0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '20px',
-                        padding: '2rem',
+                        padding: '1.5rem',
                         border: '1px solid rgba(251, 191, 36, 0.3)',
                         boxShadow: '0 8px 32px rgba(251, 191, 36, 0.2)',
                         transition: 'transform 0.3s ease'
                     }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                         onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                     >
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '1rem',
-                            marginBottom: '1.5rem',
-                            paddingBottom: '1rem',
+                            gap: '0.8rem',
+                            marginBottom: '1rem',
+                            paddingBottom: '0.8rem',
                             borderBottom: '2px solid rgba(251, 191, 36, 0.3)'
                         }}>
                             <div style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '12px',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '10px',
                                 background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                fontSize: '1.5rem',
+                                fontSize: '1.2rem',
                                 color: '#fff',
-                                boxShadow: '0 4px 15px rgba(251, 191, 36, 0.4)'
+                                boxShadow: '0 4px 10px rgba(251, 191, 36, 0.3)'
                             }}>
                                 <i className="fas fa-edit"></i>
                             </div>
                             <h3 style={{
-                                fontSize: '1.5rem',
+                                fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
                                 color: '#fbbf24',
                                 margin: 0,
                                 fontWeight: '600'
@@ -643,38 +643,38 @@ const StudentDashboard = () => {
                         background: 'rgba(236, 72, 153, 0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '20px',
-                        padding: '2rem',
+                        padding: '1.5rem',
                         border: '1px solid rgba(236, 72, 153, 0.3)',
                         boxShadow: '0 8px 32px rgba(236, 72, 153, 0.2)',
                         transition: 'transform 0.3s ease'
                     }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                         onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                     >
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '1rem',
-                            marginBottom: '1.5rem',
-                            paddingBottom: '1rem',
+                            gap: '0.8rem',
+                            marginBottom: '1rem',
+                            paddingBottom: '0.8rem',
                             borderBottom: '2px solid rgba(236, 72, 153, 0.3)'
                         }}>
                             <div style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '12px',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '10px',
                                 background: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                fontSize: '1.5rem',
+                                fontSize: '1.2rem',
                                 color: '#fff',
-                                boxShadow: '0 4px 15px rgba(236, 72, 153, 0.4)'
+                                boxShadow: '0 4px 10px rgba(236, 72, 153, 0.3)'
                             }}>
                                 <i className="fas fa-briefcase"></i>
                             </div>
                             <h3 style={{
-                                fontSize: '1.5rem',
+                                fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
                                 color: '#ec4899',
                                 margin: 0,
                                 fontWeight: '600'
@@ -752,38 +752,38 @@ const StudentDashboard = () => {
                         background: 'rgba(139, 92, 246, 0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '20px',
-                        padding: '2rem',
+                        padding: '1.5rem',
                         border: '1px solid rgba(139, 92, 246, 0.3)',
                         boxShadow: '0 8px 32px rgba(139, 92, 246, 0.2)',
                         transition: 'transform 0.3s ease'
                     }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                         onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                     >
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '1rem',
-                            marginBottom: '1.5rem',
-                            paddingBottom: '1rem',
+                            gap: '0.8rem',
+                            marginBottom: '1rem',
+                            paddingBottom: '0.8rem',
                             borderBottom: '2px solid rgba(139, 92, 246, 0.3)'
                         }}>
                             <div style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '12px',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '10px',
                                 background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                fontSize: '1.5rem',
+                                fontSize: '1.2rem',
                                 color: '#fff',
-                                boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)'
+                                boxShadow: '0 4px 10px rgba(139, 92, 246, 0.3)'
                             }}>
                                 <i className="fas fa-calendar-check"></i>
                             </div>
                             <h3 style={{
-                                fontSize: '1.5rem',
+                                fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
                                 color: '#8b5cf6',
                                 margin: 0,
                                 fontWeight: '600'
