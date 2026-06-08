@@ -62,6 +62,11 @@ const UploadPaper = () => {
         }
     }, [aiData.branch, aiData.semester]);
 
+    // Scroll to top whenever step changes
+    React.useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [step]);
+
     const handleFileSelect = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             setFiles(prev => [...prev, ...Array.from(e.target.files)]);
