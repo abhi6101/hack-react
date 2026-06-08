@@ -1637,9 +1637,8 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         </div>
-
                         {isSuperAdmin && (
-                            <div className="company-stats-section" style={{ marginBottom: '2.5rem' }}>
+                            <div className="company-stats-section desktop-only" style={{ marginBottom: '2.5rem' }}>
                                 <h2 style={{ marginBottom: '1.5rem' }}>Company Performance</h2>
                                 {loadingStats ? (
                                     <div className="loading-indicator">Loading company statistics...</div>
