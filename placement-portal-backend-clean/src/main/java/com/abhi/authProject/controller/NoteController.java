@@ -171,6 +171,20 @@ public class NoteController {
     }
 
     /**
+     * Deletes a specific note file (Admin only).
+     */
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN') or hasRole('DEPT_ADMIN') or hasRole('COMPANY_ADMIN')")
+    @DeleteMapping("/notes/{id}")
+    public ResponseEntity<?> deleteNote(@PathVariable Long id) {
+        Note note = noteRepository.findById(id).orElse(null);
+        if (note == null) {
+            return ResponseEntity.notFound().build();
+        }
+        noteRepository.delete(note);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Streams the note PDF content securely, verifying access.
      */
     @GetMapping("/notes/download/{id}")
