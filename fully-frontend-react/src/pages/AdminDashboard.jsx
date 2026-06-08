@@ -8,8 +8,6 @@ import LeaderboardAdmin from '../components/LeaderboardAdmin';
 import Notes from './Notes';
 import API_BASE_URL from '../config';
 import { useAlert } from '../components/CustomAlert';
-import StatCard from '../components/StatCard';
-import Loader from '../components/Loader';
 import { useToast } from '../components/CustomToast';
 import AdminBottomNav from '../components/AdminBottomNav';
 import '../styles/admin.css';
