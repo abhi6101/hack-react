@@ -2748,6 +2748,8 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            case 'menu':
+                return <AdminMobileMenu menuGroups={menuGroups} menuItems={menuItems} role={role} setActiveTab={setActiveTab} />;
             case 'departments':
                 return (
                     <section className="card surface-glow">
