@@ -19,7 +19,7 @@ const AdminBottomNav = ({ activeTab, setActiveTab }) => {
                     onClick={() => {
                         if(item.id === 'menu') {
                             // Can trigger a bottom sheet menu if needed, or default to a generic system tab
-                            setActiveTab('departments');
+                            setActiveTab('menu');
                         } else {
                             setActiveTab(item.id);
                         }
