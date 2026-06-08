@@ -289,7 +289,7 @@
         width: 100%;
         justify-content: flex-start;
         font-size: 1.1rem;
-        padding: 1rem 1.5rem;
+        padding: 0.8rem 1rem; margin: 0;
     }
 
     .navbar .dropdown-menu {
