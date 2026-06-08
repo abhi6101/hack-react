@@ -38,8 +38,19 @@ const Navbar = () => {
         <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
             <div className="logo">Hack-2-<span className="highlight">Hired</span></div>
 
+            {/* Mobile Drawer Overlay */}
+            <div className={`nav-overlay ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}></div>
+
             <div className={`nav-links ${isMenuOpen ? 'active' : ''}`} id="navLinks">
-                <Link to="/" className={isActive('/')}><i className="fas fa-home"></i> Home</Link>
+                {/* Mobile Drawer Header */}
+                <div className="mobile-drawer-header">
+                    <div className="logo">Hack-2-<span className="highlight">Hired</span></div>
+                    <button className="close-drawer" onClick={toggleMenu}>
+                        <i className="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <Link to="/" className={isActive('/')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-home"></i> Home</Link>
                 <Link to="/jobs" className={isActive('/jobs')}><i className="fas fa-briefcase"></i> Jobs</Link>
                 <Link to="/resume-builder" className={isActive('/resume-builder')}><i className="fas fa-file-alt"></i> Resume</Link>
 
@@ -90,7 +101,7 @@ const Navbar = () => {
             </div>
 
             <div className="hamburger" onClick={toggleMenu}>
-                <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                <i className="fas fa-bars"></i>
             </div>
         </nav>
     );
