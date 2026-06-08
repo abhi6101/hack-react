@@ -1509,7 +1509,7 @@ const AdminDashboard = () => {
                         </div>
 
                         {/* 3. Balanced 50/50 Body Grid */}
-                        <div className="dashboard-split-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2.5rem' }}>
+                        <div className="dashboard-split-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
                             {/* Left Col: Analytics Perspective */}
                             <div className="analytics-col">
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
