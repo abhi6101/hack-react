@@ -24,7 +24,6 @@ import Quiz from './pages/Quiz';
 import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import Onboarding from './pages/Onboarding';
-import ResumeAnalysis from './pages/ResumeAnalysis';
 import StudentProfile from './pages/StudentProfile';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
@@ -119,7 +118,6 @@ function App() {
                                 <Route path="/verify-account" element={<VerifyAccount />} />
                                 <Route path="/onboarding" element={<Onboarding />} />
                                 <Route path="/jobs" element={<Jobs />} />
-                                <Route path="/resume" element={<ResumeAnalysis />} />
                                 <Route path="/resume-builder" element={<ResumeBuilder />} />
                                 <Route path="/interview" element={<Interview />} />
                                 <Route path="/papers" element={<Papers />} />

@@ -4,11 +4,17 @@ import '../styles/user-bottom-nav.css';
 
 const UserBottomNav = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
     const location = useLocation();
+    const isLoggedIn = !!localStorage.getItem('authToken');
     
-    const navItems = [
+    const navItems = isLoggedIn ? [
         { id: 'home', icon: 'fa-home', label: 'Home', path: '/' },
         { id: 'jobs', icon: 'fa-briefcase', label: 'Jobs', path: '/jobs' },
-        { id: 'interview', icon: 'fa-comments', label: 'Interviews', path: '/interview' },
+        { id: 'papers', icon: 'fa-copy', label: 'Papers', path: '/papers' },
+        { id: 'dashboard', icon: 'fa-user-circle', label: 'Dashboard', path: '/dashboard' },
+    ] : [
+        { id: 'home', icon: 'fa-home', label: 'Home', path: '/' },
+        { id: 'jobs', icon: 'fa-briefcase', label: 'Jobs', path: '/jobs' },
+        { id: 'papers', icon: 'fa-copy', label: 'Papers', path: '/papers' },
         { id: 'notes', icon: 'fa-sticky-note', label: 'Notes', path: '/notes' },
     ];
 
