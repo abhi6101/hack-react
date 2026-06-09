@@ -325,15 +325,16 @@ const Interview = () => {
     {/* Search & Location */}
     <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap', alignItems: 'center' }}>
         <div className="search-wrapper" style={{ flex: '2 1 0', minWidth: 0 }}>
-            <div style={{ position: 'relative', width: '100%' }}>
+            <div style={{ position: 'relative', width: '100%', minWidth: 0 }}>
                 <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-70%)', color: 'var(--text-secondary)' }}></i>
                 <input
                     type="text"
-                    placeholder="Search by company or role..."
+                    placeholder="Search by company..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
                         width: '100%',
+                        minWidth: 0,
                         background: 'rgba(255, 255, 255, 0.05)',
                         border: '1px solid var(--border-color)',
                         padding: '0.8rem 1rem 0.8rem 2.5rem',
@@ -359,6 +360,7 @@ const Interview = () => {
                     borderRadius: '12px',
                     cursor: 'pointer',
                     width: '100%',
+                    minWidth: 0,
                     boxSizing: 'border-box',
                     justifyContent: 'space-between',
                     color: '#fff',
