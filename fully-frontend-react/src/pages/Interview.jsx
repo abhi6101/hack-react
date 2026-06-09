@@ -62,6 +62,7 @@ const Interview = () => {
     }, []);
 
     const [interviews, setInterviews] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [upcoming, setUpcoming] = useState([]);
     const [future, setFuture] = useState([]);
     const [showApplicationModal, setShowApplicationModal] = useState(false);
@@ -73,6 +74,7 @@ const Interview = () => {
 
     useEffect(() => {
         const fetchInterviews = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(`${API_BASE_URL}/interview-drives`, {
                     headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -90,6 +92,8 @@ const Interview = () => {
             } catch (err) {
                 console.error("API Fetch Error", err);
                 setInterviews([]); // Show empty if API fails
+            } finally {
+                setLoading(false);
             }
         };
         fetchInterviews();
@@ -371,10 +375,26 @@ const Interview = () => {
                 <main className="interview-content">
                     <div className="section-header">
                         <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
-                        <span className="result-count">{filteredInterviews.length} drives found</span>
+                        <span className="result-count">{loading ? '...' : filteredInterviews.length} drives found</span>
                     </div>
                     <div className="interview-grid">
-                        {filteredInterviews.length > 0 ? (
+                        {loading ? (
+                            Array(4).fill(0).map((_, i) => (
+                                <div className="interview-card skeleton-card" key={`skel-${i}`} style={{ height: '350px' }}>
+                                    <div className="card-header" style={{ display: 'flex', gap: '1rem', alignItems: 'center', background: 'transparent' }}>
+                                        <div className="skeleton-line" style={{ width: '50px', height: '50px', borderRadius: '12px', margin: 0 }}></div>
+                                        <div style={{ flex: 1 }}>
+                                            <div className="skeleton-line title" style={{ height: '20px', width: '70%', marginBottom: '0.5rem', margin: 0 }}></div>
+                                            <div className="skeleton-line subtitle" style={{ height: '15px', width: '40%', margin: 0 }}></div>
+                                        </div>
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="skeleton-content" style={{ height: '120px', marginBottom: '1rem' }}></div>
+                                        <div className="skeleton-content" style={{ height: '40px' }}></div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : filteredInterviews.length > 0 ? (
                             filteredInterviews.map(renderCard)
                         ) : (
                             <div className="no-results">
