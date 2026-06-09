@@ -843,13 +843,7 @@ const Papers = () => {
 
             <main className="papers-container" style={{ padding: '6.5rem 5% 5rem', position: 'relative', zIndex: 2 }}>
                 
-                {/* Leaderboard Section - Only show when no search/filter is active to keep it clean */}
-                {globalSearchQuery.trim() === '' && selectedSemester === null && (
-                    <div style={{ marginBottom: '40px' }}>
-                        <LeaderboardComponent />
-                    </div>
-                )}
-
+                
                 <AnimatePresence mode="wait">
                     {globalSearchQuery.trim() !== '' ? (
                         <div key="search-results">{renderSearchResults()}</div>
