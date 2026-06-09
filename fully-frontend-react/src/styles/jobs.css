@@ -669,3 +669,26 @@
   box-shadow: none;
   background: rgba(16, 185, 129, 0.15);
 }
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  .job-card {
+    padding: 1.25rem;
+  }
+  .filter-section {
+    padding: 1rem;
+  }
+  .job-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .job-actions {
+    flex-direction: column;
+  }
+  .job-actions .btn {
+    width: 100%;
+  }
+}
