@@ -321,7 +321,7 @@ const Jobs = () => {
                                 fontSize: '0.9rem'
                             }}
                         >
-                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     {filters.category === 'all' && 'All Jobs'}
                                     {filters.category === 'it' && 'IT Engineering'}
                                     {filters.category === 'engineering' && 'Engineering'}
@@ -416,7 +416,7 @@ const Jobs = () => {
                                 fontSize: '0.9rem'
                             }}
                         >
-                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     {filters.sort === 'newest' && 'Newest First'}
                                     {filters.sort === 'salary-high' && 'Salary (High to Low)'}
                                     {filters.sort === 'salary-low' && 'Salary (Low to High)'}

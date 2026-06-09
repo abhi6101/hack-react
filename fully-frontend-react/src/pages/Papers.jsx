@@ -475,7 +475,19 @@ const Papers = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                {availableSems.length === 0 ? (
+                {loading ? (
+                    Array(6).fill(0).map((_, i) => (
+                        <div key={`skel-${i}`} className="semester-card" style={{ opacity: 0.5, pointerEvents: 'none', background: 'rgba(255,255,255,0.02)' }}>
+                            <div className="card-icon">
+                                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} className="skeleton-line"></div>
+                            </div>
+                            <div className="card-content" style={{ width: '100%' }}>
+                                <div className="skeleton-line" style={{ width: '60%', height: '1.5rem', marginBottom: '0.5rem', borderRadius: '4px' }}></div>
+                                <div className="skeleton-line" style={{ width: '40%', height: '1rem', borderRadius: '4px' }}></div>
+                            </div>
+                        </div>
+                    ))
+                ) : availableSems.length === 0 ? (
                     <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px' }}>
                         <i className="fas fa-folder-open" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}></i>
                         <h3>No Semesters found for {branch}</h3>

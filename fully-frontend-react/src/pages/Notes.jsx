@@ -621,7 +621,7 @@ const Notes = ({ isAdminView }) => {
                             value={branchFilter}
                             onChange={(e) => setBranchFilter(e.target.value)}
                             disabled={userRole === 'STUDENT'}
-                            style={{ width: '100%', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '10px 1.5rem 10px 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.85rem' }}
+                            style={{ width: '100%', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '10px 1.5rem 10px 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.85rem' }}
                         >
                             <option value="" style={{ color: '#000' }}>All Branches</option>
                             {deptList.map(dept => (
