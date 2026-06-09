@@ -291,47 +291,135 @@ const Interview = () => {
 
     return (
         <div className="interview-page">
-            <div className="section-header" style={{ padding: '0 1.5rem', marginBottom: '1.5rem', borderBottom: 'none', textAlign: 'center' }}>
-                <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
-                <span className="result-count">{loading ? '...' : filteredInterviews.length} drives found</span>
+<div className="interview-top-bar" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.5rem', gap: '1rem' }}>
+    {/* Stats inline */}
+    <div className="stats-inline" style={{ display: 'flex', gap: '1.5rem' }}>
+        <div className="stat-item">
+            <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
+                <i className="fas fa-calendar-check"></i>
             </div>
-
-
-            <div className="interview-main-layout">
-                {/* Left Sidebar - Statistics */}
-                <aside className="stats-sidebar">
-                    <h3>Overview</h3>
-                    <div className="stat-item">
-                        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
-                            <i className="fas fa-calendar-check"></i>
-                        </div>
-                        <div className="stat-info">
-                            <span className="stat-value-small">{stats.total}</span>
-                            <span className="stat-label-small">Total Drives</span>
-                        </div>
-                    </div>
-
-                    <div className="stat-item">
-                        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
-                            <i className="fas fa-door-open"></i>
-                        </div>
-                        <div className="stat-info">
-                            <span className="stat-value-small">{stats.available}</span>
-                            <span className="stat-label-small">Slots Available</span>
-                        </div>
-                    </div>
-
-                    <div className="stat-item">
-                        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
-                            <i className="fas fa-paper-plane"></i>
-                        </div>
-                        <div className="stat-info">
-                            <span className="stat-value-small">{stats.applied}</span>
-                            <span className="stat-label-small">Applications Sent</span>
-                        </div>
-                    </div>
-                </aside>
-
+            <div className="stat-info">
+                <span className="stat-value-small">{stats.total}</span>
+                <span className="stat-label-small">Total Drives</span>
+            </div>
+        </div>
+        <div className="stat-item">
+            <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
+                <i className="fas fa-door-open"></i>
+            </div>
+            <div className="stat-info">
+                <span className="stat-value-small">{stats.available}</span>
+                <span className="stat-label-small">Slots Available</span>
+            </div>
+        </div>
+        <div className="stat-item">
+            <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
+                <i className="fas fa-paper-plane"></i>
+            </div>
+            <div className="stat-info">
+                <span className="stat-value-small">{stats.applied}</span>
+                <span className="stat-label-small">Applications Sent</span>
+            </div>
+        </div>
+    </div>
+    {/* Search & Location */}
+    <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: 'auto', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="search-wrapper" style={{ flex: '2 1 200px', minWidth: 0 }}>
+            <div style={{ position: 'relative', width: '100%' }}>
+                <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-70%)', color: 'var(--text-secondary)' }}></i>
+                <input
+                    type="text"
+                    placeholder="Search by company or role..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                        width: '100%',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid var(--border-color)',
+                        padding: '0.8rem 1rem 0.8rem 2.5rem',
+                        borderRadius: '12px',
+                        color: '#fff',
+                        fontSize: '0.9rem',
+                        boxSizing: 'border-box'
+                    }}
+                />
+            </div>
+        </div>
+        <div className="location-wrapper" style={{ flex: '1 1 150px', minWidth: 0 }}>
+            <div
+                className="custom-dropdown"
+                onClick={() => setShowLocationMenu(!showLocationMenu)}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--border-color)',
+                    padding: '0.8rem 1rem',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    justifyContent: 'space-between',
+                    color: '#fff',
+                    fontSize: '0.9rem'
+                }}
+            >
+                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, paddingRight: '10px', textAlign: 'left' }}>
+                    {filterLocation === 'all' ? 'All Locations' : filterLocation}
+                </span>
+                <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s' }}></i>
+            </div>
+            <AnimatePresence>
+                {showLocationMenu && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        style={{
+                            position: 'absolute',
+                            top: '120%',
+                            left: 0,
+                            width: '100%',
+                            background: 'rgba(22, 22, 34, 0.95)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '12px',
+                            padding: '0.5rem',
+                            zIndex: 100,
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                            maxHeight: '250px',
+                            overflowY: 'auto'
+                        }}
+                    >
+                        {locations.map(loc => (
+                            <div
+                                key={loc}
+                                className="dropdown-option"
+                                onClick={() => { setFilterLocation(loc); setShowLocationMenu(false); }}
+                                style={{
+                                    padding: '0.8rem 1rem',
+                                    cursor: 'pointer',
+                                    borderRadius: '8px',
+                                    color: filterLocation === loc ? '#fff' : 'var(--text-secondary)',
+                                    background: filterLocation === loc ? 'var(--primary)' : 'transparent',
+                                    transition: '0.2s',
+                                    marginBottom: '0.2rem',
+                                    fontSize: '0.9rem'
+                                }}
+                            >
+                                {loc === 'all' ? 'All Locations' : loc}
+                            </div>
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    </section>
+    {/* Result count */}
+    <span className="result-count" style={{ whiteSpace: 'nowrap' }}>{loading ? '...' : filteredInterviews.length} drives found</span>
+</div>
                 {/* Right Content - Interview Grid */}
                 <main className="interview-content">
                     {/* Search and Filter - Now inside main content to align with Overview */}
