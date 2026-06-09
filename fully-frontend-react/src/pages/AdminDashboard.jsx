@@ -2940,7 +2940,7 @@ const AdminDashboard = () => {
             case 'paper-logs':
                 return renderPaperViewLogs();
             case 'study-notes':
-                return <Notes />;
+                return <Notes isAdminView={true} />;
             case 'question-papers':
                 return (
                     <div className="users-management-page animate-in">

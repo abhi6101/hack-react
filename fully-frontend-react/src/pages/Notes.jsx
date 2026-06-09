@@ -132,7 +132,7 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
     );
 };
 
-const Notes = () => {
+const Notes = ({ isAdminView }) => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const { showToast } = useToast();
@@ -543,7 +543,12 @@ const Notes = () => {
     const isAdmin = ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'].includes(userRole);
 
     return (
-        <div className="papers-container" style={{ padding: '6.5rem 5% 5rem', position: 'relative', zIndex: 2, minHeight: '90vh' }}>
+        <div className="papers-container" style={{ 
+            padding: isAdminView ? '0 0 2rem' : '6.5rem 5% 5rem', 
+            position: 'relative', 
+            zIndex: 2, 
+            minHeight: isAdminView ? 'auto' : '90vh' 
+        }}>
             <Helmet>
                 <title>RGPV IMCA Study Notes | Syllabus & Class Notes | Hack-2-Hired</title>
                 <meta name="description" content="Download high-quality study notes, syllabuses, and subject guides for RGPV Integrated MCA (IMCA) and BCA. Perfect for your exam preparation." />
