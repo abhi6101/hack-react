@@ -194,7 +194,7 @@ a:hover {
 
 .hero {
     min-height: 40vh;
-    padding: 4rem 2rem;
+    padding: 4rem 2rem 2rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -244,7 +244,6 @@ a:hover {
 .categories {
     text-align: left;
     margin-bottom: 2rem;
-    padding-left: 1rem;
 }
 
 .category-tags {
