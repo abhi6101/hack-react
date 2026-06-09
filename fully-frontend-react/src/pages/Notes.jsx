@@ -36,7 +36,7 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
                     alignItems: 'center',
                     gap: '0.8rem',
                     cursor: 'pointer',
-                    color: 'var(--text-secondary)',
+                    color: '#FFFFFF',
                     borderBottom: '1px solid rgba(255,255,255,0.015)',
                     transition: 'all 0.2s',
                     position: 'relative'
@@ -46,13 +46,13 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
                 {level > 0 && <div style={{ position: 'absolute', left: `${((level - 1) * 1.5) + 1.8}rem`, top: 0, bottom: 0, width: '1px', background: 'rgba(255,255,255,0.06)' }}></div>}
                 
                 <i className={`fas ${fileIcon}`} style={{ color: iconColor, fontSize: '1.2rem', filter: `drop-shadow(0 2px 4px ${iconColor}40)`, zIndex: 1 }}></i>
-                <span style={{ flex: 1, fontSize: '0.95rem', fontWeight: '500' }}>{node.name}</span>
+                <span style={{ flex: 1, fontSize: '0.95rem', fontWeight: '500', color: '#FFFFFF' }}>{node.name}</span>
                 {isLocked ? (
                     <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                         <i className="fas fa-lock"></i> Locked
                     </div>
                 ) : (
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
                         <div 
                             onClick={(e) => { e.stopPropagation(); handleViewFile(node); }}
                             style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#10B981', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
@@ -567,7 +567,7 @@ const Notes = ({ isAdminView }) => {
                 backdropFilter: 'blur(10px)',
                 flexWrap: 'wrap',
                 gap: '1.5rem',
-                marginBottom: '2rem'
+                marginBottom: 'calc(2rem + 16px)'
             }}>
                 <div>
                     <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
@@ -691,7 +691,7 @@ const Notes = ({ isAdminView }) => {
                             >
                                 {/* Root Folder Header */}
                                 <div style={{ 
-                                    padding: '1.8rem 2rem', 
+                                    padding: '1rem 1.5rem', 
                                     borderBottom: '1px solid rgba(255,255,255,0.05)',
                                     display: 'flex',
                                     justifyContent: 'space-between',
@@ -702,16 +702,15 @@ const Notes = ({ isAdminView }) => {
                                     {/* Neon Accent Line */}
                                     <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
                                     
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                                        <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: 'rgba(0, 212, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                            <i className="fas fa-folder-open" style={{ fontSize: '2.2rem', color: '#00d4ff', filter: 'drop-shadow(0 0 10px rgba(0, 212, 255, 0.5))' }}></i>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                                        <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(0, 212, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                            <i className="fas fa-folder-open" style={{ fontSize: '1.6rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.5))' }}></i>
                                         </div>
                                         <div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.6rem' }}>
-                                                <h3 style={{ fontSize: '1.4rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{folder.name}</h3>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.3rem' }}>
+                                                <h3 style={{ fontSize: '1.3rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{folder.name}</h3>
                                             </div>
-                                            <div style={{ display: 'flex', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: '500' }}>
-                                                {folder.meta.subject && <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-book" style={{ color: 'var(--primary)' }}></i> {folder.meta.subject.toUpperCase()}</span>}
+                                            <div style={{ display: 'flex', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '500' }}>
                                                 {folder.meta.semester ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Semester {folder.meta.semester}</span> : null}
                                                 {folder.meta.branch ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {folder.meta.branch}</span> : null}
                                             </div>
