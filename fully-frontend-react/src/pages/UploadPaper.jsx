@@ -121,12 +121,12 @@ const UploadPaper = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', padding: '100px 20px 50px', background: 'var(--dark-bg)' }}>
+        <div style={{ minHeight: '100vh', padding: '80px 15px 30px', background: 'var(--dark-bg)' }}>
             <div className="container" style={{ maxWidth: '600px', margin: '0 auto' }}>
-                <div style={{ background: 'var(--surface-bg)', borderRadius: '16px', padding: '30px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ background: 'var(--surface-bg)', borderRadius: '16px', padding: '20px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
                     
                     {/* Progress Bar */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px', position: 'relative' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '2px', background: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
                         <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '2px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.3s ease' }}></div>
                         {[1, 2, 3, 4].map(num => (
@@ -143,36 +143,36 @@ const UploadPaper = () => {
                         ))}
                     </div>
 
-                    <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Smart Paper Upload</h1>
-                    {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
+                    <h1 style={{ textAlign: 'center', marginBottom: '15px', fontSize: 'clamp(1.5rem, 5vw, 2rem)', lineHeight: '1.2' }}>Smart Paper Upload</h1>
+                    {error && <div className="alert alert-error" style={{ marginBottom: '15px' }}>{error}</div>}
 
                     <AnimatePresence mode="wait">
                         {step === 1 && (
                             <motion.div key="step1" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
-                                <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+                                <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '15px', fontSize: '0.9rem' }}>
                                     Take photos of an official university exam paper. Ensure the text is clear and legible.
                                 </p>
                                 
-                                <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+                                <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
                                     <div 
                                         onClick={() => cameraInputRef.current.click()}
                                         style={{ 
-                                            flex: 1, border: '2px dashed var(--primary)', borderRadius: '12px', padding: '25px 10px', 
+                                            flex: 1, border: '2px dashed var(--primary)', borderRadius: '12px', padding: '15px 10px', 
                                             textAlign: 'center', cursor: 'pointer', background: 'rgba(0, 212, 255, 0.05)', transition: 'all 0.3s ease'
                                         }}
                                     >
-                                        <i className="fas fa-camera" style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: '10px' }}></i>
-                                        <h4 style={{ margin: 0, fontSize: '1rem' }}>Take Photo</h4>
+                                        <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '8px' }}></i>
+                                        <h4 style={{ margin: 0, fontSize: '0.95rem' }}>Take Photo</h4>
                                     </div>
                                     <div 
                                         onClick={() => fileInputRef.current.click()}
                                         style={{ 
-                                            flex: 1, border: '2px dashed #10B981', borderRadius: '12px', padding: '25px 10px', 
+                                            flex: 1, border: '2px dashed #10B981', borderRadius: '12px', padding: '15px 10px', 
                                             textAlign: 'center', cursor: 'pointer', background: 'rgba(16, 185, 129, 0.05)', transition: 'all 0.3s ease'
                                         }}
                                     >
-                                        <i className="fas fa-images" style={{ fontSize: '2rem', color: '#10B981', marginBottom: '10px' }}></i>
-                                        <h4 style={{ margin: 0, fontSize: '1rem' }}>Gallery</h4>
+                                        <i className="fas fa-images" style={{ fontSize: '1.8rem', color: '#10B981', marginBottom: '8px' }}></i>
+                                        <h4 style={{ margin: 0, fontSize: '0.95rem' }}>Gallery</h4>
                                     </div>
                                 </div>
                                 <input 
