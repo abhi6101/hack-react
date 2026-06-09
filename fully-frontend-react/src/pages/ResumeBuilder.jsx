@@ -527,6 +527,16 @@ const ResumeBuilder = () => {
 
             {/* Inline CSS for this page specifically */}
             <style jsx>{`
+                .page-header {
+                    text-align: center;
+                    margin-bottom: 2rem;
+                }
+                .page-header h1 {
+                    font-size: clamp(1.8rem, 5vw, 2.5rem);
+                    white-space: normal;
+                    word-wrap: break-word;
+                    line-height: 1.2;
+                }
                 .resume-form-container {
                     display: flex;
                     flex-direction: column;
@@ -642,6 +652,11 @@ const ResumeBuilder = () => {
                     }
                     .sticky-box {
                         position: static;
+                    }
+                    .page-header h1 {
+                        font-size: clamp(1.5rem, 5vw, 2.5rem);
+                        white-space: normal;
+                        word-wrap: break-word;
                     }
                 }
             `}</style>
