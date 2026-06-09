@@ -186,6 +186,8 @@
 
     /* Resume Builder */
     .resume-container {
+    flex-direction: column;
+    padding-top: 2rem; /* Added top spacing for visual balance */
         flex-direction: column;
     }
 
