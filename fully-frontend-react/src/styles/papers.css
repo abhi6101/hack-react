@@ -38,7 +38,7 @@ a:hover {
 }
 
 /* --- 2. Navigation --- */
-nav {
+.legacy-nav {
     padding: 1rem 5%;
     background: rgba(10, 10, 16, 0.5);
     backdrop-filter: blur(10px);
@@ -46,7 +46,7 @@ nav {
     border-bottom: 1px solid var(--border-color);
 }
 
-nav:last-of-type {
+.legacy-nav:last-of-type {
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -63,7 +63,7 @@ nav:last-of-type {
     color: var(--primary);
 }
 
-nav ul {
+.legacy-nav ul {
     display: flex;
     list-style: none;
     gap: 1rem;
@@ -72,7 +72,7 @@ nav ul {
     padding-bottom: 0.5rem;
 }
 
-nav a {
+.legacy-nav a {
     color: var(--text-secondary);
     padding: 0.5rem 1rem;
     border-radius: 8px;
@@ -84,12 +84,12 @@ nav a {
     transition: all 0.3s ease;
 }
 
-nav a:hover {
+.legacy-nav a:hover {
     color: var(--text-primary);
     background-color: var(--surface-bg);
 }
 
-nav a.active {
+.legacy-nav a.active {
     color: var(--primary);
     background: var(--surface-bg);
 }
