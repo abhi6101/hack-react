@@ -593,8 +593,7 @@
     }
 
     .stats-sidebar {
-        display: block;
-        margin-bottom: 1rem;
+        display: none;
     }
     
     .stats-sidebar .stat-item {
