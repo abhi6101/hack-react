@@ -98,3 +98,99 @@ nav.user-bottom-nav {
         padding-bottom: 90px !important;
     }
 }
+
+/* User Profile Card Styles */
+.user-profile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0.5rem 0 0 0;
+    width: 100%;
+}
+
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-profile-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.user-profile-name {
+    margin: 0;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.user-profile-code {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.user-profile-code i {
+    color: var(--primary);
+}
+
+.user-profile-badge {
+    align-self: flex-start;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.15rem;
+}
+
+.mobile-menu-logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.9rem;
+    background: rgba(239, 68, 68, 0.08) !important;
+    border: 1px solid rgba(239, 68, 68, 0.2) !important;
+    border-radius: 12px;
+    color: #ef4444 !important;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+}
+
+.mobile-menu-logout-btn:hover {
+    background: rgba(239, 68, 68, 0.18) !important;
+    border-color: #ef4444 !important;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+}
+

@@ -4,6 +4,8 @@ import '../styles/user-bottom-nav.css';
 
 const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
     const isLoggedIn = !!localStorage.getItem('authToken');
+    const name = localStorage.getItem('name') || '';
+    const username = localStorage.getItem('username') || '';
 
     const handleLogout = () => {
         localStorage.clear();
@@ -16,14 +18,23 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
         window.scrollTo(0, 0);
     };
 
+    const getInitials = (fullName) => {
+        if (!fullName) return 'S';
+        const parts = fullName.trim().split(/\s+/);
+        if (parts.length >= 2) {
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        return fullName.charAt(0).toUpperCase();
+    };
+
     const menuGroups = [
         {
             title: 'Placement & Career',
             icon: 'fa-briefcase',
             items: [
-                { path: '/jobs', icon: 'fa-briefcase', label: 'Jobs Listing' },
+                ...(isLoggedIn ? [{ path: '/jobs', icon: 'fa-briefcase', label: 'Jobs Listing' }] : []),
                 { path: '/interview', icon: 'fa-comments', label: 'Interview Drives' },
-                { path: '/resume-builder', icon: 'fa-file-alt', label: 'Build Resume' }
+                ...(isLoggedIn ? [{ path: '/resume-builder', icon: 'fa-file-alt', label: 'Build Resume' }] : [])
             ]
         },
         {
@@ -31,8 +42,8 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
             icon: 'fa-book-reader',
             items: [
                 { path: '/papers', icon: 'fa-copy', label: 'Question Papers' },
-                { path: '/upload-paper', icon: 'fa-upload', label: 'Contribute Paper' },
-                { path: '/notes', icon: 'fa-sticky-note', label: 'Subject Notes' },
+                ...(isLoggedIn ? [{ path: '/upload-paper', icon: 'fa-upload', label: 'Contribute Paper' }] : []),
+                ...(isLoggedIn ? [{ path: '/notes', icon: 'fa-sticky-note', label: 'Subject Notes' }] : []),
                 { path: '/quiz', icon: 'fa-brain', label: 'Interactive Quiz' },
                 { path: '/videos', icon: 'fa-video', label: 'Lecture Videos' },
                 { path: '/courses', icon: 'fa-book', label: 'Skill Courses' }
@@ -47,7 +58,7 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
                 { path: '/contact', icon: 'fa-envelope', label: 'Help & Support' }
             ]
         }
-    ];
+    ].filter(group => group.items.length > 0);
 
     return (
         <div className="user-mobile-menu-container animate-in">
@@ -59,74 +70,27 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
                     <i className="fas fa-user-circle"></i> Student Portal
                 </h3>
                 {isLoggedIn ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                        <Link
-                            to="/dashboard"
-                            onClick={handleNavigation}
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem',
-                                padding: '0.9rem',
-                                background: 'rgba(255, 255, 255, 0.02)',
-                                border: '1px solid rgba(255, 255, 255, 0.05)',
-                                borderRadius: '12px',
-                                color: 'var(--text-secondary)',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                textDecoration: 'none'
-                            }}
-                            className="mobile-menu-item"
-                        >
-                            <i className="fas fa-user-circle" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}></i>
-                            <span style={{ fontSize: '0.8rem', fontWeight: '500', textAlign: 'center' }}>My Dashboard</span>
-                        </Link>
-                        <Link
-                            to="/profile"
-                            onClick={handleNavigation}
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem',
-                                padding: '0.9rem',
-                                background: 'rgba(255, 255, 255, 0.02)',
-                                border: '1px solid rgba(255, 255, 255, 0.05)',
-                                borderRadius: '12px',
-                                color: 'var(--text-secondary)',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                textDecoration: 'none'
-                            }}
-                            className="mobile-menu-item"
-                        >
-                            <i className="fas fa-id-card" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}></i>
-                            <span style={{ fontSize: '0.8rem', fontWeight: '500', textAlign: 'center' }}>Profile Details</span>
-                        </Link>
+                    <div className="user-profile-card">
+                        <div className="user-profile-header">
+                            <div className="user-profile-avatar">
+                                {getInitials(name)}
+                            </div>
+                            <div className="user-profile-info">
+                                <h4 className="user-profile-name">{name || 'Student User'}</h4>
+                                <p className="user-profile-code">
+                                    <i className="fas fa-id-card"></i> {username || 'Student ID'}
+                                </p>
+                                <span className="user-profile-badge">
+                                    <i className="fas fa-check-circle"></i> Verified Profile
+                                </span>
+                            </div>
+                        </div>
                         <button
                             onClick={handleLogout}
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem',
-                                padding: '0.9rem',
-                                background: 'rgba(239, 68, 68, 0.05)',
-                                border: '1px solid rgba(239, 68, 68, 0.15)',
-                                borderRadius: '12px',
-                                color: '#ef4444',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                gridColumn: '1 / -1'
-                            }}
-                            className="mobile-menu-item-logout"
+                            className="mobile-menu-logout-btn"
                         >
-                            <i className="fas fa-sign-out-alt" style={{ fontSize: '1.25rem', color: '#ef4444' }}></i>
-                            <span style={{ fontSize: '0.8rem', fontWeight: '600', textAlign: 'center' }}>Logout</span>
+                            <i className="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
                         </button>
                     </div>
                 ) : (
