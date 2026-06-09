@@ -9,6 +9,8 @@ const Navbar = ({ menuOpen = false }) => {
     const [scrolled, setScrolled] = useState(false);
     const [resourcesOpen, setResourcesOpen] = useState(false);
     const [exploreOpen, setExploreOpen] = useState(false);
+    const [careerOpen, setCareerOpen] = useState(false);
+    const [academicsOpen, setAcademicsOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -59,11 +61,36 @@ const Navbar = ({ menuOpen = false }) => {
                 </div>
 
                 <Link to="/" className={isActive('/')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-home"></i> Home</Link>
-                <Link to="/jobs" className={isActive('/jobs')}><i className="fas fa-briefcase"></i> Jobs</Link>
-                <Link to="/resume-builder" className={isActive('/resume-builder')}><i className="fas fa-file-alt"></i> Resume</Link>
-                <Link to="/interview" className={isActive('/interview')}><i className="fas fa-comments"></i> Interviews</Link>
-                <Link to="/papers" className={isActive('/papers')}><i className="fas fa-copy"></i> Papers</Link>
-                <Link to="/notes" className={isActive('/notes')}><i className="fas fa-sticky-note"></i> Notes</Link>
+                
+                {/* Career Dropdown */}
+                <div className="dropdown"
+                    onMouseEnter={() => setCareerOpen(true)}
+                    onMouseLeave={() => setCareerOpen(false)}
+                    onClick={() => setCareerOpen(!careerOpen)}>
+                    <button className="dropdown-toggle">
+                        <i className="fas fa-briefcase"></i> Career <i className="fas fa-chevron-down"></i>
+                    </button>
+                    <div className={`dropdown-menu ${careerOpen ? 'show' : ''}`}>
+                        <Link to="/jobs" className={isActive('/jobs')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-search-dollar"></i> Jobs</Link>
+                        <Link to="/resume-builder" className={isActive('/resume-builder')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-file-alt"></i> Resume Builder</Link>
+                        <Link to="/interview" className={isActive('/interview')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-comments"></i> Interviews</Link>
+                    </div>
+                </div>
+
+                {/* Academics Dropdown */}
+                <div className="dropdown"
+                    onMouseEnter={() => setAcademicsOpen(true)}
+                    onMouseLeave={() => setAcademicsOpen(false)}
+                    onClick={() => setAcademicsOpen(!academicsOpen)}>
+                    <button className="dropdown-toggle">
+                        <i className="fas fa-graduation-cap"></i> Academics <i className="fas fa-chevron-down"></i>
+                    </button>
+                    <div className={`dropdown-menu ${academicsOpen ? 'show' : ''}`}>
+                        <Link to="/papers" className={isActive('/papers')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-copy"></i> Previous Papers</Link>
+                        <Link to="/notes" className={isActive('/notes')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-sticky-note"></i> Study Notes</Link>
+                        <Link to="/upload-paper" className={isActive('/upload-paper')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-upload"></i> Upload Paper</Link>
+                    </div>
+                </div>
 
                 {/* Resources Dropdown */}
                 <div className="dropdown"
@@ -74,9 +101,9 @@ const Navbar = ({ menuOpen = false }) => {
                         <i className="fas fa-book-reader"></i> Resources <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${resourcesOpen ? 'show' : ''}`}>
-                        <Link to="/quiz" className={isActive('/quiz')}><i className="fas fa-brain"></i> Quiz</Link>
-                        <Link to="/videos" className={isActive('/videos')}><i className="fas fa-video"></i> Study Videos</Link>
-                        <Link to="/courses" className={isActive('/courses')}><i className="fas fa-book"></i> Courses</Link>
+                        <Link to="/quiz" className={isActive('/quiz')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-brain"></i> Quiz</Link>
+                        <Link to="/videos" className={isActive('/videos')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-video"></i> Study Videos</Link>
+                        <Link to="/courses" className={isActive('/courses')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-book"></i> Courses</Link>
                     </div>
                 </div>
 
@@ -89,17 +116,14 @@ const Navbar = ({ menuOpen = false }) => {
                         <i className="fas fa-compass"></i> Explore <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${exploreOpen ? 'show' : ''}`}>
-                        <Link to="/gallery" className={isActive('/gallery')}><i className="fas fa-images"></i> Gallery</Link>
-                        <Link to="/blog" className={isActive('/blog')}><i className="fas fa-blog"></i> Blog</Link>
+                        <Link to="/gallery" className={isActive('/gallery')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-images"></i> Gallery</Link>
+                        <Link to="/blog" className={isActive('/blog')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-blog"></i> Blog</Link>
                     </div>
                 </div>
 
                 {isAdminUser && (
-                    <Link to="/admin" className={isActive('/admin')}><i className="fas fa-shield-alt"></i> Admin</Link>
+                    <Link to="/admin" className={isActive('/admin')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-shield-alt"></i> Admin</Link>
                 )}
-                <Link to="/upload-paper" className={`btn-upload-paper ${isActive('/upload-paper')}`}>
-                    <i className="fas fa-upload"></i> Upload Paper
-                </Link>
                 {isLoggedIn && userRole === 'USER' && (
                     <Link to="/dashboard" className={isActive('/dashboard')}><i className="fas fa-user-circle"></i> Dashboard</Link>
                 )}
