@@ -99,3 +99,20 @@ a { color: var(--primary); text-decoration: none; } a:hover { color: white; }
 .course-meta span { display: flex; align-items: center; gap: 0.4rem; }
 .course-meta i { color: var(--primary); }
 .course-card .btn-primary { margin-top: 1.5rem; width: 100%; }
+
+@media (max-width: 768px) {
+    .category-filters {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        width: 100%;
+        scrollbar-width: none;
+    }
+    .category-filters::-webkit-scrollbar { display: none; }
+    .category-filters .btn-outline {
+        flex-shrink: 0;
+        white-space: nowrap;
+        width: auto !important;
+    }
+}

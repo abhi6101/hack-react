@@ -459,3 +459,20 @@ a:hover {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px var(--primary-glow);
 }
+
+@media (max-width: 768px) {
+    .category-tags {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        width: 100%;
+        scrollbar-width: none;
+    }
+    .category-tags::-webkit-scrollbar { display: none; }
+    .category-tags .btn-outline {
+        flex-shrink: 0;
+        white-space: nowrap;
+        width: auto !important;
+    }
+}

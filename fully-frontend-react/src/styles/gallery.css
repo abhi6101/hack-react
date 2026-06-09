@@ -281,6 +281,13 @@
         width: 100%;
         border-radius: 16px;
         padding: 0.8rem;
+        scrollbar-width: none;
+    }
+    .gallery-categories::-webkit-scrollbar { display: none; }
+    .gallery-categories .btn-outline {
+        flex-shrink: 0;
+        white-space: nowrap;
+        width: auto !important;
     }
 
     .gallery-page {

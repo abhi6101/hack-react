@@ -403,4 +403,10 @@ form {
     .contact-grid {
         grid-template-columns: 1fr;
     }
+    .contact-card {
+        padding: 1.5rem;
+    }
+    .hero h1 {
+        font-size: clamp(2rem, 8vw, 2.5rem);
+    }
 }
