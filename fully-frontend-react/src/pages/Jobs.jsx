@@ -26,6 +26,7 @@ const Jobs = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showSortMenu, setShowSortMenu] = useState(false);
+    const [showCategoryMenu, setShowCategoryMenu] = useState(false);
     const [applicationData, setApplicationData] = useState({
         applicantName: '',
         applicantEmail: '',
@@ -293,30 +294,114 @@ const Jobs = () => {
             {/* Wrapper to ensure footer stays down if content short */}
 
             <div className="container">
-                <div className="page-header">
+                <div className="page-header" style={{ display: 'none' }}>
                     <h1>Job Opportunities</h1>
                     <p>Browse through our latest job openings from top companies and kickstart your career</p>
                 </div>
 
 
                 <div className="filter-section">
-                    <div className="filter-buttons">
-                        {['all', 'it', 'engineering', 'finance', 'internship'].map(cat => (
-                            <button
-                                key={cat}
-                                className={`filter-btn ${filters.category === cat ? 'active' : ''}`}
-                                onClick={() => handleFilterChange('category', cat)}
+                    <div className="filter-dropdowns" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <div className="category-options" style={{ position: 'relative', minWidth: '200px' }}>
+                            <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginRight: '0.5rem' }}>Category:</span>
+                            <div
+                                className="custom-dropdown"
+                                onClick={() => { setShowCategoryMenu(!showCategoryMenu); setShowSortMenu(false); }}
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid var(--border-color)',
+                                    padding: '0.6rem 1.2rem',
+                                    borderRadius: '12px',
+                                    cursor: 'pointer',
+                                    minWidth: '180px',
+                                    justifyContent: 'space-between',
+                                    color: '#fff'
+                                }}
                             >
-                                {cat === 'all' ? 'All Jobs' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-                            </button>
-                        ))}
+                                <span>
+                                    {filters.category === 'all' && 'All Jobs'}
+                                    {filters.category === 'it' && 'IT Engineering'}
+                                    {filters.category === 'engineering' && 'Engineering'}
+                                    {filters.category === 'finance' && 'Finance'}
+                                    {filters.category === 'internship' && 'Internship'}
+                                </span>
+                                <i className={`fas fa-chevron-down ${showCategoryMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s' }}></i>
+                            </div>
+
+                            <AnimatePresence>
+                                {showCategoryMenu && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        transition={{ duration: 0.2 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '120%',
+                                            left: 0,
+                                            width: '100%',
+                                            background: 'rgba(22, 22, 34, 0.95)',
+                                            backdropFilter: 'blur(10px)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '12px',
+                                            padding: '0.5rem',
+                                            zIndex: 100,
+                                            boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                                            overflow: 'hidden'
+                                        }}
+                                    >
+                                        {[
+                                            { value: 'all', label: 'All Jobs' },
+                                            { value: 'it', label: 'IT Engineering' },
+                                            { value: 'finance', label: 'Finance' },
+                                            { value: 'internship', label: 'Internship' }
+                                        ].map(option => (
+                                            <div
+                                                key={option.value}
+                                                onClick={() => {
+                                                    handleFilterChange('category', option.value);
+                                                    setShowCategoryMenu(false);
+                                                }}
+                                                style={{
+                                                    padding: '0.8rem 1rem',
+                                                    cursor: 'pointer',
+                                                    borderRadius: '8px',
+                                                    background: filters.category === option.value ? 'var(--primary)' : 'transparent',
+                                                    color: filters.category === option.value ? '#fff' : 'var(--text-secondary)',
+                                                    transition: '0.2s',
+                                                    marginBottom: '0.2rem',
+                                                    fontSize: '0.9rem'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    if (filters.category !== option.value) {
+                                                        e.target.style.background = 'rgba(255,255,255,0.05)';
+                                                        e.target.style.color = '#fff';
+                                                    }
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    if (filters.category !== option.value) {
+                                                        e.target.style.background = 'transparent';
+                                                        e.target.style.color = 'var(--text-secondary)';
+                                                    }
+                                                }}
+                                            >
+                                                {option.label}
+                                            </div>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                     <div className="sort-options">
                         <div className="sort-wrapper" style={{ position: 'relative', minWidth: '200px' }}>
                             <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginRight: '0.5rem' }}>Sort by:</span>
                             <div
                                 className="custom-dropdown"
-                                onClick={() => setShowSortMenu(!showSortMenu)}
+                                onClick={() => { setShowSortMenu(!showSortMenu); setShowCategoryMenu(false); }}
                                 style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',

@@ -109,12 +109,12 @@ const Navbar = ({ menuOpen = false }) => {
             <div className="navbar-auth">
                 {isLoggedIn ? (
                     <>
-                        <div className="navbar-user-chip">
+                        <Link to="/dashboard" className="navbar-user-chip" style={{ textDecoration: 'none' }}>
                             <div className="navbar-user-avatar">
                                 {firstName.charAt(0).toUpperCase()}
                             </div>
                             <span className="navbar-user-name">Hi, {firstName}</span>
-                        </div>
+                        </Link>
                         <button className="navbar-logout-btn" onClick={handleLogout}>
                             <i className="fas fa-sign-out-alt"></i>
                             <span>Logout</span>

@@ -336,7 +336,7 @@ const Login = () => {
                         </div>
 
                         <button type="submit" id="loginButton" className="btn btn-primary" disabled={loading || lockedTimeLeft > 0}>
-                            {loading ? 'Logging in...' : lockedTimeLeft > 0 ? `Locked Out (${lockedTimeLeft}s)` : `Login as ${loginMode === 'student' ? 'Student' : 'Admin'} `}
+                            {loading ? <i className="fas fa-spinner fa-spin"></i> : lockedTimeLeft > 0 ? `Locked Out (${lockedTimeLeft}s)` : `Login as ${loginMode === 'student' ? 'Student' : 'Admin'} `}
                         </button>
                     </form>
                     <div className="login-footer">

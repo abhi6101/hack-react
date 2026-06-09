@@ -82,6 +82,7 @@ const Papers = () => {
     };
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchUserProfile();
         fetchPaperSettings();
     }, []);

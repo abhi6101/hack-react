@@ -344,9 +344,7 @@ const Home = () => {
                         </motion.p>
 
                         <motion.div className="cta-btns hero-cta-guest-wrapper" variants={fadeInUp} style={{ justifyContent: 'flex-start' }}>
-                            {localStorage.getItem('authToken') ? (
-                                <Link to="/dashboard" className="btn btn-outline"><i className="fas fa-tachometer-alt"></i> My Dashboard</Link>
-                            ) : (
+                            {localStorage.getItem('authToken') ? null : (
                                 <span className="hero-cta-guest">
                                     <Link to="/register" id="registerBtn" className="btn btn-outline">🚀 Get Started</Link>
                                     <Link to="/login" className="btn btn-outline">Sign In</Link>
