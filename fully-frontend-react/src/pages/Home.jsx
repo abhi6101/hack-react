@@ -337,23 +337,7 @@ const Home = () => {
                             </h1>
                         </motion.div>
 
-                        {user && (
-                            <motion.div
-                                id="userWelcome"
-                                variants={fadeInUp}
-                                style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    boxShadow: 'none',
-                                    padding: 0,
-                                    textAlign: 'left', // Aligned left now
-                                    marginTop: '1rem'
-                                }}
-                            >
-                                <h2 style={{ textAlign: 'left' }}>Welcome, <span id="displayUsername">{user.name || user.username}</span>!</h2>
-                                <p style={{ textAlign: 'left' }}>Account type: <span id="displayRole">{user.role}</span></p>
-                            </motion.div>
-                        )}
+
 
                         <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '0.75rem 0 1.5rem' }}>
                             Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
@@ -361,12 +345,7 @@ const Home = () => {
 
                         <motion.div className="cta-btns" variants={fadeInUp} style={{ justifyContent: 'flex-start' }}>
                             {localStorage.getItem('authToken') ? (
-                                <>
-                                    <Link to="/jobs" className="btn btn-outline">Explore Jobs <i className="fas fa-arrow-right"></i></Link>
-                                    <button onClick={handleLogout} className="btn btn-outline" style={{ borderColor: 'var(--neon-pink)', color: 'white' }}>
-                                        Logout
-                                    </button>
-                                </>
+                                <Link to="/dashboard" className="btn btn-outline"><i className="fas fa-tachometer-alt"></i> My Dashboard</Link>
                             ) : (
                                 <>
                                     <Link to="/register" id="registerBtn" className="btn btn-outline">🚀 Get Started</Link>

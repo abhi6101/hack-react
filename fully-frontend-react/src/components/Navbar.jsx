@@ -113,7 +113,7 @@ const Navbar = () => {
                             <div className="navbar-user-avatar">
                                 {firstName.charAt(0).toUpperCase()}
                             </div>
-                            <span className="navbar-user-name">{firstName}</span>
+                            <span className="navbar-user-name">Hi, {firstName}</span>
                         </div>
                         <button className="navbar-logout-btn" onClick={handleLogout}>
                             <i className="fas fa-sign-out-alt"></i>
