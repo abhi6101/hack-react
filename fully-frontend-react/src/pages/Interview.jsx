@@ -4,6 +4,7 @@ import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import ApplicationModal from '../components/ApplicationModal';
 import AuthPromptModal from '../components/AuthPromptModal';
+import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../config';
 import '../styles/interview.css';
 
@@ -70,6 +71,7 @@ const Interview = () => {
     const [myApplications, setMyApplications] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterLocation, setFilterLocation] = useState('all');
+    const [showLocationMenu, setShowLocationMenu] = useState(false);
     const [stats, setStats] = useState({ total: 0, available: 0, applied: 0 });
 
     useEffect(() => {
@@ -318,20 +320,92 @@ const Interview = () => {
                     <i className="fas fa-search"></i>
                     <input
                         type="text"
-                        placeholder="Search by company or position..."
+                        placeholder="Search"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <div className="int-filter-bar">
-                    <label><i className="fas fa-filter"></i> Location:</label>
-                    <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)}>
-                        {locations.map(loc => (
-                            <option key={loc} value={loc}>
-                                {loc === 'all' ? 'All Locations' : loc}
-                            </option>
-                        ))}
-                    </select>
+                <div className="int-filter-bar" style={{ position: 'relative', background: 'transparent', padding: 0, border: 'none' }}>
+                    <div
+                        className="custom-dropdown"
+                        onClick={() => setShowLocationMenu(!showLocationMenu)}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            padding: '1rem 1.5rem',
+                            borderRadius: '12px',
+                            cursor: 'pointer',
+                            width: '100%',
+                            justifyContent: 'space-between',
+                            color: '#fff',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <i className="fas fa-map-marker-alt" style={{ color: 'var(--text-secondary)' }}></i>
+                            {filterLocation === 'all' ? 'All Locations' : filterLocation}
+                        </span>
+                        <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s' }}></i>
+                    </div>
+
+                    <AnimatePresence>
+                        {showLocationMenu && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                transition={{ duration: 0.2 }}
+                                style={{
+                                    position: 'absolute',
+                                    top: '120%',
+                                    left: 0,
+                                    width: '100%',
+                                    background: 'rgba(22, 22, 34, 0.95)',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '12px',
+                                    padding: '0.5rem',
+                                    zIndex: 1000,
+                                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+                                    maxHeight: '250px',
+                                    overflowY: 'auto'
+                                }}
+                            >
+                                {locations.map(loc => (
+                                    <div
+                                        key={loc}
+                                        className="dropdown-option"
+                                        onClick={() => { setFilterLocation(loc); setShowLocationMenu(false); }}
+                                        style={{
+                                            padding: '0.8rem 1rem',
+                                            cursor: 'pointer',
+                                            borderRadius: '8px',
+                                            color: filterLocation === loc ? 'var(--primary)' : 'var(--text-secondary)',
+                                            background: filterLocation === loc ? 'rgba(67, 97, 238, 0.1)' : 'transparent',
+                                            transition: '0.2s'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (filterLocation !== loc) {
+                                                e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                                                e.target.style.color = '#fff';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (filterLocation !== loc) {
+                                                e.target.style.background = 'transparent';
+                                                e.target.style.color = 'var(--text-secondary)';
+                                            }
+                                        }}
+                                    >
+                                        {loc === 'all' ? 'All Locations' : loc}
+                                    </div>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </section>
 
