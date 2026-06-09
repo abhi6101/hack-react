@@ -115,4 +115,8 @@ a { color: var(--primary); text-decoration: none; } a:hover { color: white; }
         white-space: nowrap;
         width: auto !important;
     }
+    
+    .course-list {
+        grid-template-columns: 1fr;
+    }
 }
