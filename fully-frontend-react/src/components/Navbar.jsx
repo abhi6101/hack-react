@@ -4,7 +4,7 @@ import '../styles/index.css';
 import '../styles/dropdown.css';
 import '../styles/navbar-professional.css';
 
-const Navbar = () => {
+const Navbar = ({ menuOpen = false }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [resourcesOpen, setResourcesOpen] = useState(false);
@@ -43,7 +43,7 @@ const Navbar = () => {
     const firstName = userName.split(' ')[0];
 
     return (
-        <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'solid' : ''}`}>
             <Link to="/" className="logo">Hack-2-<span className="highlight">Hired</span></Link>
 
             {/* Mobile Drawer Overlay */}

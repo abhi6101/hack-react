@@ -79,7 +79,7 @@ function Layout({ children }) {
 
     return (
         <>
-            {showNavbar && <Navbar />}
+            {showNavbar && <Navbar menuOpen={isMobileMenuOpen} />}
             {isMobileMenuOpen && showNavbar && <UserMobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />}
             {children}
             {showNavbar && <UserBottomNav isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />}

@@ -35,6 +35,22 @@
     border-bottom: 1px solid rgba(99, 102, 241, 0.2);
 }
 
+/* ===== SOLID STATE (when mobile menu is open) ===== */
+.navbar.solid {
+    background: rgba(10, 10, 22, 0.98) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ===== HIDE HERO GUEST CTA ON MOBILE (navbar already shows Sign In / Register) ===== */
+@media (max-width: 768px) {
+    .hero-cta-guest {
+        display: none;
+    }
+}
+
 /* ===== LOGO DESIGN ===== */
 .navbar .logo {
     font-family: 'Poppins', sans-serif;
