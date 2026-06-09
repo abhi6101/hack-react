@@ -5,6 +5,8 @@ import API_BASE_URL from './config';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProfileUpdateModal from './components/ProfileUpdateModal';
+import UserBottomNav from './components/UserBottomNav';
+import UserMobileMenu from './components/UserMobileMenu';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import AdminLogin from './pages/AdminLogin';
@@ -50,16 +52,24 @@ function Layout({ children }) {
     const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success', '/verify-account'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleProfileUpdate = () => {
         setShowProfileModal(false);
         // Optionally refresh the page or update state
     };
 
+    // Close menu when route changes
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location]);
+
     return (
         <>
             {showNavbar && <Navbar />}
+            {isMobileMenuOpen && showNavbar && <UserMobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />}
             {children}
+            {showNavbar && <UserBottomNav isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />}
             {showNavbar && <Footer />}
         </>
     );

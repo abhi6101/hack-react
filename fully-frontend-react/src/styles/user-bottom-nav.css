@@ -1,0 +1,100 @@
+nav.user-bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 70px !important;
+    background: rgba(15, 15, 20, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    display: none !important; /* Hidden by default on desktop */
+    justify-content: space-around !important;
+    align-items: center !important;
+    z-index: 999999 !important;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 1;
+    height: 100%;
+    text-decoration: none;
+}
+
+.bottom-nav-item i {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.bottom-nav-item:hover {
+    color: var(--text-primary);
+}
+
+.bottom-nav-item.active {
+    color: var(--primary);
+}
+
+.bottom-nav-item.active i {
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* User Mobile Menu Container */
+.user-mobile-menu-container {
+    position: fixed;
+    top: 70px; /* height of navbar */
+    bottom: 70px; /* height of bottom nav */
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 15, 0.96) !important;
+    backdrop-filter: blur(30px) !important;
+    -webkit-backdrop-filter: blur(30px) !important;
+    z-index: 99999 !important;
+    padding: 1.5rem 1.5rem 3rem 1.5rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Hover effects for mobile menu items */
+.mobile-menu-item:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--primary) !important;
+}
+
+/* Responsive Overrides */
+@media (max-width: 767px) {
+    nav.user-bottom-nav {
+        display: flex !important;
+    }
+    
+    /* Hide top nav hamburger on mobile since we have bottom nav */
+    .navbar .hamburger {
+        display: none !important;
+    }
+
+    /* Add padding to prevent content from going behind bottom nav */
+    body, 
+    .papers-container, 
+    .dashboard-container,
+    div[style*="minHeight: 100vh"] {
+        padding-bottom: 90px !important;
+    }
+}
