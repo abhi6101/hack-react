@@ -245,79 +245,44 @@ const StudentDashboard = () => {
                     background: 'rgba(255, 255, 255, 0.05)',
                     backdropFilter: 'blur(10px)',
                     borderRadius: '20px',
-                    padding: '1.5rem',
+                    padding: '1.25rem 1.75rem',
                     marginBottom: '1.5rem',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem'
                 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                            {/* Profile Picture */}
-                            <div style={{
-                                width: '60px',
-                                height: '60px',
-                                borderRadius: '50%',
-                                overflow: 'hidden',
-                                border: '2px solid #667eea',
-                                boxShadow: '0 0 15px rgba(102, 126, 234, 0.4)',
-                                background: '#1a1a2e',
-                                flexShrink: 0
-                            }}>
-                                <img
-                                    src={user?.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.fullName || user?.username || 'User')}&background=667eea&color=fff`}
-                                    alt="Profile"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
-                            </div>
-                            <div>
-                                <h1 style={{
-                                    fontSize: 'clamp(1.8rem, 6vw, 2.5rem)',
-                                    color: '#fff',
-                                    margin: 0,
-                                    marginBottom: '0.5rem',
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    fontWeight: '700',
-                                    wordWrap: 'break-word'
-                                }}>
-                                    Welcome Back! 👋
-                                </h1>
-                                <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem', margin: 0 }}>
-                                    {user?.fullName || user?.name || user?.username || 'Student'}
-                                </p>
-                            </div>
-                        </div>
-                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                            <button
-                                onClick={handleLogout}
-                                style={{
-                                    padding: '1rem 2rem',
-                                    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    color: '#fff',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    transition: 'all 0.3s ease',
-                                    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
-                                }}
-                                onMouseOver={(e) => {
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 6px 20px rgba(239, 68, 68, 0.6)';
-                                }}
-                                onMouseOut={(e) => {
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.4)';
-                                }}
-                            >
-                                <i className="fas fa-sign-out-alt"></i> Logout
-                            </button>
-                        </div>
+                    <div style={{
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '12px',
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.2rem',
+                        color: '#fff',
+                        flexShrink: 0,
+                        boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)'
+                    }}>
+                        <i className="fas fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <h1 style={{
+                            fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
+                            margin: 0,
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            fontWeight: '700',
+                            wordBreak: 'break-word'
+                        }}>
+                            {user?.fullName || user?.name || user?.username || 'Student'}
+                        </h1>
+                        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.82rem', margin: 0, marginTop: '0.2rem', letterSpacing: '0.5px' }}>
+                            {user?.computerCode ? `#${user.computerCode}` : ''}{user?.computerCode && user?.branch ? '  ·  ' : ''}{user?.branch || ''}
+                        </p>
                     </div>
                 </div>
 
