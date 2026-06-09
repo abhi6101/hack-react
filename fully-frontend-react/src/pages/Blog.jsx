@@ -26,35 +26,13 @@ const Blog = () => {
             </Helmet>
             <header className="hero" style={{ paddingTop: '120px' }}>
                 <div className="hero-content" style={{ marginTop: '20px' }}>
-                    <h1>Career Insight Blog</h1>
-                    <p>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
-
+                    <h1 style={{ whiteSpace: 'nowrap', fontSize: 'clamp(1.5rem, 6vw, 3rem)' }}>Career Insight Blog</h1>
                 </div>
             </header>
 
             <main className="blog-container" style={{ paddingBottom: '100px' }}>
                 <section className="categories" style={{ marginBottom: '2rem' }}>
-                    <label htmlFor="categoryDropdown" style={{ color: 'var(--text-primary)', marginRight: '0.8rem', fontSize: '1.2rem', fontWeight: '600' }}>Explore by Category:</label>
-                    <select id="categoryDropdown" value={activeCategory} onChange={(e) => handleFilter(e.target.value)} style={{
-                        padding: '0.6rem 2.5rem 0.6rem 1.2rem',
-                        borderRadius: '12px',
-                        background: 'var(--surface-bg)',
-                        border: '1px solid var(--border-color)',
-                        color: '#fff',
-                        fontSize: '0.95rem',
-                        cursor: 'pointer',
-                        appearance: 'none',
-                        backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'right 1rem center',
-                        backgroundSize: '1em'
-                    }}>
-                        {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
-                            <option key={cat} value={cat} style={{ background: '#0f111a', color: '#fff' }}>
-                                {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                            </option>
-                        ))}
-                    </select>
+                    <h3 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: '600' }}>Explore Posts:</h3>
                 </section>
 
                 <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center' }}>
