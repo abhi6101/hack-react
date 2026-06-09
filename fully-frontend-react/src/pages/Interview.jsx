@@ -323,7 +323,7 @@ const Interview = () => {
         </div>
     </div>
     {/* Search & Location */}
-    <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: 'auto', flexWrap: 'wrap', alignItems: 'center' }}>
+    <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap', alignItems: 'center' }}>
         <div className="search-wrapper" style={{ flex: '2 1 200px', minWidth: 0 }}>
             <div style={{ position: 'relative', width: '100%' }}>
                 <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-70%)', color: 'var(--text-secondary)' }}></i>

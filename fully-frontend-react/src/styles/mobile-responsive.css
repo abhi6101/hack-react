@@ -212,6 +212,10 @@
         text-align: center;
     }
 
+    .stats-inline {
+        display: none !important;
+    }
+
     /* Contact Form */
     .contact-container {
         grid-template-columns: 1fr !important;
