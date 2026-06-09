@@ -251,7 +251,7 @@ const Interview = () => {
 
         return (
             <div key={interview.id} className="interview-card surface-glow">
-                <div className="card-header">
+                <div className="int-card-header">
                     <div className="company-info">
                         <div className="company-logo-placeholder">{interview.company.charAt(0)}</div>
                         <div>
@@ -265,7 +265,7 @@ const Interview = () => {
                     </div>
                 </div>
 
-                <div className="card-body">
+                <div className="int-card-body">
                     <div className="detail-row">
                         <i className="fas fa-clock"></i> <span>{interview.time}</span>
                     </div>
@@ -290,7 +290,7 @@ const Interview = () => {
                     </div>
                 </div>
 
-                <div className="card-footer">
+                <div className="int-card-footer">
                     <div className="criteria">
                         <i className="fas fa-graduation-cap"></i> {interview.eligibility}
                     </div>
@@ -314,6 +314,11 @@ const Interview = () => {
 
     return (
         <div className="interview-page">
+            <div className="section-header" style={{ padding: '0 1.5rem', marginBottom: '0', borderBottom: 'none' }}>
+                <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
+                <span className="result-count">{loading ? '...' : filteredInterviews.length} drives found</span>
+            </div>
+
             {/* Search and Filter - Top */}
             <section className="top-filter-section">
                 <div className="int-search-bar">
@@ -447,22 +452,18 @@ const Interview = () => {
 
                 {/* Right Content - Interview Grid */}
                 <main className="interview-content">
-                    <div className="section-header">
-                        <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
-                        <span className="result-count">{loading ? '...' : filteredInterviews.length} drives found</span>
-                    </div>
                     <div className="interview-grid">
                         {loading ? (
                             Array(4).fill(0).map((_, i) => (
                                 <div className="interview-card skeleton-card" key={`skel-${i}`} style={{ height: '350px' }}>
-                                    <div className="card-header" style={{ display: 'flex', gap: '1rem', alignItems: 'center', background: 'transparent' }}>
+                                    <div className="int-card-header" style={{ display: 'flex', gap: '1rem', alignItems: 'center', background: 'transparent' }}>
                                         <div className="skeleton-line" style={{ width: '50px', height: '50px', borderRadius: '12px', margin: 0 }}></div>
                                         <div style={{ flex: 1 }}>
                                             <div className="skeleton-line title" style={{ height: '20px', width: '70%', marginBottom: '0.5rem', margin: 0 }}></div>
                                             <div className="skeleton-line subtitle" style={{ height: '15px', width: '40%', margin: 0 }}></div>
                                         </div>
                                     </div>
-                                    <div className="card-body">
+                                    <div className="int-card-body">
                                         <div className="skeleton-content" style={{ height: '120px', marginBottom: '1rem' }}></div>
                                         <div className="skeleton-content" style={{ height: '40px' }}></div>
                                     </div>
