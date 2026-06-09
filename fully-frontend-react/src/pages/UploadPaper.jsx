@@ -124,8 +124,8 @@ const UploadPaper = () => {
         <div className="papers-page-wrapper">
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
-            <div style={{ minHeight: '100vh', padding: '80px 15px 30px', position: 'relative', zIndex: 2 }}>
-                <div className="container" style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <div style={{ minHeight: '100vh', padding: '100px 15px 50px', position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="container" style={{ maxWidth: '600px', width: '100%', margin: '0 auto' }}>
                 <div style={{ background: 'var(--surface-bg)', borderRadius: '16px', padding: '20px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
                     
                     {/* Progress Bar */}
