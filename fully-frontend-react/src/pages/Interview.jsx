@@ -553,7 +553,6 @@ const Interview = () => {
                         )}
                     </div>
                 </main>
-            </div>
 
             {showModal ? (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
