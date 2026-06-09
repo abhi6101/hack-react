@@ -330,14 +330,16 @@ const Home = () => {
                         variants={staggerContainer}
                         style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                     >
+                        <motion.div variants={fadeInUp} style={{ marginBottom: '2rem', maxWidth: '400px' }}>
+                            <LeaderboardComponent />
+                        </motion.div>
+
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
                                 Get Your Dream Job with <br />
                                 <span className="hero-brand-text">hack-2-hired</span>
                             </h1>
                         </motion.div>
-
-
 
                         <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '0.75rem 0 1.5rem' }}>
                             Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
@@ -350,10 +352,6 @@ const Home = () => {
                                     <Link to="/login" className="btn btn-outline">Sign In</Link>
                                 </span>
                             )}
-                        </motion.div>
-
-                        <motion.div variants={fadeInUp} style={{ marginTop: '2rem', maxWidth: '400px' }}>
-                            <LeaderboardComponent />
                         </motion.div>
                     </motion.div>
 
