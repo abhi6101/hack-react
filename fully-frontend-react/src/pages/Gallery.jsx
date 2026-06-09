@@ -155,7 +155,6 @@ const Gallery = () => {
                             background: 'linear-gradient(135deg, #fff 0%, var(--primary) 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
-                            textShadow: '0 0 30px rgba(67, 97, 238, 0.2)',
                             fontWeight: '800'
                         }}>Moments & Memories</h1>
                         <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', margin: '0' }}>

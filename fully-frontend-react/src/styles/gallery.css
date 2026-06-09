@@ -64,39 +64,40 @@
 }
 
 .gallery-categories .btn-outline {
-    background: transparent;
-    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-secondary);
-    padding: 0.6rem 1.5rem;
-    font-weight: 600;
+    padding: 8px 16px;
+    font-weight: 500;
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: inherit;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .gallery-categories .btn-outline:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .gallery-categories .btn-outline.active {
-    background: var(--primary);
+    background: rgba(0, 212, 255, 0.15);
     color: #fff;
-    box-shadow: 0 0 20px var(--primary-glow);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
 }
 
 /* --- 3. Photo Grid (Masonry-style) --- */
 .photo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
     position: relative;
 }
 
 .photo-item {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 5;
     border-radius: 20px;
     cursor: pointer;
     overflow: hidden;
