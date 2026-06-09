@@ -94,6 +94,12 @@ nav.user-bottom-nav {
     body, 
     .papers-container, 
     .dashboard-container,
+    .contact-page-container,
+    .blog-container,
+    .gallery-page,
+    .quiz-container,
+    .videos-page,
+    .courses-container,
     div[style*="minHeight: 100vh"] {
         padding-bottom: 90px !important;
     }
