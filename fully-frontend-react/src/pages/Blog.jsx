@@ -20,41 +20,35 @@ const Blog = () => {
     return (
         <>
             <Helmet>
-                <title>Career Insights & Placement Blog | Hack-2-Hired</title>
+                <title>Career Insight Block | Hack-2-Hired</title>
                 <meta name="description" content="Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career." />
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
             <header className="hero" style={{ paddingTop: '120px' }}>
                 <div className="hero-content">
-                    <h1><span className="hide-on-mobile">Career Insights </span>Blog</h1>
+                    <h1>Career Insight Block</h1>
                     <p>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
-                    <a href="#blog-posts-section" className="btn btn-primary">Explore Posts <i className="fas fa-arrow-down"></i></a>
+
                 </div>
             </header>
 
             <main className="blog-container">
-                <section className="categories">
-                    <h2>Explore by Category</h2>
-                    <div className="category-tags" id="categoryTags" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.8rem' }}>
+                <section className="categories" style={{ marginBottom: '2rem' }}>
+                    <label htmlFor="categoryDropdown" style={{ color: 'var(--text-secondary)', marginRight: '0.5rem' }}>Explore by Category:</label>
+                    <select id="categoryDropdown" value={activeCategory} onChange={(e) => handleFilter(e.target.value)} style={{
+                        padding: '0.5rem 1rem',
+                        borderRadius: '50px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid var(--border-color)',
+                        color: '#fff',
+                        fontSize: '0.9rem'
+                    }}>
                         {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
-                            <button
-                                key={cat}
-                                className={`btn btn-outline ${activeCategory === cat ? 'active' : ''}`}
-                                onClick={() => handleFilter(cat)}
-                                style={{
-                                    border: activeCategory === cat ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '50px',
-                                    padding: '0.6rem 1.2rem',
-                                    fontWeight: '500',
-                                    fontSize: '0.9rem',
-                                    background: activeCategory === cat ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
-                                    color: activeCategory === cat ? '#000' : 'var(--text-secondary)'
-                                }}
-                            >
+                            <option key={cat} value={cat} style={{ background: '#0f111a', color: '#fff' }}>
                                 {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                            </button>
+                            </option>
                         ))}
-                    </div>
+                    </select>
                 </section>
 
                 <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center' }}>
@@ -82,14 +76,7 @@ const Blog = () => {
                     {/* Pagination can be added here if needed */}
                 </nav>
 
-                <section className="newsletter-section surface-glow">
-                    <h2>Stay Updated</h2>
-                    <p>Get the latest career insights and tips delivered straight to your inbox.</p>
-                    <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-                        <input type="email" placeholder="Your email address" required />
-                        <button type="submit" className="btn btn-primary">Subscribe <i className="fas fa-paper-plane"></i></button>
-                    </form>
-                </section>
+
             </main>
         </>
     );
