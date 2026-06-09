@@ -141,7 +141,7 @@ const StudentDashboard = () => {
         <div style={{
             minHeight: '100vh',
             background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
-            padding: '2rem',
+            padding: '6rem 2rem 2rem 2rem',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'flex-start'
@@ -230,7 +230,7 @@ const StudentDashboard = () => {
         <div style={{
             minHeight: '100vh',
             background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
-            padding: '2rem',
+            padding: '6rem 2rem 2rem 2rem',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'flex-start'
