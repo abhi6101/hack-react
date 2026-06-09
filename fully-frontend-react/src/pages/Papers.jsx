@@ -5,7 +5,6 @@ import { useToast } from '../components/CustomToast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import AuthPromptModal from '../components/AuthPromptModal';
-import LeaderboardComponent from '../components/LeaderboardComponent';
 import API_BASE_URL from '../config';
 
 import Typewriter from '../components/Typewriter';
