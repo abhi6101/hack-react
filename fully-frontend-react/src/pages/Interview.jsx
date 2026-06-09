@@ -555,7 +555,7 @@ const Interview = () => {
                 </main>
             </div>
 
-            {showModal && (
+            {showModal ? (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
                     <div className="modal-content surface-glow" onClick={e => e.stopPropagation()}>
                         <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
@@ -595,7 +595,7 @@ const Interview = () => {
                         </form>
                     </div>
                 </div>
-            )}
+            ) : null}
 
             {showApplicationModal && selectedInterview && (
                 <ApplicationModal
