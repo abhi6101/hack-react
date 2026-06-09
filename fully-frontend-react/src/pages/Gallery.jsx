@@ -169,12 +169,14 @@ const Gallery = () => {
                             padding: '0.8rem 2rem',
                             display: 'inline-flex',
                             alignItems: 'center',
+                            justifyContent: 'center',
                             gap: '0.5rem',
                             borderRadius: '50px',
                             boxShadow: '0 10px 25px rgba(67, 97, 238, 0.4)',
                             fontWeight: '600',
                             fontSize: '1.1rem',
-                            marginTop: '1rem'
+                            marginTop: '1rem',
+                            width: 'fit-content'
                         }}
                     >
                         <i className="fas fa-camera"></i> <span>Share Photo</span>

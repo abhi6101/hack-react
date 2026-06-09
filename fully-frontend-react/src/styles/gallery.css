@@ -222,7 +222,7 @@
 /* --- 5. Image Modal --- */
 .modal {
     position: fixed;
-    z-index: 2000;
+    z-index: 2147483647 !important;
     left: 0;
     top: 0;
     width: 100%;
