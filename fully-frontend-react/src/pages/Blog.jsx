@@ -25,15 +25,28 @@ const Blog = () => {
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
             <header className="hero" style={{ paddingTop: '120px' }}>
-                <div className="hero-content" style={{ marginTop: '20px' }}>
+                <div className="hero-content" style={{ marginTop: '20px', width: '100%' }}>
                     <h1 style={{ whiteSpace: 'nowrap', fontSize: 'clamp(1.5rem, 6vw, 3rem)' }}>Career Insight Blog</h1>
+                    <p>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
+                    
+                    <div className="category-pills-container">
+                        <span className="category-label">Explore by Category:</span>
+                        <div className="category-pills">
+                            {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
+                                <button 
+                                    key={cat} 
+                                    className={`pill-btn ${activeCategory === cat ? 'active' : ''}`}
+                                    onClick={() => handleFilter(cat)}
+                                >
+                                    {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </header>
 
             <main className="blog-container" style={{ paddingBottom: '100px' }}>
-                <section className="categories" style={{ marginBottom: '2rem' }}>
-                    <h3 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: '600' }}>Explore Posts:</h3>
-                </section>
 
                 <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center' }}>
                     {posts.length === 0 ? (
