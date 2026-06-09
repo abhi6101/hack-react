@@ -145,7 +145,7 @@ const Quiz = () => {
     };
 
     return (
-        <main className="quiz-container">
+        <main className="quiz-container" style={{ paddingTop: '80px' }}>
             <Helmet>
                 <title>Placement Preparation Quizzes | Hack-2-Hired</title>
                 <meta name="description" content="Test your knowledge with our free placement preparation quizzes. Practice HTML, CSS, JavaScript, React, Java, DSA, and more to ace your technical interviews." />

@@ -38,7 +38,7 @@ const Courses = () => {
                 <meta name="description" content="Master in-demand skills with our industry-relevant courses and get placement-ready. Explore programming, web dev, and data science courses." />
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
-            <header className="courses-hero">
+            <header className="courses-hero" style={{ paddingTop: '80px' }}>
                 <h1>Career-Boosting Courses</h1>
                 <p className="subtitle">Master in-demand skills with our industry-relevant courses and get placement-ready.</p>
             </header>

@@ -20,7 +20,7 @@ const Videos = () => {
     });
 
     return (
-        <main className="videos-page">
+        <main className="videos-page" style={{ paddingTop: '80px' }}>
             <Helmet>
                 <title>Curated Study Videos | Hack-2-Hired</title>
                 <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />
