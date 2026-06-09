@@ -192,33 +192,6 @@ const AdminDashboard = () => {
     const [editingJob, setEditingJob] = useState(null);
     const [editingInterview, setEditingInterview] = useState(null);
 
-    // View Toggles
-    const [activeJobsView, setActiveJobsView] = useState('list');
-    const [activeUsersView, setActiveUsersView] = useState('list');
-    const [activeInterviewsView, setActiveInterviewsView] = useState('list');
-    const [activeStudentsView, setActiveStudentsView] = useState('list');
-    const [activePapersView, setActivePapersView] = useState('list');
-    const [activeGalleryView, setActiveGalleryView] = useState('list');
-    const [activePaperLogsView, setActivePaperLogsView] = useState('list');
-
-    const ViewToggle = ({ activeView, setActiveView, formLabel, listLabel, formIcon, listIcon }) => (
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
-            <button 
-                className={`btn ${activeView === 'form' ? 'btn-primary' : 'btn-outline'}`} 
-                onClick={() => setActiveView('form')}
-                style={{ flex: 1, minWidth: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-                <i className={formIcon}></i> {formLabel}
-            </button>
-            <button 
-                className={`btn ${activeView === 'list' ? 'btn-primary' : 'btn-outline'}`} 
-                onClick={() => setActiveView('list')}
-                style={{ flex: 1, minWidth: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-                <i className={listIcon}></i> {listLabel}
-            </button>
-        </div>
-    );
     const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
     const [verificationTab, setVerificationTab] = useState('idCard'); // idCard, admit // For ID Card Modal
     const [applications, setApplications] = useState([]);
@@ -695,7 +668,6 @@ const AdminDashboard = () => {
                 setMessage({ text: 'Photo uploaded successfully!', type: 'success' });
                 setGalleryForm({ title: '', type: 'campus', description: '', image: null });
                 loadGalleryItems();
-                setActiveGalleryView('list');
             } else {
                 setMessage({ text: 'Failed to upload photo.', type: 'error' });
             }
@@ -1345,14 +1317,11 @@ const AdminDashboard = () => {
     );
 
     const renderPaperViewLogs = () => (
-        <>
-            <ViewToggle activeView={activePaperLogsView} setActiveView={setActivePaperLogsView} formLabel="Hide Logs" listLabel="Show Logs" formIcon="fas fa-eye-slash" listIcon="fas fa-eye" />
-            {activePaperLogsView === 'list' && (
-            <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-                    <div>
-                        <h2>Paper View Logs</h2>
-                    </div>
+        <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                    <h2>Paper View Logs</h2>
+                </div>
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     <div className="search-box-modern">
                         <i className="fas fa-search"></i>
@@ -1443,9 +1412,7 @@ const AdminDashboard = () => {
                     </table>
                 </div>
             )}
-            </div>
-            )}
-        </>
+        </div>
     );
 
     const renderAnalytics = () => {
@@ -1485,18 +1452,6 @@ const AdminDashboard = () => {
 
     const renderStudentMonitor = () => (
         <div className="users-management-page animate-in">
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', width: '100%' }}>
-                <button 
-                    className="btn btn-primary" 
-                    onClick={() => setActiveStudentsView(activeStudentsView === 'list' ? 'form' : 'list')}
-                    style={{ minWidth: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                >
-                    <i className={activeStudentsView === 'list' ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-                    {activeStudentsView === 'list' ? 'Hide Monitor' : 'Show Monitor'}
-                </button>
-            </div>
-            
-            {activeStudentsView === 'list' && (
             <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
                 <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
@@ -1550,7 +1505,6 @@ const AdminDashboard = () => {
                 </div>
             )}
             </section>
-            )}
         </div>
     );
 
@@ -1839,9 +1793,7 @@ const AdminDashboard = () => {
             case 'jobs':
                 return (
                     <>
-                        <ViewToggle activeView={activeJobsView} setActiveView={setActiveJobsView} formLabel="Post New Job" listLabel="View Posted Jobs" formIcon="fas fa-plus-circle" listIcon="fas fa-briefcase" />
-                        {activeJobsView === 'form' && (
-                        <section id="jobs-section" className="card surface-glow">
+                        <section id="jobs-section" className="card surface-glow" style={{ marginBottom: '2.5rem' }}>
                             <div className="card-header">
                                 <h3><i className={editingJob ? "fas fa-edit" : "fas fa-plus-circle"}></i> {editingJob ? 'Edit Job' : 'Post New Job'}</h3>
                             </div>
@@ -2002,9 +1954,7 @@ const AdminDashboard = () => {
                                 </div>
                             </form>
                         </section>
-                        )}
 
-                        {activeJobsView === 'list' && (
                         <section className="card surface-glow">
                             <div className="card-header">
                                 <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
@@ -2055,7 +2005,6 @@ const AdminDashboard = () => {
                                 </div>
                             )}
                         </section>
-                        )}
                     </>
                 );
             case 'users': {
@@ -2069,8 +2018,7 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="users-management-page animate-in">
-                        {!isCompanyAdmin && <ViewToggle activeView={activeUsersView} setActiveView={setActiveUsersView} formLabel="Onboard New User" listLabel="Registered Workforce" formIcon="fas fa-user-plus" listIcon="fas fa-users" />}
-                        {activeUsersView === 'form' && !isCompanyAdmin && (
+                        {!isCompanyAdmin && (
                             <section className="card surface-glow-premium" style={{ marginBottom: '2.5rem', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
                                 <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                                     <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -2262,7 +2210,6 @@ const AdminDashboard = () => {
                             </section>
                         )}
 
-                        {(activeUsersView === 'list' || isCompanyAdmin) && (
                         <section className="card surface-glow" style={{ border: '1px solid rgba(255,255,255,0.05)' }}>
                             <div className="card-header" style={{ padding: '1.5rem 2rem' }}>
                                 <div>
@@ -2376,7 +2323,6 @@ const AdminDashboard = () => {
                                 </div>
                             )}
                         </section>
-                        )}
                     </div>
                 );
             }
@@ -2488,10 +2434,8 @@ const AdminDashboard = () => {
                 );
             case 'interviews':
                 return (
-                    <>
-                        <ViewToggle activeView={activeInterviewsView} setActiveView={setActiveInterviewsView} formLabel="Post New Interview" listLabel="View Interviews" formIcon="fas fa-calendar-plus" listIcon="fas fa-calendar-alt" />
-                        {activeInterviewsView === 'form' && (
-                        <section className="card surface-glow">
+                    <div className="users-management-page animate-in">
+                        <section className="card surface-glow" style={{ marginBottom: '2.5rem' }}>
                             <div className="card-header">
                                 <h3><i className={editingInterview ? "fas fa-edit" : "fas fa-calendar-plus"}></i> {editingInterview ? 'Edit Interview' : 'Post New Interview'}</h3>
                             </div>
@@ -2540,9 +2484,7 @@ const AdminDashboard = () => {
                                 </div>
                             </form>
                         </section>
-                        )}
 
-                        {(activeInterviewsView === 'list' || isCompanyAdmin) && (
                         <section className="card surface-glow">
                             <div className="card-header">
                                 <h3><i className="fas fa-calendar-check"></i> Scheduled Interviews</h3>
@@ -2562,7 +2504,7 @@ const AdminDashboard = () => {
                                                     {(!isCompanyAdmin || interview.company === myCompanyName) ? (
                                                         <>
                                                             <button className="btn btn-secondary" onClick={() => startEditInterview(interview)} style={{ marginRight: '0.5rem' }}>
-                                                                <i className="fas fa-edit"></i>
+                                                                 <i className="fas fa-edit"></i>
                                                             </button>
                                                             <button className="btn btn-danger" onClick={() => deleteInterview(interview.id)}>
                                                                 <i className="fas fa-trash"></i>
@@ -2578,8 +2520,7 @@ const AdminDashboard = () => {
                                 </table>
                             </div>
                         </section>
-                        )}
-                    </>
+                    </div>
                 );
             case 'interview-applications':
                 return (
@@ -2680,158 +2621,144 @@ const AdminDashboard = () => {
                 );
             case 'gallery':
                 return (
-                    <>
-                        <ViewToggle 
-                            activeView={activeGalleryView} 
-                            setActiveView={setActiveGalleryView} 
-                            formLabel="Upload Photo" 
-                            listLabel="Moderate Gallery" 
-                            formIcon="fas fa-camera" 
-                            listIcon="fas fa-images" 
-                        />
-                        
-                        {activeGalleryView === 'form' && (
-                            <section className="card surface-glow">
-                                <div className="card-header">
-                                    <h3><i className="fas fa-camera"></i> Share New Photo</h3>
-                                </div>
-                                <div style={{ padding: '2rem' }}>
-                                    {message.text && (
-                                        <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '1.5rem' }}>
-                                            {message.text}
-                                        </div>
-                                    )}
-                                    <form onSubmit={handleGalleryUpload}>
-                                        <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Title</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                required
-                                                value={galleryForm.title}
-                                                onChange={e => setGalleryForm({ ...galleryForm, title: e.target.value })}
-                                                placeholder="e.g., Annual Tech Fest 2024"
-                                            />
-                                        </div>
-                                        <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Category</label>
-                                            <select
-                                                className="form-control"
-                                                value={galleryForm.type}
-                                                onChange={e => setGalleryForm({ ...galleryForm, type: e.target.value })}
-                                            >
-                                                <option value="campus">Campus</option>
-                                                <option value="lab">Lab</option>
-                                                <option value="function">Function</option>
-                                                <option value="farewell">Farewell</option>
-                                                <option value="class">Class</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Description</label>
-                                            <textarea
-                                                className="form-control"
-                                                rows="3"
-                                                value={galleryForm.description}
-                                                onChange={e => setGalleryForm({ ...galleryForm, description: e.target.value })}
-                                                placeholder="Tell us about this photo..."
-                                            ></textarea>
-                                        </div>
-                                        <div className="form-group" style={{ marginBottom: '2rem' }}>
-                                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Photo</label>
-                                            <input
-                                                type="file"
-                                                className="form-control"
-                                                required
-                                                accept="image/*"
-                                                onChange={e => setGalleryForm({ ...galleryForm, image: e.target.files[0] })}
-                                            />
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '1rem' }}>
-                                            <button type="submit" className="btn btn-primary" disabled={galleryUploadLoading}>
-                                                {galleryUploadLoading ? 'Uploading...' : 'Submit Photo'}
-                                            </button>
-                                            <button type="button" className="btn btn-outline" onClick={() => {
-                                                setGalleryForm({ title: '', type: 'campus', description: '', image: null });
-                                                setActiveGalleryView('list');
-                                            }}>
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </section>
-                        )}
-
-                        {activeGalleryView === 'list' && (
-                            <section className="card surface-glow">
-                                <div className="card-header">
-                                    <h3><i className="fas fa-images"></i> Gallery Management</h3>
-                                </div>
-                                {loadingGallery ? (
-                                    <p style={{ padding: '2rem', textAlign: 'center' }}>Loading gallery items...</p>
-                                ) : galleryItems.length > 0 ? (
-                                    <div className="table-responsive" style={{ padding: '1rem' }}>
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th>Type</th>
-                                                    <th>Uploaded By</th>
-                                                    <th>Status</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {galleryItems.map(item => (
-                                                    <tr key={item.id}>
-                                                        <td>
-                                                            {item.title}
-                                                            {item.description && <div style={{ fontSize: '0.8rem', color: '#888' }}>{item.description.substring(0, 50)}...</div>}
-                                                        </td>
-                                                        <td>{item.type}</td>
-                                                        <td>{item.uploadedBy}</td>
-                                                        <td>
-                                                            <span className={`status-badge status-${item.status.toLowerCase()}`}>
-                                                                {item.status}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                                                                <select
-                                                                    value={item.status}
-                                                                    onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
-                                                                    className="form-control"
-                                                                    style={{ width: 'auto', padding: '0.4rem', fontSize: '0.85rem' }}
-                                                                >
-                                                                    <option value="PENDING">Pending</option>
-                                                                    <option value="ACCEPTED">Accept</option>
-                                                                    <option value="REJECTED">Reject</option>
-                                                                </select>
-                                                                <button className="action-btn-modern delete-btn" onClick={() => deleteGalleryItem(item.id)} title="Delete Item">
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button>
-                                                                <button
-                                                                    className="action-btn-modern edit-btn"
-                                                                    onClick={() => window.open(item.url, '_blank')}
-                                                                    title="View Image"
-                                                                >
-                                                                    <i className="fas fa-eye"></i>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                    <div className="users-management-page animate-in">
+                        <section className="card surface-glow" style={{ marginBottom: '2.5rem' }}>
+                            <div className="card-header">
+                                <h3><i className="fas fa-camera"></i> Share New Photo</h3>
+                            </div>
+                            <div style={{ padding: '2rem' }}>
+                                {message.text && (
+                                    <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '1.5rem' }}>
+                                        {message.text}
                                     </div>
-                                ) : (
-                                    <p style={{ padding: '2rem', textAlign: 'center' }}>No gallery items found.</p>
                                 )}
-                            </section>
-                        )}
-                    </>
+                                <form onSubmit={handleGalleryUpload}>
+                                    <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Title</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            required
+                                            value={galleryForm.title}
+                                            onChange={e => setGalleryForm({ ...galleryForm, title: e.target.value })}
+                                            placeholder="e.g., Annual Tech Fest 2024"
+                                        />
+                                    </div>
+                                    <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Category</label>
+                                        <select
+                                            className="form-control"
+                                            value={galleryForm.type}
+                                            onChange={e => setGalleryForm({ ...galleryForm, type: e.target.value })}
+                                        >
+                                            <option value="campus">Campus</option>
+                                            <option value="lab">Lab</option>
+                                            <option value="function">Function</option>
+                                            <option value="farewell">Farewell</option>
+                                            <option value="class">Class</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Description</label>
+                                        <textarea
+                                            className="form-control"
+                                            rows="3"
+                                            value={galleryForm.description}
+                                            onChange={e => setGalleryForm({ ...galleryForm, description: e.target.value })}
+                                            placeholder="Tell us about this photo..."
+                                        ></textarea>
+                                    </div>
+                                    <div className="form-group" style={{ marginBottom: '2rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Photo</label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            required
+                                            accept="image/*"
+                                            onChange={e => setGalleryForm({ ...galleryForm, image: e.target.files[0] })}
+                                        />
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '1rem' }}>
+                                        <button type="submit" className="btn btn-primary" disabled={galleryUploadLoading}>
+                                            {galleryUploadLoading ? 'Uploading...' : 'Submit Photo'}
+                                        </button>
+                                        <button type="button" className="btn btn-outline" onClick={() => {
+                                            setGalleryForm({ title: '', type: 'campus', description: '', image: null });
+                                        }}>
+                                            Clear Form
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </section>
+
+                        <section className="card surface-glow">
+                            <div className="card-header">
+                                <h3><i className="fas fa-images"></i> Gallery Management</h3>
+                            </div>
+                            {loadingGallery ? (
+                                <p style={{ padding: '2rem', textAlign: 'center' }}>Loading gallery items...</p>
+                            ) : galleryItems.length > 0 ? (
+                                <div className="table-responsive" style={{ padding: '1rem' }}>
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Type</th>
+                                                <th>Uploaded By</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {galleryItems.map(item => (
+                                                <tr key={item.id}>
+                                                    <td>
+                                                        {item.title}
+                                                        {item.description && <div style={{ fontSize: '0.8rem', color: '#888' }}>{item.description.substring(0, 50)}...</div>}
+                                                    </td>
+                                                    <td>{item.type}</td>
+                                                    <td>{item.uploadedBy}</td>
+                                                    <td>
+                                                        <span className={`status-badge status-${item.status.toLowerCase()}`}>
+                                                            {item.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                                                            <select
+                                                                value={item.status}
+                                                                onChange={(e) => updateGalleryStatus(item.id, e.target.value)}
+                                                                className="form-control"
+                                                                style={{ width: 'auto', padding: '0.4rem', fontSize: '0.85rem' }}
+                                                            >
+                                                                <option value="PENDING">Pending</option>
+                                                                <option value="ACCEPTED">Accept</option>
+                                                                <option value="REJECTED">Reject</option>
+                                                            </select>
+                                                            <button className="action-btn-modern delete-btn" onClick={() => deleteGalleryItem(item.id)} title="Delete Item">
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
+                                                            <button
+                                                                className="action-btn-modern edit-btn"
+                                                                onClick={() => window.open(item.url, '_blank')}
+                                                                title="View Image"
+                                                            >
+                                                                <i className="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <p style={{ padding: '2rem', textAlign: 'center' }}>No gallery items found.</p>
+                            )}
+                        </section>
+                    </div>
                 );
             case 'companies':
                 const companyAdmins = users.filter(u => u.role === 'COMPANY_ADMIN');
@@ -3016,11 +2943,12 @@ const AdminDashboard = () => {
                 return <Notes />;
             case 'question-papers':
                 return (
-                    <>
-                        <ViewToggle activeView={activePapersView} setActiveView={setActivePapersView} formLabel="Upload Paper" listLabel="View Papers" formIcon="fas fa-file-upload" listIcon="fas fa-file-pdf" />
-                        {activePapersView === 'form' && <PaperWizard onUploadSuccess={() => { setRefreshKey(prev => prev + 1); setActivePapersView('list'); }} />}
-                        {activePapersView === 'list' && <PaperList key={refreshKey} />}
-                    </>
+                    <div className="users-management-page animate-in">
+                        <div style={{ marginBottom: '2.5rem' }}>
+                            <PaperWizard onUploadSuccess={() => setRefreshKey(prev => prev + 1)} />
+                        </div>
+                        <PaperList key={refreshKey} />
+                    </div>
                 );
             case 'pending-papers':
                 return <PendingPapersAdmin />;
