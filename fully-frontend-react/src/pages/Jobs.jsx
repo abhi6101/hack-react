@@ -321,14 +321,14 @@ const Jobs = () => {
                                 fontSize: '0.9rem'
                             }}
                         >
-                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, textAlign: 'left' }}>
+                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
                                     {filters.category === 'all' && 'All Jobs'}
                                     {filters.category === 'it' && 'IT Engineering'}
                                     {filters.category === 'engineering' && 'Engineering'}
                                     {filters.category === 'finance' && 'Finance'}
                                     {filters.category === 'internship' && 'Internship'}
                                 </span>
-                                <i className={`fas fa-chevron-down ${showCategoryMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s' }}></i>
+                                <i className={`fas fa-chevron-down ${showCategoryMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s', flexShrink: 0 }}></i>
                             </div>
 
                             <AnimatePresence>
@@ -416,13 +416,13 @@ const Jobs = () => {
                                 fontSize: '0.9rem'
                             }}
                         >
-                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, textAlign: 'left' }}>
+                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
                                     {filters.sort === 'newest' && 'Newest First'}
                                     {filters.sort === 'salary-high' && 'Salary (High to Low)'}
                                     {filters.sort === 'salary-low' && 'Salary (Low to High)'}
                                     {filters.sort === 'deadline' && 'Application Deadline'}
                                 </span>
-                                <i className={`fas fa-chevron-down ${showSortMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s' }}></i>
+                                <i className={`fas fa-chevron-down ${showSortMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s', flexShrink: 0 }}></i>
                             </div>
 
                             <AnimatePresence>
