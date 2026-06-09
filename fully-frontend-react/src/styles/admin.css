@@ -714,6 +714,8 @@ td {
     color: var(--text-primary);
     font-size: 1rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Force options to use dark background to prevent text becoming invisible */
@@ -1571,6 +1573,37 @@ td {
         padding-bottom: 1rem;
         margin-bottom: 1rem;
         box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5);
+    }
+
+    .operations-col {
+        display: none !important;
+    }
+
+    .card {
+        padding: 1.25rem !important;
+    }
+
+    .card-body {
+        padding: 1rem 0 0 0 !important;
+    }
+
+    .card-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+
+    .card-header > div {
+        width: 100% !important;
+    }
+
+    .search-box-modern {
+        width: 100% !important;
+    }
+
+    .search-box-modern input {
+        width: 100% !important;
+        max-width: none !important;
     }
 }
 

@@ -16,7 +16,7 @@ import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGri
 
 // Simple Toggle Switch Component
 const ToggleSwitch = ({ checked, onChange, disabled }) => (
-    <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '50px', height: '26px', opacity: disabled ? 0.5 : 1 }}>
+    <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '50px', height: '26px', opacity: disabled ? 0.5 : 1, flexShrink: 0 }}>
         <input
             type="checkbox"
             checked={checked}
@@ -1485,12 +1485,16 @@ const AdminDashboard = () => {
 
     const renderStudentMonitor = () => (
         <div className="users-management-page animate-in">
-            <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
-                    Student Monitor
-                </h2>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', width: '100%' }}>
+                <button 
+                    className="btn btn-primary" 
+                    onClick={() => setActiveStudentsView(activeStudentsView === 'list' ? 'form' : 'list')}
+                    style={{ minWidth: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                >
+                    <i className={activeStudentsView === 'list' ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                    {activeStudentsView === 'list' ? 'Hide Monitor' : 'Show Monitor'}
+                </button>
             </div>
-            <ViewToggle activeView={activeStudentsView} setActiveView={setActiveStudentsView} formLabel="Hide Monitor" listLabel="Show Monitor" formIcon="fas fa-eye-slash" listIcon="fas fa-eye" />
             
             {activeStudentsView === 'list' && (
             <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
@@ -1936,17 +1940,17 @@ const AdminDashboard = () => {
 
                                 {/* Email Notification Toggle */}
                                 <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <div>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                                        <div style={{ flex: 1 }}>
                                             <label style={{ fontWeight: '600', color: 'white', marginBottom: '0.25rem', display: 'block' }}>
                                                 <i className="fas fa-envelope" style={{ marginRight: '0.5rem' }}></i>
                                                 Email Notifications
                                             </label>
                                             <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
                                                 Send email alerts to all students when a new job is posted
-                                            </p>
+                                             </p>
                                         </div>
-                                        <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px' }}>
+                                        <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: '60px', height: '30px', flexShrink: 0 }}>
                                             <input
                                                 type="checkbox"
                                                 checked={sendEmailNotifications}
