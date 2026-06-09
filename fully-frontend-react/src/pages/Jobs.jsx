@@ -490,7 +490,6 @@ const Jobs = () => {
                             </AnimatePresence>
                         </div>
                     </div>
-                </div>
 
                 <div className="job-list" id="jobList">
                     {/* Skeleton Loading */}
