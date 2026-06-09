@@ -300,27 +300,27 @@ const Jobs = () => {
                 </div>
 
 
-                <div className="filter-section">
-                    <div className="filter-dropdowns" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <div className="category-options" style={{ position: 'relative', minWidth: '200px' }}>
-                            <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginRight: '0.5rem' }}>Category:</span>
-                            <div
-                                className="custom-dropdown"
-                                onClick={() => { setShowCategoryMenu(!showCategoryMenu); setShowSortMenu(false); }}
-                                style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    border: '1px solid var(--border-color)',
-                                    padding: '0.6rem 1.2rem',
-                                    borderRadius: '12px',
-                                    cursor: 'pointer',
-                                    minWidth: '180px',
-                                    justifyContent: 'space-between',
-                                    color: '#fff'
-                                }}
-                            >
+                <div className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', marginBottom: '1.5rem', flexWrap: 'nowrap' }}>
+                    <div className="category-options" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Category:</span>
+                        <div
+                            className="custom-dropdown"
+                            onClick={() => { setShowCategoryMenu(!showCategoryMenu); setShowSortMenu(false); }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px solid var(--border-color)',
+                                padding: '0.6rem 1rem',
+                                borderRadius: '12px',
+                                cursor: 'pointer',
+                                width: '100%',
+                                justifyContent: 'space-between',
+                                color: '#fff',
+                                fontSize: '0.9rem'
+                            }}
+                        >
                                 <span>
                                     {filters.category === 'all' && 'All Jobs'}
                                     {filters.category === 'it' && 'IT Engineering'}
@@ -391,31 +391,31 @@ const Jobs = () => {
                                                 {option.label}
                                             </div>
                                         ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
-                    <div className="sort-options">
-                        <div className="sort-wrapper" style={{ position: 'relative', minWidth: '200px' }}>
-                            <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginRight: '0.5rem' }}>Sort by:</span>
-                            <div
-                                className="custom-dropdown"
-                                onClick={() => { setShowSortMenu(!showSortMenu); setShowCategoryMenu(false); }}
-                                style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    border: '1px solid var(--border-color)',
-                                    padding: '0.6rem 1.2rem',
-                                    borderRadius: '12px',
-                                    cursor: 'pointer',
-                                    minWidth: '180px',
-                                    justifyContent: 'space-between',
-                                    color: '#fff'
-                                }}
-                            >
+
+                    <div className="sort-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Sort by:</span>
+                        <div
+                            className="custom-dropdown"
+                            onClick={() => { setShowSortMenu(!showSortMenu); setShowCategoryMenu(false); }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px solid var(--border-color)',
+                                padding: '0.6rem 1rem',
+                                borderRadius: '12px',
+                                cursor: 'pointer',
+                                width: '100%',
+                                justifyContent: 'space-between',
+                                color: '#fff',
+                                fontSize: '0.9rem'
+                            }}
+                        >
                                 <span>
                                     {filters.sort === 'newest' && 'Newest First'}
                                     {filters.sort === 'salary-high' && 'Salary (High to Low)'}

@@ -33,7 +33,7 @@ const Contact = () => {
 
     return (
         <>
-            <header className="hero">
+            <header className="hero" style={{ paddingTop: '80px' }}>
                 <div className="hero-content">
                     <h1>Get In Touch</h1>
                     <p className="subtitle">We're here to help. Reach out with any questions or inquiries, and our team will get back to you shortly.</p>

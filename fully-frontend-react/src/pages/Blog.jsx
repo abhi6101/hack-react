@@ -24,7 +24,7 @@ const Blog = () => {
                 <meta name="description" content="Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career." />
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
-            <header className="hero">
+            <header className="hero" style={{ paddingTop: '80px' }}>
                 <div className="hero-content">
                     <h1>Career Insights Blog</h1>
                     <p>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
