@@ -25,11 +25,11 @@ const Blog = () => {
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
             <header className="hero" style={{ paddingTop: '120px' }}>
-                <div className="hero-content" style={{ marginTop: '20px', width: '100%' }}>
+                <div className="hero-content" style={{ marginTop: '20px', width: '100%', textAlign: 'left', alignItems: 'flex-start' }}>
                     <h1 style={{ whiteSpace: 'nowrap', fontSize: 'clamp(1.5rem, 6vw, 3rem)' }}>Career Insight Blog</h1>
-                    <p>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
+                    <p style={{ margin: 0 }}>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
                     
-                    <div className="category-pills-container">
+                    <div className="category-pills-container" style={{ marginTop: '24px' }}>
                         <span className="category-label">Explore by Category:</span>
                         <div className="category-pills">
                             {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (

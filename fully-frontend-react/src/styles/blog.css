@@ -194,7 +194,7 @@ a:hover {
 
 .hero {
     min-height: 40vh;
-    padding: 4rem 2rem 2rem 2rem;
+    padding: 4rem 2rem 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,7 +236,7 @@ a:hover {
 .blog-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 3rem 5%;
+    padding: 1rem 5% 3rem 5%;
 }
 
 
@@ -246,7 +246,7 @@ a:hover {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-top: 2rem;
+    margin-top: 0;
     text-align: left;
 }
 
@@ -255,12 +255,12 @@ a:hover {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.8rem;
-    padding-left: 0.2rem;
+    padding-left: 0;
 }
 
 .category-pills {
     display: flex;
-    gap: 0.8rem;
+    gap: 12px;
     width: 100%;
     overflow-x: auto;
     padding-bottom: 0.5rem;
@@ -275,9 +275,9 @@ a:hover {
 .pill-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    padding: 0.6rem 1.2rem;
-    border-radius: 50px;
+    color: #b0bec5;
+    padding: 8px 16px;
+    border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 500;
     white-space: nowrap;
@@ -291,8 +291,8 @@ a:hover {
 }
 
 .pill-btn.active {
-    background: var(--primary);
-    color: #000;
+    background: rgba(0, 212, 255, 0.15);
+    color: #fff;
     border-color: var(--primary);
     box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
 }
