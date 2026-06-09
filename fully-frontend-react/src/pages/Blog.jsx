@@ -24,7 +24,7 @@ const Blog = () => {
                 <meta name="description" content="Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career." />
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
-            <header className="hero" style={{ paddingTop: '80px' }}>
+            <header className="hero" style={{ paddingTop: '120px' }}>
                 <div className="hero-content">
                     <h1><span className="hide-on-mobile">Career Insights </span>Blog</h1>
                     <p>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
@@ -35,12 +35,21 @@ const Blog = () => {
             <main className="blog-container">
                 <section className="categories">
                     <h2>Explore by Category</h2>
-                    <div className="category-tags" id="categoryTags">
+                    <div className="category-tags" id="categoryTags" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.8rem' }}>
                         {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
                             <button
                                 key={cat}
                                 className={`btn btn-outline ${activeCategory === cat ? 'active' : ''}`}
                                 onClick={() => handleFilter(cat)}
+                                style={{
+                                    border: activeCategory === cat ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '50px',
+                                    padding: '0.6rem 1.2rem',
+                                    fontWeight: '500',
+                                    fontSize: '0.9rem',
+                                    background: activeCategory === cat ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
+                                    color: activeCategory === cat ? '#000' : 'var(--text-secondary)'
+                                }}
                             >
                                 {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                             </button>
@@ -48,7 +57,7 @@ const Blog = () => {
                     </div>
                 </section>
 
-                <section id="blog-posts-section" className="blog-posts">
+                <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center' }}>
                     {posts.length === 0 ? (
                         <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1 / -1' }}>No posts found in this category.</p>
                     ) : (

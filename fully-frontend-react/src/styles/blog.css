@@ -192,7 +192,6 @@ a:hover {
 
 /* === BLOG-SPECIFIC STYLES START HERE === */
 
-/* --- 4. Hero Section --- */
 .hero {
     min-height: 40vh;
     padding: 4rem 2rem;
@@ -202,54 +201,6 @@ a:hover {
     text-align: center;
     position: relative;
     overflow: hidden;
-}
-
-.hero::before,
-.hero::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    filter: blur(120px);
-    will-change: transform;
-    border-radius: 50%;
-}
-
-.hero::before {
-    width: 40vw;
-    height: 40vw;
-    background: radial-gradient(circle, var(--primary) 0%, transparent 60%);
-    top: 10%;
-    left: 10%;
-    animation: drift-1 20s infinite alternate ease-in-out;
-}
-
-.hero::after {
-    width: 30vw;
-    height: 30vw;
-    background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
-    bottom: 10%;
-    right: 10%;
-    animation: drift-2 25s infinite alternate ease-in-out;
-}
-
-@keyframes drift-1 {
-    from {
-        transform: translate(-50px, -50px) rotate(0deg);
-    }
-
-    to {
-        transform: translate(50px, 50px) rotate(90deg);
-    }
-}
-
-@keyframes drift-2 {
-    from {
-        transform: translate(50px, 50px) rotate(0deg);
-    }
-
-    to {
-        transform: translate(-50px, -50px) rotate(-90deg);
-    }
 }
 
 .hero-content {

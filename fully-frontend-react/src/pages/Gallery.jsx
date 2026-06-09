@@ -137,7 +137,7 @@ const Gallery = () => {
                 <meta name="description" content="Explore moments and memories from our college campus. View photos of lab sessions, classroom lectures, cultural events, and farewell celebrations." />
                 <meta name="keywords" content="college gallery, campus life, student photos, events, tech fest, farewell" />
             </Helmet>
-            <section className="gallery-page" style={{ paddingTop: '80px' }}>
+            <section className="gallery-page" style={{ paddingTop: '120px' }}>
                 <div className="gallery-header" style={{
                     display: 'flex',
                     flexDirection: 'column',

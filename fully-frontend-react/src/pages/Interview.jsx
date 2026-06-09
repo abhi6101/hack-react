@@ -6,6 +6,7 @@ import ApplicationModal from '../components/ApplicationModal';
 import AuthPromptModal from '../components/AuthPromptModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../config';
+import '../styles/jobs.css';
 import '../styles/interview.css';
 
 const mockInterviewData = [
@@ -243,70 +244,46 @@ const Interview = () => {
         return myApplications.some(app => app.interviewDriveId === interviewId);
     };
 
-    const renderCard = (interview) => {
+    const renderCard = (interview, index) => {
         const total = interview.totalSlots || 20;
         const booked = interview.bookedSlots || 0;
         const slotsLeft = total - booked;
-        const progress = (booked / total) * 100;
 
         return (
-            <div key={interview.id} className="interview-card surface-glow">
-                <div className="int-card-header">
-                    <div className="company-info">
-                        <div className="company-logo-placeholder">{interview.company.charAt(0)}</div>
-                        <div>
-                            <h3>{interview.company}</h3>
-                            <span className="location"><i className="fas fa-map-marker-alt"></i> {interview.location}</span>
-                        </div>
+            <div key={interview.id} className="job-card" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="job-header">
+                    <h3 className="job-title">{interview.role || 'SDE'}</h3>
+                    <div className="job-company">
+                        <i className="fas fa-building"></i> {interview.company}
                     </div>
-                    <div className="date-badge">
-                        <span className="month">{new Date(interview.date).toLocaleString('default', { month: 'short' })}</span>
-                        <span className="day">{new Date(interview.date).getDate()}</span>
-                    </div>
+                    <span className="job-type full-time"><i className="fas fa-map-marker-alt"></i> {interview.location}</span>
                 </div>
-
-                <div className="int-card-body">
-                    <div className="detail-row">
-                        <i className="fas fa-clock"></i> <span>{interview.time}</span>
+                <div className="job-content">
+                    <p className="job-description">
+                        <strong>Eligibility:</strong> {interview.eligibility}
+                    </p>
+                    <div className="job-meta">
+                        <span className="job-meta-item">
+                            <i className="fas fa-calendar-alt"></i> {new Date(interview.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </span>
+                        <span className="job-meta-item">
+                            <i className="fas fa-clock"></i> {interview.time}
+                        </span>
+                        <span className="job-meta-item" style={{ color: slotsLeft < 5 ? '#ff477b' : 'inherit' }}>
+                            <i className="fas fa-users"></i> {slotsLeft} slots left
+                        </span>
                     </div>
-                    <div className="detail-row">
-                        <i className="fas fa-building"></i> <span>{interview.venue}</span>
+                    <div className="job-actions">
+                        {hasApplied(interview.id) ? (
+                            <button className="btn btn-applied" disabled>
+                                <i className="fas fa-check"></i> Applied
+                            </button>
+                        ) : (
+                            <button className="btn apply-btn" disabled={slotsLeft === 0} onClick={() => handleApplyClick(interview)}>
+                                <i className="fas fa-paper-plane"></i> {slotsLeft === 0 ? 'Full' : 'Apply Now'}
+                            </button>
+                        )}
                     </div>
-                    <div className="positions-list">
-                        {interview.positions && interview.positions.split(',').map((pos, idx) => (
-                            <span key={idx} className="position-tag">{pos.trim()}</span>
-                        ))}
-                    </div>
-
-                    <div className="slots-container">
-                        <div className="slots-info">
-                            <span>Slots Filled</span>
-                            <span>{booked} / {total}</span>
-                        </div>
-                        <div className="progress-bar">
-                            <div className="progress-fill" style={{ width: `${progress}%`, backgroundColor: slotsLeft < 5 ? '#ff477b' : 'var(--primary)' }}></div>
-                        </div>
-                        <div className="eligibility-note">Only {slotsLeft} seats left!</div>
-                    </div>
-                </div>
-
-                <div className="int-card-footer">
-                    <div className="criteria">
-                        <i className="fas fa-graduation-cap"></i> {interview.eligibility}
-                    </div>
-                    {hasApplied(interview.id) ? (
-                        <button className="btn btn-success" disabled>
-                            <i className="fas fa-check"></i> Applied
-                        </button>
-                    ) : (
-                        <button
-                            className="btn btn-primary"
-                            disabled={slotsLeft === 0}
-                            onClick={() => handleApplyClick(interview)}
-                        >
-                            {slotsLeft === 0 ? 'Full' : 'Apply Now'}
-                        </button>
-                    )}
                 </div>
             </div>
         );
@@ -320,17 +297,32 @@ const Interview = () => {
             </div>
 
             {/* Search and Filter - Top */}
-            <section className="top-filter-section">
-                <div className="int-search-bar">
-                    <i className="fas fa-search"></i>
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+            <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', marginBottom: '1.5rem', flexWrap: 'wrap', position: 'relative', zIndex: 10, padding: '0 1.5rem' }}>
+                <div className="search-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Search:</span>
+                    <div style={{ position: 'relative', width: '100%' }}>
+                        <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
+                        <input
+                            type="text"
+                            placeholder="Search by company or role..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{
+                                width: '100%',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px solid var(--border-color)',
+                                padding: '0.6rem 1rem 0.6rem 2.5rem',
+                                borderRadius: '12px',
+                                color: '#fff',
+                                fontSize: '0.9rem',
+                                boxSizing: 'border-box'
+                            }}
+                        />
+                    </div>
                 </div>
-                <div className="int-filter-bar" style={{ position: 'relative', background: 'transparent', padding: 0, border: 'none' }}>
+
+                <div className="location-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Location:</span>
                     <div
                         className="custom-dropdown"
                         onClick={() => setShowLocationMenu(!showLocationMenu)}
@@ -339,21 +331,22 @@ const Interview = () => {
                             alignItems: 'center',
                             gap: '0.5rem',
                             background: 'rgba(255, 255, 255, 0.05)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            padding: '1rem 1.5rem',
+                            border: '1px solid var(--border-color)',
+                            padding: '0.6rem 1rem',
                             borderRadius: '12px',
                             cursor: 'pointer',
                             width: '100%',
+                            minWidth: 0,
+                            boxSizing: 'border-box',
                             justifyContent: 'space-between',
                             color: '#fff',
-                            fontSize: '1rem'
+                            fontSize: '0.9rem'
                         }}
                     >
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            <i className="fas fa-map-marker-alt" style={{ color: 'var(--text-secondary)' }}></i>
+                        <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
                             {filterLocation === 'all' ? 'All Locations' : filterLocation}
                         </span>
-                        <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s' }}></i>
+                        <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s', flexShrink: 0 }}></i>
                     </div>
 
                     <AnimatePresence>
@@ -373,8 +366,8 @@ const Interview = () => {
                                     border: '1px solid rgba(255, 255, 255, 0.1)',
                                     borderRadius: '12px',
                                     padding: '0.5rem',
-                                    zIndex: 1000,
-                                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+                                    zIndex: 100,
+                                    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
                                     maxHeight: '250px',
                                     overflowY: 'auto'
                                 }}
@@ -388,9 +381,11 @@ const Interview = () => {
                                             padding: '0.8rem 1rem',
                                             cursor: 'pointer',
                                             borderRadius: '8px',
-                                            color: filterLocation === loc ? 'var(--primary)' : 'var(--text-secondary)',
-                                            background: filterLocation === loc ? 'rgba(67, 97, 238, 0.1)' : 'transparent',
-                                            transition: '0.2s'
+                                            color: filterLocation === loc ? '#fff' : 'var(--text-secondary)',
+                                            background: filterLocation === loc ? 'var(--primary)' : 'transparent',
+                                            transition: '0.2s',
+                                            marginBottom: '0.2rem',
+                                            fontSize: '0.9rem'
                                         }}
                                         onMouseEnter={(e) => {
                                             if (filterLocation !== loc) {
@@ -455,18 +450,10 @@ const Interview = () => {
                     <div className="interview-grid">
                         {loading ? (
                             Array(4).fill(0).map((_, i) => (
-                                <div className="interview-card skeleton-card" key={`skel-${i}`} style={{ height: '350px' }}>
-                                    <div className="int-card-header" style={{ display: 'flex', gap: '1rem', alignItems: 'center', background: 'transparent' }}>
-                                        <div className="skeleton-line" style={{ width: '50px', height: '50px', borderRadius: '12px', margin: 0 }}></div>
-                                        <div style={{ flex: 1 }}>
-                                            <div className="skeleton-line title" style={{ height: '20px', width: '70%', marginBottom: '0.5rem', margin: 0 }}></div>
-                                            <div className="skeleton-line subtitle" style={{ height: '15px', width: '40%', margin: 0 }}></div>
-                                        </div>
-                                    </div>
-                                    <div className="int-card-body">
-                                        <div className="skeleton-content" style={{ height: '120px', marginBottom: '1rem' }}></div>
-                                        <div className="skeleton-content" style={{ height: '40px' }}></div>
-                                    </div>
+                                <div className="job-card skeleton-card" key={`skel-${i}`}>
+                                    <div className="skeleton-line title"></div>
+                                    <div className="skeleton-line subtitle"></div>
+                                    <div className="skeleton-content"></div>
                                 </div>
                             ))
                         ) : filteredInterviews.length > 0 ? (

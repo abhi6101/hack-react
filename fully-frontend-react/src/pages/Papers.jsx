@@ -426,7 +426,7 @@ const Papers = () => {
                 <div style={{ maxWidth: '650px' }}>
                     <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700', color: 'var(--text-primary)' }}>Previous Year Question Papers</h1>
                     <p style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
-                        Download the complete archive of <strong>RGPV previous year question papers</strong> for the IMCA (Integrated MCA) program. Unlike other portals that only offer 1 or 2 papers, Hack2Hired provides the full, exclusive collection from Semester 1 to 10.
+                        Download the complete archive of <strong>previous year question papers</strong> for the IMCA (Integrated MCA) program. Unlike other portals that only offer 1 or 2 papers, Hack2Hired provides the full, exclusive collection from Semester 1 to 10.
                     </p>
                 </div>
 

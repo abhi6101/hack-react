@@ -21,13 +21,6 @@ const Courses = () => {
             return matchesSearch && matchesCategory;
         });
 
-        switch (sortBy) {
-            case 'title-asc': filtered.sort((a, b) => a.title.localeCompare(b.title)); break;
-            case 'title-desc': filtered.sort((a, b) => b.title.localeCompare(a.title)); break;
-            case 'students-desc': filtered.sort((a, b) => b.students - a.students); break;
-            default: break;
-        }
-
         setCourses(filtered);
     };
 
@@ -38,9 +31,15 @@ const Courses = () => {
                 <meta name="description" content="Master in-demand skills with our industry-relevant courses and get placement-ready. Explore programming, web dev, and data science courses." />
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
-            <header className="courses-hero" style={{ paddingTop: '80px' }}>
-                <h1>Career-Boosting Courses</h1>
-                <p className="subtitle">Master in-demand skills with our industry-relevant courses and get placement-ready.</p>
+            <header className="courses-hero" style={{ paddingTop: '100px', position: 'relative', overflow: 'hidden' }}>
+                <video autoPlay loop muted playsInline className="hero-video-bg">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-4174-large.mp4" type="video/mp4" />
+                </video>
+                <div className="hero-overlay"></div>
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                    <h1>Career-Boosting Courses</h1>
+                    <p className="subtitle">Master in-demand skills with our industry-relevant courses and get placement-ready.</p>
+                </div>
             </header>
 
             <main className="courses-container">
@@ -55,24 +54,25 @@ const Courses = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <div className="category-filters">
+                    <div className="category-filters" style={{ flexWrap: 'wrap', display: 'flex', gap: '0.8rem', flex: 2, minWidth: '300px', justifyContent: 'center' }}>
                         {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
                             <button
                                 key={cat}
                                 className={`btn btn-outline ${activeCategory === cat ? 'active' : ''}`}
                                 onClick={() => setActiveCategory(cat)}
+                                style={{
+                                    border: activeCategory === cat ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '50px',
+                                    padding: '0.6rem 1.2rem',
+                                    fontWeight: '500',
+                                    fontSize: '0.9rem',
+                                    background: activeCategory === cat ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
+                                    color: activeCategory === cat ? '#000' : 'var(--text-secondary)'
+                                }}
                             >
-                                {cat === 'all' ? 'All' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                             </button>
                         ))}
-                    </div>
-                    <div className="sort-control">
-                        <select id="courseSort" className="sort-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                            <option value="default">Sort by Default</option>
-                            <option value="title-asc">Title (A-Z)</option>
-                            <option value="title-desc">Title (Z-A)</option>
-                            <option value="students-desc">Popularity</option>
-                        </select>
                     </div>
                 </div>
 

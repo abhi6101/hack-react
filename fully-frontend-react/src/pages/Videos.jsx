@@ -6,9 +6,9 @@ const allVideos = [
     { id: 1, title: "Learn MERN Stack (MongoDB, Express, React, Node.js)", src: "https://www.youtube.com/embed/mrHNSanmqQ4", duration: "8h 00m", level: "Intermediate", category: "programming", links: [{ text: "FreeCodeCamp", url: "https://www.freecodecamp.org" }] },
     { id: 2, title: "Spring Boot & Spring Data JPA - Full Course", src: "https://www.youtube.com/embed/9ptB5bN_bS0", duration: "13h 00m", level: "Advanced", category: "programming", links: [{ text: "AmigosCode", url: "https://amigoscode.com" }] },
     { id: 3, title: "Spring Boot Tutorial for Beginners (2024)", src: "https://www.youtube.com/embed/k_l2F3Y138E", duration: "2h 30m", level: "Beginner", category: "programming", links: [{ text: "Programming with Mosh", url: "https://codewithmosh.com" }] },
-    { id: 4, title: "Build a MERN Stack App (Project Based)", src: "https://www.youtube.com/embed/p0aJ2V2x_u4", duration: "1h 30m", level: "Intermediate", category: "programming", links: [{ text: "Source Code", url: "#" }] },
-    { id: 5, title: "Full Stack Pinterest App (MERN)", src: "https://www.youtube.com/embed/7M7Fq8pUo1k", duration: "3h 45m", level: "Advanced", category: "programming", links: [{ text: "Source Code", url: "#" }] },
-    { id: 6, title: "MERN Stack Tutorial - Beginner to Master", src: "https://www.youtube.com/embed/D0sR6Wq2tPM", duration: "6h 00m", level: "Beginner", category: "programming", links: [{ text: "Edureka", url: "#" }] }
+    { id: 4, title: "Build a MERN Stack App (Project Based)", src: "https://www.youtube.com/embed/p0aJ2V2x_u4", duration: "1h 30m", level: "Intermediate", category: "programming", links: [{ text: "Source Code", url: "https://github.com" }] },
+    { id: 5, title: "Full Stack Pinterest App (MERN)", src: "https://www.youtube.com/embed/7M7Fq8pUo1k", duration: "3h 45m", level: "Advanced", category: "programming", links: [{ text: "Source Code", url: "https://github.com" }] },
+    { id: 6, title: "MERN Stack Tutorial - Beginner to Master", src: "https://www.youtube.com/embed/D0sR6Wq2tPM", duration: "6h 00m", level: "Beginner", category: "programming", links: [{ text: "Edureka", url: "https://www.edureka.co" }] }
 ];
 
 const Videos = () => {

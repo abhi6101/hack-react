@@ -709,9 +709,6 @@ const Notes = ({ isAdminView }) => {
                                         <div>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.6rem' }}>
                                                 <h3 style={{ fontSize: '1.4rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{folder.name}</h3>
-                                                <span className={getVisibilityBadgeClass(folder.meta.visibility)}>
-                                                    {getVisibilityLabel(folder.meta.visibility)}
-                                                </span>
                                             </div>
                                             <div style={{ display: 'flex', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: '500' }}>
                                                 {folder.meta.subject && <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-book" style={{ color: 'var(--primary)' }}></i> {folder.meta.subject.toUpperCase()}</span>}
