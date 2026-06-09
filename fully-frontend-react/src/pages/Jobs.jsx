@@ -300,7 +300,7 @@ const Jobs = () => {
                 </div>
 
 
-                <div className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <div className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', marginBottom: '1.5rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
                     <div className="category-options" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
                         <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Category:</span>
                         <div
