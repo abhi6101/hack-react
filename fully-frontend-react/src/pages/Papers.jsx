@@ -45,6 +45,7 @@ const Papers = () => {
     };
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingSemesters, setLoadingSemesters] = useState(true);
     const [availableSems, setAvailableSems] = useState([]);
     const [branch, setBranch] = useState('IMCA');
     const [deptList, setDeptList] = useState([]);
@@ -267,6 +268,7 @@ const Papers = () => {
     }, [branch]);
 
     const fetchAvailableMetadata = async () => {
+        setLoadingSemesters(true);
         try {
             const token = getToken();
             const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
@@ -291,6 +293,8 @@ const Papers = () => {
             }
         } catch (e) {
             console.error(e);
+        } finally {
+            setLoadingSemesters(false);
         }
     };
 
@@ -475,7 +479,7 @@ const Papers = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                {loading ? (
+                {loadingSemesters ? (
                     Array(6).fill(0).map((_, i) => (
                         <div key={`skel-${i}`} className="semester-card" style={{ opacity: 0.5, pointerEvents: 'none', background: 'rgba(255,255,255,0.02)' }}>
                             <div className="card-icon">
