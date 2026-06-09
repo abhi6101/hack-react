@@ -547,9 +547,33 @@
 
 @media (max-width: 768px) {
     .top-filter-section {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-wrap: nowrap;
         padding: 1rem;
-        gap: 1rem;
+        gap: 0.5rem;
+    }
+    
+    .int-search-bar {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .int-filter-bar {
+        flex: 1;
+        min-width: 0;
+        padding: 0 0.5rem;
+    }
+    
+    .int-filter-bar label {
+        display: none; /* Hide 'Location:' text on mobile to save space */
+    }
+
+    .int-search-bar input {
+        padding: 0.8rem 1rem 0.8rem 2.5rem; /* Reduce padding to fit */
+    }
+    
+    .int-search-bar i {
+        left: 1rem;
     }
 
     .interview-grid {
