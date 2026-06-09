@@ -65,9 +65,6 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
             
             {/* Student Portal - Always at the top */}
             <div className="mobile-menu-group card surface-glow" style={{ marginBottom: '1.5rem', padding: '1.25rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: '600' }}>
-                    <i className="fas fa-user-circle"></i> Student Portal
-                </h3>
                 {isLoggedIn ? (
                     <div className="user-profile-card">
                         <div className="user-profile-header">
