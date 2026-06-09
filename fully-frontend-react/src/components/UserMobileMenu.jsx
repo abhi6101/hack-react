@@ -62,7 +62,6 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
 
     return (
         <div className="user-mobile-menu-container animate-in">
-            <h2 style={{ marginBottom: '1.5rem', color: '#fff', fontSize: '1.6rem', fontWeight: '700' }}>App Menu</h2>
             
             {/* Student Portal - Always at the top */}
             <div className="mobile-menu-group card surface-glow" style={{ marginBottom: '1.5rem', padding: '1.25rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>

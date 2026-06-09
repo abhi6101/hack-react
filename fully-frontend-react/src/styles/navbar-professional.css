@@ -334,3 +334,147 @@
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
 }
+
+/* ===== APNA-STYLE AUTH SECTION ===== */
+.navbar-auth {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+}
+
+/* User chip when logged in */
+.navbar-user-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+    background: rgba(102, 126, 234, 0.12);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 50px;
+}
+
+.navbar-user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.navbar-user-name {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Logout button */
+.navbar-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 50px;
+    color: #ef4444;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.navbar-logout-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+}
+
+/* Sign In button */
+.navbar-signin-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50px;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.navbar-signin-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+}
+
+/* Register button */
+.navbar-register-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 12px rgba(102, 126, 234, 0.35);
+    white-space: nowrap;
+}
+
+.navbar-register-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 18px rgba(102, 126, 234, 0.5);
+}
+
+/* Hide auth text on small screens, show only icons */
+@media (max-width: 900px) {
+    .navbar-user-name,
+    .navbar-logout-btn span,
+    .navbar-signin-btn span,
+    .navbar-register-btn span {
+        display: none;
+    }
+    .navbar-logout-btn,
+    .navbar-signin-btn,
+    .navbar-register-btn {
+        padding: 0.45rem 0.65rem;
+    }
+    .navbar-user-chip {
+        padding: 0.35rem;
+    }
+}
+
+/* On mobile (<768px) hide auth entirely - handled by bottom nav menu */
+@media (max-width: 768px) {
+    .navbar-auth {
+        display: none;
+    }
+}
+

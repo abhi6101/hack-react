@@ -44,7 +44,7 @@ const UserBottomNav = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
                 style={{ background: 'transparent', border: 'none', padding: 0 }}
             >
                 <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
-                <span>{isMobileMenuOpen ? 'Close' : 'Menu'}</span>
+                <span>Menu</span>
             </button>
         </nav>
     );
