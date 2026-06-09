@@ -324,7 +324,7 @@ const Interview = () => {
     </div>
     {/* Search & Location */}
     <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap', alignItems: 'center' }}>
-        <div className="search-wrapper" style={{ flex: '2 1 200px', minWidth: 0 }}>
+        <div className="search-wrapper" style={{ flex: '2 1 0', minWidth: 0 }}>
             <div style={{ position: 'relative', width: '100%' }}>
                 <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-70%)', color: 'var(--text-secondary)' }}></i>
                 <input
@@ -345,7 +345,7 @@ const Interview = () => {
                 />
             </div>
         </div>
-        <div className="location-wrapper" style={{ flex: '1 1 150px', minWidth: 0 }}>
+        <div className="location-wrapper" style={{ flex: '1 1 0', minWidth: 0 }}>
             <div
                 className="custom-dropdown"
                 onClick={() => setShowLocationMenu(!showLocationMenu)}
@@ -365,10 +365,10 @@ const Interview = () => {
                     fontSize: '0.9rem'
                 }}
             >
-                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, paddingRight: '10px', textAlign: 'left' }}>
+                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
                     {filterLocation === 'all' ? 'All Locations' : filterLocation}
                 </span>
-                <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s' }}></i>
+                <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s', flexShrink: 0 }}></i>
             </div>
             <AnimatePresence>
                 {showLocationMenu && (
