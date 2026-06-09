@@ -291,125 +291,12 @@ const Interview = () => {
 
     return (
         <div className="interview-page">
-            <div className="section-header" style={{ padding: '0 1.5rem', marginBottom: '0', borderBottom: 'none' }}>
+            <div className="section-header" style={{ padding: '0 1.5rem', marginBottom: '1.5rem', borderBottom: 'none', textAlign: 'center' }}>
                 <h2><i className="fas fa-calendar-alt"></i> Upcoming Drives</h2>
                 <span className="result-count">{loading ? '...' : filteredInterviews.length} drives found</span>
             </div>
 
-            {/* Search and Filter - Top */}
-            <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', marginBottom: '1.5rem', flexWrap: 'wrap', position: 'relative', zIndex: 10, padding: '0 1.5rem' }}>
-                <div className="search-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
-                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Search:</span>
-                    <div style={{ position: 'relative', width: '100%' }}>
-                        <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
-                        <input
-                            type="text"
-                            placeholder="Search by company or role..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{
-                                width: '100%',
-                                background: 'rgba(255, 255, 255, 0.05)',
-                                border: '1px solid var(--border-color)',
-                                padding: '0.6rem 1rem 0.6rem 2.5rem',
-                                borderRadius: '12px',
-                                color: '#fff',
-                                fontSize: '0.9rem',
-                                boxSizing: 'border-box'
-                            }}
-                        />
-                    </div>
-                </div>
 
-                <div className="location-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
-                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Location:</span>
-                    <div
-                        className="custom-dropdown"
-                        onClick={() => setShowLocationMenu(!showLocationMenu)}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            border: '1px solid var(--border-color)',
-                            padding: '0.6rem 1rem',
-                            borderRadius: '12px',
-                            cursor: 'pointer',
-                            width: '100%',
-                            minWidth: 0,
-                            boxSizing: 'border-box',
-                            justifyContent: 'space-between',
-                            color: '#fff',
-                            fontSize: '0.9rem'
-                        }}
-                    >
-                        <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
-                            {filterLocation === 'all' ? 'All Locations' : filterLocation}
-                        </span>
-                        <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s', flexShrink: 0 }}></i>
-                    </div>
-
-                    <AnimatePresence>
-                        {showLocationMenu && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                transition={{ duration: 0.2 }}
-                                style={{
-                                    position: 'absolute',
-                                    top: '120%',
-                                    left: 0,
-                                    width: '100%',
-                                    background: 'rgba(22, 22, 34, 0.95)',
-                                    backdropFilter: 'blur(10px)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                    borderRadius: '12px',
-                                    padding: '0.5rem',
-                                    zIndex: 100,
-                                    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-                                    maxHeight: '250px',
-                                    overflowY: 'auto'
-                                }}
-                            >
-                                {locations.map(loc => (
-                                    <div
-                                        key={loc}
-                                        className="dropdown-option"
-                                        onClick={() => { setFilterLocation(loc); setShowLocationMenu(false); }}
-                                        style={{
-                                            padding: '0.8rem 1rem',
-                                            cursor: 'pointer',
-                                            borderRadius: '8px',
-                                            color: filterLocation === loc ? '#fff' : 'var(--text-secondary)',
-                                            background: filterLocation === loc ? 'var(--primary)' : 'transparent',
-                                            transition: '0.2s',
-                                            marginBottom: '0.2rem',
-                                            fontSize: '0.9rem'
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            if (filterLocation !== loc) {
-                                                e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-                                                e.target.style.color = '#fff';
-                                            }
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            if (filterLocation !== loc) {
-                                                e.target.style.background = 'transparent';
-                                                e.target.style.color = 'var(--text-secondary)';
-                                            }
-                                        }}
-                                    >
-                                        {loc === 'all' ? 'All Locations' : loc}
-                                    </div>
-                                ))}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </section>
-
-            {/* Main Content with Sidebar */}
             <div className="interview-main-layout">
                 {/* Left Sidebar - Statistics */}
                 <aside className="stats-sidebar">
@@ -447,6 +334,117 @@ const Interview = () => {
 
                 {/* Right Content - Interview Grid */}
                 <main className="interview-content">
+                    {/* Search and Filter - Now inside main content to align with Overview */}
+                    <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', marginBottom: '2rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
+                        <div className="search-wrapper" style={{ position: 'relative', flex: 2, minWidth: 0 }}>
+                            <div style={{ position: 'relative', width: '100%' }}>
+                                <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
+                                <input
+                                    type="text"
+                                    placeholder="Search by company or role..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        border: '1px solid var(--border-color)',
+                                        padding: '0.8rem 1rem 0.8rem 2.5rem',
+                                        borderRadius: '12px',
+                                        color: '#fff',
+                                        fontSize: '0.9rem',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="location-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                            <div
+                                className="custom-dropdown"
+                                onClick={() => setShowLocationMenu(!showLocationMenu)}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid var(--border-color)',
+                                    padding: '0.8rem 1rem',
+                                    borderRadius: '12px',
+                                    cursor: 'pointer',
+                                    width: '100%',
+                                    minWidth: 0,
+                                    boxSizing: 'border-box',
+                                    justifyContent: 'space-between',
+                                    color: '#fff',
+                                    fontSize: '0.9rem'
+                                }}
+                            >
+                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
+                                    {filterLocation === 'all' ? 'All Locations' : filterLocation}
+                                </span>
+                                <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s', flexShrink: 0 }}></i>
+                            </div>
+
+                            <AnimatePresence>
+                                {showLocationMenu && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        transition={{ duration: 0.2 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '120%',
+                                            left: 0,
+                                            width: '100%',
+                                            background: 'rgba(22, 22, 34, 0.95)',
+                                            backdropFilter: 'blur(10px)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '12px',
+                                            padding: '0.5rem',
+                                            zIndex: 100,
+                                            boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                                            maxHeight: '250px',
+                                            overflowY: 'auto'
+                                        }}
+                                    >
+                                        {locations.map(loc => (
+                                            <div
+                                                key={loc}
+                                                className="dropdown-option"
+                                                onClick={() => { setFilterLocation(loc); setShowLocationMenu(false); }}
+                                                style={{
+                                                    padding: '0.8rem 1rem',
+                                                    cursor: 'pointer',
+                                                    borderRadius: '8px',
+                                                    color: filterLocation === loc ? '#fff' : 'var(--text-secondary)',
+                                                    background: filterLocation === loc ? 'var(--primary)' : 'transparent',
+                                                    transition: '0.2s',
+                                                    marginBottom: '0.2rem',
+                                                    fontSize: '0.9rem'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    if (filterLocation !== loc) {
+                                                        e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                                                        e.target.style.color = '#fff';
+                                                    }
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    if (filterLocation !== loc) {
+                                                        e.target.style.background = 'transparent';
+                                                        e.target.style.color = 'var(--text-secondary)';
+                                                    }
+                                                }}
+                                            >
+                                                {loc === 'all' ? 'All Locations' : loc}
+                                            </div>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </section>
+
                     <div className="interview-grid">
                         {loading ? (
                             Array(4).fill(0).map((_, i) => (

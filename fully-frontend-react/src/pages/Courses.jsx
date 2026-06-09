@@ -31,48 +31,53 @@ const Courses = () => {
                 <meta name="description" content="Master in-demand skills with our industry-relevant courses and get placement-ready. Explore programming, web dev, and data science courses." />
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
-            <header className="courses-hero" style={{ paddingTop: '100px', position: 'relative', overflow: 'hidden' }}>
-                <video autoPlay loop muted playsInline className="hero-video-bg">
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-4174-large.mp4" type="video/mp4" />
-                </video>
-                <div className="hero-overlay"></div>
-                <div style={{ position: 'relative', zIndex: 2 }}>
-                    <h1>Career-Boosting Courses</h1>
-                    <p className="subtitle">Master in-demand skills with our industry-relevant courses and get placement-ready.</p>
-                </div>
-            </header>
+            <main className="courses-container" style={{ paddingTop: '100px', minHeight: '100vh', background: 'transparent' }}>
+                <div className="course-controls" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1.5rem',
+                    flexWrap: 'wrap',
+                    marginBottom: '2rem',
+                    padding: '0 2rem',
+                    background: 'transparent'
+                }}>
+                    <h2 style={{ margin: 0, fontSize: '1.8rem', flexShrink: 0, whiteSpace: 'nowrap' }}>Career boosting courses</h2>
 
-            <main className="courses-container">
-                <div className="course-controls">
-                    <div className="search-bar">
-                        <i className="fas fa-search"></i>
+                    <div className="search-bar" style={{ flex: 1, minWidth: '250px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '50px', display: 'flex', alignItems: 'center', padding: '0 1.5rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                        <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
                         <input
                             type="text"
                             id="courseSearch"
                             placeholder="Search courses..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{ border: 'none', background: 'transparent', color: '#fff', width: '100%', padding: '0.8rem 1rem' }}
                         />
                     </div>
-                    <div className="category-filters" style={{ flexWrap: 'wrap', display: 'flex', gap: '0.8rem', flex: 2, minWidth: '300px', justifyContent: 'center' }}>
-                        {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
-                            <button
-                                key={cat}
-                                className={`btn btn-outline ${activeCategory === cat ? 'active' : ''}`}
-                                onClick={() => setActiveCategory(cat)}
-                                style={{
-                                    border: activeCategory === cat ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '50px',
-                                    padding: '0.6rem 1.2rem',
-                                    fontWeight: '500',
-                                    fontSize: '0.9rem',
-                                    background: activeCategory === cat ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
-                                    color: activeCategory === cat ? '#000' : 'var(--text-secondary)'
-                                }}
-                            >
-                                {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                            </button>
-                        ))}
+
+                    <div className="category-dropdown" style={{ position: 'relative', minWidth: '200px' }}>
+                        <select
+                            value={activeCategory}
+                            onChange={(e) => setActiveCategory(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '0.8rem 1.5rem',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                color: '#fff',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                borderRadius: '50px',
+                                fontSize: '0.95rem',
+                                appearance: 'none',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
+                                <option key={cat} value={cat} style={{ background: '#0f111a', color: '#fff' }}>
+                                    {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                </option>
+                            ))}
+                        </select>
+                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none' }}></i>
                     </div>
                 </div>
 

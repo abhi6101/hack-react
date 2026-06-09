@@ -148,7 +148,7 @@ const Gallery = () => {
                     paddingBottom: '2rem',
                     borderBottom: '1px solid rgba(255,255,255,0.1)'
                 }}>
-                    <div style={{ maxWidth: '800px', textAlign: 'center' }}>
+                    <div style={{ maxWidth: '800px', textAlign: 'left', width: '100%' }}>
                         <h1 style={{
                             fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                             marginBottom: '1rem',
@@ -158,15 +158,25 @@ const Gallery = () => {
                             textShadow: '0 0 30px rgba(67, 97, 238, 0.2)',
                             fontWeight: '800'
                         }}>Moments & Memories</h1>
-                        <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', margin: '0 auto' }}>
+                        <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', margin: '0' }}>
                             A collection of moments from our campus life, events, and sessions.
                         </p>
                     </div>
+                </div>
+
+                <div className="gallery-controls-row" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1.5rem',
+                    flexWrap: 'wrap',
+                    marginBottom: '2rem',
+                    justifyContent: 'flex-start'
+                }}>
                     <button
                         className="btn btn-primary"
                         onClick={() => setShowUploadModal(true)}
                         style={{
-                            padding: '0.8rem 2rem',
+                            padding: '0.8rem 1.5rem',
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -174,25 +184,24 @@ const Gallery = () => {
                             borderRadius: '50px',
                             boxShadow: '0 10px 25px rgba(67, 97, 238, 0.4)',
                             fontWeight: '600',
-                            fontSize: '1.1rem',
-                            marginTop: '1rem',
-                            width: 'fit-content'
+                            fontSize: '1rem',
+                            whiteSpace: 'nowrap'
                         }}
                     >
                         <i className="fas fa-camera"></i> <span>Share Photo</span>
                     </button>
-                </div>
 
-                <div className="gallery-categories">
-                    {['all', 'function', 'lab', 'farewell', 'campus', 'class'].map(cat => (
-                        <button
-                            key={cat}
-                            className={`btn btn-outline ${activeCategory === cat ? 'active' : ''}`}
-                            onClick={() => setActiveCategory(cat)}
-                        >
-                            {cat === 'all' ? 'All Photos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-                        </button>
-                    ))}
+                    <div className="gallery-categories" style={{ margin: 0, justifyContent: 'flex-start' }}>
+                        {['all', 'function', 'lab', 'farewell', 'campus', 'class'].map(cat => (
+                            <button
+                                key={cat}
+                                className={`btn btn-outline ${activeCategory === cat ? 'active' : ''}`}
+                                onClick={() => setActiveCategory(cat)}
+                            >
+                                {cat === 'all' ? 'All Photos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {loading ? (
