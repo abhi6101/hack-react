@@ -290,7 +290,7 @@ const Jobs = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingTop: '80px' }}>
             {/* Wrapper to ensure footer stays down if content short */}
 
             <div className="container">
