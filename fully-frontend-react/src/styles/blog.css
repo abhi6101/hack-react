@@ -484,4 +484,7 @@ a:hover {
         white-space: nowrap;
         width: auto !important;
     }
+    .hide-on-mobile {
+        display: none;
+    }
 }

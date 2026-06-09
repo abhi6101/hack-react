@@ -26,7 +26,7 @@ const Blog = () => {
             </Helmet>
             <header className="hero" style={{ paddingTop: '80px' }}>
                 <div className="hero-content">
-                    <h1>Career Insights Blog</h1>
+                    <h1><span className="hide-on-mobile">Career Insights </span>Blog</h1>
                     <p>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
                     <a href="#blog-posts-section" className="btn btn-primary">Explore Posts <i className="fas fa-arrow-down"></i></a>
                 </div>
