@@ -80,7 +80,7 @@ nav.user-bottom-nav {
 }
 
 /* Responsive Overrides */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     nav.user-bottom-nav {
         display: flex !important;
     }
