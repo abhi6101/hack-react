@@ -49,7 +49,9 @@ function Layout({ children }) {
     const location = useLocation();
     const navigate = useNavigate(); // Add hook
     const hideNavbarRoutes = ['/login', '/admin/login', '/register', '/admin', '/onboarding', '/forgot-password', '/verify-otp', '/reset-password', '/reset-success', '/verify-account'];
+    const hideFooterRoutes = [...hideNavbarRoutes, '/dashboard', '/profile'];
     const showNavbar = !hideNavbarRoutes.includes(location.pathname);
+    const showFooter = !hideFooterRoutes.includes(location.pathname);
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -81,7 +83,7 @@ function Layout({ children }) {
             {isMobileMenuOpen && showNavbar && <UserMobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />}
             {children}
             {showNavbar && <UserBottomNav isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />}
-            {showNavbar && <Footer />}
+            {showFooter && <Footer />}
         </>
     );
 }

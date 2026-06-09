@@ -137,7 +137,94 @@ const StudentDashboard = () => {
         setLoading(false);
     };
 
-    if (loading) return <div className="loading"><i className="fas fa-spinner fa-spin"></i> Loading...</div>;
+    if (loading) return (
+        <div style={{
+            minHeight: '100vh',
+            background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+            padding: '2rem',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start'
+        }}>
+            <style>{`
+                @keyframes shimmer {
+                    0% { background-position: -800px 0; }
+                    100% { background-position: 800px 0; }
+                }
+                .sk {
+                    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.04) 75%);
+                    background-size: 800px 100%;
+                    animation: shimmer 1.5s infinite linear;
+                    border-radius: 10px;
+                }
+            `}</style>
+            <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                {/* Header card skeleton */}
+                <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '20px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div className="sk" style={{ width: 60, height: 60, borderRadius: '50%', flexShrink: 0 }} />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <div className="sk" style={{ width: 200, height: 28 }} />
+                            <div className="sk" style={{ width: 140, height: 18 }} />
+                        </div>
+                    </div>
+                    <div className="sk" style={{ width: 110, height: 44, borderRadius: '12px' }} />
+                </div>
+
+                {/* ID Card skeleton */}
+                <div style={{ background: 'rgba(102,126,234,0.08)', borderRadius: '20px', padding: '1.5rem', border: '1px solid rgba(102,126,234,0.2)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
+                        <div className="sk" style={{ width: 40, height: 40, borderRadius: '10px' }} />
+                        <div className="sk" style={{ width: 160, height: 24 }} />
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
+                        {[1,2,3,4].map(i => (
+                            <div key={i} style={{ background: 'rgba(255,255,255,0.04)', padding: '1.25rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <div className="sk" style={{ width: '60%', height: 12 }} />
+                                <div className="sk" style={{ width: '85%', height: 20 }} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Registration Details skeleton */}
+                <div style={{ background: 'rgba(251,191,36,0.08)', borderRadius: '20px', padding: '1.5rem', border: '1px solid rgba(251,191,36,0.2)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
+                        <div className="sk" style={{ width: 40, height: 40, borderRadius: '10px' }} />
+                        <div className="sk" style={{ width: 190, height: 24 }} />
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
+                        {[1,2,3,4,5,6].map(i => (
+                            <div key={i} style={{ background: 'rgba(255,255,255,0.04)', padding: '1.25rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <div className="sk" style={{ width: '55%', height: 12 }} />
+                                <div className="sk" style={{ width: '80%', height: 20 }} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Job Applications skeleton */}
+                <div style={{ background: 'rgba(236,72,153,0.08)', borderRadius: '20px', padding: '1.5rem', border: '1px solid rgba(236,72,153,0.2)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
+                        <div className="sk" style={{ width: 40, height: 40, borderRadius: '10px' }} />
+                        <div className="sk" style={{ width: 220, height: 24 }} />
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+                        {[1,2].map(i => (
+                            <div key={i} style={{ background: 'rgba(255,255,255,0.04)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                <div className="sk" style={{ width: '70%', height: 22 }} />
+                                <div className="sk" style={{ width: '50%', height: 16 }} />
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                                    <div className="sk" style={{ width: '40%', height: 14 }} />
+                                    <div className="sk" style={{ width: 80, height: 30, borderRadius: '20px' }} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div style={{
