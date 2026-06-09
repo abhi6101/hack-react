@@ -467,19 +467,26 @@
 
 .loading,
 .error-message,
-.no-results {
-  text-align: center;
-  padding: 4rem;
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 16px;
-  border: 1px dashed var(--border-color);
+.first-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+/* Center the Upcoming Drives heading */
+.section-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
-
 .no-results h3 {
   color: var(--text-primary);
   margin: 1rem 0 0.5rem;

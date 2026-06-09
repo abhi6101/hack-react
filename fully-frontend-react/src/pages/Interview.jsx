@@ -250,7 +250,7 @@ const Interview = () => {
         const slotsLeft = total - booked;
 
         return (
-            <div key={interview.id} className="job-card" style={{ animationDelay: `${index * 0.1}s` }}>
+            <div key={interview.id} className={index === 0 ? "job-card first-card" : "job-card"} style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="job-header">
                     <h3 className="job-title">{interview.role || 'SDE'}</h3>
                     <div className="job-company">
