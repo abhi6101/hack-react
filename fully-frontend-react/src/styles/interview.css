@@ -567,7 +567,7 @@
     }
 
     .stats-sidebar {
-        padding: 1rem;
+        display: none;
     }
 
     .stat-item {

@@ -625,7 +625,9 @@ const Notes = ({ isAdminView }) => {
                         >
                             <option value="" style={{ color: '#000' }}>All Branches</option>
                             {deptList.map(dept => (
-                                <option key={dept.id} value={dept.code} style={{ color: '#000' }}>{dept.name} ({dept.code})</option>
+                                <option key={dept.id} value={dept.code} style={{ color: '#000' }}>
+                                    {dept.name.length > 30 ? `${dept.name.substring(0, 30)}...` : dept.name} ({dept.code})
+                                </option>
                             ))}
                             {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA" style={{ color: '#000' }}>IMCA</option>}
                         </select>
