@@ -140,24 +140,25 @@ const Gallery = () => {
             <section className="gallery-page" style={{ paddingTop: '80px' }}>
                 <div className="gallery-header" style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'end',
-                    flexWrap: 'wrap',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '1.5rem',
-                    marginBottom: '2rem',
+                    marginBottom: '3rem',
                     paddingBottom: '2rem',
                     borderBottom: '1px solid rgba(255,255,255,0.1)'
                 }}>
-                    <div style={{ maxWidth: '600px' }}>
+                    <div style={{ maxWidth: '800px', textAlign: 'center' }}>
                         <h1 style={{
-                            fontSize: '3rem',
-                            marginBottom: '0.5rem',
+                            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                            marginBottom: '1rem',
                             background: 'linear-gradient(135deg, #fff 0%, var(--primary) 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
-                            textShadow: '0 0 30px rgba(67, 97, 238, 0.2)'
+                            textShadow: '0 0 30px rgba(67, 97, 238, 0.2)',
+                            fontWeight: '800'
                         }}>Moments & Memories</h1>
-                        <p className="subtitle" style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>
+                        <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', margin: '0 auto' }}>
                             A collection of moments from our campus life, events, and sessions.
                         </p>
                     </div>
@@ -165,13 +166,15 @@ const Gallery = () => {
                         className="btn btn-primary"
                         onClick={() => setShowUploadModal(true)}
                         style={{
-                            padding: '0.8rem 1.5rem',
+                            padding: '0.8rem 2rem',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '0.5rem',
-                            width: 'auto',
-                            borderRadius: '12px',
-                            boxShadow: '0 4px 15px rgba(67, 97, 238, 0.4)'
+                            borderRadius: '50px',
+                            boxShadow: '0 10px 25px rgba(67, 97, 238, 0.4)',
+                            fontWeight: '600',
+                            fontSize: '1.1rem',
+                            marginTop: '1rem'
                         }}
                     >
                         <i className="fas fa-camera"></i> <span>Share Photo</span>
