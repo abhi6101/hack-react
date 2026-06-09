@@ -63,6 +63,7 @@ const Papers = () => {
     const [branchPapers, setBranchPapers] = useState([]);
     const [globalSearchQuery, setGlobalSearchQuery] = useState('');
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [downloadStatus, setDownloadStatus] = useState({});
 
     const getToken = () => localStorage.getItem("authToken");
 
@@ -351,7 +352,15 @@ const Papers = () => {
             return;
         }
 
-        setLoading(true);
+        // Countdown Logic
+        setDownloadStatus(prev => ({ ...prev, [paper.id]: 3 }));
+        await new Promise(r => setTimeout(r, 1000));
+        setDownloadStatus(prev => ({ ...prev, [paper.id]: 2 }));
+        await new Promise(r => setTimeout(r, 1000));
+        setDownloadStatus(prev => ({ ...prev, [paper.id]: 1 }));
+        await new Promise(r => setTimeout(r, 1000));
+        setDownloadStatus(prev => ({ ...prev, [paper.id]: 'DOWNLOADING' }));
+
         try {
             const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?action=DOWNLOAD&t=${Date.now()}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -370,12 +379,14 @@ const Papers = () => {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(blobUrl);
             
+            setDownloadStatus(prev => ({ ...prev, [paper.id]: 'SUCCESS' }));
+            setTimeout(() => setDownloadStatus(prev => ({ ...prev, [paper.id]: null })), 3000);
             showToast({ message: 'Paper downloaded successfully!', type: 'success' });
         } catch (e) {
             console.error("Download error:", e);
+            setDownloadStatus(prev => ({ ...prev, [paper.id]: 'FAILED' }));
+            setTimeout(() => setDownloadStatus(prev => ({ ...prev, [paper.id]: null })), 3000);
             showToast({ message: 'Failed to download paper.', type: 'error' });
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -658,13 +669,41 @@ const Papers = () => {
                                     <motion.button
                                         className="download-btn-premium"
                                         onClick={() => handleActualDownload(paper)}
-                                        style={{ flex: 1, marginTop: 0, background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000' }}
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
+                                        disabled={downloadStatus[paper.id] !== undefined && downloadStatus[paper.id] !== null}
+                                        style={{ 
+                                            flex: 1, 
+                                            marginTop: 0, 
+                                            background: downloadStatus[paper.id] === 'FAILED' 
+                                                ? 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)' 
+                                                : downloadStatus[paper.id] === 'SUCCESS'
+                                                ? 'linear-gradient(135deg, #10b981 0%, #047857 100%)'
+                                                : 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', 
+                                            color: downloadStatus[paper.id] ? '#fff' : '#000',
+                                            opacity: (downloadStatus[paper.id] === 'DOWNLOADING' || typeof downloadStatus[paper.id] === 'number') ? 0.7 : 1,
+                                            cursor: (downloadStatus[paper.id] === 'DOWNLOADING' || typeof downloadStatus[paper.id] === 'number') ? 'not-allowed' : 'pointer'
+                                        }}
+                                        whileHover={{ scale: (downloadStatus[paper.id] === 'DOWNLOADING' || typeof downloadStatus[paper.id] === 'number') ? 1 : 1.02 }}
+                                        whileTap={{ scale: (downloadStatus[paper.id] === 'DOWNLOADING' || typeof downloadStatus[paper.id] === 'number') ? 1 : 0.98 }}
                                     >
-                                        <span style={{ flex: 1 }}>Download</span>
+                                        <span style={{ flex: 1 }}>
+                                            {typeof downloadStatus[paper.id] === 'number' ? `Download in ${downloadStatus[paper.id]} seconds` : 
+                                             downloadStatus[paper.id] === 'DOWNLOADING' ? 'Download Started...' : 
+                                             downloadStatus[paper.id] === 'SUCCESS' ? 'Download Complete' : 
+                                             downloadStatus[paper.id] === 'FAILED' ? 'Download Failed. Try Again' : 
+                                             'Download Paper'}
+                                        </span>
                                         <div className="btn-icon" style={{ background: 'rgba(0,0,0,0.1)' }}>
-                                            <i className="fas fa-download"></i>
+                                            {typeof downloadStatus[paper.id] === 'number' ? (
+                                                <i className="fas fa-clock"></i>
+                                            ) : downloadStatus[paper.id] === 'DOWNLOADING' ? (
+                                                <i className="fas fa-spinner fa-spin"></i>
+                                            ) : downloadStatus[paper.id] === 'SUCCESS' ? (
+                                                <i className="fas fa-check"></i>
+                                            ) : downloadStatus[paper.id] === 'FAILED' ? (
+                                                <i className="fas fa-times"></i>
+                                            ) : (
+                                                <i className="fas fa-download"></i>
+                                            )}
                                         </div>
                                     </motion.button>
                                 )}
