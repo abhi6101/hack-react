@@ -424,7 +424,7 @@ const Papers = () => {
                 marginBottom: '2rem'
             }}>
                 <div style={{ maxWidth: '650px' }}>
-                    <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700', color: 'var(--text-primary)' }}>RGPV Question Papers</h1>
+                    <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700', color: 'var(--text-primary)' }}>Previous Year Question Papers</h1>
                     <p style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
                         Download the complete archive of <strong>RGPV previous year question papers</strong> for the IMCA (Integrated MCA) program. Unlike other portals that only offer 1 or 2 papers, Hack2Hired provides the full, exclusive collection from Semester 1 to 10.
                     </p>
@@ -849,7 +849,7 @@ const Papers = () => {
     return (
         <div className="papers-page-wrapper">
             <Helmet>
-                <title>RGPV Question Papers | IMCA Previous Year Exams | Hack-2-Hired</title>
+                <title>Previous Year Question Papers | IMCA Exams | Hack-2-Hired</title>
                 <meta name="description" content="Download exclusive RGPV question papers and Integrated MCA (IMCA) previous year exams. Access the complete collection of 1st to 10th semester papers." />
                 <meta name="keywords" content="imca previous year question paper, previous pg question papers, rmca lmca imca question papers, imca bca integrated honor solved question papers, RGPV question papers, RGPV IMCA papers, IMCA 8th sem papers, Integrated MCA question papers, RGPV previous year papers, Hack2Hired" />
             </Helmet>

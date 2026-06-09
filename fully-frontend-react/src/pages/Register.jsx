@@ -658,7 +658,7 @@ const Register = () => {
                         <video ref={videoRef} autoPlay playsInline muted></video>
                     </div>, document.body
                 )}
-                <div style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <div style={{ position: 'relative', display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                     <Link to="/" style={{ color: '#667eea', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>
                         <i className="fas fa-home"></i> Home
                     </Link>

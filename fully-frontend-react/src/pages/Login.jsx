@@ -203,16 +203,15 @@ const Login = () => {
                         transition={{ delay: 0.2 }}
                     >
                         <Link to="/" style={{
-                            position: 'absolute',
-                            top: '1rem',
-                            left: '1rem',
-                            color: '#667eea',
-                            textDecoration: 'none',
-                            display: 'flex',
+                            position: 'relative',
+                            display: 'inline-flex',
                             alignItems: 'center',
                             gap: '0.5rem',
+                            color: '#667eea',
+                            textDecoration: 'none',
                             fontSize: '0.9rem',
-                            fontWeight: '600'
+                            fontWeight: '600',
+                            marginBottom: '1rem'
                         }}>
                             <i className="fas fa-home"></i> Home
                         </Link>

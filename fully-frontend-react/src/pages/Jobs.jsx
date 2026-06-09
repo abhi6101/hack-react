@@ -316,6 +316,8 @@ const Jobs = () => {
                                 borderRadius: '12px',
                                 cursor: 'pointer',
                                 width: '100%',
+                                minWidth: 0,
+                                boxSizing: 'border-box',
                                 justifyContent: 'space-between',
                                 color: '#fff',
                                 fontSize: '0.9rem'
@@ -411,6 +413,8 @@ const Jobs = () => {
                                 borderRadius: '12px',
                                 cursor: 'pointer',
                                 width: '100%',
+                                minWidth: 0,
+                                boxSizing: 'border-box',
                                 justifyContent: 'space-between',
                                 color: '#fff',
                                 fontSize: '0.9rem'
