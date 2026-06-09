@@ -67,7 +67,7 @@ nav.user-bottom-nav {
     backdrop-filter: blur(30px) !important;
     -webkit-backdrop-filter: blur(30px) !important;
     z-index: 99999 !important;
-    padding: 2.5rem 1.5rem 3.5rem 1.5rem !important;
+    padding: 5rem 1.5rem 3.5rem 1.5rem !important;
     overflow-y: auto !important;
     box-sizing: border-box !important;
 }
