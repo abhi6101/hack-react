@@ -471,10 +471,48 @@
     }
 }
 
-/* On mobile (<768px) hide auth entirely - handled by bottom nav menu */
+/* On mobile (<768px): keep auth visible in top-right, compact style */
 @media (max-width: 768px) {
     .navbar-auth {
+        display: flex;
+        gap: 0.4rem;
+    }
+
+    /* Hide user full-name on mobile, keep avatar only */
+    .navbar-user-name {
         display: none;
     }
-}
 
+    /* Compact user chip - avatar only */
+    .navbar-user-chip {
+        padding: 0.3rem;
+    }
+
+    /* Keep "Sign In" text visible but smaller */
+    .navbar-signin-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.78rem;
+        gap: 0.3rem;
+        border-radius: 50px;
+    }
+
+    .navbar-signin-btn span {
+        display: inline; /* keep text visible */
+    }
+
+    /* Hide "Register" button text on mobile, show icon only */
+    .navbar-register-btn span {
+        display: none;
+    }
+    .navbar-register-btn {
+        padding: 0.4rem 0.6rem;
+    }
+
+    /* Logout icon only on mobile */
+    .navbar-logout-btn span {
+        display: none;
+    }
+    .navbar-logout-btn {
+        padding: 0.4rem 0.6rem;
+    }
+}
