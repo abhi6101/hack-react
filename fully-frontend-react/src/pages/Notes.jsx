@@ -529,9 +529,9 @@ const Notes = ({ isAdminView }) => {
     };
 
     const getVisibilityLabel = (vis) => {
-        if (vis?.toUpperCase() === 'ALL') return 'All Students';
-        if (vis?.toUpperCase() === 'BRANCH') return 'Branch Only';
-        return 'Admin Private';
+        if (vis?.toUpperCase() === 'ALL') return 'Public';
+        if (vis?.toUpperCase() === 'BRANCH') return 'Branch';
+        return 'Private';
     };
 
     const getVisibilityBadgeClass = (vis) => {
@@ -650,9 +650,26 @@ const Notes = ({ isAdminView }) => {
 
                 {/* Explorer Display Viewport */}
                 {loading ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '4rem 0' }}>
-                        <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '3rem', color: 'var(--primary)' }}></i>
-                        <p style={{ marginTop: '1.2rem', color: 'var(--text-secondary)' }}>Analyzing directory hierarchy...</p>
+                    <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        {Array(3).fill(0).map((_, i) => (
+                            <div key={`skel-${i}`} style={{ background: 'rgba(22, 22, 34, 0.75)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', overflow: 'hidden', animation: 'pulse 1.5s infinite', opacity: 0.7 }}>
+                                <div style={{ padding: '1.8rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '1.5rem', background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)', position: 'relative' }}>
+                                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'rgba(255,255,255,0.1)' }}></div>
+                                    <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: 'rgba(255, 255, 255, 0.05)' }}></div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', maxWidth: '300px' }}>
+                                        <div style={{ width: '80%', height: '24px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px' }}></div>
+                                        <div style={{ display: 'flex', gap: '1.2rem' }}>
+                                            <div style={{ width: '60px', height: '16px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
+                                            <div style={{ width: '80px', height: '16px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ padding: '1.5rem 2rem', background: 'rgba(0,0,0,0.2)' }}>
+                                    <div style={{ width: '100%', height: '45px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', marginBottom: '0.8rem' }}></div>
+                                    <div style={{ width: '100%', height: '45px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}></div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : filteredRoots.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '4rem 2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', margin: '2rem 0' }}>
