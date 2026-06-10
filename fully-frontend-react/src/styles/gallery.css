@@ -421,3 +421,72 @@
     .lightbox-nav { display: none; /* Hide arrows on mobile to use swipe */ }
     .lightbox-image { max-height: calc(80vh - 80px); }
 }
+
+/* Desktop UI Centering & Refinements */
+@media (min-width: 1024px) {
+    /* Centered Header */
+    .gallery-header-container {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr !important;
+        align-items: center !important;
+        padding: 1rem 2rem !important;
+    }
+    .gallery-header-container .papers-header-left {
+        grid-column: 2;
+        text-align: center;
+        margin: 0 !important;
+    }
+    .gallery-header-container .papers-header-right {
+        grid-column: 3;
+        display: flex;
+        justify-content: flex-end;
+        margin: 0 !important;
+    }
+
+    /* Fixed Photo Card Proportions */
+    .photo-item {
+        display: flex !important;
+        flex-direction: column !important;
+        aspect-ratio: auto !important;
+        height: 280px !important; /* Consistent height */
+    }
+    .photo-item img {
+        height: 75% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        transition: transform 0.5s ease;
+    }
+    .photo-item:hover img {
+        transform: scale(1.05) !important;
+    }
+    .photo-info {
+        position: static !important;
+        height: 25% !important;
+        transform: none !important;
+        background: rgba(22, 22, 34, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        padding: 0.5rem 1rem !important; /* Slim padding */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        border-top: 1px solid rgba(255,255,255,0.05) !important;
+    }
+    .photo-info h4 {
+        font-size: 1rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+
+    /* Navigation Arrows Centering */
+    .desktop-only-arrow.sleek-arrow {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+    .sleek-arrow-left {
+        left: -15px !important;
+    }
+    .sleek-arrow-right {
+        right: -15px !important;
+    }
+}

@@ -30,15 +30,15 @@ const CourseDetail = () => {
         <>
             <header className="course-hero">
                 <div className="course-hero-container">
-                    <div className="hero-content" style={{ textAlign: 'left' }}>
+                    <div className="hero-content" style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                        <Link to="/courses" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '50%', color: '#fff', marginBottom: '1rem', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; e.currentTarget.style.color = '#fff'; }}>
+                            <i className="fas fa-arrow-left"></i>
+                        </Link>
                         <h1 style={{ background: 'none', WebkitTextFillColor: 'initial', color: '#fff' }}>{course.title}</h1>
                         <p className="subtitle sr-only">{course.subtitle}</p>
                     </div>
                     <div className="hero-actions">
-                        <button className="btn" style={{ background: 'rgba(255, 255, 255, 0.05)', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '50px', padding: '0.6rem 1.5rem', fontSize: '0.9rem', fontWeight: '600', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'var(--primary)'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; }}>Enroll Now</button>
-                        <button className="btn" style={{ background: 'rgba(255, 255, 255, 0.05)', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '50%', width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0', transition: 'all 0.3s ease' }} title="Share Course" onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'var(--primary)'; e.currentTarget.style.borderColor = 'var(--primary)'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; }}>
-                            <i className="fas fa-share-alt"></i>
-                        </button>
+                        <button className="btn hero-enroll-btn">Enroll Now</button>
                     </div>
                 </div>
             </header>
@@ -79,12 +79,9 @@ const CourseDetail = () => {
                 <aside className="course-sidebar">
                     <div className="sidebar-card surface-glow">
                         <div className="course-meta-grid">
-                            <div class="meta-item"><i className="fas fa-clock"></i><div><span>Duration</span><strong>{course.duration}</strong></div></div>
-                            <div class="meta-item"><i className="fas fa-layer-group"></i><div><span>Level</span><strong>{course.level}</strong></div></div>
-                            <div class="meta-item"><i className="fas fa-users"></i><div><span>Enrolled</span><strong>{course.students}+ Students</strong></div></div>
-                        </div>
-                        <div className="course-cta">
-                            <button className="btn btn-primary enroll-btn">Enroll Now</button>
+                            <div className="meta-item"><i className="fas fa-clock"></i><div><span>Duration</span><strong>{course.duration}</strong></div></div>
+                            <div className="meta-item"><i className="fas fa-layer-group"></i><div><span>Level</span><strong>{course.level}</strong></div></div>
+                            <div className="meta-item"><i className="fas fa-users"></i><div><span>Enrolled</span><strong>{course.students}+ Students</strong></div></div>
                         </div>
                         <h3 className="sidebar-title">Key Features</h3>
                         <ul className="feature-list">

@@ -25,7 +25,7 @@ const Blog = () => {
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
             <header className="hero" style={{ paddingTop: '120px', paddingBottom: '0', minHeight: 'auto' }}>
-                <div className="hero-content papers-header-container slim-interview-header" style={{ width: '100%', marginBottom: '24px', alignItems: 'center' }}>
+                <div className="hero-content papers-header-container blog-header-container" style={{ width: '100%', marginBottom: '24px', alignItems: 'center' }}>
                     <div className="papers-header-left blog-header-left">
                         <h1 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1', background: 'none', WebkitTextFillColor: 'initial', color: '#fff' }}>Career Insight Blog</h1>
                         <p className="sr-only">Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career.</p>
@@ -67,7 +67,7 @@ const Blog = () => {
                                             <span><i className="fas fa-calendar-alt"></i> {post.date}</span>
                                             <span><i className="fas fa-eye"></i> {post.views}</span>
                                         </div>
-                                        <Link to={`/blog/${post.slug}`} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', width: '100%', borderRadius: '12px', padding: '0.8rem', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.4)'; }} onMouseOut={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}>Read More <i className="fas fa-arrow-right"></i></Link>
+                                        <Link to={`/blog/${post.slug}`} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.4)'; }} onMouseOut={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}>Read More <i className="fas fa-arrow-right"></i></Link>
                                     </div>
                                 </div>
                             </article>
