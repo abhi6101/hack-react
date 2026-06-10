@@ -340,9 +340,7 @@ const Home = () => {
 
 
 
-                        <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '1rem 0 2rem', lineHeight: '1.9', fontSize: '1.25rem', color: 'rgba(255,255,255,0.8)' }}>
-                            Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
-                        </motion.p>
+
 
                         <motion.div className="cta-btns" variants={fadeInUp} style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: user?.username ? 'center' : 'flex-start' }}>
                             {!user?.username && (

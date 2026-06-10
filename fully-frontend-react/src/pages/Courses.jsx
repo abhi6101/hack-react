@@ -36,46 +36,87 @@ const Courses = () => {
                 <div className="course-header-left papers-header-left" style={{ flex: 1 }}>
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1', color: 'var(--text-primary)' }}>Career boosting courses</h2>
                 </div>
-
-                    <div className="search-bar" style={{ flex: 1.5, minWidth: '250px', margin: '0 1rem' }}>
-                        <i className="fas fa-search"></i>
-                        <input
-                            type="text"
-                            id="courseSearch"
-                            placeholder="Search courses..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="course-header-right" style={{ flex: 1, justifyContent: 'flex-end' }}>
-                        <div className="category-dropdown" style={{ position: 'relative', minWidth: '200px' }}>
-                            <select
-                                value={activeCategory}
-                                onChange={(e) => setActiveCategory(e.target.value)}
+                    <div className="papers-header-right" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'flex-end', flex: 2 }}>
+                        <div className="global-search-container" style={{
+                            position: 'relative',
+                            flex: 1.5,
+                            minWidth: '200px',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(0, 212, 255, 0.3)',
+                            borderRadius: '50px',
+                            padding: '0 1rem 0 2.5rem',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            backdropFilter: 'blur(15px)',
+                            transition: 'all 0.3s ease'
+                        }}>
+                            <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
+                            <input
+                                type="text"
+                                placeholder="Search courses..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                                 style={{
-                                    width: '100%',
-                                    padding: '0.9rem 1.5rem',
-                                    background: 'rgba(22, 22, 34, 0.8)',
+                                    background: 'transparent',
+                                    border: 'none',
                                     color: '#fff',
-                                    border: '1px solid var(--border-color)',
-                                    borderRadius: '50px',
-                                    fontSize: '1rem',
-                                    appearance: 'none',
-                                    cursor: 'pointer',
+                                    fontSize: '0.95rem',
+                                    width: '100%',
+                                    height: '100%',
                                     outline: 'none',
-                                    transition: 'all 0.3s ease'
+                                    padding: '0'
                                 }}
-                                onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px var(--primary-glow)'; }}
-                                onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none'; }}
+                            />
+                            {searchTerm && (
+                                <i 
+                                    className="fas fa-times" 
+                                    onClick={() => setSearchTerm('')}
+                                    style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
+                                ></i>
+                            )}
+                        </div>
+
+                        <div className="category-dropdown" style={{ position: 'relative', flex: 1, minWidth: '160px' }}>
+                            <div
+                                className="custom-dropdown"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(0, 212, 255, 0.3)',
+                                    padding: '0 1rem',
+                                    height: '40px',
+                                    borderRadius: '50px',
+                                    position: 'relative',
+                                    width: '100%'
+                                }}
                             >
-                                {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
-                                    <option key={cat} value={cat} style={{ background: '#0F172A', color: '#fff' }}>
-                                        {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                    </option>
-                                ))}
-                            </select>
-                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
+                                <select
+                                    value={activeCategory}
+                                    onChange={(e) => setActiveCategory(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        background: 'transparent',
+                                        color: '#fff',
+                                        border: 'none',
+                                        appearance: 'none',
+                                        outline: 'none',
+                                        cursor: 'pointer',
+                                        fontSize: '0.95rem',
+                                        paddingRight: '1rem'
+                                    }}
+                                >
+                                    {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
+                                        <option key={cat} value={cat} style={{ background: '#0F172A', color: '#fff' }}>
+                                            {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                        </option>
+                                    ))}
+                                </select>
+                                <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', pointerEvents: 'none', color: 'var(--primary)', fontSize: '0.8rem' }}></i>
+                            </div>
                         </div>
                     </div>
                 </div>
