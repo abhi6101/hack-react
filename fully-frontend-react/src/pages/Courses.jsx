@@ -32,52 +32,48 @@ const Courses = () => {
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
             <main className="courses-container" style={{ paddingTop: '160px', minHeight: '100vh', background: 'transparent' }}>
-                <div className="course-controls" style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1.5rem',
-                    flexWrap: 'wrap',
-                    marginBottom: '2rem',
-                    padding: '0 2rem',
-                    background: 'transparent'
-                }}>
-                    <h2 style={{ margin: 0, fontSize: '1.8rem', flexShrink: 0, whiteSpace: 'nowrap' }}>Career boosting courses</h2>
-
-                    <div className="search-bar" style={{ flex: 1, minWidth: '250px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '50px', display: 'flex', alignItems: 'center', padding: '0 1.5rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                        <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
-                        <input
-                            type="text"
-                            id="courseSearch"
-                            placeholder="Search courses..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{ border: 'none', background: 'transparent', color: '#fff', width: '100%', padding: '0.8rem 1rem' }}
-                        />
+                <div className="course-controls course-header-container">
+                    <div className="course-header-left">
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap' }}>Career boosting courses</h2>
                     </div>
 
-                    <div className="category-dropdown" style={{ position: 'relative', minWidth: '200px' }}>
-                        <select
-                            value={activeCategory}
-                            onChange={(e) => setActiveCategory(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '0.8rem 1.5rem',
-                                background: 'rgba(255, 255, 255, 0.05)',
-                                color: '#fff',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                borderRadius: '50px',
-                                fontSize: '0.95rem',
-                                appearance: 'none',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
-                                <option key={cat} value={cat} style={{ background: '#0f111a', color: '#fff' }}>
-                                    {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                </option>
-                            ))}
-                        </select>
-                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none' }}></i>
+                    <div className="course-header-right">
+                        <div className="search-bar" style={{ flex: 1, minWidth: '250px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '50px', display: 'flex', alignItems: 'center', padding: '0 1.5rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                            <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
+                            <input
+                                type="text"
+                                id="courseSearch"
+                                placeholder="Search courses..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                style={{ border: 'none', background: 'transparent', color: '#fff', width: '100%', padding: '0.8rem 1rem' }}
+                            />
+                        </div>
+
+                        <div className="category-dropdown" style={{ position: 'relative', minWidth: '200px' }}>
+                            <select
+                                value={activeCategory}
+                                onChange={(e) => setActiveCategory(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.8rem 1.5rem',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    color: '#fff',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '50px',
+                                    fontSize: '0.95rem',
+                                    appearance: 'none',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
+                                    <option key={cat} value={cat} style={{ background: '#0f111a', color: '#fff' }}>
+                                        {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                    </option>
+                                ))}
+                            </select>
+                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none' }}></i>
+                        </div>
                     </div>
                 </div>
 
