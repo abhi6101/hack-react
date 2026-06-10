@@ -551,7 +551,31 @@ const Papers = () => {
                 </div>
 
                 <div className="subject-grid">
-                    {subjects.length === 0 ? (
+                    {loading ? (
+                        Array(8).fill(0).map((_, i) => (
+                            <div 
+                                key={`skel-sub-${i}`} 
+                                className="subject-folder" 
+                                style={{ 
+                                    animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
+                                    background: 'rgba(30, 41, 59, 0.8)', 
+                                    borderColor: 'rgba(255, 255, 255, 0.05)',
+                                    pointerEvents: 'none'
+                                }}
+                            >
+                                <div className="folder-icon-wrapper">
+                                    <div style={{ width: '45px', height: '45px', borderRadius: '12px', background: 'rgba(255,255,255,0.1)' }}></div>
+                                </div>
+                                <div className="folder-info" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <div style={{ height: '1.2rem', width: '70%', background: 'rgba(255,255,255,0.1)', borderRadius: '6px' }}></div>
+                                    <div style={{ height: '0.8rem', width: '40%', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}></div>
+                                </div>
+                                <div className="folder-arrow">
+                                    <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}></div>
+                                </div>
+                            </div>
+                        ))
+                    ) : subjects.length === 0 ? (
                         <div className="empty-state surface-glow" style={{ textAlign: 'center', padding: '6rem 2rem', borderRadius: '24px', gridColumn: '1/-1' }}>
                             <i className="fas fa-folder-open" style={{ fontSize: '4rem', color: 'rgba(255,255,255,0.05)', marginBottom: '2rem' }}></i>
                             <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>No Subjects Found</h3>
