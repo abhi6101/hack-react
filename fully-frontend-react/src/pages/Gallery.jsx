@@ -157,40 +157,34 @@ const Gallery = () => {
                             WebkitTextFillColor: 'transparent',
                             fontWeight: '800'
                         }}>Moments & Memories</h1>
-                        <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', margin: '0' }}>
+                        <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', margin: '0 0 2.5rem 0' }}>
                             A collection of moments from our campus life, events, and sessions.
                         </p>
+                        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => setShowUploadModal(true)}
+                                style={{
+                                    width: '240px',
+                                    padding: '0.8rem 0',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem',
+                                    borderRadius: '50px',
+                                    boxShadow: '0 10px 25px rgba(67, 97, 238, 0.4)',
+                                    fontWeight: '600',
+                                    fontSize: '1rem',
+                                }}
+                            >
+                                <i className="fas fa-camera"></i> <span>Share Photo</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div className="gallery-controls-row" style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1.5rem',
-                    flexWrap: 'wrap',
-                    marginBottom: '2rem',
-                    justifyContent: 'flex-start'
-                }}>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => setShowUploadModal(true)}
-                        style={{
-                            padding: '0.8rem 1.5rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '0.5rem',
-                            borderRadius: '50px',
-                            boxShadow: '0 10px 25px rgba(67, 97, 238, 0.4)',
-                            fontWeight: '600',
-                            fontSize: '1rem',
-                            whiteSpace: 'nowrap'
-                        }}
-                    >
-                        <i className="fas fa-camera"></i> <span>Share Photo</span>
-                    </button>
-
-                    <div className="gallery-categories" style={{ margin: 0, justifyContent: 'flex-start' }}>
+                <div className="gallery-categories-container" style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'flex-start' }}>
+                    <div className="gallery-categories" style={{ margin: 0, padding: 0, justifyContent: 'flex-start', border: 'none', background: 'transparent' }}>
                         {['all', 'function', 'lab', 'farewell', 'campus', 'class'].map(cat => (
                             <button
                                 key={cat}
@@ -206,18 +200,22 @@ const Gallery = () => {
                 {loading ? (
                     <p style={{ textAlign: 'center', padding: '2rem' }}>Loading gallery...</p>
                 ) : (
-                    <div className="photo-grid">
-                        {filteredImages.length > 0 ? filteredImages.map(img => (
-                            <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedImage(img)}>
-                                <img src={img.url} alt={img.title} onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
-                                <div className="photo-info">
-                                    <h4>{img.title}</h4>
-                                    {img.uploadedBy && <span style={{ fontSize: '0.8rem', color: '#ccc' }}>by {img.uploadedBy}</span>}
+                    <div className="gallery-carousel-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <button className="btn btn-outline desktop-only-arrow" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: -300, behavior: 'smooth' }); }}><i className="fas fa-chevron-left"></i></button>
+                        <div className="photo-grid" id="photoGrid">
+                            {filteredImages.length > 0 ? filteredImages.map(img => (
+                                <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedImage(img)}>
+                                    <img src={img.url} alt={img.title} onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
+                                    <div className="photo-info">
+                                        <h4>{img.title}</h4>
+                                        {img.uploadedBy && <span style={{ fontSize: '0.8rem', color: '#ccc' }}>by {img.uploadedBy}</span>}
+                                    </div>
                                 </div>
-                            </div>
-                        )) : (
-                            <p style={{ width: '100%', textAlign: 'center', padding: '2rem' }}>No photos in this category yet.</p>
-                        )}
+                            )) : (
+                                <p style={{ width: '100%', textAlign: 'center', padding: '2rem' }}>No photos in this category yet.</p>
+                            )}
+                        </div>
+                        <button className="btn btn-primary desktop-only-arrow" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: 300, behavior: 'smooth' }); }}><i className="fas fa-chevron-right"></i></button>
                     </div>
                 )}
             </section>

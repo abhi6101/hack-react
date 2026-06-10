@@ -94,6 +94,7 @@
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
     position: relative;
+    width: 100%;
 }
 
 .photo-item {
@@ -292,6 +293,43 @@
     }
 
     .gallery-page {
-        padding-top: 140px;
+        margin-top: 2rem;
+    }
+}
+
+.desktop-only-arrow {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .photo-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 1.5rem;
+        scroll-behavior: smooth;
+        scrollbar-width: none; /* Hide scrollbar for a clean look */
+        padding-bottom: 1rem; /* Prevent shadow clipping */
+    }
+    
+    .photo-grid::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .photo-item {
+        flex: 0 0 calc(25% - 1.125rem); /* Exactly 4 columns */
+        aspect-ratio: 4 / 5;
+    }
+
+    .desktop-only-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        padding: 0;
+        flex-shrink: 0;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 }
