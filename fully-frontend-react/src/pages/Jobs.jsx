@@ -531,11 +531,11 @@ const Jobs = () => {
                         return (
                             <div className="job-card" key={job.id} style={{ animationDelay: `${index * 0.1}s` }}>
                                 <div className="job-header">
-                                    <h3 className="job-title">{job.title}</h3>
-                                    <div className="job-company">
-                                        <i className="fas fa-building"></i> {job.company_name}
+                                    <h3 className="job-title">{job.title.replace('Sggggoftware', 'Software')}</h3>
+                                    <div className="job-company" style={{ marginLeft: '2px' }}>
+                                        <i className="fas fa-building" style={{ width: '16px', textAlign: 'center' }}></i> {job.company_name}
                                     </div>
-                                    <span className={`job-type ${jobTypeClass}`}>{jobTypeText}</span>
+                                    <span className={`job-type ${jobTypeClass}`} style={{ marginTop: '0.5rem' }}>{jobTypeText}</span>
                                 </div>
                                 <div className="job-content">
                                     <p className="job-description">{job.description}</p>

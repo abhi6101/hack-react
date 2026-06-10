@@ -752,3 +752,80 @@
     width: 100%;
   }
 }
+/* UI Overhaul: Job Cards */
+.job-title {
+    text-transform: capitalize;
+}
+
+.job-card {
+    transition: all 0.3s ease !important;
+}
+
+.job-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.job-company {
+    align-items: baseline;
+}
+
+.job-content {
+    margin-top: 1rem;
+    padding-top: 1.5rem !important; /* increased gap from badge */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.job-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 3.2em; /* Ensure consistent 2-line height */
+    margin-bottom: auto !important; /* Pushes everything else to bottom */
+}
+
+.job-meta {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.job-meta-item i {
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+.apply-btn {
+    background: linear-gradient(135deg, #00d4ff 0%, #007aff 100%) !important; /* Blue/Cyan */
+}
+
+@media (min-width: 1024px) {
+    .job-actions {
+        flex-direction: row !important;
+        flex-wrap: nowrap;
+    }
+    .job-actions .btn {
+        flex: 1;
+        padding: 0.8rem 1rem !important;
+        text-align: center;
+        justify-content: center;
+    }
+}
+/* Toast Refinement */
+.toast.info {
+    background: rgba(22, 22, 34, 0.9) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(0, 212, 255, 0.2) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 212, 255, 0.1) !important;
+    color: #fff !important;
+    border-radius: 12px !important;
+}
+.toast.info .toast-icon {
+    color: var(--primary) !important;
+}
