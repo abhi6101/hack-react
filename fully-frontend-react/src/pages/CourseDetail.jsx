@@ -29,9 +29,17 @@ const CourseDetail = () => {
     return (
         <>
             <header className="course-hero">
-                <div className="hero-content">
-                    <h1>{course.title}</h1>
-                    <p className="subtitle">{course.subtitle}</p>
+                <div className="course-hero-container">
+                    <div className="hero-content" style={{ textAlign: 'left' }}>
+                        <h1 style={{ background: 'none', WebkitTextFillColor: 'initial', color: '#fff' }}>{course.title}</h1>
+                        <p className="subtitle sr-only">{course.subtitle}</p>
+                    </div>
+                    <div className="hero-actions">
+                        <button className="btn" style={{ background: 'rgba(255, 255, 255, 0.05)', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '50px', padding: '0.6rem 1.5rem', fontSize: '0.9rem', fontWeight: '600', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'var(--primary)'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; }}>Enroll Now</button>
+                        <button className="btn" style={{ background: 'rgba(255, 255, 255, 0.05)', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '50%', width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0', transition: 'all 0.3s ease' }} title="Share Course" onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'var(--primary)'; e.currentTarget.style.borderColor = 'var(--primary)'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; }}>
+                            <i className="fas fa-share-alt"></i>
+                        </button>
+                    </div>
                 </div>
             </header>
 
