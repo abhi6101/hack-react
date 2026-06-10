@@ -11,7 +11,7 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 1.5rem 5%;
+    padding: 0.8rem 5% !important; /* Slimmer height */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,7 +25,7 @@
     background: rgba(10, 10, 16, 0.85);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    padding: 0.9rem 5%;
+    padding: 0.5rem 5% !important; /* Even slimmer when scrolled */
     box-shadow:
         0 4px 24px rgba(0, 0, 0, 0.3),
         0 0 40px rgba(99, 102, 241, 0.1);

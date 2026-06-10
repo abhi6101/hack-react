@@ -508,6 +508,13 @@ main {
         gap: 1.5rem;
     }
     
+    .hero-btn-prominent {
+        padding: 1rem 2.5rem !important;
+        font-size: 1.2rem !important;
+        border-radius: 50px;
+        box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+    }
+    
     .boy-image-container {
         max-width: 480px;
     }
