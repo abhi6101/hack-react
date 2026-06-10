@@ -32,25 +32,53 @@ const Videos = () => {
                 <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />
                 <meta name="keywords" content="study videos, programming tutorials, MERN stack tutorial, Spring Boot course, online learning" />
             </Helmet>
-            <header className="papers-header-container slim-videos-header" style={{ marginBottom: '1.5rem', alignItems: 'center', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)' }}>
+            <div className="papers-header-container">
                 <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Curated Study Videos</h2>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Curated Study Videos</h2>
                 </div>
-
                 <div className="papers-header-right" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <div className="search-bar" style={{ margin: 0, minWidth: '280px' }}>
-                        <i className="fas fa-search"></i>
+                    <div className="global-search-container" style={{
+                        position: 'relative',
+                        flex: 1.5,
+                        minWidth: '140px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(0, 212, 255, 0.3)',
+                        borderRadius: '50px',
+                        padding: '0 1rem 0 2.5rem',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        backdropFilter: 'blur(15px)',
+                        transition: 'all 0.3s ease'
+                    }}>
+                        <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
                         <input
                             type="text"
-                            id="videoSearch"
                             placeholder="Search videos..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{ padding: '0.6rem 1.5rem 0.6rem 3rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0,212,255,0.3)', borderRadius: '50px' }}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#fff',
+                                fontSize: '0.95rem',
+                                width: '100%',
+                                height: '100%',
+                                outline: 'none',
+                                padding: '0'
+                            }}
                         />
+                        {searchTerm && (
+                            <i
+                                className="fas fa-times"
+                                onClick={() => setSearchTerm('')}
+                                style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
+                            ></i>
+                        )}
                     </div>
                 </div>
-            </header>
+            </div>
             
             <div className="category-filters-container" style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
                 {['All', 'Frontend', 'Backend', 'Database'].map(cat => (

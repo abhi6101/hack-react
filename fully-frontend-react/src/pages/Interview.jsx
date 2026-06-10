@@ -296,65 +296,87 @@ const Interview = () => {
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
 
-<div className="papers-header-container slim-interview-header" style={{ borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center', padding: '0.5rem 1.5rem', minHeight: '64px' }}>
+<div className="papers-header-container">
     <div className="papers-header-left">
-        <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Available Job Drives</h2>
+        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Available Job Drives</h2>
     </div>
     
-    <div className="papers-header-right">
-    {/* Search & Location */}
-    <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap', alignItems: 'center' }}>
-        <div className="search-wrapper" style={{ flex: '1.5', minWidth: '150px' }}>
-            <div style={{ position: 'relative', width: '100%', minWidth: 0, height: '40px' }}>
-                <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
-                <input
-                    type="text"
-                    placeholder="Search by company..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(0, 212, 255, 0.3)',
-                        padding: '0 1rem 0 2.5rem',
-                        borderRadius: '50px',
-                        color: '#fff',
-                        fontSize: '0.95rem',
-                        boxSizing: 'border-box'
-                    }}
-                />
-            </div>
-        </div>
-        <div className="location-wrapper" style={{ flex: '1', minWidth: '150px', position: 'relative', height: '40px' }}>
-            <select
-                className="form-input template-select"
-                value={filterLocation}
-                onChange={(e) => setFilterLocation(e.target.value)}
+    <div className="papers-header-right" style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '500px', flexWrap: 'nowrap', alignItems: 'center' }}>
+        {/* Search */}
+        <div className="global-search-container" style={{
+            position: 'relative',
+            flex: 1.5,
+            minWidth: '140px',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(0, 212, 255, 0.3)',
+            borderRadius: '50px',
+            padding: '0 1rem 0 2.5rem',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            backdropFilter: 'blur(15px)',
+            transition: 'all 0.3s ease'
+        }}>
+            <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
+            <input
+                type="text"
+                placeholder="Search by company..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
-                    width: '100%',
-                    height: '100%',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(0, 212, 255, 0.3)',
-                    padding: '0 2.5rem 0 1rem',
-                    borderRadius: '50px',
+                    background: 'transparent',
+                    border: 'none',
                     color: '#fff',
                     fontSize: '0.95rem',
-                    boxSizing: 'border-box',
+                    width: '100%',
+                    height: '100%',
                     outline: 'none',
-                    cursor: 'pointer',
-                    appearance: 'none'
+                    padding: '0'
                 }}
-            >
-                {locations.map(loc => (
-                    <option key={loc} value={loc} style={{ background: '#0F172A', color: '#fff' }}>
-                        {loc === 'all' ? 'All Locations' : loc}
-                    </option>
-                ))}
-            </select>
-            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
+            />
+            {searchTerm && (
+                <i 
+                    className="fas fa-times" 
+                    onClick={() => setSearchTerm('')}
+                    style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
+                ></i>
+            )}
         </div>
-    </section>
+
+        {/* Location Dropdown */}
+        <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100, flex: 1, minWidth: '140px' }}>
+            <div className="custom-dropdown" onClick={() => setShowLocationMenu(!showLocationMenu)}>
+                <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0 1rem', height: '40px', borderRadius: '50px', border: '1px solid rgba(0, 212, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff', fontSize: '0.95rem' }}>
+                        {filterLocation === 'all' ? 'All Locations' : filterLocation}
+                    </span>
+                    <i className={`fas fa-chevron-down ${showLocationMenu ? 'open' : ''}`} style={{ color: 'var(--primary)', fontSize: '0.8rem', marginLeft: '0.5rem' }}></i>
+                </div>
+
+                <AnimatePresence>
+                    {showLocationMenu && (
+                        <motion.div
+                            className="dropdown-menu surface-glow"
+                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                            style={{ right: 0, left: 'auto', minWidth: '100%', top: 'calc(100% + 5px)' }}
+                        >
+                            {locations.map(loc => (
+                                <div
+                                    key={loc}
+                                    className={`dropdown-item ${filterLocation === loc ? 'active' : ''}`}
+                                    onClick={() => { setFilterLocation(loc); setShowLocationMenu(false); }}
+                                >
+                                    {loc === 'all' ? 'All Locations' : loc}
+                                </div>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
     </div>
 </div>
 {/* Compact Stats Bar */}

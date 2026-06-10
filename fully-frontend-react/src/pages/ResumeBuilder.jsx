@@ -366,13 +366,13 @@ const ResumeBuilder = () => {
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
-            <div className="papers-header-container" style={{ marginBottom: '2rem', padding: '1rem 2rem' }}>
+            <div className="papers-header-container">
                 <div className="papers-header-left">
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '800', lineHeight: '1' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
                     <p className="sr-only">Create a professional, clean resume in seconds.</p>
                 </div>
                 <div className="papers-header-right">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(0, 212, 255, 0.3)', position: 'relative' }}>
+                    <div className="custom-dropdown">
                         <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>Template:</span>
                         <div 
                             style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', fontWeight: '600' }}
@@ -611,6 +611,11 @@ const ResumeBuilder = () => {
                     border-radius: 24px;
                     padding: 2rem;
                     box-shadow: 0 10px 30px rgba(0, 212, 255, 0.05);
+                }
+                .custom-dropdown {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1rem;
                 }
                 .section-header {
                     display: flex;

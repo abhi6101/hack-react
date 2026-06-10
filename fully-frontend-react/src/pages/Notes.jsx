@@ -151,6 +151,7 @@ const Notes = ({ isAdminView }) => {
     const [semesterFilter, setSemesterFilter] = useState('');
     const [branchFilter, setBranchFilter] = useState('');
     const [deptList, setDeptList] = useState([]);
+    const [showBranchMenu, setShowBranchMenu] = useState(false);
 
     // UI & Modal States
     const [showAuthModal, setShowAuthModal] = useState(false);
@@ -581,9 +582,9 @@ const Notes = ({ isAdminView }) => {
             </Helmet>
 
             {/* Unified Header section matching Papers.jsx */}
-            <div className="papers-header-container slim-notes-header" style={{ padding: '0.5rem 2rem', marginBottom: '24px', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
+            <div className="papers-header-container">
                 <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', fontWeight: '700', lineHeight: '1', whiteSpace: 'nowrap' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
                     <p style={{ display: 'none' }} className="sr-only">
                         Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
                     </p>
@@ -631,22 +632,66 @@ const Notes = ({ isAdminView }) => {
                         )}
                     </div>
 
-                    <div style={{ position: 'relative', flex: 1, minWidth: '100px', height: '40px' }}>
-                        <select
-                            value={branchFilter}
-                            onChange={(e) => setBranchFilter(e.target.value)}
-                            disabled={userRole === 'STUDENT'}
-                            style={{ width: '100%', height: '100%', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0, 212, 255, 0.3)', borderRadius: '50px', padding: '0 2.5rem 0 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
+                    <div className="dept-selector-inline" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 100 }}>
+                        <div
+                            className={`custom-dropdown ${userRole === 'STUDENT' ? 'disabled' : ''}`}
+                            onClick={() => { if (userRole !== 'STUDENT') setShowBranchMenu(!showBranchMenu); }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(0, 212, 255, 0.3)',
+                                borderRadius: '50px',
+                                padding: '0 1rem',
+                                height: '100%',
+                                color: '#fff',
+                                cursor: userRole === 'STUDENT' ? 'not-allowed' : 'pointer',
+                                fontSize: '0.95rem',
+                                opacity: userRole === 'STUDENT' ? 0.6 : 1
+                            }}
                         >
-                            <option value="" style={{ color: '#000' }}>All Branches</option>
-                            {deptList.map(dept => (
-                                <option key={dept.id} value={dept.code} style={{ color: '#000' }}>
-                                    {dept.name.length > 30 ? `${dept.name.substring(0, 30)}...` : dept.name} ({dept.code})
-                                </option>
-                            ))}
-                            {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA" style={{ color: '#000' }}>IMCA</option>}
-                        </select>
-                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {branchFilter === '' ? 'All Branches' : branchFilter}
+                            </span>
+                            <i className={`fas fa-chevron-down ${showBranchMenu ? 'open' : ''}`} style={{ color: 'var(--primary)', fontSize: '0.8rem', marginLeft: '0.5rem' }}></i>
+                        </div>
+
+                        <AnimatePresence>
+                            {showBranchMenu && userRole !== 'STUDENT' && (
+                                <motion.div
+                                    className="dropdown-menu surface-glow"
+                                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                    style={{ right: 0, left: 'auto', minWidth: '100%', top: 'calc(100% + 5px)' }}
+                                >
+                                    <div
+                                        className={`dropdown-item ${branchFilter === '' ? 'active' : ''}`}
+                                        onClick={() => { setBranchFilter(''); setShowBranchMenu(false); }}
+                                    >
+                                        All Branches
+                                    </div>
+                                    {deptList.map(dept => (
+                                        <div
+                                            key={dept.id}
+                                            className={`dropdown-item ${branchFilter === dept.code ? 'active' : ''}`}
+                                            onClick={() => { setBranchFilter(dept.code); setShowBranchMenu(false); }}
+                                        >
+                                            {dept.name.length > 30 ? `${dept.name.substring(0, 30)}...` : dept.name} ({dept.code})
+                                        </div>
+                                    ))}
+                                    {!deptList.some(d => d.code === 'IMCA') && (
+                                        <div
+                                            className={`dropdown-item ${branchFilter === 'IMCA' ? 'active' : ''}`}
+                                            onClick={() => { setBranchFilter('IMCA'); setShowBranchMenu(false); }}
+                                        >
+                                            IMCA
+                                        </div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
                     {isAdmin && (

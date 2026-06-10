@@ -294,34 +294,75 @@ const Jobs = () => {
             {/* Wrapper to ensure footer stays down if content short */}
 
             <div className="container">
-                <div className="jobs-header-container">
-                    <div className="jobs-header-left">
-                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap' }}>Job Opportunities</h2>
+                <div className="papers-header-container">
+                    <div className="papers-header-left">
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Job Opportunities</h2>
                     </div>
 
-                    <div className="jobs-header-right">
-                    <div className="category-options" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
-                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Category:</span>
-                        <div
-                            className="custom-dropdown"
-                            onClick={() => { setShowCategoryMenu(!showCategoryMenu); setShowSortMenu(false); }}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                background: 'rgba(255, 255, 255, 0.05)',
-                                border: '1px solid var(--border-color)',
-                                padding: '0.6rem 1rem',
-                                borderRadius: '12px',
-                                cursor: 'pointer',
-                                width: '100%',
-                                minWidth: 0,
-                                boxSizing: 'border-box',
-                                justifyContent: 'space-between',
-                                color: '#fff',
-                                fontSize: '0.9rem'
-                            }}
-                        >
+                    <div className="papers-header-right" style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '600px', flexWrap: 'nowrap', alignItems: 'center' }}>
+                        {/* Search */}
+                        <div className="global-search-container" style={{
+                            position: 'relative',
+                            flex: 1.5,
+                            minWidth: '140px',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(0, 212, 255, 0.3)',
+                            borderRadius: '50px',
+                            padding: '0 1rem 0 2.5rem',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            backdropFilter: 'blur(15px)',
+                            transition: 'all 0.3s ease'
+                        }}>
+                            <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
+                            <input
+                                type="text"
+                                placeholder="Search jobs..."
+                                value={filters.search}
+                                onChange={(e) => handleFilterChange('search', e.target.value)}
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: '#fff',
+                                    fontSize: '0.95rem',
+                                    width: '100%',
+                                    height: '100%',
+                                    outline: 'none',
+                                    padding: '0'
+                                }}
+                            />
+                            {filters.search && (
+                                <i 
+                                    className="fas fa-times" 
+                                    onClick={() => handleFilterChange('search', '')}
+                                    style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
+                                ></i>
+                            )}
+                        </div>
+                        <div className="category-options" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                            <div
+                                className="custom-dropdown"
+                                onClick={() => { setShowCategoryMenu(!showCategoryMenu); setShowSortMenu(false); }}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(0, 212, 255, 0.3)',
+                                    padding: '0 1rem',
+                                    height: '40px',
+                                    borderRadius: '50px',
+                                    cursor: 'pointer',
+                                    width: '100%',
+                                    minWidth: 0,
+                                    boxSizing: 'border-box',
+                                    justifyContent: 'space-between',
+                                    color: '#fff',
+                                    fontSize: '0.95rem'
+                                }}
+                            >
                                 <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
                                     {filters.category === 'all' && 'All Jobs'}
                                     {filters.category === 'it' && 'IT Engineering'}
@@ -398,27 +439,27 @@ const Jobs = () => {
                     </div>
 
                     <div className="sort-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
-                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Sort by:</span>
-                        <div
-                            className="custom-dropdown"
-                            onClick={() => { setShowSortMenu(!showSortMenu); setShowCategoryMenu(false); }}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                background: 'rgba(255, 255, 255, 0.05)',
-                                border: '1px solid var(--border-color)',
-                                padding: '0.6rem 1rem',
-                                borderRadius: '12px',
-                                cursor: 'pointer',
-                                width: '100%',
-                                minWidth: 0,
-                                boxSizing: 'border-box',
-                                justifyContent: 'space-between',
-                                color: '#fff',
-                                fontSize: '0.9rem'
-                            }}
-                        >
+                            <div
+                                className="custom-dropdown"
+                                onClick={() => { setShowSortMenu(!showSortMenu); setShowCategoryMenu(false); }}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(0, 212, 255, 0.3)',
+                                    padding: '0 1rem',
+                                    height: '40px',
+                                    borderRadius: '50px',
+                                    cursor: 'pointer',
+                                    width: '100%',
+                                    minWidth: 0,
+                                    boxSizing: 'border-box',
+                                    justifyContent: 'space-between',
+                                    color: '#fff',
+                                    fontSize: '0.95rem'
+                                }}
+                            >
                                 <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
                                     {filters.sort === 'newest' && 'Newest First'}
                                     {filters.sort === 'salary-high' && 'Salary (High to Low)'}
