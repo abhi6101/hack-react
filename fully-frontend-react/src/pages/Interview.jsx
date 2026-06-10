@@ -296,9 +296,9 @@ const Interview = () => {
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
 
-<div className="papers-header-container slim-interview-header" style={{ borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
+<div className="papers-header-container slim-interview-header" style={{ borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center', padding: '0.5rem 1.5rem', minHeight: '64px' }}>
     <div className="papers-header-left">
-        <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 3vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Available Job Drives</h2>
+        <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Available Job Drives</h2>
     </div>
     
     <div className="papers-header-right">
