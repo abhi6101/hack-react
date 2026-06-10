@@ -892,71 +892,72 @@ const Papers = () => {
             <AnimatePresence>
                 {viewPdfUrl && (
                     <motion.div
+                        className="pdf-viewer-overlay"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            backgroundColor: 'rgba(0,0,0,0.95)',
-                            zIndex: 9999,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '2rem'
-                        }}
                     >
-                        {/* Close Button */}
-                        <motion.button
-                            onClick={() => {
-                                setViewPdfUrl(null);
-                                setCurrentPaper(null);
-                                window.URL.revokeObjectURL(viewPdfUrl);
-                            }}
-                            whileHover={{ scale: 1.1, rotate: 90 }}
-                            whileTap={{ scale: 0.9 }}
-                            style={{
-                                position: 'absolute',
-                                top: '2rem',
-                                right: '2rem',
-                                background: 'rgba(255,255,255,0.1)',
-                                border: '1px solid rgba(255,255,255,0.2)',
-                                color: 'white',
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '50%',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '1.5rem',
-                                zIndex: 10000
-                            }}
-                        >
-                            <i className="fas fa-times"></i>
-                        </motion.button>
+                        {/* Header Navbar */}
+                        <div className="pdf-viewer-header">
+                            <h2 className="pdf-viewer-title">
+                                {currentPaper?.subject} - Sem {currentPaper?.semester}
+                            </h2>
+                            <div className="pdf-viewer-actions">
+                                <motion.button
+                                    className="download-btn-premium"
+                                    onClick={() => handleActualDownload(currentPaper)}
+                                    disabled={downloadStatus[currentPaper?.id] !== undefined && downloadStatus[currentPaper?.id] !== null}
+                                    style={{
+                                        background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)',
+                                        color: '#fff',
+                                        border: 'none',
+                                        margin: 0,
+                                        opacity: (downloadStatus[currentPaper?.id] === 'DOWNLOADING' || typeof downloadStatus[currentPaper?.id] === 'number') ? 0.7 : 1,
+                                        cursor: (downloadStatus[currentPaper?.id] === 'DOWNLOADING' || typeof downloadStatus[currentPaper?.id] === 'number') ? 'not-allowed' : 'pointer'
+                                    }}
+                                >
+                                    <span>
+                                        {typeof downloadStatus[currentPaper?.id] === 'number' ? `Download in ${downloadStatus[currentPaper?.id]}s` : 
+                                         downloadStatus[currentPaper?.id] === 'DOWNLOADING' ? 'Downloading...' : 
+                                         'Download PDF'}
+                                    </span>
+                                    <i className="fas fa-download"></i>
+                                </motion.button>
 
-
+                                <motion.button
+                                    onClick={() => {
+                                        setViewPdfUrl(null);
+                                        setCurrentPaper(null);
+                                        window.URL.revokeObjectURL(viewPdfUrl);
+                                    }}
+                                    whileHover={{ scale: 1.1, rotate: 90 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    style={{
+                                        background: 'rgba(255,255,255,0.1)',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        color: 'white',
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '50%',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '1.2rem',
+                                    }}
+                                >
+                                    <i className="fas fa-times"></i>
+                                </motion.button>
+                            </div>
+                        </div>
 
                         {/* PDF Frame */}
                         <motion.div
+                            className="pdf-viewer-frame-container"
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onContextMenu={(e) => { if (screenshotRestrictionEnabled) e.preventDefault(); }}
-                            style={{
-                                width: '90%',
-                                height: '90%',
-                                background: '#1a1a1a',
-                                borderRadius: '12px',
-                                overflow: 'hidden',
-                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                                position: 'relative'
-                            }}
                         >
                             <iframe
                                 src={`${viewPdfUrl}#toolbar=0&navpanes=0&scrollbar=0&zoom=100`}
