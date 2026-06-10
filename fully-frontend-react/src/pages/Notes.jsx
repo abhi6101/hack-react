@@ -569,8 +569,8 @@ const Notes = ({ isAdminView }) => {
     const isAdmin = ['ADMIN', 'SUPER_ADMIN', 'DEPT_ADMIN'].includes(userRole);
 
     return (
-        <div className="papers-container" style={{ 
-            padding: isAdminView ? '0 0 2rem' : '6.5rem 5% 5rem', 
+        <div className="container" style={{ 
+            padding: isAdminView ? '0 0 2rem' : '112px 2rem 50px', 
             position: 'relative', 
             zIndex: 2, 
             minHeight: isAdminView ? 'auto' : '90vh' 
