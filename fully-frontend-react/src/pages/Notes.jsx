@@ -525,7 +525,7 @@ const Notes = ({ isAdminView }) => {
         window.open(`${API_BASE_URL}/notes/download/${note.id}?token=${token}`, '_blank');
     };
 
-    const handleDownloadFile = (note) => {
+    const handleDownloadFile = async (note) => {
         const token = getToken();
 
         if (!token) {
@@ -533,7 +533,24 @@ const Notes = ({ isAdminView }) => {
             return;
         }
 
-        window.open(`${API_BASE_URL}/notes/download/${note.id}?token=${token}&action=DOWNLOAD`, '_blank');
+        try {
+            const res = await fetch(`${API_BASE_URL}/notes/download/${note.id}?token=${token}&action=DOWNLOAD`);
+            if (!res.ok) throw new Error("Failed to download file");
+            const blob = await res.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.setAttribute('download', note.name);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+            showToast({ message: 'File downloaded successfully!', type: 'success' });
+        } catch (e) {
+            console.error("Download error:", e);
+            showToast({ message: 'Failed to download file.', type: 'error' });
+        }
     };
 
     const getVisibilityLabel = (vis) => {
@@ -564,7 +581,7 @@ const Notes = ({ isAdminView }) => {
             </Helmet>
 
             {/* Unified Header section matching Papers.jsx */}
-            <div className="papers-header-container" style={{ padding: '0.5rem 2rem', marginBottom: '24px', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
+            <div className="papers-header-container slim-notes-header" style={{ padding: '0.5rem 2rem', marginBottom: '24px', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
                 <div className="papers-header-left">
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', fontWeight: '700', lineHeight: '1', whiteSpace: 'nowrap' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
                     <p style={{ display: 'none' }} className="sr-only">
@@ -648,24 +665,18 @@ const Notes = ({ isAdminView }) => {
 
                 {/* Explorer Display Viewport */}
                 {loading ? (
-                    <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        {Array(3).fill(0).map((_, i) => (
-                            <div key={`skel-${i}`} style={{ background: 'rgba(22, 22, 34, 0.75)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', overflow: 'hidden', animation: 'pulse 1.5s infinite', opacity: 0.7 }}>
-                                <div style={{ padding: '1.8rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '1.5rem', background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)', position: 'relative' }}>
-                                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'rgba(255,255,255,0.1)' }}></div>
-                                    <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: 'rgba(255, 255, 255, 0.05)' }}></div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', maxWidth: '300px' }}>
-                                        <div style={{ width: '80%', height: '24px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px' }}></div>
-                                        <div style={{ display: 'flex', gap: '1.2rem' }}>
-                                            <div style={{ width: '60px', height: '16px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
-                                            <div style={{ width: '80px', height: '16px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
-                                        </div>
+                    <div className="notes-grid" style={{ marginTop: '2rem' }}>
+                        {Array(4).fill(0).map((_, i) => (
+                            <div key={`skel-${i}`} className="subject-card" style={{ background: 'rgba(22, 22, 34, 0.75)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', animation: 'pulse 1.5s infinite', opacity: 0.7 }}>
+                                <div style={{ width: '100%' }}>
+                                    <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', marginBottom: '1.2rem' }}></div>
+                                    <div style={{ width: '80%', height: '1.2rem', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px', marginBottom: '0.8rem' }}></div>
+                                    <div style={{ display: 'flex', gap: '1rem' }}>
+                                        <div style={{ width: '40px', height: '1rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
+                                        <div style={{ width: '60px', height: '1rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
                                     </div>
                                 </div>
-                                <div style={{ padding: '1.5rem 2rem', background: 'rgba(0,0,0,0.2)' }}>
-                                    <div style={{ width: '100%', height: '45px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', marginBottom: '0.8rem' }}></div>
-                                    <div style={{ width: '100%', height: '45px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}></div>
-                                </div>
+                                <div style={{ width: '100%', height: '40px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', marginTop: '1rem' }}></div>
                             </div>
                         ))}
                     </div>
@@ -809,11 +820,11 @@ const Notes = ({ isAdminView }) => {
                                                             </td>
                                                             <td>
                                                                 {isLocked ? (
-                                                                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                                                                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'flex-end', width: '100%' }}>
                                                                         <i className="fas fa-lock"></i> Locked
                                                                     </div>
                                                                 ) : (
-                                                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                                    <div className="btn-group">
                                                                         <button 
                                                                             onClick={(e) => { e.stopPropagation(); handleViewFile(fileNode); }}
                                                                             style={{ background: 'transparent', border: '1px solid rgba(0, 212, 255, 0.3)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#00d4ff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
@@ -864,7 +875,7 @@ const Notes = ({ isAdminView }) => {
                                 <button
                                     onClick={() => setSelectedFolder(folder)}
                                     className="download-btn-premium"
-                                    style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', borderRadius: '12px', padding: '0.8rem', fontSize: '0.9rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                    style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', borderRadius: '12px', padding: '0.8rem', fontSize: '0.9rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s ease', marginTop: '1rem' }}
                                 >
                                     Explore Units <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
                                 </button>
