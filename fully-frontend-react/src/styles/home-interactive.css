@@ -27,10 +27,10 @@
 #heroHeading::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -5px;
     left: 0;
     width: 0;
-    height: 8px;
+    height: 4px;
     background: linear-gradient(90deg, var(--primary), var(--accent));
     transition: width 0.8s ease;
     border-radius: 4px;

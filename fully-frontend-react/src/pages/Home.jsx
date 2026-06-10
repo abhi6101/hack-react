@@ -330,8 +330,13 @@ const Home = () => {
                         variants={staggerContainer}
                         style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                     >
+                        <motion.div variants={fadeInUp} style={{ marginBottom: '1.5rem' }}>
+                            <div className="status-pill" style={{ margin: 0, padding: '0.4rem 1rem', fontSize: '0.85rem' }}>
+                                <span className="dot"></span> Trusted Worldwide
+                            </div>
+                        </motion.div>
                         <motion.div variants={fadeInUp}>
-                            <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
+                            <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
                                 Get Your Dream Job with <br />
                                 <span className="hero-brand-text">Hack-2-Hired</span>
                             </h1>
@@ -339,16 +344,13 @@ const Home = () => {
 
 
 
-                        <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '0.75rem 0 1.5rem' }}>
+                        <motion.p id="heroSubtitle" variants={fadeInUp} style={{ textAlign: 'left', margin: '1rem 0 2rem', lineHeight: '1.9', fontSize: '1.25rem', color: 'rgba(255,255,255,0.8)' }}>
                             Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
                         </motion.p>
 
-                        <motion.div className="cta-btns hero-cta-guest-wrapper" variants={fadeInUp} style={{ justifyContent: 'flex-start' }}>
-                            {localStorage.getItem('authToken') ? null : (
-                                <span className="hero-cta-guest">
-                                    <Link to="/register" id="registerBtn" className="btn btn-primary hero-btn-prominent">🚀 Get Started</Link>
-                                </span>
-                            )}
+                        <motion.div className="cta-btns" variants={fadeInUp} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <Link to="/register" className="btn btn-primary" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', boxShadow: '0 0 15px rgba(0, 212, 255, 0.4)', borderRadius: '50px', fontWeight: '600', padding: '0.8rem 2rem' }}>Get Started</Link>
+                            <Link to="/courses" className="btn btn-outline" style={{ borderRadius: '50px', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '0.8rem 2rem', background: 'transparent' }}>Explore More</Link>
                         </motion.div>
 
                         <motion.div variants={fadeInUp} style={{ marginTop: '2rem', maxWidth: '400px' }}>
@@ -374,9 +376,6 @@ const Home = () => {
             <section className="partners-scroll-section">
                 <div className="container">
                     <div className="partners-header">
-                        <div className="status-pill">
-                            <span className="dot"></span> Trusted Worldwide
-                        </div>
                         <h2 className="partners-title">
                             Trusted By <span>100+ Companies</span>
                         </h2>

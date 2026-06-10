@@ -22,9 +22,9 @@ const FloatingCodeBackground = () => {
         // Configuration
         const particleCount = 20; // Number of floating items
         const colors = [
-            'rgba(0, 212, 255, 0.15)', // Cyan
-            'rgba(168, 85, 247, 0.15)', // Purple
-            'rgba(34, 197, 94, 0.15)'   // Green
+            'rgba(0, 212, 255, 0.05)', // Cyan
+            'rgba(168, 85, 247, 0.05)', // Purple
+            'rgba(34, 197, 94, 0.05)'   // Green
         ];
         const font = '16px "Fira Code", monospace';
 
