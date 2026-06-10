@@ -24,23 +24,27 @@ const Blog = () => {
                 <meta name="description" content="Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career." />
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
-            <header className="hero" style={{ paddingTop: '120px' }}>
-                <div className="hero-content" style={{ marginTop: '20px', width: '100%', textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h1 style={{ whiteSpace: 'nowrap', fontSize: 'clamp(1.5rem, 6vw, 3rem)' }}>Career Insight Blog</h1>
-                    <p style={{ margin: 0 }}>Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
+            <header className="hero" style={{ paddingTop: '120px', paddingBottom: '0', minHeight: 'auto' }}>
+                <div className="hero-content blog-header-container" style={{ width: '100%' }}>
+                    <div className="blog-header-left">
+                        <h1 style={{ whiteSpace: 'nowrap', fontSize: 'clamp(1.5rem, 6vw, 3rem)' }}>Career Insight Blog</h1>
+                        <p className="sr-only">Get expert advice, industry trends, and placement preparation tips from our career specialists.</p>
+                    </div>
                     
-                    <div className="category-pills-container" style={{ marginTop: '24px' }}>
-                        <span className="category-label">Explore by Category:</span>
-                        <div className="category-pills">
-                            {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
-                                <button 
-                                    key={cat} 
-                                    className={`pill-btn ${activeCategory === cat ? 'active' : ''}`}
-                                    onClick={() => handleFilter(cat)}
-                                >
-                                    {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                </button>
-                            ))}
+                    <div className="blog-header-right">
+                        <div className="category-pills-container">
+                            <span className="category-label">Explore by Category:</span>
+                            <div className="category-pills">
+                                {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
+                                    <button 
+                                        key={cat} 
+                                        className={`pill-btn ${activeCategory === cat ? 'active' : ''}`}
+                                        onClick={() => handleFilter(cat)}
+                                    >
+                                        {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
