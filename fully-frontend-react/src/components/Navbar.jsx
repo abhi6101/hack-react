@@ -31,7 +31,32 @@ const Navbar = ({ menuOpen = false }) => {
 
     useEffect(() => {
         setIsMenuOpen(false);
+        setCareerOpen(false);
+        setAcademicsOpen(false);
+        setResourcesOpen(false);
+        setExploreOpen(false);
     }, [location]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.dropdown')) {
+                setCareerOpen(false);
+                setAcademicsOpen(false);
+                setResourcesOpen(false);
+                setExploreOpen(false);
+            }
+        };
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
+    const toggleDropdown = (dropdownName, e) => {
+        e.stopPropagation(); // Prevent document click from immediately closing it
+        setCareerOpen(dropdownName === 'career' ? !careerOpen : false);
+        setAcademicsOpen(dropdownName === 'academics' ? !academicsOpen : false);
+        setResourcesOpen(dropdownName === 'resources' ? !resourcesOpen : false);
+        setExploreOpen(dropdownName === 'explore' ? !exploreOpen : false);
+    };
 
     const isActive = (path) => location.pathname === path ? 'active' : '';
 
@@ -62,9 +87,8 @@ const Navbar = ({ menuOpen = false }) => {
 
                 <Link to="/" className={isActive('/')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-home"></i> Home</Link>
                 
-                <div className="dropdown"
-                    onClick={() => setCareerOpen(!careerOpen)}>
-                    <button className="dropdown-toggle">
+                <div className="dropdown">
+                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('career', e)}>
                         <i className="fas fa-briefcase"></i> Career <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${careerOpen ? 'show' : ''}`}>
@@ -74,9 +98,8 @@ const Navbar = ({ menuOpen = false }) => {
                     </div>
                 </div>
 
-                <div className="dropdown"
-                    onClick={() => setAcademicsOpen(!academicsOpen)}>
-                    <button className="dropdown-toggle">
+                <div className="dropdown">
+                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('academics', e)}>
                         <i className="fas fa-graduation-cap"></i> Academics <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${academicsOpen ? 'show' : ''}`}>
@@ -86,9 +109,8 @@ const Navbar = ({ menuOpen = false }) => {
                     </div>
                 </div>
 
-                <div className="dropdown"
-                    onClick={() => setResourcesOpen(!resourcesOpen)}>
-                    <button className="dropdown-toggle">
+                <div className="dropdown">
+                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('resources', e)}>
                         <i className="fas fa-book-reader"></i> Resources <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${resourcesOpen ? 'show' : ''}`}>
@@ -98,9 +120,8 @@ const Navbar = ({ menuOpen = false }) => {
                     </div>
                 </div>
 
-                <div className="dropdown"
-                    onClick={() => setExploreOpen(!exploreOpen)}>
-                    <button className="dropdown-toggle">
+                <div className="dropdown">
+                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('explore', e)}>
                         <i className="fas fa-compass"></i> Explore <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${exploreOpen ? 'show' : ''}`}>
