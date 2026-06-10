@@ -361,9 +361,28 @@ const ResumeBuilder = () => {
 
     return (
         <div className="container" style={{ paddingTop: '100px', paddingBottom: '2rem' }}>
-            <div className="page-header">
-                <h1>ATS-Friendly Resume Builder</h1>
-                <p>Create a professional, clean resume in seconds.</p>
+            <div className="resume-header-container">
+                <div className="resume-header-left">
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap' }}>ATS-Friendly Resume Builder</h2>
+                    <p className="sr-only" style={{ display: 'none' }}>Create a professional, clean resume in seconds.</p>
+                </div>
+                <div className="resume-header-right">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>Template:</span>
+                        <select
+                            className="form-input template-select"
+                            name="template"
+                            value={formData.template}
+                            onChange={handleChange}
+                            style={{ background: 'transparent', border: 'none', padding: 0, width: 'auto', outline: 'none' }}
+                        >
+                            <option value="sde" style={{ color: 'black' }}>SDE Format (IIT Standard)</option>
+                            <option value="professional" style={{ color: 'black' }}>Professional (Simple)</option>
+                            <option value="creative" style={{ color: 'black' }}>Creative</option>
+                            <option value="modern" style={{ color: 'black' }}>Modern</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <div className="resume-layout-grid">
@@ -490,23 +509,7 @@ const ResumeBuilder = () => {
                 <div className="resume-actions-sidebar">
                     <div className="sticky-box">
                         <h3>Actions</h3>
-                        <p className="text-muted">Choose your template and generate instantly.</p>
-
-                        <div className="form-group" style={{ marginBottom: '1rem' }}>
-                            <label className="form-label">Select Template</label>
-                            <select
-                                className="form-input"
-                                name="template"
-                                value={formData.template}
-                                onChange={handleChange}
-                                style={{ background: 'rgba(255,255,255,0.1)' }}
-                            >
-                                <option value="sde" style={{ color: 'black' }}>SDE Format (IIT Standard)</option>
-                                <option value="professional" style={{ color: 'black' }}>Professional (Simple)</option>
-                                <option value="creative" style={{ color: 'black' }}>Creative</option>
-                                <option value="modern" style={{ color: 'black' }}>Modern</option>
-                            </select>
-                        </div>
+                        <p className="text-muted">Fill out the form and generate instantly.</p>
 
                         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
                             <button className="btn-secondary" onClick={fillDummyData} style={{ flex: 1, padding: '0.5rem', cursor: 'pointer', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '6px' }}>
@@ -527,15 +530,25 @@ const ResumeBuilder = () => {
 
             {/* Inline CSS for this page specifically */}
             <style jsx>{`
-                .page-header {
-                    text-align: center;
+                .resume-header-container {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 24px;
+                    padding: 1.5rem 2rem;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
                     margin-bottom: 2rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 2rem;
                 }
-                .page-header h1 {
-                    font-size: clamp(1.8rem, 5vw, 2.5rem);
-                    white-space: normal;
-                    word-wrap: break-word;
-                    line-height: 1.2;
+                .resume-header-left {
+                    flex: 1;
+                }
+                .resume-header-right {
+                    flex: 1;
+                    display: flex;
+                    justify-content: flex-end;
                 }
                 .resume-form-container {
                     display: flex;
@@ -545,8 +558,9 @@ const ResumeBuilder = () => {
                 .section-card {
                     background: rgba(255, 255, 255, 0.03);
                     border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 12px;
-                    padding: 1.5rem;
+                    border-radius: 20px;
+                    padding: 2rem;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
                 }
                 .section-header {
                     display: flex;
@@ -574,14 +588,25 @@ const ResumeBuilder = () => {
                 .form-input {
                     background: rgba(0, 0, 0, 0.2);
                     border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 6px;
-                    padding: 0.7rem;
+                    border-radius: 8px;
+                    padding: 0.7rem 1rem;
                     color: #fff;
                     font-family: inherit; width: 100%; box-sizing: border-box;
+                    transition: border-color 0.3s ease;
                 }
                 .form-input:focus {
                     border-color: var(--primary);
                     outline: none;
+                }
+                .template-select {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+                    background-repeat: no-repeat;
+                    background-position: right 0.7em top 50%;
+                    background-size: 0.65em auto;
+                    padding-right: 2rem !important;
                 }
                 .repeater-item {
                     border-left: 2px solid var(--primary);
@@ -592,10 +617,11 @@ const ResumeBuilder = () => {
                     background: none;
                     border: 1px dashed var(--primary);
                     color: var(--primary);
-                    padding: 0.5rem 1rem;
-                    border-radius: 6px;
+                    padding: 0.8rem 1rem;
+                    border-radius: 8px;
                     cursor: pointer;
                     width: 100%;
+                    transition: background 0.3s ease;
                 }
                 .btn-add:hover {
                     background: rgba(67, 97, 238, 0.1);
@@ -610,19 +636,19 @@ const ResumeBuilder = () => {
                 }
                 .sticky-box {
                     position: sticky;
-                    top: 100px;
-                    background: rgba(22, 22, 34, 0.9);
-                    border: 1px solid var(--primary);
-                    padding: 1.5rem;
-                    border-radius: 12px;
-                    box-shadow: 0 0 20px rgba(67, 97, 238, 0.15);
+                    top: 100px; /* sticky top-24 */
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    padding: 2rem;
+                    border-radius: 20px;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
                 }
                 .btn-download {
                     width: 100%;
-                    background: var(--primary);
+                    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
                     color: #fff;
-                    padding: 1rem;
-                    border-radius: 8px;
+                    padding: 1.2rem;
+                    border-radius: 12px;
                     border: none;
                     font-weight: bold;
                     margin-top: 1rem;
@@ -630,33 +656,41 @@ const ResumeBuilder = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 0.5rem;
-                    font-size: 1rem;
+                    gap: 0.8rem;
+                    font-size: 1.1rem;
+                    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
                 }
-                .btn-download:hover {
-                    background: #304ffe;
+                .btn-download:hover:not(:disabled) {
                     transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+                    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
                 }
                 .resume-layout-grid {
                     display: grid;
                     grid-template-columns: 1fr 350px;
                     gap: 2rem;
+                    align-items: start;
                 }
-                @media (max-width: 768px) {
-                    .resume-layout-grid {
-                        grid-template-columns: 1fr !important;
+                @media (max-width: 1024px) {
+                    .resume-header-container {
+                        flex-direction: column;
+                        align-items: stretch;
+                        gap: 1rem;
                     }
-                    .form-grid-2 {
-                        grid-template-columns: 1fr !important;
+                    .resume-header-right {
+                        justify-content: flex-start;
+                    }
+                    .resume-layout-grid {
+                        grid-template-columns: 1fr;
                     }
                     .sticky-box {
                         position: static;
+                        box-shadow: none;
                     }
-                    .page-header h1 {
-                        font-size: clamp(1.5rem, 5vw, 2.5rem);
-                        white-space: normal;
-                        word-wrap: break-word;
+                }
+                @media (max-width: 768px) {
+                    .form-grid-2 {
+                        grid-template-columns: 1fr !important;
                     }
                 }
             `}</style>
