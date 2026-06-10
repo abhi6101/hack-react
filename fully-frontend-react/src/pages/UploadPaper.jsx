@@ -127,7 +127,7 @@ const UploadPaper = () => {
             <div style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
                 
                 {/* Gallery-Style Split Header */}
-                <div className="papers-header-container" style={{ marginBottom: '2rem' }}>
+                <div className="papers-header-container" style={{ marginBottom: '2rem', padding: '1rem 2rem' }}>
                     <div className="papers-header-left">
                         <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Smart Paper <span style={{ color: 'var(--primary)' }}>Upload</span></h2>
                     </div>
@@ -146,17 +146,17 @@ const UploadPaper = () => {
                     {/* Thinner, Modern Progress Bar at Top */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2.5rem', position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
-                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '2px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 10px var(--primary)' }}></div>
+                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '1px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 10px var(--primary)' }}></div>
                         {[1, 2, 3, 4].map(num => (
                             <div key={num} style={{ 
                                 width: '24px', height: '24px', borderRadius: '50%', 
-                                background: step >= num ? 'var(--primary)' : 'var(--surface-bg)', 
-                                color: step >= num ? '#000' : '#fff',
+                                background: step === num ? 'var(--primary)' : 'var(--surface-bg)', 
+                                color: step === num ? '#000' : (step > num ? 'var(--primary)' : '#fff'),
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 zIndex: 2, border: `1px solid ${step >= num ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`,
                                 fontWeight: '700', fontSize: '0.8rem',
                                 transition: 'all 0.3s ease',
-                                boxShadow: step >= num ? '0 0 15px rgba(0, 212, 255, 0.5)' : 'none'
+                                boxShadow: step === num ? '0 0 15px rgba(0, 212, 255, 0.5)' : 'none'
                             }}>
                                 {step > num ? <i className="fas fa-check" style={{ fontSize: '0.6rem' }}></i> : num}
                             </div>
@@ -197,11 +197,11 @@ const UploadPaper = () => {
                                             textAlign: 'center', cursor: 'pointer', background: 'rgba(255, 255, 255, 0.03)', transition: 'all 0.3s ease',
                                             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
                                         }}
-                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = '#10B981'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(16, 185, 129, 0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
                                         onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
-                                        <div style={{ width: '64px', height: '64px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                                            <i className="fas fa-images" style={{ fontSize: '1.8rem', color: '#10B981' }}></i>
+                                        <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                            <i className="fas fa-images" style={{ fontSize: '1.8rem', color: 'var(--primary)' }}></i>
                                         </div>
                                         <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Gallery</h4>
                                     </div>
@@ -254,7 +254,7 @@ const UploadPaper = () => {
                                 )}
 
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <button onClick={handleNext} className="btn" style={{ width: '100%', maxWidth: '300px', padding: '0.8rem 1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', border: 'none', transition: 'all 0.3s ease', opacity: files.length === 0 ? 0.5 : 1, cursor: files.length === 0 ? 'not-allowed' : 'pointer' }} disabled={files.length === 0}>
+                                    <button onClick={handleNext} className="btn" style={{ width: '100%', maxWidth: '300px', padding: '0.8rem 1.5rem', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', border: 'none', transition: 'all 0.3s ease', opacity: files.length === 0 ? 0.5 : 1, cursor: files.length === 0 ? 'not-allowed' : 'pointer' }} disabled={files.length === 0}>
                                         Next Step <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
                                     </button>
                                 </div>
