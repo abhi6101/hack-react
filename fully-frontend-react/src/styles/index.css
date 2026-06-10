@@ -870,13 +870,15 @@ footer .heart {
     }
 
     .cta-btns {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1rem;
         width: 100%;
     }
 
     .cta-btns .btn {
-        width: 100%;
+        width: auto;
         justify-content: center;
     }
 
