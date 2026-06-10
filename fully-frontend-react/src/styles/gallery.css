@@ -332,4 +332,29 @@
         font-size: 1.2rem;
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
+}/* UI Refinement: Sleek Arrows */
+.desktop-only-arrow.sleek-arrow {
+    position: absolute;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    transition: all 0.3s ease;
+}
+.desktop-only-arrow.sleek-arrow:hover {
+    background: rgba(0, 212, 255, 0.2);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+.sleek-arrow-left { left: 0; }
+.sleek-arrow-right { right: 0; }
+
+/* UI Refinement: Photo Item Hover */
+.photo-item { border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+.photo-item:hover {
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3) !important;
+    border-color: rgba(0, 212, 255, 0.5) !important;
 }

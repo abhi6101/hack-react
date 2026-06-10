@@ -138,52 +138,38 @@ const Gallery = () => {
                 <meta name="keywords" content="college gallery, campus life, student photos, events, tech fest, farewell" />
             </Helmet>
             <section className="gallery-page" style={{ paddingTop: '120px' }}>
-                <div className="gallery-header" style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '1.5rem',
-                    marginBottom: '3rem',
-                    paddingBottom: '2rem',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)'
-                }}>
-                    <div style={{ maxWidth: '800px', textAlign: 'left', width: '100%' }}>
-                        <h1 style={{
-                            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                            marginBottom: '1rem',
-                            background: 'linear-gradient(135deg, #fff 0%, var(--primary) 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            fontWeight: '800'
-                        }}>Moments & Memories</h1>
-                        <p className="subtitle" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', margin: '0 0 2.5rem 0' }}>
-                            A collection of moments from our campus life, events, and sessions.
-                        </p>
-                        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => setShowUploadModal(true)}
-                                style={{
-                                    width: '240px',
-                                    padding: '0.8rem 0',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem',
-                                    borderRadius: '50px',
-                                    boxShadow: '0 10px 25px rgba(67, 97, 238, 0.4)',
-                                    fontWeight: '600',
-                                    fontSize: '1rem',
-                                }}
-                            >
-                                <i className="fas fa-camera"></i> <span>Share Photo</span>
-                            </button>
-                        </div>
+                <div className="papers-header-container" style={{ padding: '1rem 2rem', marginBottom: '24px' }}>
+                    <div className="papers-header-left">
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '800', lineHeight: '1' }}>Moments & Memories</h2>
+                        <p className="sr-only">A collection of moments from our campus life, events, and sessions.</p>
+                    </div>
+                    <div className="papers-header-right">
+                        <button
+                            className="btn"
+                            onClick={() => setShowUploadModal(true)}
+                            style={{
+                                width: '180px',
+                                padding: '0.8rem 0',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                borderRadius: '50px',
+                                background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)',
+                                color: '#fff',
+                                border: 'none',
+                                boxShadow: '0 10px 25px rgba(0, 212, 255, 0.4)',
+                                fontWeight: '600',
+                                fontSize: '1rem',
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
+                            <i className="fas fa-camera"></i> <span>Share Photo</span>
+                        </button>
                     </div>
                 </div>
 
-                <div className="gallery-categories-container" style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'flex-start' }}>
+                <div className="gallery-categories-container" style={{ marginBottom: '24px', display: 'flex', justifyContent: 'flex-start', paddingLeft: '1rem' }}>
                     <div className="gallery-categories" style={{ margin: 0, padding: 0, justifyContent: 'flex-start', border: 'none', background: 'transparent' }}>
                         {['all', 'function', 'lab', 'farewell', 'campus', 'class'].map(cat => (
                             <button
@@ -200,9 +186,9 @@ const Gallery = () => {
                 {loading ? (
                     <p style={{ textAlign: 'center', padding: '2rem' }}>Loading gallery...</p>
                 ) : (
-                    <div className="gallery-carousel-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                        <button className="btn btn-outline desktop-only-arrow" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: -300, behavior: 'smooth' }); }}><i className="fas fa-chevron-left"></i></button>
-                        <div className="photo-grid" id="photoGrid">
+                    <div className="gallery-carousel-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', position: 'relative' }}>
+                        <button className="btn btn-outline desktop-only-arrow sleek-arrow sleek-arrow-left" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: -300, behavior: 'smooth' }); }}><i className="fas fa-chevron-left"></i></button>
+                        <div className="photo-grid" id="photoGrid" style={{ padding: '0 2rem' }}>
                             {filteredImages.length > 0 ? filteredImages.map(img => (
                                 <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedImage(img)}>
                                     <img src={img.url} alt={img.title} onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
@@ -215,7 +201,7 @@ const Gallery = () => {
                                 <p style={{ width: '100%', textAlign: 'center', padding: '2rem' }}>No photos in this category yet.</p>
                             )}
                         </div>
-                        <button className="btn btn-primary desktop-only-arrow" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: 300, behavior: 'smooth' }); }}><i className="fas fa-chevron-right"></i></button>
+                        <button className="btn btn-primary desktop-only-arrow sleek-arrow sleek-arrow-right" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: 300, behavior: 'smooth' }); }}><i className="fas fa-chevron-right"></i></button>
                     </div>
                 )}
             </section>
