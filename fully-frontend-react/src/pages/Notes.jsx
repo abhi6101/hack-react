@@ -570,7 +570,7 @@ const Notes = ({ isAdminView }) => {
 
     return (
         <div className="container" style={{ 
-            padding: isAdminView ? '0 0 2rem' : '80px 2rem 50px', 
+            padding: isAdminView ? '0 0 2rem' : '104px 2rem 50px', 
             position: 'relative', 
             zIndex: 2, 
             minHeight: isAdminView ? 'auto' : '90vh' 

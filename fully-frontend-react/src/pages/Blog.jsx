@@ -18,7 +18,7 @@ const Blog = () => {
     };
 
     return (
-        <div className="container" style={{ minHeight: '100vh', padding: '80px 2rem 50px', position: 'relative', zIndex: 2 }}>
+        <div className="container" style={{ minHeight: '100vh', padding: '104px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Career Insight Blog | Hack-2-Hired</title>
                 <meta name="description" content="Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career." />
