@@ -410,32 +410,20 @@ const Papers = () => {
 
     const renderSemesterGrid = () => (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <div className="view-header" style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                background: 'rgba(255,255,255,0.02)',
-                padding: '2rem',
-                borderRadius: '24px',
-                border: '1px solid rgba(255,255,255,0.05)',
-                backdropFilter: 'blur(10px)',
-                flexWrap: 'wrap',
-                gap: '1.5rem',
-                marginBottom: '2rem'
-            }}>
-                <div style={{ maxWidth: '650px' }}>
-                    <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700', color: 'var(--text-primary)' }}>Previous Year Question Papers</h1>
-                    <p style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
-                        Download the complete archive of <strong>previous year question papers</strong> for the IMCA (Integrated MCA) program. Unlike other portals that only offer 1 or 2 papers, Hack2Hired provides the full, exclusive collection from Semester 1 to 10.
+            <div className="papers-header-container">
+                <div className="papers-header-left">
+                    <h1 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Previous Year Question Papers</h1>
+                    <p className="sr-only" style={{ display: 'none' }}>
+                        Download the complete archive of previous year question papers for the IMCA program.
                     </p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <div className="papers-header-right">
                     {userRole !== 'STUDENT' && (
                         <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100 }}>
                             <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
-                                <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                    <i className="fas fa-graduation-cap"></i>
+                                <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginRight: '0.5rem' }}>Course:</span>
                                     <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>{deptFullName}</span>
                                     <i className={`fas fa-chevron-down ${isDeptOpen ? 'open' : ''}`}></i>
                                 </div>
@@ -447,7 +435,7 @@ const Papers = () => {
                                             initial={{ opacity: 0, scale: 0.95, y: 10 }}
                                             animate={{ opacity: 1, scale: 1, y: 0 }}
                                             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                            style={{ right: 0, left: 'auto' }}
+                                            style={{ right: 0, left: 'auto', minWidth: '200px' }}
                                         >
                                             <div
                                                 className={`dropdown-item ${branch === 'IMCA' ? 'active' : ''}`}

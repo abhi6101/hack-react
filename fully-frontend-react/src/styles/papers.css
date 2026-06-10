@@ -140,6 +140,29 @@ a:hover {
 
 /* === PAPERS-SPECIFIC STYLES START HERE === */
 
+.papers-header-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.papers-header-left {
+    flex: 1;
+}
+
+.papers-header-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 /* --- 4. Papers Hero Section --- */
 .papers-page-wrapper {
     position: relative;
@@ -375,27 +398,31 @@ a:hover {
 /* --- 5. Semester Grid & Cards --- */
 .semester-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2.5rem;
-    padding: 2rem 0;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    padding: 1rem 0;
+}
+
+@media (min-width: 1024px) {
+    .semester-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 .semester-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 32px;
-    padding: 3rem 2rem;
+    border-radius: 20px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: 1rem;
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(20px);
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    max-width: 380px;
-    margin: 0 auto;
+    transition: all 0.3s ease;
     width: 100%;
 }
 
@@ -419,16 +446,16 @@ a:hover {
 }
 
 .semester-card .card-icon {
-    width: 90px;
-    height: 90px;
+    width: 60px;
+    height: 60px;
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 28px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.8rem;
+    font-size: 2rem;
     color: var(--primary);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
     position: relative;
@@ -448,10 +475,11 @@ a:hover {
 }
 
 .semester-card .card-content h2 {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: 1.2rem;
+    font-weight: 700;
     margin: 0;
-    letter-spacing: -0.5px;
+    text-align: center;
+    letter-spacing: 0.5px;
     background: linear-gradient(135deg, #fff 40%, rgba(255, 255, 255, 0.6));
     -webkit-background-clip: text;
     background-clip: text;
@@ -744,6 +772,18 @@ a:hover {
 }
 
 /* --- Responsive Fixes --- */
+@media (max-width: 1024px) {
+    .papers-header-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .papers-header-right {
+        justify-content: flex-start;
+    }
+}
+
 @media (max-width: 768px) {
     .papers-hero {
         padding: 4rem 1.5rem 2rem;
