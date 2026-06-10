@@ -294,13 +294,12 @@ const Jobs = () => {
             {/* Wrapper to ensure footer stays down if content short */}
 
             <div className="container">
-                <div className="page-header" style={{ display: 'none' }}>
-                    <h1>Job Opportunities</h1>
-                    <p>Browse through our latest job openings from top companies and kickstart your career</p>
-                </div>
+                <div className="jobs-header-container">
+                    <div className="jobs-header-left">
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap' }}>Job Opportunities</h2>
+                    </div>
 
-
-                <div className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', marginBottom: '1.5rem', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
+                    <div className="jobs-header-right">
                     <div className="category-options" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
                         <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Category:</span>
                         <div
@@ -494,6 +493,7 @@ const Jobs = () => {
                             </AnimatePresence>
                         </div>
                     </div>
+                </div>
 
                 <div className="job-list" id="jobList">
                     {/* Skeleton Loading */}

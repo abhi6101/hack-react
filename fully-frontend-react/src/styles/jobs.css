@@ -160,23 +160,33 @@
   }
 }
 
-/* --- 3. Filters --- */
-.filter-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  margin-top: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 1.25rem 1.5rem;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
+/* --- 3. Filters & Headers --- */
+.jobs-header-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
 }
 
-.filter-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem;
+.jobs-header-left {
+    flex: 1;
+}
+
+.jobs-header-right {
+    flex: 1.5;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.filter-section {
+    display: flex;
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
@@ -235,6 +245,13 @@
 .job-list {
   display: grid;
   gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .job-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 @keyframes slideInUp {
@@ -269,6 +286,7 @@
   z-index: 1;
   /* Default border for non-hover state */
   border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100%; /* Equalize card height */
 }
 
 .job-card::after {
@@ -381,6 +399,10 @@
   font-size: 0.95rem;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .job-meta {
@@ -400,6 +422,11 @@
   border-radius: 4px;
 }
 
+.job-meta-item i {
+  font-size: 0.8rem;
+  margin-right: 0.2rem;
+}
+
 .job-actions {
   margin-top: 1.5rem;
   display: flex;
@@ -410,6 +437,18 @@
 .job-actions .btn {
   font-size: 0.9rem;
   padding: 0.7rem 1.5rem;
+}
+
+.apply-btn {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+}
+
+.apply-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
 }
 
 /* --- 5. Skeleton, Zero State, Error --- */
@@ -676,6 +715,19 @@
   transform: none;
   box-shadow: none;
   background: rgba(16, 185, 129, 0.15);
+}
+
+@media (max-width: 1024px) {
+  .jobs-header-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .jobs-header-right {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 768px) {
