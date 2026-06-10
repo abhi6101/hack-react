@@ -31,7 +31,7 @@ const Courses = () => {
                 <meta name="description" content="Master in-demand skills with our industry-relevant courses and get placement-ready. Explore programming, web dev, and data science courses." />
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
-            <main className="courses-container" style={{ paddingTop: '100px', minHeight: '100vh', background: 'transparent' }}>
+            <main className="courses-container" style={{ paddingTop: '160px', minHeight: '100vh', background: 'transparent' }}>
                 <div className="course-controls" style={{
                     display: 'flex',
                     alignItems: 'center',

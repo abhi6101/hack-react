@@ -133,3 +133,10 @@ a { color: var(--primary); text-decoration: none; } a:hover { color: white; }
         grid-template-columns: 1fr;
     }
 }
+
+@media (min-width: 1024px) {
+    .course-list {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+}
