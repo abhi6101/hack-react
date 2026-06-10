@@ -462,6 +462,56 @@ a:hover {
     z-index: 2;
 }
 
+/* --- Notes Grid & Subject Cards --- */
+.notes-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    padding: 1rem 0;
+}
+
+@media (min-width: 1024px) {
+    .notes-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.subject-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    text-align: center;
+    height: 100%;
+}
+
+.subject-card:hover {
+    transform: scale(1.03);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 212, 255, 0.3);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.subject-icon-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: rgba(0, 212, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    margin: 0 auto;
+}
+
 .semester-card:hover .card-icon {
     transform: scale(1.15) rotate(-8deg);
     background: var(--primary);

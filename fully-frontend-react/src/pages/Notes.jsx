@@ -160,6 +160,7 @@ const Notes = ({ isAdminView }) => {
     const [uploadFiles, setUploadFiles] = useState([]); // Array of files
     const [uploadPaths, setUploadPaths] = useState([]); // Array of relative paths matching files
     const [notesDownloadEnabled, setNotesDownloadEnabled] = useState(false);
+    const [selectedFolder, setSelectedFolder] = useState(null);
 
     // Profile States
     const [userRole, setUserRole] = useState(null);
@@ -556,27 +557,15 @@ const Notes = ({ isAdminView }) => {
             </Helmet>
 
             {/* Unified Header section matching Papers.jsx */}
-            <div className="view-header" style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                background: 'rgba(255,255,255,0.02)',
-                padding: '2rem',
-                borderRadius: '24px',
-                border: '1px solid rgba(255,255,255,0.05)',
-                backdropFilter: 'blur(10px)',
-                flexWrap: 'wrap',
-                gap: '1.5rem',
-                marginBottom: 'calc(2rem + 16px)'
-            }}>
-                <div>
-                    <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
-                    <p style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
+            <div className="papers-header-container">
+                <div className="papers-header-left">
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
+                    <p style={{ display: 'none' }} className="sr-only">
                         Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
                     </p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'nowrap', alignItems: 'center', width: '100%', maxWidth: '700px' }}>
+                <div className="papers-header-right" style={{ gap: '0.8rem', width: '100%', maxWidth: '700px', flexWrap: 'nowrap' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
                         flex: 1.5,
@@ -677,88 +666,123 @@ const Notes = ({ isAdminView }) => {
                         <h3>No Directories Available</h3>
                         <p style={{ color: 'var(--text-secondary)' }}>Check your filters or upload a folder structure to begin.</p>
                     </div>
-                ) : (
-                    <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        {filteredRoots.map(folder => (
-                            <div
-                                key={folder.name}
+                ) : selectedFolder ? (
+                    <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                            <button
+                                className="back-btn"
+                                onClick={() => setSelectedFolder(null)}
                                 style={{
-                                    background: 'rgba(22, 22, 34, 0.75)',
-                                    border: '1px solid rgba(255,255,255,0.05)',
-                                    borderRadius: '20px',
-                                    overflow: 'hidden'
+                                    background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', padding: '0.5rem 1rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'
                                 }}
                             >
-                                {/* Root Folder Header */}
-                                <div style={{ 
-                                    padding: '1rem 1.5rem', 
-                                    borderBottom: '1px solid rgba(255,255,255,0.05)',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
-                                    position: 'relative'
-                                }}>
-                                    {/* Neon Accent Line */}
-                                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
-                                    
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
-                                        <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(0, 212, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                            <i className="fas fa-folder-open" style={{ fontSize: '1.6rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.5))' }}></i>
+                                <i className="fas fa-chevron-left"></i> Back to Grid
+                            </button>
+                        </div>
+                        <div
+                            style={{
+                                background: 'rgba(22, 22, 34, 0.75)',
+                                border: '1px solid rgba(255,255,255,0.05)',
+                                borderRadius: '20px',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            {/* Root Folder Header */}
+                            <div style={{ 
+                                padding: '1.5rem', 
+                                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                                position: 'relative'
+                            }}>
+                                {/* Neon Accent Line */}
+                                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
+                                
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(0, 212, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                        <i className="fas fa-folder-open" style={{ fontSize: '1.6rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.5))' }}></i>
+                                    </div>
+                                    <div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.3rem' }}>
+                                            <h3 style={{ fontSize: '1.3rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{selectedFolder.name}</h3>
                                         </div>
-                                        <div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.3rem' }}>
-                                                <h3 style={{ fontSize: '1.3rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{folder.name}</h3>
-                                            </div>
-                                            <div style={{ display: 'flex', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '500' }}>
-                                                {folder.meta.semester ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Semester {folder.meta.semester}</span> : null}
-                                                {folder.meta.branch ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {folder.meta.branch}</span> : null}
-                                            </div>
+                                        <div style={{ display: 'flex', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '500' }}>
+                                            {selectedFolder.meta.semester ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Semester {selectedFolder.meta.semester}</span> : null}
+                                            {selectedFolder.meta.branch ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {selectedFolder.meta.branch}</span> : null}
                                         </div>
                                     </div>
-                                    
-                                    {isAdmin && (
-                                        <button
-                                            onClick={(e) => handleDeleteRootFolder(folder.name, e)}
-                                            className="action-btn delete-btn"
-                                            style={{
-                                                borderRadius: '8px',
-                                                padding: '0.6rem 1rem',
-                                                border: 'none',
-                                                background: 'rgba(239, 68, 68, 0.1)',
-                                                color: '#EF4444',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.5rem',
-                                                fontWeight: 'bold'
-                                            }}
-                                        >
-                                            <i className="fas fa-trash-alt"></i> Delete Subject
-                                        </button>
-                                    )}
                                 </div>
                                 
-                                {/* Root Folder Tree Contents */}
-                                <div style={{ padding: '0.5rem 0' }}>
-                                    {Object.values(folder.children).length === 0 ? (
-                                        <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem 0' }}>This subject folder is empty.</p>
-                                    ) : (
-                                        Object.values(folder.children).map(child => (
-                                            <TreeNode 
-                                                key={child.name} 
-                                                node={child} 
-                                                level={0} 
-                                                handleViewFile={handleViewFile} 
-                                                handleDownloadFile={handleDownloadFile}
-                                                handleDeleteFile={handleDeleteFile}
-                                                isAdmin={isAdmin}
-                                                getToken={getToken} 
-                                                notesDownloadEnabled={notesDownloadEnabled}
-                                            />
-                                        ))
-                                    )}
+                                {isAdmin && (
+                                    <button
+                                        onClick={(e) => {
+                                            handleDeleteRootFolder(selectedFolder.name, e);
+                                            setSelectedFolder(null);
+                                        }}
+                                        className="action-btn delete-btn"
+                                        style={{
+                                            borderRadius: '8px',
+                                            padding: '0.6rem 1rem',
+                                            border: 'none',
+                                            background: 'rgba(239, 68, 68, 0.1)',
+                                            color: '#EF4444',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            fontWeight: 'bold'
+                                        }}
+                                    >
+                                        <i className="fas fa-trash-alt"></i> Delete Subject
+                                    </button>
+                                )}
+                            </div>
+                            
+                            {/* Root Folder Tree Contents */}
+                            <div style={{ padding: '0.5rem 0' }}>
+                                {Object.values(selectedFolder.children).length === 0 ? (
+                                    <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem 0' }}>This subject folder is empty.</p>
+                                ) : (
+                                    Object.values(selectedFolder.children).map(child => (
+                                        <TreeNode 
+                                            key={child.name} 
+                                            node={child} 
+                                            level={0} 
+                                            handleViewFile={handleViewFile} 
+                                            handleDownloadFile={handleDownloadFile}
+                                            handleDeleteFile={handleDeleteFile}
+                                            isAdmin={isAdmin}
+                                            getToken={getToken} 
+                                            notesDownloadEnabled={notesDownloadEnabled}
+                                        />
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="notes-grid">
+                        {filteredRoots.map(folder => (
+                            <div key={folder.name} className="subject-card">
+                                <div style={{ width: '100%' }}>
+                                    <div className="subject-icon-large">
+                                        <i className="fas fa-folder-open"></i>
+                                    </div>
+                                    <h3 style={{ fontSize: '1.2rem', color: '#fff', marginTop: '1.2rem', marginBottom: '0.8rem', fontWeight: '700' }}>{folder.name}</h3>
+                                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                        {folder.meta.semester ? <span><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Sem {folder.meta.semester}</span> : null}
+                                        {folder.meta.branch ? <span><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {folder.meta.branch}</span> : null}
+                                    </div>
                                 </div>
+                                <button
+                                    onClick={() => setSelectedFolder(folder)}
+                                    className="download-btn-premium"
+                                    style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', borderRadius: '12px', padding: '0.8rem', fontSize: '0.9rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                >
+                                    Explore Units <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
+                                </button>
                             </div>
                         ))}
                     </div>
