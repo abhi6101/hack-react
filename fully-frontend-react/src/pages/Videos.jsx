@@ -11,6 +11,12 @@ const allVideos = [
     { id: 6, title: "MERN Stack Tutorial - Beginner to Master", src: "https://www.youtube.com/embed/D0sR6Wq2tPM", duration: "6h 00m", level: "Beginner", category: "programming", links: [{ text: "Edureka", url: "https://www.edureka.co" }] }
 ];
 
+const getYouTubeId = (url) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
+
 const Videos = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -26,19 +32,24 @@ const Videos = () => {
                 <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />
                 <meta name="keywords" content="study videos, programming tutorials, MERN stack tutorial, Spring Boot course, online learning" />
             </Helmet>
-            <header className="videos-header">
-                <h1>Curated Study Videos</h1>
-                <p className="subtitle">Enhance your skills with our collection of educational videos from top instructors.</p>
+            <header className="papers-header-container" style={{ padding: '1rem 2rem', marginBottom: '24px' }}>
+                <div className="papers-header-left">
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', lineHeight: '1' }}>Curated Study Videos</h2>
+                    <p className="sr-only">Enhance your skills with our collection of educational videos from top instructors.</p>
+                </div>
 
-                <div className="search-bar">
-                    <i className="fas fa-search"></i>
-                    <input
-                        type="text"
-                        id="videoSearch"
-                        placeholder="Search for videos by title, e.g., 'JavaScript'"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                <div className="papers-header-right">
+                    <div className="search-bar" style={{ margin: 0, minWidth: '250px', maxWidth: '350px' }}>
+                        <i className="fas fa-search"></i>
+                        <input
+                            type="text"
+                            id="videoSearch"
+                            placeholder="Search videos..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{ padding: '0.8rem 1.5rem 0.8rem 3rem' }}
+                        />
+                    </div>
                 </div>
             </header>
 
@@ -50,14 +61,12 @@ const Videos = () => {
                         filteredVideos.map((video, index) => (
                             <div key={video.id} className="video-card surface-glow" style={{ animationDelay: `${index * 0.05}s` }}>
                                 <div className="video-thumbnail">
-                                    <iframe
-                                        src={video.src}
-                                        title={video.title}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        loading="lazy"
-                                    ></iframe>
+                                    <div className="video-thumbnail-placeholder" style={{ backgroundImage: `url(https://img.youtube.com/vi/${getYouTubeId(video.src)}/hqdefault.jpg)` }}>
+                                        <div className="video-thumbnail-overlay"></div>
+                                        <a href={`https://www.youtube.com/watch?v=${getYouTubeId(video.src)}`} target="_blank" rel="noopener noreferrer" className="btn btn-youtube">
+                                            <i className="fab fa-youtube" style={{ color: '#ff0000', fontSize: '1.4rem' }}></i> Watch on YouTube
+                                        </a>
+                                    </div>
                                 </div>
                                 <div className="video-content">
                                     <h2>{video.title}</h2>
