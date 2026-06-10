@@ -10,7 +10,7 @@ const Gallery = () => {
     const { showAlert } = useAlert();
     const [galleryItems, setGalleryItems] = useState([]);
     const [activeCategory, setActiveCategory] = useState("all");
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState(null);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [uploadLoading, setUploadLoading] = useState(false);
@@ -130,6 +130,43 @@ const Gallery = () => {
         ? galleryItems
         : galleryItems.filter(img => img.type.toLowerCase() === activeCategory.toLowerCase());
 
+    const handleNext = (e) => {
+        if (e) e.stopPropagation();
+        setSelectedIndex(prev => prev === filteredImages.length - 1 ? 0 : prev + 1);
+    };
+
+    const handlePrev = (e) => {
+        if (e) e.stopPropagation();
+        setSelectedIndex(prev => prev === 0 ? filteredImages.length - 1 : prev - 1);
+    };
+
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchEnd, setTouchEnd] = useState(null);
+    const minSwipeDistance = 50;
+
+    const onTouchStart = (e) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+    const onTouchEndHandler = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        if (distance > minSwipeDistance) handleNext();
+        if (distance < -minSwipeDistance) handlePrev();
+    };
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (selectedIndex === null) return;
+            if (e.key === 'ArrowRight') handleNext();
+            if (e.key === 'ArrowLeft') handlePrev();
+            if (e.key === 'Escape') setSelectedIndex(null);
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [selectedIndex, filteredImages.length]);
+
     return (
         <main>
             <Helmet>
@@ -189,8 +226,8 @@ const Gallery = () => {
                     <div className="gallery-carousel-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', position: 'relative' }}>
                         <button className="btn btn-outline desktop-only-arrow sleek-arrow sleek-arrow-left" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: -300, behavior: 'smooth' }); }}><i className="fas fa-chevron-left"></i></button>
                         <div className="photo-grid" id="photoGrid" style={{ padding: '0 2rem' }}>
-                            {filteredImages.length > 0 ? filteredImages.map(img => (
-                                <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedImage(img)}>
+                            {filteredImages.length > 0 ? filteredImages.map((img, index) => (
+                                <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedIndex(index)}>
                                     <img src={img.url} alt={img.title} onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
                                     <div className="photo-info">
                                         <h4>{img.title}</h4>
@@ -355,14 +392,42 @@ const Gallery = () => {
                 </div>
             )}
 
-            {selectedImage && (
-                <div id="imageModal" className="modal" style={{ display: 'flex' }} onClick={() => setSelectedImage(null)}>
-                    <span className="close-modal" onClick={() => setSelectedImage(null)}>&times;</span>
-                    <div style={{ textAlign: 'center' }}>
-                        <img className="modal-content" id="modalImage" src={selectedImage.url} alt={selectedImage.title} onClick={(e) => e.stopPropagation()} />
-                        <h3 style={{ color: 'white', marginTop: '1rem' }}>{selectedImage.title}</h3>
-                        <p style={{ color: '#ccc' }}>{selectedImage.description}</p>
+            {selectedIndex !== null && filteredImages[selectedIndex] && (
+                <div id="imageModal" className="modal lightbox-modal" onClick={() => setSelectedIndex(null)}>
+                    <span className="close-modal lightbox-close" onClick={() => setSelectedIndex(null)}>&times;</span>
+                    
+                    <button className="lightbox-nav lightbox-prev" onClick={handlePrev}>
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    <div 
+                        className="lightbox-slider-container"
+                        onTouchStart={onTouchStart}
+                        onTouchMove={onTouchMove}
+                        onTouchEnd={onTouchEndHandler}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div 
+                            className="lightbox-track" 
+                            style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
+                        >
+                            {filteredImages.map((img) => (
+                                <div className="lightbox-slide" key={img.id}>
+                                    <div className="lightbox-content">
+                                        <img src={img.url} alt={img.title} className="lightbox-image" onError={(e) => { e.target.src = 'https://via.placeholder.com/800x600' }} />
+                                        <div className="lightbox-caption">
+                                            <h3 className="lightbox-title">{img.title}</h3>
+                                            <p className="lightbox-desc">{img.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
+
+                    <button className="lightbox-nav lightbox-next" onClick={handleNext}>
+                        <i className="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             )}
         </main>

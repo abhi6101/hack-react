@@ -84,4 +84,57 @@ a { color: var(--primary); text-decoration: none; } a:hover { color: white; }
 @media (max-width: 992px) {
     .post-detail-container { grid-template-columns: 1fr; }
     .post-sidebar { position: static; margin-top: 3rem; }
+}/* Blog Post UI Overhaul */
+.post-detail-container {
+    padding-top: 120px; /* Slimmer header padding */
+    max-width: 1200px;
+}
+@media (min-width: 1024px) {
+    .post-detail-container {
+        grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); /* 70% / 30% */
+    }
+}
+.post-main-content {
+    max-width: 800px;
+}
+.post-header {
+    margin-bottom: 2rem;
+}
+.post-header h1 {
+    text-align: left;
+    font-weight: 700;
+}
+.post-meta {
+    gap: 1.5rem !important;
+}
+.post-meta i {
+    font-size: 1.2rem; /* Larger icons */
+}
+.post-body {
+    font-family: var(--font-family);
+    line-height: 1.8;
+}
+.post-featured-image {
+    border-radius: 24px !important;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3), 0 0 10px rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.sidebar-card {
+    border-radius: 24px !important;
+    border: 1px solid rgba(0, 212, 255, 0.2) !important;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.1) !important;
+}
+.sidebar-card .btn-primary {
+    background: linear-gradient(135deg, #00d4ff 0%, #007aff 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    padding: 0.8rem 1.5rem !important;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+    transition: all 0.3s ease;
+}
+.sidebar-card .btn-primary:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
 }
