@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/CustomToast';
 import '../styles/quiz.css';
+import '../styles/papers.css';
 import { quizData } from '../data/quizData';
 
 const subjects = [
@@ -153,10 +154,45 @@ const Quiz = () => {
             </Helmet>
             {step === 'subject-selection' && (
                 <section id="subject-selection" className="quiz-step active">
-                    <header className="page-header">
-                        <h1><i className="fas fa-brain"></i> Quiz Master</h1>
-                        <p className="subtitle">Select a subject to test your knowledge and prepare for interviews.</p>
-                    </header>
+                    <div className="papers-header-container" style={{ marginBottom: '3rem' }}>
+                        <div className="papers-header-left">
+                            <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>
+                                <i className="fas fa-brain" style={{ color: 'var(--primary)', marginRight: '10px' }}></i>
+                                Quiz <span style={{ color: 'var(--primary)' }}>Master</span>
+                            </h2>
+                            <p className="sr-only">Select a subject to test your knowledge and prepare for interviews.</p>
+                        </div>
+                        <div className="papers-header-right">
+                            <div className="global-search-container" style={{
+                                position: 'relative',
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                borderRadius: '50px',
+                                padding: '8px 16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                backdropFilter: 'blur(15px)',
+                                transition: 'all 0.3s ease',
+                                width: '100%',
+                                maxWidth: '300px'
+                            }}>
+                                <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
+                                <input
+                                    type="text"
+                                    placeholder="Search Quizzes..."
+                                    style={{
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: '#fff',
+                                        fontSize: '0.95rem',
+                                        width: '100%',
+                                        outline: 'none',
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <div id="subject-menu" className="subject-grid">
                         {subjects.map(s => (
                             <div key={s.id} className="subject-btn" onClick={() => handleStartQuiz(s.id)}>
