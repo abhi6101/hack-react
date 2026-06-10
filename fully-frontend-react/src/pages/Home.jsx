@@ -330,11 +330,7 @@ const Home = () => {
                         variants={staggerContainer}
                         style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                     >
-                        <motion.div variants={fadeInUp} className="badge-container" style={{ marginBottom: '1.5rem', display: 'flex', width: '100%', alignItems: 'center' }}>
-                            <div className="status-pill" style={{ margin: 0, padding: '0.4rem 1rem', fontSize: '0.85rem' }}>
-                                <span className="dot"></span> Trusted Worldwide
-                            </div>
-                        </motion.div>
+
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
                                 Get Your Dream Job with <br />
