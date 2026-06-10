@@ -648,13 +648,15 @@ const Notes = ({ isAdminView }) => {
                                 color: '#fff',
                                 cursor: userRole === 'STUDENT' ? 'not-allowed' : 'pointer',
                                 fontSize: '0.95rem',
-                                opacity: userRole === 'STUDENT' ? 0.6 : 1
+                                opacity: userRole === 'STUDENT' ? 0.6 : 1,
+                                minWidth: 'unset',
+                                width: '100%'
                             }}
                         >
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, marginRight: '8px' }}>
                                 {branchFilter === '' ? 'All Branches' : branchFilter}
                             </span>
-                            <i className={`fas fa-chevron-down ${showBranchMenu ? 'open' : ''}`} style={{ color: 'var(--primary)', fontSize: '0.8rem', marginLeft: '0.5rem' }}></i>
+                            <i className={`fas fa-chevron-down ${showBranchMenu ? 'open' : ''}`} style={{ color: 'var(--primary)', fontSize: '0.8rem', flexShrink: 0 }}></i>
                         </div>
 
                         <AnimatePresence>
