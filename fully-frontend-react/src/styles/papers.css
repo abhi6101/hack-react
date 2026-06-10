@@ -865,3 +865,76 @@ a:hover {
   .unit-card-header > i.fa-folder { margin-bottom: 0.5rem; }
   .unit-card-title { margin-top: 0.5rem; }
 }
+/* Notes Page Units Grid */
+@media (min-width: 1024px) {
+    .notes-units-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+}
+@media (max-width: 1023px) {
+    .notes-units-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+.unit-folder-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.unit-folder-card:hover, .unit-folder-card.active {
+    background: rgba(0, 212, 255, 0.08);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.2);
+    border-color: rgba(0, 212, 255, 0.5);
+}
+.unit-folder-card.active {
+    transform: none; /* Keep active state flat but highlighted */
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+/* Notes Page File Table */
+.file-table-container {
+    margin-top: 2rem;
+    background: rgba(22, 22, 34, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.file-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.file-table th, .file-table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.file-table th {
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.file-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+.file-table td {
+    color: #fff;
+    font-size: 0.95rem;
+}
+.file-table .file-icon {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}

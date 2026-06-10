@@ -127,38 +127,33 @@ const UploadPaper = () => {
             <div style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
                 
                 {/* Gallery-Style Split Header */}
-                <div className="papers-header-container" style={{ marginBottom: '2rem', padding: '1rem 2rem' }}>
-                    <div className="papers-header-left">
+                <div className="papers-header-container" style={{ marginBottom: '2rem', padding: '0.8rem 2rem', display: 'flex', justifyContent: 'center' }}>
+                    <div className="papers-header-left" style={{ textAlign: 'center', width: '100%' }}>
                         <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Smart Paper <span style={{ color: 'var(--primary)' }}>Upload</span></h2>
-                    </div>
-                    <div className="papers-header-right">
-                        <button onClick={() => navigate('/papers')} className="btn" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '12px', padding: '0.6rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }} onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = '#fff'; }}>
-                            <i className="fas fa-times"></i> Exit Upload
-                        </button>
                     </div>
                 </div>
 
                 {/* Central Upload Card Container */}
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div className="container" style={{ maxWidth: '650px', width: '100%', margin: '0 auto' }}>
-                        <div style={{ background: 'rgba(22, 22, 34, 0.75)', borderRadius: '24px', padding: '2.5rem', border: '1px solid rgba(255, 255, 255, 0.05)', position: 'relative', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', backdropFilter: 'blur(20px)' }}>
+                    <div className="container" style={{ maxWidth: '550px', width: '100%', margin: '0 auto' }}>
+                        <div style={{ background: 'rgba(22, 22, 34, 0.75)', borderRadius: '24px', padding: '2.5rem', border: '1px solid rgba(0, 212, 255, 0.2)', position: 'relative', overflow: 'hidden', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', backdropFilter: 'blur(20px)' }}>
                     
                     {/* Thinner, Modern Progress Bar at Top */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2.5rem', position: 'relative' }}>
-                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
-                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '1px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 10px var(--primary)' }}></div>
+                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(255,255,255,0.05)', zIndex: 0 }}></div>
+                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '1px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 8px var(--primary)' }}></div>
                         {[1, 2, 3, 4].map(num => (
                             <div key={num} style={{ 
-                                width: '24px', height: '24px', borderRadius: '50%', 
-                                background: step === num ? 'var(--primary)' : 'var(--surface-bg)', 
-                                color: step === num ? '#000' : (step > num ? 'var(--primary)' : '#fff'),
+                                width: '20px', height: '20px', borderRadius: '50%', 
+                                background: step === num ? 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)' : 'var(--surface-bg)', 
+                                color: step === num ? '#fff' : (step > num ? 'var(--primary)' : '#fff'),
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                zIndex: 2, border: `1px solid ${step >= num ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`,
-                                fontWeight: '700', fontSize: '0.8rem',
+                                zIndex: 2, border: `1px solid ${step >= num ? 'var(--primary)' : 'rgba(255,255,255,0.1)'}`,
+                                fontWeight: '700', fontSize: '0.7rem',
                                 transition: 'all 0.3s ease',
-                                boxShadow: step === num ? '0 0 15px rgba(0, 212, 255, 0.5)' : 'none'
+                                boxShadow: step === num ? '0 0 10px rgba(0, 212, 255, 0.4)' : 'none'
                             }}>
-                                {step > num ? <i className="fas fa-check" style={{ fontSize: '0.6rem' }}></i> : num}
+                                {step > num ? <i className="fas fa-check" style={{ fontSize: '0.5rem' }}></i> : num}
                             </div>
                         ))}
                     </div>
@@ -174,34 +169,43 @@ const UploadPaper = () => {
                                     </p>
                                 </div>
                                 
-                                <div style={{ display: 'flex', gap: '20px', marginBottom: '2rem' }}>
+                                <style jsx>{`
+                                    @media (min-width: 1024px) {
+                                        .take-photo-btn {
+                                            display: none !important;
+                                        }
+                                    }
+                                `}</style>
+                                
+                                <div style={{ display: 'flex', gap: '20px', marginBottom: '2rem', justifyContent: 'center' }}>
                                     <div 
+                                        className="take-photo-btn"
                                         onClick={() => cameraInputRef.current.click()}
                                         style={{ 
-                                            flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '2rem 1rem', 
+                                            flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '2rem 1rem', 
                                             textAlign: 'center', cursor: 'pointer', background: 'rgba(255, 255, 255, 0.03)', transition: 'all 0.3s ease',
-                                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+                                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)'
                                         }}
-                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
-                                        onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
+                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.5)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1)'; e.currentTarget.style.background = 'rgba(0, 212, 255, 0.05)'; }}
+                                        onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
                                         <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                            <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: 'var(--primary)' }}></i>
+                                            <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: '#00d4ff' }}></i>
                                         </div>
                                         <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Take Photo</h4>
                                     </div>
                                     <div 
                                         onClick={() => fileInputRef.current.click()}
                                         style={{ 
-                                            flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '2rem 1rem', 
+                                            flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '2rem 1rem', 
                                             textAlign: 'center', cursor: 'pointer', background: 'rgba(255, 255, 255, 0.03)', transition: 'all 0.3s ease',
-                                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+                                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)'
                                         }}
-                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
-                                        onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
+                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.5)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1)'; e.currentTarget.style.background = 'rgba(0, 212, 255, 0.05)'; }}
+                                        onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
                                         <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                            <i className="fas fa-images" style={{ fontSize: '1.8rem', color: 'var(--primary)' }}></i>
+                                            <i className="fas fa-images" style={{ fontSize: '1.8rem', color: '#00d4ff' }}></i>
                                         </div>
                                         <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Gallery</h4>
                                     </div>
@@ -254,7 +258,7 @@ const UploadPaper = () => {
                                 )}
 
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <button onClick={handleNext} className="btn" style={{ width: '100%', maxWidth: '300px', padding: '0.8rem 1.5rem', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', border: 'none', transition: 'all 0.3s ease', opacity: files.length === 0 ? 0.5 : 1, cursor: files.length === 0 ? 'not-allowed' : 'pointer' }} disabled={files.length === 0}>
+                                    <button onClick={handleNext} className="btn" style={{ width: '100%', maxWidth: '300px', padding: '1rem', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', border: 'none', transition: 'all 0.3s ease', opacity: files.length === 0 ? 0.5 : 1, cursor: files.length === 0 ? 'not-allowed' : 'pointer', boxShadow: files.length > 0 ? '0 10px 25px rgba(0, 212, 255, 0.3)' : 'none' }} disabled={files.length === 0} onMouseOver={e => { if(files.length > 0) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 212, 255, 0.5)'; } }} onMouseOut={e => { if(files.length > 0) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 212, 255, 0.3)'; } }}>
                                         Next Step <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
                                     </button>
                                 </div>

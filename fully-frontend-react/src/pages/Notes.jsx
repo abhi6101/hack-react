@@ -167,6 +167,7 @@ const Notes = ({ isAdminView }) => {
     const [uploadPaths, setUploadPaths] = useState([]); // Array of relative paths matching files
     const [notesDownloadEnabled, setNotesDownloadEnabled] = useState(false);
     const [selectedFolder, setSelectedFolder] = useState(null);
+    const [selectedUnit, setSelectedUnit] = useState(null);
 
     // Profile States
     const [userRole, setUserRole] = useState(null);
@@ -563,30 +564,31 @@ const Notes = ({ isAdminView }) => {
             </Helmet>
 
             {/* Unified Header section matching Papers.jsx */}
-            <div className="papers-header-container" style={{ padding: '1rem 2rem', marginBottom: '1.5rem' }}>
+            <div className="papers-header-container" style={{ padding: '0.5rem 2rem', marginBottom: '24px', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
                 <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', fontWeight: '700', lineHeight: '1', whiteSpace: 'nowrap' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
                     <p style={{ display: 'none' }} className="sr-only">
                         Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
                     </p>
                 </div>
 
-                <div className="papers-header-right" style={{ gap: '0.8rem', width: '100%', maxWidth: '500px', flexWrap: 'nowrap' }}>
+                <div className="papers-header-right" style={{ gap: '1rem', width: '100%', maxWidth: '500px', display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
                         flex: 1.5,
                         minWidth: '140px',
                         background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        border: '1px solid rgba(0, 212, 255, 0.3)',
                         borderRadius: '50px',
-                        padding: '4px 12px',
+                        padding: '0 1rem 0 2.5rem',
+                        height: '40px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.5rem',
                         backdropFilter: 'blur(15px)',
                         transition: 'all 0.3s ease'
                     }}>
-                        <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
+                        <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
                         <input
                             type="text"
                             placeholder="Search subjects..."
@@ -598,25 +600,26 @@ const Notes = ({ isAdminView }) => {
                                 color: '#fff',
                                 fontSize: '0.95rem',
                                 width: '100%',
+                                height: '100%',
                                 outline: 'none',
-                                padding: '8px 0'
+                                padding: '0'
                             }}
                         />
                         {searchQuery && (
                             <i 
                                 className="fas fa-times" 
                                 onClick={() => setSearchQuery('')}
-                                style={{ color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
+                                style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
                             ></i>
                         )}
                     </div>
 
-                    <div style={{ position: 'relative', flex: 1, minWidth: '100px' }}>
+                    <div style={{ position: 'relative', flex: 1, minWidth: '100px', height: '40px' }}>
                         <select
                             value={branchFilter}
                             onChange={(e) => setBranchFilter(e.target.value)}
                             disabled={userRole === 'STUDENT'}
-                            style={{ width: '100%', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '8px 1.5rem 8px 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.85rem' }}
+                            style={{ width: '100%', height: '100%', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0, 212, 255, 0.3)', borderRadius: '50px', padding: '0 2.5rem 0 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.95rem' }}
                         >
                             <option value="" style={{ color: '#000' }}>All Branches</option>
                             {deptList.map(dept => (
@@ -626,7 +629,7 @@ const Notes = ({ isAdminView }) => {
                             ))}
                             {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA" style={{ color: '#000' }}>IMCA</option>}
                         </select>
-                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
+                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
                     </div>
 
                     {isAdmin && (
@@ -635,7 +638,7 @@ const Notes = ({ isAdminView }) => {
                             whileTap={{ scale: 0.97 }}
                             className="btn btn-primary"
                             onClick={() => setShowUploadModal(true)}
-                            style={{ borderRadius: '50px', padding: '0.7rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
+                            style={{ borderRadius: '50px', padding: '0 1.2rem', height: '40px', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
                         >
                             <i className="fas fa-plus"></i> Upload
                         </motion.button>
@@ -676,12 +679,25 @@ const Notes = ({ isAdminView }) => {
                     <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
                             <button
-                                className="sleek-back-btn"
-                                onClick={() => setSelectedFolder(null)}
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '50%',
+                                    width: '40px',
+                                    height: '40px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: '#fff',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onClick={() => { setSelectedFolder(null); setSelectedUnit(null); }}
                                 title="Back to Grid"
+                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0, 212, 255, 0.1)'; e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'; e.currentTarget.style.color = '#00d4ff'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'; e.currentTarget.style.color = '#fff'; }}
                             >
                                 <i className="fas fa-arrow-left"></i>
-                                <span className="back-text">Back</span>
                             </button>
                         </div>
                         <div
@@ -749,19 +765,84 @@ const Notes = ({ isAdminView }) => {
                                 {Object.values(selectedFolder.children).length === 0 ? (
                                     <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem 0' }}>This subject folder is empty.</p>
                                 ) : (
-                                    Object.values(selectedFolder.children).map(child => (
-                                        <TreeNode 
-                                            key={child.name} 
-                                            node={child} 
-                                            level={0} 
-                                            handleViewFile={handleViewFile} 
-                                            handleDownloadFile={handleDownloadFile}
-                                            handleDeleteFile={handleDeleteFile}
-                                            isAdmin={isAdmin}
-                                            getToken={getToken} 
-                                            notesDownloadEnabled={notesDownloadEnabled}
-                                        />
-                                    ))
+                                    <div className="notes-units-grid">
+                                        {Object.values(selectedFolder.children).map(child => (
+                                            <div 
+                                                key={child.name} 
+                                                className={`unit-folder-card ${selectedUnit && selectedUnit.name === child.name ? 'active' : ''}`}
+                                                onClick={() => setSelectedUnit(selectedUnit?.name === child.name ? null : child)}
+                                            >
+                                                <i className="fas fa-folder" style={{ color: '#ffd700', fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.2))' }}></i>
+                                                <span style={{ color: '#fff', fontWeight: '600', fontSize: '1rem' }}>{child.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                
+                                {selectedUnit && (
+                                    <div className="file-table-container">
+                                        <table className="file-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>File Name</th>
+                                                    <th style={{ width: '200px' }}>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {Object.values(selectedUnit.children).map(fileNode => {
+                                                    if (fileNode.isDirectory) return null;
+                                                    const ext = fileNode.name.substring(fileNode.name.lastIndexOf('.')).toLowerCase();
+                                                    let fileIcon = 'fa-file-alt'; let iconColor = '#9CA3AF';
+                                                    if (ext === '.pdf') { fileIcon = 'fa-file-pdf'; iconColor = '#EF4444'; }
+                                                    else if (ext === '.ppt' || ext === '.pptx') { fileIcon = 'fa-file-powerpoint'; iconColor = '#F97316'; }
+                                                    else if (ext === '.doc' || ext === '.docx') { fileIcon = 'fa-file-word'; iconColor = '#3B82F6'; }
+                                                    else if (ext === '.xls' || ext === '.xlsx' || ext === '.csv') { fileIcon = 'fa-file-excel'; iconColor = '#10B981'; }
+                                                    else if (ext === '.txt') { fileIcon = 'fa-file-lines'; iconColor = '#D1D5DB'; }
+
+                                                    const isLocked = !getToken();
+
+                                                    return (
+                                                        <tr key={fileNode.name}>
+                                                            <td>
+                                                                <i className={`fas ${fileIcon} file-icon`} style={{ color: iconColor }}></i>
+                                                                {fileNode.name}
+                                                            </td>
+                                                            <td>
+                                                                {isLocked ? (
+                                                                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                                                                        <i className="fas fa-lock"></i> Locked
+                                                                    </div>
+                                                                ) : (
+                                                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                                        <button 
+                                                                            onClick={(e) => { e.stopPropagation(); handleViewFile(fileNode); }}
+                                                                            style={{ background: 'transparent', border: '1px solid rgba(0, 212, 255, 0.3)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#00d4ff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                                                        >
+                                                                            <i className="fas fa-eye"></i> View
+                                                                        </button>
+                                                                        <button 
+                                                                            onClick={(e) => { e.stopPropagation(); handleDownloadFile(fileNode); }}
+                                                                            style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#fff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                                                        >
+                                                                            <i className="fas fa-download"></i> Download
+                                                                        </button>
+                                                                        {isAdmin && handleDeleteFile && (
+                                                                            <button 
+                                                                                onClick={(e) => { e.stopPropagation(); handleDeleteFile(fileNode); }}
+                                                                                style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                                                            >
+                                                                                <i className="fas fa-trash-alt"></i>
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 )}
                             </div>
                         </div>
