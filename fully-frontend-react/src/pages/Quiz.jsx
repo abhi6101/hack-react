@@ -207,20 +207,29 @@ const Quiz = () => {
 
             {step === 'quiz' && (
                 <section id="quiz" className="quiz-step active">
-                    <div className="quiz-card surface-glow">
-                        <header className="quiz-card-header">
-                            <h2 id="quiz-subject-title">{currentSubject?.name} Quiz</h2>
-                            <div id="timer"><i className="fas fa-clock"></i> <span>{formatTime(timeElapsed)}</span></div>
-                        </header>
-                        <div className="progress-container">
-                            <div id="progress-bar-container">
-                                <div id="progress-bar" style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}></div>
+                    {/* Slim Header Container */}
+                    <div className="papers-header-container slim-interview-header" style={{ marginBottom: '24px', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
+                        <div className="papers-header-left">
+                            <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', fontWeight: '700' }}>{currentSubject?.name} Quiz</h2>
+                        </div>
+                        <div className="papers-header-right" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                            <span id="progress-text" style={{ fontWeight: '600', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Question {currentQuestionIndex + 1} of {questions.length}</span>
+                            <div id="timer" style={{ background: 'rgba(0, 212, 255, 0.1)', color: 'var(--primary)', padding: '0.4rem 1rem', borderRadius: '50px', fontWeight: '700', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                <i className="fas fa-clock"></i> <span style={{ marginLeft: '5px' }}>{formatTime(timeElapsed)}</span>
                             </div>
-                            <span id="progress-text">Question {currentQuestionIndex + 1}/{questions.length}</span>
                         </div>
-                        <div className="question-container">
-                            <p id="question-text">{questions[currentQuestionIndex]?.question}</p>
+                    </div>
+
+                    <div className="quiz-card" style={{ position: 'relative', overflow: 'hidden', padding: '3rem 2.5rem', borderRadius: '24px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', margin: '0 auto', maxWidth: '800px' }}>
+                        {/* Sleek pulsating progress bar */}
+                        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: 'rgba(0,0,0,0.3)' }}>
+                            <div style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`, height: '100%', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary-glow)', transition: 'width 0.3s ease', animation: 'pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1)' }}></div>
                         </div>
+
+                        <div className="question-container" style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
+                            <p id="question-text" style={{ fontSize: '1.4rem', fontWeight: '600', lineHeight: '1.6' }}>{questions[currentQuestionIndex]?.question}</p>
+                        </div>
+
                         <div id="options-container" className="options-grid">
                             {questions[currentQuestionIndex]?.options.map((opt, i) => {
                                 const currentQ = questions[currentQuestionIndex];
@@ -235,25 +244,30 @@ const Quiz = () => {
                                 return (
                                     <label key={i} className={className} onClick={() => !answerState && handleOptionSelect(opt)}>
                                         <input type="radio" name="option" value={opt} checked={selectedOption === opt} readOnly />
-                                        <span className="option-letter">{String.fromCharCode(65 + i)}</span>
+                                        <div className="option-badge">{String.fromCharCode(65 + i)}</div>
                                         <span className="option-text">{opt}</span>
                                     </label>
                                 );
                             })}
                         </div>
-                        <footer className="quiz-card-footer">
-                            <div id="score-display">Score: <span>{score}</span></div>
+
+                        <footer className="quiz-card-footer" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', gap: '1.5rem' }}>
+                            <div id="score-display" style={{ color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: '600' }}>Score: <span style={{ color: '#fff', marginLeft: '5px' }}>{score}</span></div>
                             <button
                                 id="next-question-btn"
                                 className="btn btn-primary"
                                 disabled={!selectedOption || !!answerState}
                                 onClick={onNextClick}
+                                style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', border: 'none', color: '#fff', padding: '0.8rem 2.5rem', borderRadius: '50px', fontSize: '1rem', fontWeight: '700', cursor: (!selectedOption || !!answerState) ? 'not-allowed' : 'pointer', transition: 'all 0.3s ease', opacity: (!selectedOption || !!answerState) ? 0.6 : 1 }}
                             >
-                                Next Question <i className="fas fa-arrow-right"></i>
+                                Next Question <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
                             </button>
                         </footer>
                     </div>
-                    <button id="quit-quiz-btn" className="quit-btn" onClick={handleQuit}>Quit Quiz</button>
+                    
+                    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                        <button id="quit-quiz-btn" className="btn btn-outline" onClick={handleQuit} style={{ padding: '0.6rem 2rem', borderRadius: '50px', fontSize: '0.9rem' }}>Quit Quiz</button>
+                    </div>
                 </section>
             )}
 

@@ -32,13 +32,13 @@ const Courses = () => {
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
             <main className="courses-container" style={{ paddingTop: '160px', minHeight: '100vh', background: 'transparent' }}>
-                <div className="course-controls course-header-container" style={{ padding: '1rem 2rem', marginBottom: '24px' }}>
+                <div className="course-controls course-header-container">
                     <div className="course-header-left">
-                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', lineHeight: '1' }}>Career boosting courses</h2>
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Career boosting courses</h2>
                     </div>
 
                     <div className="course-header-right">
-                        <div className="search-bar" style={{ flex: 1, minWidth: '250px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '50px', display: 'flex', alignItems: 'center', padding: '0 1.5rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                        <div className="search-bar" style={{ flex: 1, minWidth: '250px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '50px', display: 'flex', alignItems: 'center', padding: '0 1.5rem', border: '1px solid rgba(0, 212, 255, 0.3)' }}>
                             <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
                             <input
                                 type="text"
@@ -46,7 +46,7 @@ const Courses = () => {
                                 placeholder="Search courses..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{ border: 'none', background: 'transparent', color: '#fff', width: '100%', padding: '0.8rem 1rem' }}
+                                style={{ border: 'none', background: 'transparent', color: '#fff', width: '100%', padding: '0.6rem 1rem', outline: 'none' }}
                             />
                         </div>
 
@@ -56,23 +56,24 @@ const Courses = () => {
                                 onChange={(e) => setActiveCategory(e.target.value)}
                                 style={{
                                     width: '100%',
-                                    padding: '0.8rem 1.5rem',
+                                    padding: '0.6rem 1.5rem',
                                     background: 'rgba(255, 255, 255, 0.05)',
                                     color: '#fff',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    border: '1px solid rgba(0, 212, 255, 0.3)',
                                     borderRadius: '50px',
                                     fontSize: '0.95rem',
                                     appearance: 'none',
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    outline: 'none'
                                 }}
                             >
                                 {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
-                                    <option key={cat} value={cat} style={{ background: '#0f111a', color: '#fff' }}>
+                                    <option key={cat} value={cat} style={{ background: '#0F172A', color: '#fff' }}>
                                         {cat === 'all' ? 'All Courses' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                     </option>
                                 ))}
                             </select>
-                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none' }}></i>
+                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
                         </div>
                     </div>
                 </div>

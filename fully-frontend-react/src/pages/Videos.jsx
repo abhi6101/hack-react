@@ -32,14 +32,13 @@ const Videos = () => {
                 <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />
                 <meta name="keywords" content="study videos, programming tutorials, MERN stack tutorial, Spring Boot course, online learning" />
             </Helmet>
-            <header className="papers-header-container" style={{ padding: '1rem 2rem', marginBottom: '24px' }}>
+            <header className="papers-header-container slim-interview-header" style={{ marginBottom: '1.5rem', alignItems: 'center', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)' }}>
                 <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', lineHeight: '1' }}>Curated Study Videos</h2>
-                    <p className="sr-only">Enhance your skills with our collection of educational videos from top instructors.</p>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Curated Study Videos</h2>
                 </div>
 
-                <div className="papers-header-right">
-                    <div className="search-bar" style={{ margin: 0, minWidth: '250px', maxWidth: '350px' }}>
+                <div className="papers-header-right" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', alignItems: 'flex-end' }}>
+                    <div className="search-bar" style={{ margin: 0, minWidth: '280px' }}>
                         <i className="fas fa-search"></i>
                         <input
                             type="text"
@@ -47,11 +46,19 @@ const Videos = () => {
                             placeholder="Search videos..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{ padding: '0.8rem 1.5rem 0.8rem 3rem' }}
+                            style={{ padding: '0.6rem 1.5rem 0.6rem 3rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0,212,255,0.3)', borderRadius: '50px' }}
                         />
                     </div>
                 </div>
             </header>
+            
+            <div className="category-filters-container" style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+                {['All', 'Frontend', 'Backend', 'Database'].map(cat => (
+                    <button key={cat} style={{ background: cat === 'All' ? 'var(--primary)' : 'rgba(255,255,255,0.05)', color: cat === 'All' ? '#000' : 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', padding: '0.4rem 1.2rem', borderRadius: '50px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s ease' }}>
+                        {cat}
+                    </button>
+                ))}
+            </div>
 
             <section className="video-list-section">
                 <div className="video-list" id="videoList">
@@ -61,6 +68,7 @@ const Videos = () => {
                         filteredVideos.map((video, index) => (
                             <div key={video.id} className="video-card surface-glow" style={{ animationDelay: `${index * 0.05}s` }}>
                                 <div className="video-thumbnail">
+                                    <div className="tech-pattern-gradient"></div>
                                     <div className="video-thumbnail-placeholder" style={{ backgroundImage: `url(https://img.youtube.com/vi/${getYouTubeId(video.src)}/hqdefault.jpg)` }}>
                                         <div className="video-thumbnail-overlay"></div>
                                         <a href={`https://www.youtube.com/watch?v=${getYouTubeId(video.src)}`} target="_blank" rel="noopener noreferrer" className="btn btn-youtube">
