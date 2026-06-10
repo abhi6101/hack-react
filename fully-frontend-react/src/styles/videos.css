@@ -327,3 +327,49 @@
 .video-meta {
     font-weight: 700;
 }
+
+/* Desktop-Only Slimming & Hover Effects */
+@media (min-width: 1024px) {
+    .slim-videos-header {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.8rem 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .slim-videos-header .papers-header-left, .slim-videos-header .papers-header-right {
+        margin: 0 !important;
+    }
+    
+    .category-filters-container {
+        margin-bottom: 1.5rem !important; /* Reduced vertical gap */
+    }
+    
+    .video-card {
+        border-radius: 16px !important;
+    }
+    
+    .video-card:hover {
+        transform: scale(1.05) !important; /* Subtle scale up */
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.4), 0 0 15px rgba(0, 212, 255, 0.2) !important; /* Increased blue glow */
+    }
+    
+    .video-content {
+        padding: 1rem 1.2rem !important; /* Decreased top and bottom padding */
+    }
+    
+    .btn-youtube {
+        padding: 0.4rem 1rem !important; /* Reduced vertical padding around Watch button */
+    }
+    
+    .related-links {
+        padding: 0.8rem 1.2rem !important;
+    }
+    
+    .video-thumbnail {
+        padding-top: 0 !important;
+        aspect-ratio: 16 / 9;
+        display: flex;
+    }
+}

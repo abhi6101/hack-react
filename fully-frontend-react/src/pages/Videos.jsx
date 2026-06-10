@@ -32,12 +32,12 @@ const Videos = () => {
                 <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />
                 <meta name="keywords" content="study videos, programming tutorials, MERN stack tutorial, Spring Boot course, online learning" />
             </Helmet>
-            <header className="papers-header-container slim-interview-header" style={{ marginBottom: '1.5rem', alignItems: 'center', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)' }}>
+            <header className="papers-header-container slim-videos-header" style={{ marginBottom: '1.5rem', alignItems: 'center', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)' }}>
                 <div className="papers-header-left">
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Curated Study Videos</h2>
                 </div>
 
-                <div className="papers-header-right" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', alignItems: 'flex-end' }}>
+                <div className="papers-header-right" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'flex-end' }}>
                     <div className="search-bar" style={{ margin: 0, minWidth: '280px' }}>
                         <i className="fas fa-search"></i>
                         <input
