@@ -30,6 +30,7 @@ const ResumeBuilder = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const initialData = {
         name: '',
@@ -365,29 +366,61 @@ const ResumeBuilder = () => {
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
-            <div className="papers-header-container" style={{ marginBottom: '2rem' }}>
+            <div className="papers-header-container" style={{ marginBottom: '2rem', padding: '1rem 2rem' }}>
                 <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '700' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '800', lineHeight: '1' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
                     <p className="sr-only">Create a professional, clean resume in seconds.</p>
                 </div>
                 <div className="papers-header-right">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(0, 212, 255, 0.3)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(0, 212, 255, 0.3)', position: 'relative' }}>
                         <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>Template:</span>
-                        <div style={{ position: 'relative' }}>
-                            <select
-                                className="form-input template-select"
-                                name="template"
-                                value={formData.template}
-                                onChange={handleChange}
-                                style={{ background: 'transparent', border: 'none', padding: '0 1.5rem 0 0', width: 'auto', outline: 'none', color: '#fff', appearance: 'none', cursor: 'pointer', fontWeight: '600' }}
-                            >
-                                <option value="sde" style={{ background: '#0F172A', color: '#fff' }}>SDE Format (IIT Standard)</option>
-                                <option value="professional" style={{ background: '#0F172A', color: '#fff' }}>Professional (Simple)</option>
-                                <option value="creative" style={{ background: '#0F172A', color: '#fff' }}>Creative</option>
-                                <option value="modern" style={{ background: '#0F172A', color: '#fff' }}>Modern</option>
-                            </select>
-                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
+                        <div 
+                            style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', fontWeight: '600' }}
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                            <span style={{ color: '#fff' }}>
+                                {formData.template === 'sde' ? 'SDE Format (IIT Standard)' :
+                                 formData.template === 'professional' ? 'Professional (Simple)' :
+                                 formData.template === 'creative' ? 'Creative' : 'Modern'}
+                            </span>
+                            <i className={`fas fa-chevron-down`} style={{ color: 'var(--primary)', transition: 'transform 0.3s ease', transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)' }}></i>
                         </div>
+                        
+                        {isDropdownOpen && (
+                            <div style={{ 
+                                position: 'absolute', top: '120%', right: 0, width: '240px', 
+                                background: '#0F172A', border: '1px solid rgba(0, 212, 255, 0.3)', 
+                                borderRadius: '12px', padding: '0.5rem 0', zIndex: 100, 
+                                boxShadow: '0 15px 30px rgba(0,0,0,0.5)' 
+                            }}>
+                                {[
+                                    {val: 'sde', label: 'SDE Format (IIT Standard)'}, 
+                                    {val: 'professional', label: 'Professional (Simple)'}, 
+                                    {val: 'creative', label: 'Creative'}, 
+                                    {val: 'modern', label: 'Modern'}
+                                ].map(opt => (
+                                    <div 
+                                        key={opt.val}
+                                        style={{ 
+                                            padding: '0.8rem 1.5rem', 
+                                            color: '#fff', 
+                                            cursor: 'pointer', 
+                                            transition: 'all 0.3s ease',
+                                            background: formData.template === opt.val ? 'rgba(0, 212, 255, 0.1)' : 'transparent',
+                                            borderLeft: formData.template === opt.val ? '3px solid var(--primary)' : '3px solid transparent'
+                                        }}
+                                        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0, 212, 255, 0.1)'; e.currentTarget.style.color = 'var(--primary)'; }}
+                                        onMouseLeave={(e) => { 
+                                            e.currentTarget.style.background = formData.template === opt.val ? 'rgba(0, 212, 255, 0.1)' : 'transparent'; 
+                                            e.currentTarget.style.color = '#fff';
+                                        }}
+                                        onClick={() => { handleChange({ target: { name: 'template', value: opt.val }}); setIsDropdownOpen(false); }}
+                                    >
+                                        {opt.label}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -574,10 +607,10 @@ const ResumeBuilder = () => {
                 }
                 .section-card {
                     background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 20px;
+                    border: 1px solid rgba(0, 212, 255, 0.2);
+                    border-radius: 24px;
                     padding: 2rem;
-                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+                    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.05);
                 }
                 .section-header {
                     display: flex;
@@ -609,11 +642,12 @@ const ResumeBuilder = () => {
                     padding: 0.7rem 1rem;
                     color: #fff;
                     font-family: inherit; width: 100%; box-sizing: border-box;
-                    transition: border-color 0.3s ease;
+                    transition: all 0.3s ease;
                 }
                 .form-input:focus {
                     border-color: var(--primary);
                     outline: none;
+                    box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
                 }
                 .template-select {
                     -webkit-appearance: none;
@@ -655,16 +689,16 @@ const ResumeBuilder = () => {
                     position: sticky;
                     top: 100px; /* sticky top-24 */
                     background: rgba(22, 22, 34, 0.75);
-                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(0, 212, 255, 0.2);
                     padding: 2.5rem;
                     border-radius: 24px;
-                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.05);
                     backdrop-filter: blur(20px);
                 }
                 .btn-download {
                     width: 100%;
-                    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%);
-                    color: #000;
+                    background: linear-gradient(135deg, #00d4ff 0%, #007aff 100%);
+                    color: #fff;
                     padding: 1.2rem;
                     border-radius: 12px;
                     border: none;
@@ -676,12 +710,12 @@ const ResumeBuilder = () => {
                     justify-content: center;
                     gap: 0.8rem;
                     font-size: 1.1rem;
-                    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+                    transition: all 0.3s ease;
                 }
                 .btn-download:hover:not(:disabled) {
                     transform: translateY(-2px);
-                    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
+                    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.6);
                 }
                 .resume-layout-grid {
                     display: grid;

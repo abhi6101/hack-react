@@ -296,17 +296,17 @@ const Interview = () => {
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
 
-<div className="papers-header-container" style={{ marginBottom: '24px', padding: '1rem 2rem' }}>
+<div className="papers-header-container" style={{ marginBottom: '24px', padding: '0.5rem 2rem', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
     <div className="papers-header-left">
-        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Available Job Drives</h2>
+        <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 3vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Available Job Drives</h2>
     </div>
     
     <div className="papers-header-right">
     {/* Search & Location */}
     <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap', alignItems: 'center' }}>
         <div className="search-wrapper" style={{ flex: '1.5', minWidth: '150px' }}>
-            <div style={{ position: 'relative', width: '100%', minWidth: 0 }}>
-                <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-70%)', color: 'var(--text-secondary)' }}></i>
+            <div style={{ position: 'relative', width: '100%', minWidth: 0, height: '40px' }}>
+                <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
                 <input
                     type="text"
                     placeholder="Search by company..."
@@ -314,11 +314,10 @@ const Interview = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
                         width: '100%',
-                        minWidth: 0,
+                        height: '100%',
                         background: 'rgba(255, 255, 255, 0.05)',
                         border: '1px solid rgba(0, 212, 255, 0.3)',
                         padding: '0 1rem 0 2.5rem',
-                        height: '44px',
                         borderRadius: '50px',
                         color: '#fff',
                         fontSize: '0.95rem',
@@ -327,17 +326,17 @@ const Interview = () => {
                 />
             </div>
         </div>
-        <div className="location-wrapper" style={{ flex: '1', minWidth: '150px', position: 'relative' }}>
+        <div className="location-wrapper" style={{ flex: '1', minWidth: '150px', position: 'relative', height: '40px' }}>
             <select
                 className="form-input template-select"
                 value={filterLocation}
                 onChange={(e) => setFilterLocation(e.target.value)}
                 style={{
                     width: '100%',
+                    height: '100%',
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(0, 212, 255, 0.3)',
-                    padding: '0 2.5rem 0 1.5rem',
-                    height: '44px',
+                    padding: '0 2.5rem 0 1rem',
                     borderRadius: '50px',
                     color: '#fff',
                     fontSize: '0.95rem',
