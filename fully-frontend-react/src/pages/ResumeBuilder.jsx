@@ -4,6 +4,7 @@ import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
+import '../styles/papers.css';
 
 const ResumeBuilder = () => {
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ const ResumeBuilder = () => {
 
     const [isGenerating, setIsGenerating] = useState(false);
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [showClearModal, setShowClearModal] = useState(false);
 
     const initialData = {
         name: '',
@@ -76,10 +78,9 @@ const ResumeBuilder = () => {
         setFormData(dummyData);
     };
 
-    const clearData = () => {
-        if (window.confirm('Are you sure you want to clear all data?')) {
-            setFormData(initialData);
-        }
+    const confirmClearData = () => {
+        setFormData(initialData);
+        setShowClearModal(false);
     };
 
     // Check authentication on mount
@@ -360,27 +361,33 @@ const ResumeBuilder = () => {
     };
 
     return (
-        <div className="container" style={{ paddingTop: '100px', paddingBottom: '2rem' }}>
-            <div className="resume-header-container">
-                <div className="resume-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap' }}>ATS-Friendly Resume Builder</h2>
-                    <p className="sr-only" style={{ display: 'none' }}>Create a professional, clean resume in seconds.</p>
+        <div className="papers-page-wrapper">
+            <div className="decorative-blob blob-1"></div>
+            <div className="decorative-blob blob-2"></div>
+            <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
+            <div className="papers-header-container" style={{ marginBottom: '2rem' }}>
+                <div className="papers-header-left">
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '700' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
+                    <p className="sr-only">Create a professional, clean resume in seconds.</p>
                 </div>
-                <div className="resume-header-right">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                <div className="papers-header-right">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(0, 212, 255, 0.3)' }}>
                         <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>Template:</span>
-                        <select
-                            className="form-input template-select"
-                            name="template"
-                            value={formData.template}
-                            onChange={handleChange}
-                            style={{ background: 'transparent', border: 'none', padding: 0, width: 'auto', outline: 'none' }}
-                        >
-                            <option value="sde" style={{ color: 'black' }}>SDE Format (IIT Standard)</option>
-                            <option value="professional" style={{ color: 'black' }}>Professional (Simple)</option>
-                            <option value="creative" style={{ color: 'black' }}>Creative</option>
-                            <option value="modern" style={{ color: 'black' }}>Modern</option>
-                        </select>
+                        <div style={{ position: 'relative' }}>
+                            <select
+                                className="form-input template-select"
+                                name="template"
+                                value={formData.template}
+                                onChange={handleChange}
+                                style={{ background: 'transparent', border: 'none', padding: '0 1.5rem 0 0', width: 'auto', outline: 'none', color: '#fff', appearance: 'none', cursor: 'pointer', fontWeight: '600' }}
+                            >
+                                <option value="sde" style={{ background: '#0F172A', color: '#fff' }}>SDE Format (IIT Standard)</option>
+                                <option value="professional" style={{ background: '#0F172A', color: '#fff' }}>Professional (Simple)</option>
+                                <option value="creative" style={{ background: '#0F172A', color: '#fff' }}>Creative</option>
+                                <option value="modern" style={{ background: '#0F172A', color: '#fff' }}>Modern</option>
+                            </select>
+                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -508,21 +515,31 @@ const ResumeBuilder = () => {
                 {/* Preview/Action Side (Sticky) */}
                 <div className="resume-actions-sidebar">
                     <div className="sticky-box">
-                        <h3>Actions</h3>
-                        <p className="text-muted">Fill out the form and generate instantly.</p>
-
-                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-                            <button className="btn-secondary" onClick={fillDummyData} style={{ flex: 1, padding: '0.5rem', cursor: 'pointer', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '6px' }}>
+                        <h3 style={{ marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Actions</h3>
+                        
+                        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                            <button className="btn btn-outline" style={{ flex: 1, padding: '0.8rem', borderRadius: '12px' }} onClick={fillDummyData}>
                                 <i className="fas fa-magic"></i> Demo
                             </button>
-                            <button className="btn-danger-outline" onClick={clearData} style={{ flex: 1, padding: '0.5rem', cursor: 'pointer', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.5)', color: '#ef4444', borderRadius: '6px' }}>
-                                <i className="fas fa-trash"></i> Clear
+                            <button className="btn btn-outline" style={{ flex: 1, padding: '0.8rem', borderRadius: '12px', borderColor: 'rgba(239, 68, 68, 0.5)', color: '#EF4444' }} onClick={() => setShowClearModal(true)}>
+                                <i className="fas fa-trash-alt"></i> Clear
                             </button>
                         </div>
+                        
+                        <div style={{ background: 'rgba(0, 212, 255, 0.05)', padding: '1rem', borderRadius: '12px', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            <p style={{ margin: 0 }}><i className="fas fa-info-circle" style={{ color: 'var(--primary)', marginRight: '5px' }}></i> This tool generates a single-page PDF optimized for Applicant Tracking Systems.</p>
+                        </div>
 
-                        <button className="btn-download" onClick={generatePDF} disabled={isGenerating}>
-                            {isGenerating ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-file-pdf"></i>}
-                            Download PDF Resume
+                        <button 
+                            className="btn-download" 
+                            onClick={generatePDF} 
+                            disabled={isGenerating}
+                        >
+                            {isGenerating ? (
+                                <><i className="fas fa-circle-notch fa-spin"></i> Generating...</>
+                            ) : (
+                                <><i className="fas fa-file-pdf"></i> Download PDF Resume</>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -637,16 +654,17 @@ const ResumeBuilder = () => {
                 .sticky-box {
                     position: sticky;
                     top: 100px; /* sticky top-24 */
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    padding: 2rem;
-                    border-radius: 20px;
-                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+                    background: rgba(22, 22, 34, 0.75);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    padding: 2.5rem;
+                    border-radius: 24px;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+                    backdrop-filter: blur(20px);
                 }
                 .btn-download {
                     width: 100%;
-                    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
-                    color: #fff;
+                    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%);
+                    color: #000;
                     padding: 1.2rem;
                     border-radius: 12px;
                     border: none;
@@ -658,7 +676,7 @@ const ResumeBuilder = () => {
                     justify-content: center;
                     gap: 0.8rem;
                     font-size: 1.1rem;
-                    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+                    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
                     transition: transform 0.3s ease, box-shadow 0.3s ease;
                 }
                 .btn-download:hover:not(:disabled) {
@@ -704,6 +722,34 @@ const ResumeBuilder = () => {
                 subtitle="This service is available on our platform."
                 description="Please login or create an account to use the Resume Builder."
             />
+
+            {/* Custom Clear Data Modal */}
+            {showClearModal && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1rem', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)' }}>
+                    <div style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', padding: '2.5rem', width: '100%', maxWidth: '400px', textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
+                        <div style={{ width: '64px', height: '64px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: '#ef4444', fontSize: '2rem' }}>
+                            <i className="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Clear All Data?</h3>
+                        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '0.95rem' }}>This action cannot be undone. All your form progress will be lost permanently.</p>
+                        <div style={{ display: 'flex', gap: '1rem', flexDirection: 'column' }}>
+                            <button 
+                                onClick={confirmClearData}
+                                style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', color: '#fff', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer' }}
+                            >
+                                Yes, Clear Data
+                            </button>
+                            <button 
+                                onClick={() => setShowClearModal(false)}
+                                style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer' }}
+                            >
+                                Keep My Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            </div>
         </div>
     );
 };
