@@ -168,15 +168,14 @@ const Gallery = () => {
     }, [selectedIndex, filteredImages.length]);
 
     return (
-        <main>
+        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Campus Life & Event Gallery | Hack-2-Hired</title>
                 <meta name="description" content="Explore moments and memories from our college campus. View photos of lab sessions, classroom lectures, cultural events, and farewell celebrations." />
                 <meta name="keywords" content="college gallery, campus life, student photos, events, tech fest, farewell" />
             </Helmet>
-            <section className="gallery-page" style={{ paddingTop: '120px' }}>
-                <div className="papers-header-container gallery-header-container" style={{ padding: '1rem 2rem', marginBottom: '24px' }}>
-                    <div className="papers-header-left">
+            <div className="papers-header-container gallery-header-container" style={{ padding: '1rem 2rem', marginBottom: '24px' }}>
+                <div className="papers-header-left">
                         <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '800', lineHeight: '1' }}>Moments & Memories</h2>
                         <p className="sr-only">A collection of moments from our campus life, events, and sessions.</p>
                     </div>
@@ -241,7 +240,7 @@ const Gallery = () => {
                         <button className="btn btn-primary desktop-only-arrow sleek-arrow sleek-arrow-right" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: 300, behavior: 'smooth' }); }}><i className="fas fa-chevron-right"></i></button>
                     </div>
                 )}
-            </section>
+
 
             {/* Upload Modal */}
             {showUploadModal && (
@@ -430,7 +429,7 @@ const Gallery = () => {
                     </button>
                 </div>
             )}
-        </main>
+        </div>
     );
 };
 

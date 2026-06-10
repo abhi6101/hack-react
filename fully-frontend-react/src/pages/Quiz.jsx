@@ -146,7 +146,7 @@ const Quiz = () => {
     };
 
     return (
-        <main className="quiz-container" style={{ paddingTop: '80px' }}>
+        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Placement Preparation Quizzes | Hack-2-Hired</title>
                 <meta name="description" content="Test your knowledge with our free placement preparation quizzes. Practice HTML, CSS, JavaScript, React, Java, DSA, and more to ace your technical interviews." />
@@ -294,7 +294,7 @@ const Quiz = () => {
                     </div>
                 </section>
             )}
-        </main>
+        </div>
     );
 };
 

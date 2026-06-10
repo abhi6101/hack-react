@@ -25,17 +25,17 @@ const Courses = () => {
     };
 
     return (
-        <>
+        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Career-Boosting Courses | Hack-2-Hired</title>
                 <meta name="description" content="Master in-demand skills with our industry-relevant courses and get placement-ready. Explore programming, web dev, and data science courses." />
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
-            <main className="courses-container" style={{ paddingTop: '160px', minHeight: '100vh', background: 'transparent' }}>
-                <div className="course-controls course-header-container">
-                    <div className="course-header-left" style={{ flex: 1 }}>
-                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Career boosting courses</h2>
-                    </div>
+            
+            <div className="course-controls course-header-container papers-header-container" style={{ marginBottom: '24px' }}>
+                <div className="course-header-left papers-header-left" style={{ flex: 1 }}>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1', color: 'var(--text-primary)' }}>Career boosting courses</h2>
+                </div>
 
                     <div className="search-bar" style={{ flex: 1.5, minWidth: '250px', margin: '0 1rem' }}>
                         <i className="fas fa-search"></i>
@@ -112,8 +112,7 @@ const Courses = () => {
                         ))
                     )}
                 </div>
-            </main>
-        </>
+        </div>
     );
 };
 

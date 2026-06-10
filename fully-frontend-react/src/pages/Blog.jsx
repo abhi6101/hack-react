@@ -18,53 +18,50 @@ const Blog = () => {
     };
 
     return (
-        <>
+        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Career Insight Blog | Hack-2-Hired</title>
                 <meta name="description" content="Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career." />
                 <meta name="keywords" content="career blog, placement tips, interview advice, tech industry trends, resume building tips" />
             </Helmet>
-            <header className="hero" style={{ paddingTop: '120px', paddingBottom: '0', minHeight: 'auto' }}>
-                <div className="hero-content papers-header-container blog-header-container" style={{ width: '100%', marginBottom: '24px', alignItems: 'center' }}>
-                    <div className="papers-header-left blog-header-left">
-                        <h1 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1', background: 'none', WebkitTextFillColor: 'initial', color: '#fff' }}>Career Insight Blog</h1>
-                        <p className="sr-only">Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career.</p>
-                    </div>
-                    
-                    <div className="papers-header-right blog-header-right" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                        <div className="category-dropdown" style={{ position: 'relative', minWidth: '200px' }}>
-                            <select
-                                value={activeCategory}
-                                onChange={(e) => handleFilter(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.9rem 1.5rem',
-                                    background: 'rgba(22, 22, 34, 0.8)',
-                                    color: '#fff',
-                                    border: '1px solid var(--border-color)',
-                                    borderRadius: '50px',
-                                    fontSize: '1rem',
-                                    appearance: 'none',
-                                    cursor: 'pointer',
-                                    outline: 'none',
-                                    transition: 'all 0.3s ease'
-                                }}
-                                onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px var(--primary-glow)'; }}
-                                onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none'; }}
-                            >
-                                {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
-                                    <option key={cat} value={cat} style={{ background: '#0F172A', color: '#fff' }}>
-                                        {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                    </option>
-                                ))}
-                            </select>
-                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
-                        </div>
+            
+            <div className="papers-header-container blog-header-container" style={{ width: '100%', marginBottom: '24px', alignItems: 'center' }}>
+                <div className="papers-header-left blog-header-left">
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1', color: 'var(--text-primary)' }}>Career Insight Blog</h2>
+                    <p className="sr-only">Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career.</p>
+                </div>
+                
+                <div className="papers-header-right blog-header-right" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'nowrap', justifyContent: 'flex-end', width: '100%', maxWidth: '300px' }}>
+                    <div className="category-dropdown" style={{ position: 'relative', width: '100%' }}>
+                        <select
+                            value={activeCategory}
+                            onChange={(e) => handleFilter(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '0.9rem 1.5rem',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                color: '#fff',
+                                border: '1px solid rgba(0, 212, 255, 0.3)',
+                                borderRadius: '50px',
+                                fontSize: '0.95rem',
+                                appearance: 'none',
+                                cursor: 'pointer',
+                                outline: 'none',
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
+                            {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
+                                <option key={cat} value={cat} style={{ background: '#1a1a1a', color: '#fff' }}>
+                                    {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                </option>
+                            ))}
+                        </select>
+                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)', pointerEvents: 'none' }}></i>
                     </div>
                 </div>
-            </header>
+            </div>
 
-            <main className="blog-container" style={{ paddingBottom: '100px' }}>
+            <div style={{ paddingBottom: '0' }}>
                 <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center' }}>
                     {posts.length === 0 ? (
                         <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1 / -1' }}>No posts found in this category.</p>
@@ -94,8 +91,8 @@ const Blog = () => {
                 </nav>
 
 
-            </main>
-        </>
+            </div>
+        </div>
     );
 };
 

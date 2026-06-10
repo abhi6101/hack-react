@@ -26,13 +26,13 @@ const Videos = () => {
     });
 
     return (
-        <main className="videos-page" style={{ paddingTop: '80px' }}>
+        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Curated Study Videos | Hack-2-Hired</title>
                 <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />
                 <meta name="keywords" content="study videos, programming tutorials, MERN stack tutorial, Spring Boot course, online learning" />
             </Helmet>
-            <div className="papers-header-container">
+            <div className="papers-header-container" style={{ marginBottom: '24px' }}>
                 <div className="papers-header-left">
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Curated Study Videos</h2>
                 </div>
@@ -121,7 +121,7 @@ const Videos = () => {
                     )}
                 </div>
             </section>
-        </main>
+        </div>
     );
 };
 
