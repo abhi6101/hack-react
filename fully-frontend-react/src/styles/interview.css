@@ -167,6 +167,8 @@
     font-size: 0.85rem;
     color: var(--text-secondary);
     line-height: 1.2;
+    white-space: nowrap;
+    padding-right: 2px;
 }
 
 /* Header and Layout */

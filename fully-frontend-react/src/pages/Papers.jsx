@@ -421,35 +421,41 @@ const Papers = () => {
                 <div className="papers-header-right">
                     {userRole !== 'STUDENT' && (
                         <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100 }}>
-                            <select
-                                value={branch}
-                                onChange={(e) => setBranch(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    maxWidth: '350px',
-                                    padding: '0.9rem 2.5rem 0.9rem 1.5rem',
-                                    background: 'rgba(22, 22, 34, 0.8)',
-                                    color: '#fff',
-                                    border: '1px solid var(--border-color)',
-                                    borderRadius: '50px',
-                                    fontSize: '0.9rem',
-                                    appearance: 'none',
-                                    cursor: 'pointer',
-                                    outline: 'none',
-                                    transition: 'all 0.3s ease',
-                                    textOverflow: 'ellipsis'
-                                }}
-                                onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(0, 212, 255, 0.2)'; }}
-                                onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none'; }}
-                            >
-                                <option value="IMCA" style={{ background: '#0F172A', color: '#fff' }}>Course: IMCA Department</option>
-                                {deptList.filter(d => d.code !== 'IMCA').map(d => (
-                                    <option key={d.id} value={d.code} style={{ background: '#0F172A', color: '#fff' }}>
-                                        Course: {d.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
+                            <div className="custom-dropdown" onClick={() => setIsDeptOpen(!isDeptOpen)}>
+                                <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginRight: '0.5rem' }}>Course:</span>
+                                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>{deptFullName}</span>
+                                    <i className={`fas fa-chevron-down ${isDeptOpen ? 'open' : ''}`}></i>
+                                </div>
+
+                                <AnimatePresence>
+                                    {isDeptOpen && (
+                                        <motion.div
+                                            className="dropdown-menu surface-glow"
+                                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                            style={{ right: 0, left: 'auto', minWidth: '220px', maxWidth: '300px', width: 'max-content' }}
+                                        >
+                                            <div
+                                                className={`dropdown-item ${branch === 'IMCA' ? 'active' : ''}`}
+                                                onClick={() => { setBranch('IMCA'); setIsDeptOpen(false); }}
+                                            >
+                                                IMCA Department
+                                            </div>
+                                            {deptList.filter(d => d.code !== 'IMCA').map(d => (
+                                                <div
+                                                    key={d.id}
+                                                    className={`dropdown-item ${branch === d.code ? 'active' : ''}`}
+                                                    onClick={() => { setBranch(d.code); setIsDeptOpen(false); }}
+                                                >
+                                                    {d.name}
+                                                </div>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         </div>
                     )}
                 </div>

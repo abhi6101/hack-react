@@ -633,40 +633,65 @@ const Notes = ({ isAdminView }) => {
                     </div>
 
                     <div className="dept-selector-inline" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 1000 }}>
-                        <select
-                            value={branchFilter}
-                            onChange={(e) => setBranchFilter(e.target.value)}
-                            disabled={userRole === 'STUDENT'}
+                        <div
+                            className={`custom-dropdown ${userRole === 'STUDENT' ? 'disabled' : ''}`}
+                            onClick={() => { if (userRole !== 'STUDENT') setShowBranchMenu(!showBranchMenu); }}
                             style={{
-                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
                                 background: 'rgba(255,255,255,0.05)',
-                                color: '#fff',
                                 border: '1px solid rgba(0, 212, 255, 0.3)',
                                 borderRadius: '50px',
-                                padding: '0 2.5rem 0 1rem',
+                                padding: '0 1rem',
                                 height: '100%',
-                                fontSize: '0.95rem',
-                                appearance: 'none',
+                                color: '#fff',
                                 cursor: userRole === 'STUDENT' ? 'not-allowed' : 'pointer',
-                                outline: 'none',
-                                transition: 'all 0.3s ease',
-                                opacity: userRole === 'STUDENT' ? 0.6 : 1,
-                                textOverflow: 'ellipsis'
+                                fontSize: '0.95rem',
+                                opacity: userRole === 'STUDENT' ? 0.6 : 1
                             }}
-                            onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(0, 212, 255, 0.2)'; }}
-                            onBlur={(e) => { e.target.style.borderColor = 'rgba(0, 212, 255, 0.3)'; e.target.style.boxShadow = 'none'; }}
                         >
-                            <option value="" style={{ background: '#0F172A', color: '#fff' }}>All Branches</option>
-                            {deptList.map(dept => (
-                                <option key={dept.id} value={dept.code} style={{ background: '#0F172A', color: '#fff' }}>
-                                    {dept.name.length > 30 ? `${dept.name.substring(0, 30)}...` : dept.name} ({dept.code})
-                                </option>
-                            ))}
-                            {!deptList.some(d => d.code === 'IMCA') && (
-                                <option value="IMCA" style={{ background: '#0F172A', color: '#fff' }}>IMCA</option>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {branchFilter === '' ? 'All Branches' : branchFilter}
+                            </span>
+                            <i className={`fas fa-chevron-down ${showBranchMenu ? 'open' : ''}`} style={{ color: 'var(--primary)', fontSize: '0.8rem', marginLeft: '0.5rem' }}></i>
+                        </div>
+
+                        <AnimatePresence>
+                            {showBranchMenu && userRole !== 'STUDENT' && (
+                                <motion.div
+                                    className="dropdown-menu surface-glow"
+                                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                    style={{ right: 0, left: 'auto', minWidth: '100%', top: 'calc(100% + 5px)' }}
+                                >
+                                    <div
+                                        className={`dropdown-item ${branchFilter === '' ? 'active' : ''}`}
+                                        onClick={() => { setBranchFilter(''); setShowBranchMenu(false); }}
+                                    >
+                                        All Branches
+                                    </div>
+                                    {deptList.map(dept => (
+                                        <div
+                                            key={dept.id}
+                                            className={`dropdown-item ${branchFilter === dept.code ? 'active' : ''}`}
+                                            onClick={() => { setBranchFilter(dept.code); setShowBranchMenu(false); }}
+                                        >
+                                            {dept.name.length > 30 ? `${dept.name.substring(0, 30)}...` : dept.name} ({dept.code})
+                                        </div>
+                                    ))}
+                                    {!deptList.some(d => d.code === 'IMCA') && (
+                                        <div
+                                            className={`dropdown-item ${branchFilter === 'IMCA' ? 'active' : ''}`}
+                                            onClick={() => { setBranchFilter('IMCA'); setShowBranchMenu(false); }}
+                                        >
+                                            IMCA
+                                        </div>
+                                    )}
+                                </motion.div>
                             )}
-                        </select>
-                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
+                        </AnimatePresence>
                     </div>
 
                     {isAdmin && (

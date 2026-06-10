@@ -291,6 +291,9 @@ a:hover {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .dropdown-item:hover {
