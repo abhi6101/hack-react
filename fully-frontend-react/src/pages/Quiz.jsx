@@ -153,7 +153,7 @@ const Quiz = () => {
                 <meta name="keywords" content="placement quiz, technical interview practice, DSA quiz, React quiz, coding test preparation" />
             </Helmet>
             {step === 'subject-selection' && (
-                <section id="subject-selection" className="quiz-step active">
+                <section id="subject-selection" className="quiz-step active" style={{ padding: 0 }}>
                     <div className="papers-header-container" style={{ marginBottom: '3rem' }}>
                         <div className="papers-header-left">
                             <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>
@@ -206,7 +206,7 @@ const Quiz = () => {
             )}
 
             {step === 'quiz' && (
-                <section id="quiz" className="quiz-step active">
+                <section id="quiz" className="quiz-step active" style={{ padding: 0 }}>
                     {/* Slim Header Container */}
                     <div className="papers-header-container slim-interview-header" style={{ marginBottom: '24px', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
                         <div className="papers-header-left">
@@ -272,7 +272,7 @@ const Quiz = () => {
             )}
 
             {step === 'quiz-results' && (
-                <section id="quiz-results" className="quiz-step active">
+                <section id="quiz-results" className="quiz-step active" style={{ padding: 0 }}>
                     <div className="result-card surface-glow">
                         <i className="fas fa-trophy result-icon"></i>
                         <h2>Quiz Completed!</h2>

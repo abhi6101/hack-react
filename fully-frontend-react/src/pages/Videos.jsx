@@ -88,7 +88,7 @@ const Videos = () => {
                 ))}
             </div>
 
-            <section className="video-list-section">
+            <section className="video-list-section" style={{ padding: 0 }}>
                 <div className="video-list" id="videoList">
                     {filteredVideos.length === 0 ? (
                         <p className="no-results">No videos found. Try a different search or filter.</p>

@@ -62,7 +62,7 @@ const Blog = () => {
             </div>
 
             <div style={{ paddingBottom: '0' }}>
-                <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center' }}>
+                <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center', padding: 0 }}>
                     {posts.length === 0 ? (
                         <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1 / -1' }}>No posts found in this category.</p>
                     ) : (
