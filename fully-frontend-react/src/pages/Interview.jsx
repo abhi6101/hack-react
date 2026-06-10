@@ -291,37 +291,12 @@ const Interview = () => {
 
     return (
         <div className="interview-page">
-<div className="interview-top-bar" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', gap: '1rem', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-    {/* Stats inline */}
-    <div className="stats-inline" style={{ display: 'flex', gap: '1.5rem' }}>
-        <div className="stat-item">
-            <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
-                <i className="fas fa-calendar-check"></i>
-            </div>
-            <div className="stat-info">
-                <span className="stat-value-small">{stats.total}</span>
-                <span className="stat-label-small">Total Drives</span>
-            </div>
-        </div>
-        <div className="stat-item">
-            <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
-                <i className="fas fa-door-open"></i>
-            </div>
-            <div className="stat-info">
-                <span className="stat-value-small">{stats.available}</span>
-                <span className="stat-label-small">Slots Available</span>
-            </div>
-        </div>
-        <div className="stat-item">
-            <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
-                <i className="fas fa-paper-plane"></i>
-            </div>
-            <div className="stat-info">
-                <span className="stat-value-small">{stats.applied}</span>
-                <span className="stat-label-small">Applications Sent</span>
-            </div>
-        </div>
+<div className="interview-header-container">
+    <div className="interview-header-left">
+        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap' }}>Available Job Drives</h2>
     </div>
+    
+    <div className="interview-header-right">
     {/* Search & Location */}
     <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap', alignItems: 'center' }}>
         <div className="search-wrapper" style={{ flex: '2 1 0', minWidth: 0 }}>
@@ -418,7 +393,39 @@ const Interview = () => {
                 )}
             </AnimatePresence>
         </div>
-    </section>
+    </div>
+</div>
+
+{/* Compact Stats Bar */}
+<div className="compact-stats-bar">
+    <div className="stat-item">
+        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
+            <i className="fas fa-calendar-check"></i>
+        </div>
+        <div className="stat-info">
+            <span className="stat-value-small">{stats.total}</span>
+            <span className="stat-label-small">Total Drives</span>
+        </div>
+    </div>
+    <div className="stat-item">
+        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
+            <i className="fas fa-door-open"></i>
+        </div>
+        <div className="stat-info">
+            <span className="stat-value-small">{stats.available}</span>
+            <span className="stat-label-small">Slots Available</span>
+        </div>
+    </div>
+    <div className="stat-item">
+        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
+            <i className="fas fa-paper-plane"></i>
+        </div>
+        <div className="stat-info">
+            <span className="stat-value-small">{stats.applied}</span>
+            <span className="stat-label-small">Applications Sent</span>
+        </div>
+    </div>
+</div>
 </div>
                 {/* Right Content - Interview Grid */}
                 <main className="interview-content">
