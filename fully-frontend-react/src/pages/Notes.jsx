@@ -83,25 +83,31 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
         <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
             {level > 0 && <div style={{ position: 'absolute', left: `${((level - 1) * 1.5) + 1.8}rem`, top: 0, bottom: 0, width: '1px', background: 'rgba(255,255,255,0.06)' }}></div>}
             <motion.div
-                whileHover={{ background: 'rgba(255,255,255,0.04)' }}
+                className={level === 0 ? "unit-card-header" : ""}
+                whileHover={{ background: level === 0 ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.04)' }}
                 onClick={() => setIsExpanded(!isExpanded)}
                 style={{
-                    padding: `0.7rem 1rem`,
-                    paddingLeft: `${(level * 1.5) + 1.5}rem`,
+                    padding: level === 0 ? '1.5rem' : `0.7rem 1rem`,
+                    paddingLeft: level === 0 ? '1.5rem' : `${(level * 1.5) + 1.5}rem`,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.8rem',
                     cursor: 'pointer',
-                    background: isExpanded ? 'rgba(255,255,255,0.02)' : 'transparent',
-                    borderBottom: '1px solid rgba(255,255,255,0.015)',
-                    zIndex: 1
+                    background: isExpanded ? (level === 0 ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)') : (level === 0 ? 'rgba(255,255,255,0.02)' : 'transparent'),
+                    borderBottom: level === 0 ? 'none' : '1px solid rgba(255,255,255,0.015)',
+                    border: level === 0 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                    borderRadius: level === 0 ? '16px' : '0',
+                    zIndex: 1,
+                    transition: 'all 0.3s ease'
                 }}
             >
-                <div style={{ width: '16px', display: 'flex', justifyContent: 'center' }}>
-                    <i className={`fas fa-chevron-${isExpanded ? 'down' : 'right'}`} style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}></i>
-                </div>
-                <i className={`fas fa-folder${isExpanded ? '-open' : ''}`} style={{ color: '#ffd700', fontSize: '1.2rem', filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.2))' }}></i>
-                <span style={{ color: '#fff', fontWeight: '600', fontSize: '0.95rem' }}>{node.name}</span>
+                {level !== 0 && (
+                    <div style={{ width: '16px', display: 'flex', justifyContent: 'center' }}>
+                        <i className={`fas fa-chevron-${isExpanded ? 'down' : 'right'}`} style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}></i>
+                    </div>
+                )}
+                <i className={`fas fa-folder${isExpanded ? '-open' : ''}`} style={{ color: '#ffd700', fontSize: level === 0 ? '2.5rem' : '1.2rem', filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.2))' }}></i>
+                <span className={level === 0 ? "unit-card-title" : ""} style={{ color: '#fff', fontWeight: '600', fontSize: level === 0 ? '1.1rem' : '0.95rem' }}>{node.name}</span>
             </motion.div>
             
             <AnimatePresence>
@@ -557,7 +563,7 @@ const Notes = ({ isAdminView }) => {
             </Helmet>
 
             {/* Unified Header section matching Papers.jsx */}
-            <div className="papers-header-container">
+            <div className="papers-header-container" style={{ padding: '1rem 2rem', marginBottom: '1.5rem' }}>
                 <div className="papers-header-left">
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
                     <p style={{ display: 'none' }} className="sr-only">
@@ -565,7 +571,7 @@ const Notes = ({ isAdminView }) => {
                     </p>
                 </div>
 
-                <div className="papers-header-right" style={{ gap: '0.8rem', width: '100%', maxWidth: '700px', flexWrap: 'nowrap' }}>
+                <div className="papers-header-right" style={{ gap: '0.8rem', width: '100%', maxWidth: '500px', flexWrap: 'nowrap' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
                         flex: 1.5,
@@ -583,7 +589,7 @@ const Notes = ({ isAdminView }) => {
                         <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
                         <input
                             type="text"
-                            placeholder="Search folders by subject code, title or syllabus topics..."
+                            placeholder="Search subjects..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             style={{
@@ -593,7 +599,7 @@ const Notes = ({ isAdminView }) => {
                                 fontSize: '0.95rem',
                                 width: '100%',
                                 outline: 'none',
-                                padding: '10px 0'
+                                padding: '8px 0'
                             }}
                         />
                         {searchQuery && (
@@ -610,7 +616,7 @@ const Notes = ({ isAdminView }) => {
                             value={branchFilter}
                             onChange={(e) => setBranchFilter(e.target.value)}
                             disabled={userRole === 'STUDENT'}
-                            style={{ width: '100%', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '10px 1.5rem 10px 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.85rem' }}
+                            style={{ width: '100%', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', appearance: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '8px 1.5rem 8px 1rem', color: '#fff', cursor: 'pointer', outline: 'none', fontSize: '0.85rem' }}
                         >
                             <option value="" style={{ color: '#000' }}>All Branches</option>
                             {deptList.map(dept => (
@@ -620,7 +626,7 @@ const Notes = ({ isAdminView }) => {
                             ))}
                             {!deptList.some(d => d.code === 'IMCA') && <option value="IMCA" style={{ color: '#000' }}>IMCA</option>}
                         </select>
-                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
+                        <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', pointerEvents: 'none', fontSize: '0.8rem' }}></i>
                     </div>
 
                     {isAdmin && (
@@ -629,9 +635,9 @@ const Notes = ({ isAdminView }) => {
                             whileTap={{ scale: 0.97 }}
                             className="btn btn-primary"
                             onClick={() => setShowUploadModal(true)}
-                            style={{ borderRadius: '12px', padding: '0.9rem 1.6rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
+                            style={{ borderRadius: '50px', padding: '0.7rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
                         >
-                            <i className="fas fa-folder-plus"></i> Upload Folder
+                            <i className="fas fa-plus"></i> Upload
                         </motion.button>
                     )}
                 </div>
@@ -668,15 +674,14 @@ const Notes = ({ isAdminView }) => {
                     </div>
                 ) : selectedFolder ? (
                     <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
                             <button
-                                className="back-btn"
+                                className="sleek-back-btn"
                                 onClick={() => setSelectedFolder(null)}
-                                style={{
-                                    background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', padding: '0.5rem 1rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'
-                                }}
+                                title="Back to Grid"
                             >
-                                <i className="fas fa-chevron-left"></i> Back to Grid
+                                <i className="fas fa-arrow-left"></i>
+                                <span className="back-text">Back</span>
                             </button>
                         </div>
                         <div
@@ -689,28 +694,26 @@ const Notes = ({ isAdminView }) => {
                         >
                             {/* Root Folder Header */}
                             <div style={{ 
-                                padding: '1.5rem', 
+                                padding: '1rem 1.5rem', 
                                 borderBottom: '1px solid rgba(255,255,255,0.05)',
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                                background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
                                 position: 'relative'
                             }}>
                                 {/* Neon Accent Line */}
-                                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
+                                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
                                 
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
-                                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(0, 212, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                        <i className="fas fa-folder-open" style={{ fontSize: '1.6rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.5))' }}></i>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(0, 212, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                        <i className="fas fa-folder-open" style={{ fontSize: '1.2rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.5))' }}></i>
                                     </div>
                                     <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.3rem' }}>
-                                            <h3 style={{ fontSize: '1.3rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{selectedFolder.name}</h3>
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '500' }}>
-                                            {selectedFolder.meta.semester ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Semester {selectedFolder.meta.semester}</span> : null}
-                                            {selectedFolder.meta.branch ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {selectedFolder.meta.branch}</span> : null}
+                                        <h3 style={{ fontSize: '1.2rem', color: '#fff', margin: 0, fontWeight: '700', letterSpacing: '0.5px' }}>{selectedFolder.name}</h3>
+                                        <div style={{ display: 'flex', gap: '1rem', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: '500', marginTop: '0.2rem' }}>
+                                            {selectedFolder.meta.semester ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Sem {selectedFolder.meta.semester}</span> : null}
+                                            {selectedFolder.meta.branch ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {selectedFolder.meta.branch}</span> : null}
                                         </div>
                                     </div>
                                 </div>
@@ -724,24 +727,25 @@ const Notes = ({ isAdminView }) => {
                                         className="action-btn delete-btn"
                                         style={{
                                             borderRadius: '8px',
-                                            padding: '0.6rem 1rem',
+                                            padding: '0.5rem 0.8rem',
                                             border: 'none',
                                             background: 'rgba(239, 68, 68, 0.1)',
                                             color: '#EF4444',
                                             cursor: 'pointer',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            gap: '0.5rem',
-                                            fontWeight: 'bold'
+                                            gap: '0.4rem',
+                                            fontWeight: 'bold',
+                                            fontSize: '0.85rem'
                                         }}
                                     >
-                                        <i className="fas fa-trash-alt"></i> Delete Subject
+                                        <i className="fas fa-trash-alt"></i> Delete
                                     </button>
                                 )}
                             </div>
                             
                             {/* Root Folder Tree Contents */}
-                            <div style={{ padding: '0.5rem 0' }}>
+                            <div className="units-grid-container" style={{ padding: '1.5rem' }}>
                                 {Object.values(selectedFolder.children).length === 0 ? (
                                     <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem 0' }}>This subject folder is empty.</p>
                                 ) : (

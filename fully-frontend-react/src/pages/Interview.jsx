@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../config';
 import '../styles/jobs.css';
 import '../styles/interview.css';
+import '../styles/papers.css';
 
 const mockInterviewData = [
     {
@@ -290,16 +291,20 @@ const Interview = () => {
     };
 
     return (
-        <div className="interview-page">
-<div className="interview-header-container">
-    <div className="interview-header-left">
-        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap' }}>Available Job Drives</h2>
+        <div className="papers-page-wrapper">
+            <div className="decorative-blob blob-1"></div>
+            <div className="decorative-blob blob-2"></div>
+            <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
+
+<div className="papers-header-container" style={{ marginBottom: '1.5rem', padding: '1.2rem 2rem' }}>
+    <div className="papers-header-left">
+        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '700' }}>Available Job Drives</h2>
     </div>
     
-    <div className="interview-header-right">
+    <div className="papers-header-right">
     {/* Search & Location */}
     <section className="filter-section" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap', alignItems: 'center' }}>
-        <div className="search-wrapper" style={{ flex: '2 1 0', minWidth: 0 }}>
+        <div className="search-wrapper" style={{ flex: '1.5', minWidth: '150px' }}>
             <div style={{ position: 'relative', width: '100%', minWidth: 0 }}>
                 <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-70%)', color: 'var(--text-secondary)' }}></i>
                 <input
@@ -311,17 +316,17 @@ const Interview = () => {
                         width: '100%',
                         minWidth: 0,
                         background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid var(--border-color)',
-                        padding: '0.8rem 1rem 0.8rem 2.5rem',
-                        borderRadius: '12px',
+                        border: '1px solid rgba(0, 212, 255, 0.3)',
+                        padding: '10px 1rem 10px 2.5rem',
+                        borderRadius: '50px',
                         color: '#fff',
-                        fontSize: '0.9rem',
+                        fontSize: '0.95rem',
                         boxSizing: 'border-box'
                     }}
                 />
             </div>
         </div>
-        <div className="location-wrapper" style={{ flex: '1 1 0', minWidth: 0 }}>
+        <div className="location-wrapper" style={{ flex: '1', minWidth: '150px', position: 'relative' }}>
             <select
                 className="form-input template-select"
                 value={filterLocation}
@@ -329,22 +334,24 @@ const Interview = () => {
                 style={{
                     width: '100%',
                     background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid var(--border-color)',
-                    padding: '0.8rem 1rem',
-                    borderRadius: '12px',
+                    border: '1px solid rgba(0, 212, 255, 0.3)',
+                    padding: '10px 2.5rem 10px 1rem',
+                    borderRadius: '50px',
                     color: '#fff',
-                    fontSize: '0.9rem',
+                    fontSize: '0.95rem',
                     boxSizing: 'border-box',
                     outline: 'none',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    appearance: 'none'
                 }}
             >
                 {locations.map(loc => (
-                    <option key={loc} value={loc} style={{ color: 'black' }}>
+                    <option key={loc} value={loc} style={{ background: '#0F172A', color: '#fff' }}>
                         {loc === 'all' ? 'All Locations' : loc}
                     </option>
                 ))}
             </select>
+            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
         </div>
     </section>
     </div>
@@ -463,6 +470,7 @@ const Interview = () => {
                 subtitle="This service is available on our platform."
                 description="Please login or create an account to view interview schedules."
             />
+            </div>
         </div>
     );
 };
