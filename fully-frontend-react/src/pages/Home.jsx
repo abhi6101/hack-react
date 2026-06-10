@@ -333,7 +333,7 @@ const Home = () => {
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'block' }}>
                                 Get Your Dream Job with <br />
-                                <span className="hero-brand-text">hack-2-hired</span>
+                                <span className="hero-brand-text">Hack-2-Hired</span>
                             </h1>
                         </motion.div>
 
@@ -346,7 +346,7 @@ const Home = () => {
                         <motion.div className="cta-btns hero-cta-guest-wrapper" variants={fadeInUp} style={{ justifyContent: 'flex-start' }}>
                             {localStorage.getItem('authToken') ? null : (
                                 <span className="hero-cta-guest">
-                                    <Link to="/register" id="registerBtn" className="btn btn-outline">🚀 Get Started</Link>
+                                    <Link to="/register" id="registerBtn" className="btn btn-primary">🚀 Get Started</Link>
                                     <Link to="/login" className="btn btn-outline">Sign In</Link>
                                 </span>
                             )}

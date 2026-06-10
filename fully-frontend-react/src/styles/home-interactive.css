@@ -30,10 +30,10 @@
     bottom: -10px;
     left: 0;
     width: 0;
-    height: 4px;
+    height: 8px;
     background: linear-gradient(90deg, var(--primary), var(--accent));
     transition: width 0.8s ease;
-    border-radius: 2px;
+    border-radius: 4px;
 }
 
 .hero:hover #heroHeading::after {
@@ -43,6 +43,7 @@
 /* Animated subtitle */
 #heroSubtitle {
     animation: fadeInUp 1s ease-out 0.4s both;
+    line-height: 1.8;
 }
 
 /* Interactive user welcome card */
@@ -497,6 +498,18 @@ main {
         width: 100%;
         max-width: 600px;
         margin: 0 auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero-cta-guest {
+        display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
+    }
+    
+    .boy-image-container {
+        max-width: 480px;
     }
 }
 

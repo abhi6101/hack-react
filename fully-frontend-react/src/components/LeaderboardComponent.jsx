@@ -43,23 +43,24 @@ const LeaderboardComponent = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     {leaders.map((user, index) => (
                         <div key={user.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: index === 0 ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid transparent' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1, minWidth: 0 }}>
                                 <div style={{ 
+                                    flexShrink: 0,
                                     width: '35px', height: '35px', borderRadius: '50%', 
                                     background: index === 0 ? 'linear-gradient(135deg, #f59e0b, #fbbf24)' : index === 1 ? 'linear-gradient(135deg, #94a3b8, #cbd5e1)' : index === 2 ? 'linear-gradient(135deg, #b45309, #d97706)' : 'var(--primary)', 
                                     color: index < 3 ? '#000' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' 
                                 }}>
                                     #{index + 1}
                                 </div>
-                                <div>
-                                    <h4 style={{ margin: 0, fontSize: '1rem', color: index === 0 ? '#fbbf24' : '#fff' }}>
+                                <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                                    <h4 style={{ margin: 0, fontSize: '1rem', color: index === 0 ? '#fbbf24' : '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                         {user.name || user.username}
                                         {index === 0 && <span style={{ marginLeft: '5px' }}>👑</span>}
                                     </h4>
-                                    {index === 0 && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--primary)' }}>Verified Contributor</p>}
+                                    {index === 0 && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--primary)', whiteSpace: 'nowrap' }}>Verified Contributor</p>}
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', flexShrink: 0, marginLeft: '10px' }}>
                                 <span style={{ fontWeight: 'bold', color: '#4ade80' }}>{user.points}</span>
                                 <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>pts</span>
                             </div>
