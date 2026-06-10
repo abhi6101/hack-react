@@ -42,7 +42,11 @@ const LeaderboardComponent = () => {
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     {leaders.map((user, index) => (
-                        <div key={user.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: index === 0 ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid transparent' }}>
+                        <div key={user.id} 
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: index === 0 ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid transparent', transition: 'all 0.3s ease' }}
+                            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.3)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                        >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1, minWidth: 0 }}>
                                 <div style={{ 
                                     flexShrink: 0,
@@ -60,9 +64,9 @@ const LeaderboardComponent = () => {
                                     {index === 0 && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--primary)', whiteSpace: 'nowrap' }}>Verified Contributor</p>}
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', flexShrink: 0, marginLeft: '10px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, marginLeft: 'auto' }}>
                                 <span style={{ fontWeight: 'bold', color: '#4ade80' }}>{user.points}</span>
-                                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>pts</span>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>pts</span>
                             </div>
                         </div>
                     ))}

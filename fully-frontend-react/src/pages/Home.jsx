@@ -330,7 +330,7 @@ const Home = () => {
                         variants={staggerContainer}
                         style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                     >
-                        <motion.div variants={fadeInUp} style={{ marginBottom: '1.5rem' }}>
+                        <motion.div variants={fadeInUp} className="badge-container" style={{ marginBottom: '1.5rem', display: 'flex', width: '100%', alignItems: 'center' }}>
                             <div className="status-pill" style={{ margin: 0, padding: '0.4rem 1rem', fontSize: '0.85rem' }}>
                                 <span className="dot"></span> Trusted Worldwide
                             </div>
@@ -349,8 +349,8 @@ const Home = () => {
                         </motion.p>
 
                         <motion.div className="cta-btns" variants={fadeInUp} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <Link to="/register" className="btn btn-primary" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', boxShadow: '0 0 15px rgba(0, 212, 255, 0.4)', borderRadius: '50px', fontWeight: '600', padding: '0.8rem 2rem' }}>Get Started</Link>
-                            <Link to="/courses" className="btn btn-outline" style={{ borderRadius: '50px', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '0.8rem 2rem', background: 'transparent' }}>Explore More</Link>
+                            <Link to="/register" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', boxShadow: '0 0 15px rgba(0, 212, 255, 0.4)', borderRadius: '50px', fontWeight: '600', padding: '0.8rem 2rem' }}>Get Started</Link>
+                            <Link to="/courses" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', borderRadius: '50px', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '0.8rem 2rem', background: 'transparent' }}>Explore More</Link>
                         </motion.div>
 
                         <motion.div variants={fadeInUp} style={{ marginTop: '2rem', maxWidth: '400px' }}>
