@@ -769,3 +769,29 @@ tr:hover td {
     background: rgba(56, 189, 248, 0.2);
     color: var(--primary-color);
 }
+/* Dashboard 2-Column Grid (Desktop) */
+.dashboard-grid-2col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.dashboard-grid-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 350px;
+}
+
+@media (min-width: 1024px) {
+    .dashboard-grid-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: stretch;
+    }
+}
+
+/* Slim Professional Headers */
+.dashboard-grid-item .header-row {
+    padding-bottom: 0.8rem;
+    margin-bottom: 1rem;
+}

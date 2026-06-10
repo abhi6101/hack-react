@@ -690,8 +690,9 @@ const StudentDashboard = () => {
                         </div>
                     </div>
 
+                    <div className="dashboard-grid-2col">
                     {/* Job Applications Status */}
-                    <div style={{
+                    <div className="dashboard-grid-item" style={{
                         background: 'rgba(236, 72, 153, 0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '20px',
@@ -749,7 +750,12 @@ const StudentDashboard = () => {
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                                 gap: '1.5rem'
                             }}>
-                                {jobApplications.map(app => (
+                                {[...jobApplications].sort((a, b) => {
+                                    const wA = a.status === 'ACTIVE' ? 3 : a.status === 'PENDING' ? 2 : a.status === 'ACCEPTED' ? 1 : 0;
+                                    const wB = b.status === 'ACTIVE' ? 3 : b.status === 'PENDING' ? 2 : b.status === 'ACCEPTED' ? 1 : 0;
+                                    if (wA !== wB) return wB - wA;
+                                    return new Date(b.appliedAt) - new Date(a.appliedAt);
+                                }).map(app => (
                                     <div key={app.id} style={{
                                         background: 'rgba(255, 255, 255, 0.05)',
                                         padding: '1.5rem',
@@ -800,7 +806,7 @@ const StudentDashboard = () => {
                     </div>
 
                     {/* Upcoming Interviews */}
-                    <div style={{
+                    <div className="dashboard-grid-item" style={{
                         background: 'rgba(139, 92, 246, 0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '20px',
@@ -858,7 +864,7 @@ const StudentDashboard = () => {
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                                 gap: '1.5rem'
                             }}>
-                                {interviews.filter(i => new Date(i.interviewDate) > new Date()).slice(0, 6).map(interview => (
+                                {interviews.filter(i => new Date(i.interviewDate) > new Date()).sort((a, b) => new Date(a.interviewDate) - new Date(b.interviewDate)).slice(0, 6).map(interview => (
                                     <div key={interview.id} style={{
                                         background: 'rgba(255, 255, 255, 0.05)',
                                         padding: '1.5rem',
@@ -898,6 +904,7 @@ const StudentDashboard = () => {
                                 ))}
                             </div>
                         )}
+                    </div>
                     </div>
                 </div>
             </div>
