@@ -168,7 +168,7 @@ const Gallery = () => {
     }, [selectedIndex, filteredImages.length]);
 
     return (
-        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
+        <div className="container" style={{ minHeight: '100vh', padding: '80px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Campus Life & Event Gallery | Hack-2-Hired</title>
                 <meta name="description" content="Explore moments and memories from our college campus. View photos of lab sessions, classroom lectures, cultural events, and farewell celebrations." />

@@ -26,7 +26,7 @@ const Videos = () => {
     });
 
     return (
-        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
+        <div className="container" style={{ minHeight: '100vh', padding: '80px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Curated Study Videos | Hack-2-Hired</title>
                 <meta name="description" content="Enhance your skills with our curated collection of educational videos from top instructors. Learn MERN Stack, Spring Boot, Java, and more." />

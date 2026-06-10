@@ -25,7 +25,7 @@ const Courses = () => {
     };
 
     return (
-        <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
+        <div className="container" style={{ minHeight: '100vh', padding: '80px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Career-Boosting Courses | Hack-2-Hired</title>
                 <meta name="description" content="Master in-demand skills with our industry-relevant courses and get placement-ready. Explore programming, web dev, and data science courses." />
