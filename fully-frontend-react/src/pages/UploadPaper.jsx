@@ -124,58 +124,86 @@ const UploadPaper = () => {
         <div className="papers-page-wrapper">
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
-            <div style={{ minHeight: '100vh', padding: '100px 15px 50px', position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div className="container" style={{ maxWidth: '600px', width: '100%', margin: '0 auto' }}>
-                <div style={{ background: 'var(--surface-bg)', borderRadius: '16px', padding: '20px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
+                
+                {/* Gallery-Style Split Header */}
+                <div className="papers-header-container" style={{ marginBottom: '2rem' }}>
+                    <div className="papers-header-left">
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Smart Paper <span style={{ color: 'var(--primary)' }}>Upload</span></h2>
+                    </div>
+                    <div className="papers-header-right">
+                        <button onClick={() => navigate('/papers')} className="btn" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '12px', padding: '0.6rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }} onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = '#fff'; }}>
+                            <i className="fas fa-times"></i> Exit Upload
+                        </button>
+                    </div>
+                </div>
+
+                {/* Central Upload Card Container */}
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="container" style={{ maxWidth: '650px', width: '100%', margin: '0 auto' }}>
+                        <div style={{ background: 'rgba(22, 22, 34, 0.75)', borderRadius: '24px', padding: '2.5rem', border: '1px solid rgba(255, 255, 255, 0.05)', position: 'relative', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', backdropFilter: 'blur(20px)' }}>
                     
-                    {/* Progress Bar */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', position: 'relative' }}>
-                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '2px', background: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
-                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '2px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.3s ease' }}></div>
+                    {/* Thinner, Modern Progress Bar at Top */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2.5rem', position: 'relative' }}>
+                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
+                        <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '2px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 10px var(--primary)' }}></div>
                         {[1, 2, 3, 4].map(num => (
                             <div key={num} style={{ 
-                                width: '30px', height: '30px', borderRadius: '50%', 
+                                width: '24px', height: '24px', borderRadius: '50%', 
                                 background: step >= num ? 'var(--primary)' : 'var(--surface-bg)', 
                                 color: step >= num ? '#000' : '#fff',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                zIndex: 2, border: `2px solid ${step >= num ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`,
-                                fontWeight: 'bold'
+                                zIndex: 2, border: `1px solid ${step >= num ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`,
+                                fontWeight: '700', fontSize: '0.8rem',
+                                transition: 'all 0.3s ease',
+                                boxShadow: step >= num ? '0 0 15px rgba(0, 212, 255, 0.5)' : 'none'
                             }}>
-                                {num}
+                                {step > num ? <i className="fas fa-check" style={{ fontSize: '0.6rem' }}></i> : num}
                             </div>
                         ))}
                     </div>
-
-                    <h1 style={{ textAlign: 'center', marginBottom: '15px', fontSize: 'clamp(1.5rem, 5vw, 2rem)', lineHeight: '1.2' }}>Smart Paper Upload</h1>
                     {error && <div className="alert alert-error" style={{ marginBottom: '15px' }}>{error}</div>}
 
                     <AnimatePresence mode="wait">
                         {step === 1 && (
                             <motion.div key="step1" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
-                                <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '15px', fontSize: '0.9rem' }}>
-                                    Take photos of an official university exam paper. Ensure the text is clear and legible.
-                                </p>
+                                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                                    <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '0.5rem' }}>Select Capture Method</h3>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto' }}>
+                                        Take photos of an official university exam paper. Ensure the text is clear and legible.
+                                    </p>
+                                </div>
                                 
-                                <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+                                <div style={{ display: 'flex', gap: '20px', marginBottom: '2rem' }}>
                                     <div 
                                         onClick={() => cameraInputRef.current.click()}
                                         style={{ 
-                                            flex: 1, border: '2px dashed var(--primary)', borderRadius: '12px', padding: '15px 10px', 
-                                            textAlign: 'center', cursor: 'pointer', background: 'rgba(0, 212, 255, 0.05)', transition: 'all 0.3s ease'
+                                            flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '2rem 1rem', 
+                                            textAlign: 'center', cursor: 'pointer', background: 'rgba(255, 255, 255, 0.03)', transition: 'all 0.3s ease',
+                                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
                                         }}
+                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                                        onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
-                                        <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '8px' }}></i>
-                                        <h4 style={{ margin: 0, fontSize: '0.95rem' }}>Take Photo</h4>
+                                        <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                            <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: 'var(--primary)' }}></i>
+                                        </div>
+                                        <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Take Photo</h4>
                                     </div>
                                     <div 
                                         onClick={() => fileInputRef.current.click()}
                                         style={{ 
-                                            flex: 1, border: '2px dashed #10B981', borderRadius: '12px', padding: '15px 10px', 
-                                            textAlign: 'center', cursor: 'pointer', background: 'rgba(16, 185, 129, 0.05)', transition: 'all 0.3s ease'
+                                            flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '2rem 1rem', 
+                                            textAlign: 'center', cursor: 'pointer', background: 'rgba(255, 255, 255, 0.03)', transition: 'all 0.3s ease',
+                                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
                                         }}
+                                        onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = '#10B981'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(16, 185, 129, 0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                                        onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
-                                        <i className="fas fa-images" style={{ fontSize: '1.8rem', color: '#10B981', marginBottom: '8px' }}></i>
-                                        <h4 style={{ margin: 0, fontSize: '0.95rem' }}>Gallery</h4>
+                                        <div style={{ width: '64px', height: '64px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                                            <i className="fas fa-images" style={{ fontSize: '1.8rem', color: '#10B981' }}></i>
+                                        </div>
+                                        <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Gallery</h4>
                                     </div>
                                 </div>
                                 <input 
@@ -225,9 +253,11 @@ const UploadPaper = () => {
                                     </div>
                                 )}
 
-                                <button onClick={handleNext} className="btn btn-primary" style={{ width: '100%' }} disabled={files.length === 0}>
-                                    Next <i className="fas fa-arrow-right"></i>
-                                </button>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <button onClick={handleNext} className="btn" style={{ width: '100%', maxWidth: '300px', padding: '0.8rem 1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', border: 'none', transition: 'all 0.3s ease', opacity: files.length === 0 ? 0.5 : 1, cursor: files.length === 0 ? 'not-allowed' : 'pointer' }} disabled={files.length === 0}>
+                                        Next Step <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
+                                    </button>
+                                </div>
                             </motion.div>
                         )}
 
@@ -350,9 +380,10 @@ const UploadPaper = () => {
                         )}
                     </AnimatePresence>
 
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 };
