@@ -1148,11 +1148,10 @@ a:hover {
         padding: 1.5rem 2rem !important;
     }
     .upload-method-card {
-        aspect-ratio: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 1rem !important;
+        padding: 2rem !important;
     }
 }
