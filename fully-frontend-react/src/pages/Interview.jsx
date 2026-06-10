@@ -322,76 +322,29 @@ const Interview = () => {
             </div>
         </div>
         <div className="location-wrapper" style={{ flex: '1 1 0', minWidth: 0 }}>
-            <div
-                className="custom-dropdown"
-                onClick={() => setShowLocationMenu(!showLocationMenu)}
+            <select
+                className="form-input template-select"
+                value={filterLocation}
+                onChange={(e) => setFilterLocation(e.target.value)}
                 style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
+                    width: '100%',
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid var(--border-color)',
                     padding: '0.8rem 1rem',
                     borderRadius: '12px',
-                    cursor: 'pointer',
-                    width: '100%',
-                    minWidth: 0,
-                    boxSizing: 'border-box',
-                    justifyContent: 'space-between',
                     color: '#fff',
-                    fontSize: '0.9rem'
+                    fontSize: '0.9rem',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                    cursor: 'pointer'
                 }}
             >
-                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
-                    {filterLocation === 'all' ? 'All Locations' : filterLocation}
-                </span>
-                <i className={`fas fa-chevron-down ${showLocationMenu ? 'fa-rotate-180' : ''}`} style={{ transition: '0.3s', flexShrink: 0 }}></i>
-            </div>
-            <AnimatePresence>
-                {showLocationMenu && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        style={{
-                            position: 'absolute',
-                            top: '120%',
-                            left: 0,
-                            width: '100%',
-                            background: 'rgba(22, 22, 34, 0.95)',
-                            backdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '12px',
-                            padding: '0.5rem',
-                            zIndex: 100,
-                            boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-                            maxHeight: '250px',
-                            overflowY: 'auto'
-                        }}
-                    >
-                        {locations.map(loc => (
-                            <div
-                                key={loc}
-                                className="dropdown-option"
-                                onClick={() => { setFilterLocation(loc); setShowLocationMenu(false); }}
-                                style={{
-                                    padding: '0.8rem 1rem',
-                                    cursor: 'pointer',
-                                    borderRadius: '8px',
-                                    color: filterLocation === loc ? '#fff' : 'var(--text-secondary)',
-                                    background: filterLocation === loc ? 'var(--primary)' : 'transparent',
-                                    transition: '0.2s',
-                                    marginBottom: '0.2rem',
-                                    fontSize: '0.9rem'
-                                }}
-                            >
-                                {loc === 'all' ? 'All Locations' : loc}
-                            </div>
-                        ))}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                {locations.map(loc => (
+                    <option key={loc} value={loc} style={{ color: 'black' }}>
+                        {loc === 'all' ? 'All Locations' : loc}
+                    </option>
+                ))}
+            </select>
         </div>
     </section>
     </div>
