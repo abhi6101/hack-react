@@ -632,7 +632,7 @@ const Notes = ({ isAdminView }) => {
                         )}
                     </div>
 
-                    <div className="dept-selector-inline" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 100 }}>
+                    <div className="dept-selector-inline" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 1000 }}>
                         <div
                             className={`custom-dropdown ${userRole === 'STUDENT' ? 'disabled' : ''}`}
                             onClick={() => { if (userRole !== 'STUDENT') setShowBranchMenu(!showBranchMenu); }}
@@ -700,7 +700,7 @@ const Notes = ({ isAdminView }) => {
                             whileTap={{ scale: 0.97 }}
                             className="btn btn-primary"
                             onClick={() => setShowUploadModal(true)}
-                            style={{ borderRadius: '50px', padding: '0 1.2rem', height: '40px', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
+                            style={{ position: 'relative', zIndex: 10, borderRadius: '50px', padding: '0 1.2rem', height: '40px', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
                         >
                             <i className="fas fa-plus"></i> Upload
                         </motion.button>

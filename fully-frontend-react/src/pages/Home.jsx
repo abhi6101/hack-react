@@ -353,7 +353,7 @@ const Home = () => {
                             <Link to="/courses" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', borderRadius: '50px', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '0.8rem 2rem', background: 'transparent' }}>Explore More</Link>
                         </motion.div>
 
-                        <motion.div variants={fadeInUp} style={{ marginTop: '2rem', maxWidth: '400px' }}>
+                        <motion.div variants={fadeInUp} className="leaderboard-wrapper" style={{ marginTop: '2rem', maxWidth: '400px' }}>
                             <LeaderboardComponent />
                         </motion.div>
                     </motion.div>

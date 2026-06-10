@@ -31,7 +31,7 @@
     transition: transform 0.3s ease;
 }
 
-.dropdown:hover .dropdown-toggle i.fa-chevron-down {
+.dropdown:has(.dropdown-menu.show) .dropdown-toggle i.fa-chevron-down {
     transform: rotate(180deg);
 }
 

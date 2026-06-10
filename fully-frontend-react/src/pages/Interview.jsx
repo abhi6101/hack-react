@@ -346,7 +346,7 @@ const Interview = () => {
 
         {/* Location Dropdown */}
         <div className="dept-selector-inline" style={{ position: 'relative', zIndex: 100, flex: 1, minWidth: '140px' }}>
-            <div className="custom-dropdown" onClick={() => setShowLocationMenu(!showLocationMenu)}>
+            <div style={{ position: 'relative', width: '100%', cursor: 'pointer' }} onClick={() => setShowLocationMenu(!showLocationMenu)}>
                 <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0 1rem', height: '40px', borderRadius: '50px', border: '1px solid rgba(0, 212, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff', fontSize: '0.95rem' }}>
                         {filterLocation === 'all' ? 'All Locations' : filterLocation}

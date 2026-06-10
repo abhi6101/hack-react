@@ -62,10 +62,7 @@ const Navbar = ({ menuOpen = false }) => {
 
                 <Link to="/" className={isActive('/')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-home"></i> Home</Link>
                 
-                {/* Career Dropdown */}
                 <div className="dropdown"
-                    onMouseEnter={() => setCareerOpen(true)}
-                    onMouseLeave={() => setCareerOpen(false)}
                     onClick={() => setCareerOpen(!careerOpen)}>
                     <button className="dropdown-toggle">
                         <i className="fas fa-briefcase"></i> Career <i className="fas fa-chevron-down"></i>
@@ -77,10 +74,7 @@ const Navbar = ({ menuOpen = false }) => {
                     </div>
                 </div>
 
-                {/* Academics Dropdown */}
                 <div className="dropdown"
-                    onMouseEnter={() => setAcademicsOpen(true)}
-                    onMouseLeave={() => setAcademicsOpen(false)}
                     onClick={() => setAcademicsOpen(!academicsOpen)}>
                     <button className="dropdown-toggle">
                         <i className="fas fa-graduation-cap"></i> Academics <i className="fas fa-chevron-down"></i>
@@ -92,10 +86,7 @@ const Navbar = ({ menuOpen = false }) => {
                     </div>
                 </div>
 
-                {/* Resources Dropdown */}
                 <div className="dropdown"
-                    onMouseEnter={() => setResourcesOpen(true)}
-                    onMouseLeave={() => setResourcesOpen(false)}
                     onClick={() => setResourcesOpen(!resourcesOpen)}>
                     <button className="dropdown-toggle">
                         <i className="fas fa-book-reader"></i> Resources <i className="fas fa-chevron-down"></i>
@@ -107,10 +98,7 @@ const Navbar = ({ menuOpen = false }) => {
                     </div>
                 </div>
 
-                {/* Explore Dropdown */}
                 <div className="dropdown"
-                    onMouseEnter={() => setExploreOpen(true)}
-                    onMouseLeave={() => setExploreOpen(false)}
                     onClick={() => setExploreOpen(!exploreOpen)}>
                     <button className="dropdown-toggle">
                         <i className="fas fa-compass"></i> Explore <i className="fas fa-chevron-down"></i>

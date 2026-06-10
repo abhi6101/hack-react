@@ -474,6 +474,8 @@ main {
 
     .hero-content #heroSubtitle,
     .hero-content .cta-btns,
+    .hero-content .badge-container,
+    .hero-content .leaderboard-wrapper,
     .hero-content #userWelcome,
     .hero-content #userWelcome h2,
     .hero-content #userWelcome p {

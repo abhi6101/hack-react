@@ -191,14 +191,14 @@ section {
     }
 }
 
-/* --- 4. Hero Section --- */
 .hero {
     min-height: 80vh;
+    margin-top: 3rem;
     padding: 4rem 2rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    text-align: left;
     position: relative;
     overflow: visible;
     background: transparent !important;
@@ -332,7 +332,7 @@ section {
 
 .cta-btns {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1rem;
 }
 

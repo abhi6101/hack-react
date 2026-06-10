@@ -34,7 +34,7 @@ const Blog = () => {
                     <div className="papers-header-right blog-header-right" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                         <div className="category-pills-container" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0, flexDirection: 'row' }}>
                             <span className="category-label" style={{ margin: 0, fontSize: '0.95rem' }}>Explore by Category:</span>
-                            <div className="category-pills" style={{ display: 'flex', gap: '10px', padding: 0 }}>
+                            <div className="category-pills" style={{ display: 'flex', gap: '10px', padding: 0, alignItems: 'center' }}>
                                 {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
                                     <button 
                                         key={cat} 
