@@ -291,7 +291,7 @@ const Interview = () => {
 
     return (
         <div className="interview-page">
-<div className="interview-top-bar" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.5rem', gap: '1rem' }}>
+<div className="interview-top-bar" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', gap: '1rem', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
     {/* Stats inline */}
     <div className="stats-inline" style={{ display: 'flex', gap: '1.5rem' }}>
         <div className="stat-item">
@@ -419,8 +419,6 @@ const Interview = () => {
             </AnimatePresence>
         </div>
     </section>
-    {/* Result count */}
-    <span className="result-count" style={{ whiteSpace: 'nowrap' }}>{loading ? '...' : filteredInterviews.length} drives found</span>
 </div>
                 {/* Right Content - Interview Grid */}
                 <main className="interview-content">
