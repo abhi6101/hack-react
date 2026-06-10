@@ -1126,3 +1126,22 @@ a:hover {
     gap: 1rem;
     justify-content: flex-end;
 }
+
+/* Upload Paper UI Refinements */
+@media (min-width: 1024px) {
+    .slim-upload-header {
+        padding: 0.8rem 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .upload-wizard-card {
+        padding: 1.5rem 2rem !important;
+    }
+    .upload-method-card {
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem !important;
+    }
+}

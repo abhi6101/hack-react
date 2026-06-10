@@ -127,7 +127,7 @@ const UploadPaper = () => {
             <div style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
                 
                 {/* Gallery-Style Split Header */}
-                <div className="papers-header-container" style={{ marginBottom: '2rem', padding: '0.8rem 2rem', display: 'flex', justifyContent: 'center' }}>
+                <div className="papers-header-container slim-upload-header" style={{ marginBottom: '1.5rem', padding: '0.6rem 2rem', display: 'flex', justifyContent: 'center' }}>
                     <div className="papers-header-left" style={{ textAlign: 'center', width: '100%' }}>
                         <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Smart Paper <span style={{ color: 'var(--primary)' }}>Upload</span></h2>
                     </div>
@@ -136,10 +136,10 @@ const UploadPaper = () => {
                 {/* Central Upload Card Container */}
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div className="container" style={{ maxWidth: '550px', width: '100%', margin: '0 auto' }}>
-                        <div style={{ background: 'rgba(22, 22, 34, 0.75)', borderRadius: '24px', padding: '2.5rem', border: '1px solid rgba(0, 212, 255, 0.2)', position: 'relative', overflow: 'hidden', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', backdropFilter: 'blur(20px)' }}>
+                        <div className="upload-wizard-card" style={{ background: 'rgba(22, 22, 34, 0.75)', borderRadius: '24px', padding: '2.5rem', border: '1px solid rgba(0, 212, 255, 0.2)', position: 'relative', overflow: 'hidden', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', backdropFilter: 'blur(20px)' }}>
                     
                     {/* Thinner, Modern Progress Bar at Top */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2.5rem', position: 'relative' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(255,255,255,0.05)', zIndex: 0 }}></div>
                         <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '1px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 8px var(--primary)' }}></div>
                         {[1, 2, 3, 4].map(num => (
@@ -162,8 +162,8 @@ const UploadPaper = () => {
                     <AnimatePresence mode="wait">
                         {step === 1 && (
                             <motion.div key="step1" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
-                                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                                    <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '0.5rem' }}>Select Capture Method</h3>
+                                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                    <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem' }}>Select Capture Method</h3>
                                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto' }}>
                                         Take photos of an official university exam paper. Ensure the text is clear and legible.
                                     </p>
@@ -179,7 +179,7 @@ const UploadPaper = () => {
                                 
                                 <div style={{ display: 'flex', gap: '20px', marginBottom: '2rem', justifyContent: 'center' }}>
                                     <div 
-                                        className="take-photo-btn"
+                                        className="take-photo-btn upload-method-card"
                                         onClick={() => cameraInputRef.current.click()}
                                         style={{ 
                                             flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '2rem 1rem', 
@@ -190,11 +190,12 @@ const UploadPaper = () => {
                                         onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
                                         <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                            <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: '#00d4ff' }}></i>
+                                            <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: 'transparent', WebkitTextStroke: '1.5px #00d4ff' }}></i>
                                         </div>
                                         <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Take Photo</h4>
                                     </div>
                                     <div 
+                                        className="upload-method-card"
                                         onClick={() => fileInputRef.current.click()}
                                         style={{ 
                                             flex: 1, border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '2rem 1rem', 
@@ -205,7 +206,7 @@ const UploadPaper = () => {
                                         onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
                                         <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
-                                            <i className="fas fa-images" style={{ fontSize: '1.8rem', color: '#00d4ff' }}></i>
+                                            <i className="fas fa-images" style={{ fontSize: '1.8rem', color: 'transparent', WebkitTextStroke: '1.5px #00d4ff' }}></i>
                                         </div>
                                         <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Gallery</h4>
                                     </div>
