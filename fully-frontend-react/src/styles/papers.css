@@ -860,7 +860,6 @@ a:hover {
 .sleek-back-btn:hover .back-text { opacity: 1; visibility: visible; transform: translateX(5px); }
 .units-grid-container { display: flex; flex-direction: column; gap: 0; }
 @media (min-width: 1024px) {
-  .units-grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
   .unit-card-header { flex-direction: column; justify-content: center; text-align: center; padding: 2rem !important; height: 100%; }
   .unit-card-header > i.fa-folder { margin-bottom: 0.5rem; }
   .unit-card-title { margin-top: 0.5rem; }
@@ -904,11 +903,12 @@ a:hover {
 
 /* Notes Page File Table */
 .file-table-container {
-    margin-top: 2rem;
-    background: rgba(22, 22, 34, 0.5);
+    margin-top: 32px;
+    background: rgba(15, 23, 42, 0.6); /* Subtle dark background */
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     overflow: hidden;
+    padding: 0.5rem;
 }
 .file-table {
     width: 100%;
@@ -944,5 +944,19 @@ a:hover {
         padding: 0.5rem 2rem !important;
         margin-bottom: 12px !important;
         min-height: 60px !important;
+    }
+}
+/* Fix Unit Folder Stretching Desktop */
+@media (min-width: 1024px) {
+    .unit-folder-card {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        height: 160px !important;
+        gap: 0.5rem;
+    }
+    .unit-folder-card i.fa-folder {
+        font-size: 2.5rem !important;
+        margin-bottom: 0.5rem;
     }
 }
