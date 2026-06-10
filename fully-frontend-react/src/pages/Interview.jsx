@@ -280,7 +280,7 @@ const Interview = () => {
                                 <i className="fas fa-check"></i> Applied
                             </button>
                         ) : (
-                            <button className="btn apply-btn" disabled={slotsLeft === 0} onClick={() => handleApplyClick(interview)}>
+                            <button className="btn apply-btn" disabled={slotsLeft === 0} onClick={() => handleApplyClick(interview)} style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none' }}>
                                 <i className="fas fa-paper-plane"></i> {slotsLeft === 0 ? 'Full' : 'Apply Now'}
                             </button>
                         )}
@@ -296,9 +296,9 @@ const Interview = () => {
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2 }}>
 
-<div className="papers-header-container" style={{ marginBottom: '1.5rem', padding: '1.2rem 2rem' }}>
+<div className="papers-header-container" style={{ marginBottom: '24px', padding: '1rem 2rem' }}>
     <div className="papers-header-left">
-        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '700' }}>Available Job Drives</h2>
+        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Available Job Drives</h2>
     </div>
     
     <div className="papers-header-right">
@@ -317,7 +317,8 @@ const Interview = () => {
                         minWidth: 0,
                         background: 'rgba(255, 255, 255, 0.05)',
                         border: '1px solid rgba(0, 212, 255, 0.3)',
-                        padding: '10px 1rem 10px 2.5rem',
+                        padding: '0 1rem 0 2.5rem',
+                        height: '44px',
                         borderRadius: '50px',
                         color: '#fff',
                         fontSize: '0.95rem',
@@ -335,7 +336,8 @@ const Interview = () => {
                     width: '100%',
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(0, 212, 255, 0.3)',
-                    padding: '10px 2.5rem 10px 1rem',
+                    padding: '0 2.5rem 0 1.5rem',
+                    height: '44px',
                     borderRadius: '50px',
                     color: '#fff',
                     fontSize: '0.95rem',
