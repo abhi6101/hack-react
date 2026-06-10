@@ -393,9 +393,9 @@ const Interview = () => {
                 )}
             </AnimatePresence>
         </div>
+    </section>
     </div>
 </div>
-
 {/* Compact Stats Bar */}
 <div className="compact-stats-bar">
     <div className="stat-item">
@@ -425,7 +425,6 @@ const Interview = () => {
             <span className="stat-label-small">Applications Sent</span>
         </div>
     </div>
-</div>
 </div>
                 {/* Right Content - Interview Grid */}
                 <main className="interview-content">
