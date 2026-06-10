@@ -348,8 +348,10 @@ const Home = () => {
                             Your gateway to top-tier job placements, resume mastery, and interview excellence. Your future starts here.
                         </motion.p>
 
-                        <motion.div className="cta-btns" variants={fadeInUp} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <Link to="/register" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', boxShadow: '0 0 15px rgba(0, 212, 255, 0.4)', borderRadius: '50px', fontWeight: '600', padding: '0.8rem 2rem' }}>Get Started</Link>
+                        <motion.div className="cta-btns" variants={fadeInUp} style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: user.username ? 'center' : 'flex-start' }}>
+                            {!user.username && (
+                                <Link to="/register" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', boxShadow: '0 0 15px rgba(0, 212, 255, 0.4)', borderRadius: '50px', fontWeight: '600', padding: '0.8rem 2rem' }}>Get Started</Link>
+                            )}
                             <Link to="/courses" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', borderRadius: '50px', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '0.8rem 2rem', background: 'transparent' }}>Explore More</Link>
                         </motion.div>
 

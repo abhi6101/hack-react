@@ -33,39 +33,41 @@ const Courses = () => {
             </Helmet>
             <main className="courses-container" style={{ paddingTop: '160px', minHeight: '100vh', background: 'transparent' }}>
                 <div className="course-controls course-header-container">
-                    <div className="course-header-left">
+                    <div className="course-header-left" style={{ flex: 1 }}>
                         <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', whiteSpace: 'nowrap', fontWeight: '700', lineHeight: '1' }}>Career boosting courses</h2>
                     </div>
 
-                    <div className="course-header-right">
-                        <div className="search-bar" style={{ flex: 1, minWidth: '250px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '50px', display: 'flex', alignItems: 'center', padding: '0 1.5rem', border: '1px solid rgba(0, 212, 255, 0.3)' }}>
-                            <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
-                            <input
-                                type="text"
-                                id="courseSearch"
-                                placeholder="Search courses..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{ border: 'none', background: 'transparent', color: '#fff', width: '100%', padding: '0.6rem 1rem', outline: 'none' }}
-                            />
-                        </div>
+                    <div className="search-bar" style={{ flex: 1.5, minWidth: '250px', margin: '0 1rem' }}>
+                        <i className="fas fa-search"></i>
+                        <input
+                            type="text"
+                            id="courseSearch"
+                            placeholder="Search courses..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
 
+                    <div className="course-header-right" style={{ flex: 1, justifyContent: 'flex-end' }}>
                         <div className="category-dropdown" style={{ position: 'relative', minWidth: '200px' }}>
                             <select
                                 value={activeCategory}
                                 onChange={(e) => setActiveCategory(e.target.value)}
                                 style={{
                                     width: '100%',
-                                    padding: '0.6rem 1.5rem',
-                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    padding: '0.9rem 1.5rem',
+                                    background: 'rgba(22, 22, 34, 0.8)',
                                     color: '#fff',
-                                    border: '1px solid rgba(0, 212, 255, 0.3)',
+                                    border: '1px solid var(--border-color)',
                                     borderRadius: '50px',
-                                    fontSize: '0.95rem',
+                                    fontSize: '1rem',
                                     appearance: 'none',
                                     cursor: 'pointer',
-                                    outline: 'none'
+                                    outline: 'none',
+                                    transition: 'all 0.3s ease'
                                 }}
+                                onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px var(--primary-glow)'; }}
+                                onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none'; }}
                             >
                                 {['all', 'programming', 'web-dev', 'mobile-dev', 'data-science'].map(cat => (
                                     <option key={cat} value={cat} style={{ background: '#0F172A', color: '#fff' }}>

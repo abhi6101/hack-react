@@ -32,19 +32,33 @@ const Blog = () => {
                     </div>
                     
                     <div className="papers-header-right blog-header-right" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                        <div className="category-pills-container" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0, flexDirection: 'row' }}>
-                            <span className="category-label" style={{ margin: 0, fontSize: '0.95rem' }}>Explore by Category:</span>
-                            <div className="category-pills" style={{ display: 'flex', gap: '10px', padding: 0, alignItems: 'center' }}>
+                        <div className="category-dropdown" style={{ position: 'relative', minWidth: '200px' }}>
+                            <select
+                                value={activeCategory}
+                                onChange={(e) => handleFilter(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.9rem 1.5rem',
+                                    background: 'rgba(22, 22, 34, 0.8)',
+                                    color: '#fff',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '50px',
+                                    fontSize: '1rem',
+                                    appearance: 'none',
+                                    cursor: 'pointer',
+                                    outline: 'none',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px var(--primary-glow)'; }}
+                                onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none'; }}
+                            >
                                 {['all', 'tech-skills', 'career-growth', 'interview-tips', 'resume-advice'].map(cat => (
-                                    <button 
-                                        key={cat} 
-                                        className={`pill-btn ${activeCategory === cat ? 'active' : ''}`}
-                                        onClick={() => handleFilter(cat)}
-                                    >
+                                    <option key={cat} value={cat} style={{ background: '#0F172A', color: '#fff' }}>
                                         {cat === 'all' ? 'All Posts' : cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                    </button>
+                                    </option>
                                 ))}
-                            </div>
+                            </select>
+                            <i className="fas fa-chevron-down" style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', pointerEvents: 'none' }}></i>
                         </div>
                     </div>
                 </div>
