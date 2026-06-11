@@ -334,12 +334,44 @@ const Home = () => {
                     >
 
                         <motion.div variants={fadeInUp}>
-                            <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
-                                Get Your Dream Job
-                            </h1>
-                            <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                                Top recruiters from 100+ companies.
-                            </p>
+                            {/* MOBILE HERO (Original) */}
+                            <div className="mobile-only-hero">
+                                <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
+                                    Get Your Dream Job
+                                </h1>
+                                <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                                    Top recruiters from 100+ companies.
+                                </p>
+                            </div>
+
+                            {/* DESKTOP HERO (Enhanced) */}
+                            <div className="desktop-only-hero">
+                                <h1 id="heroHeadingDesktop" className="desktop-hero-heading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800', textAlign: 'left' }}>
+                                    Bridge the Gap from <span className="text-gradient">Campus to Career</span>
+                                </h1>
+                                <p className="hero-subheadline desktop-hero-sub" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem', textAlign: 'left' }}>
+                                    Connect with top recruiters from <span style={{color: '#fff', fontWeight: 600}}>100+ global tech giants</span> and land your perfect role.
+                                </p>
+                                
+                                <div className="desktop-hero-ctas" style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'flex-start' }}>
+                                    <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', fontWeight: '600', textDecoration: 'none', border: 'none' }}>
+                                        Find Jobs
+                                    </Link>
+                                    <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontWeight: '600', textDecoration: 'none' }}>
+                                        Build Resume
+                                    </Link>
+                                </div>
+
+                                <div className="desktop-trusted-by" style={{ marginTop: '3rem', textAlign: 'left' }}>
+                                    <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Trusted by Industry Leaders</p>
+                                    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', opacity: 0.6 }}>
+                                        <i className="fab fa-google" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
+                                        <i className="fab fa-microsoft" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
+                                        <i className="fab fa-amazon" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
+                                        <i className="fab fa-apple" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
+                                    </div>
+                                </div>
+                            </div>
                         </motion.div>
 
 

@@ -102,3 +102,13 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
       margin-top: 0 !important;
   }
 }
+
+/* DESKTOP/MOBILE HERO TOGGLE */
+.desktop-only-hero { display: none; }
+.mobile-only-hero { display: block; }
+@media (min-width: 1024px) {
+  .desktop-only-hero { display: block; }
+  .mobile-only-hero { display: none; }
+  .desktop-hero-heading { font-size: 4rem !important; line-height: 1.1 !important; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  .desktop-hero-sub { font-size: 1.3rem !important; color: #94a3b8 !important; }
+}
