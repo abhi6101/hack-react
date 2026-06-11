@@ -366,16 +366,16 @@ const ResumeBuilder = () => {
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
-            <div className="papers-header-container">
-                <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '800', lineHeight: '1' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
+            <div className="papers-header-container" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+                <div className="papers-header-left" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 2.5rem)', display: 'block', overflow: 'visible', maxWidth: '100%', fontWeight: '800', lineHeight: '1.2', textAlign: 'center' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
                     <p className="sr-only">Create a professional, clean resume in seconds.</p>
                 </div>
-                <div className="papers-header-right">
-                    <div className="custom-dropdown">
-                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>Template:</span>
+                <div className="papers-header-right" style={{ width: '100%', maxWidth: '400px', display: 'flex', justifyContent: 'center' }}>
+                    <div className="custom-dropdown" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255, 255, 255, 0.05)', padding: '0.8rem 1.2rem', borderRadius: '16px', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textAlign: 'left' }}>Template:</span>
                         <div 
-                            style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', fontWeight: '600' }}
+                            style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', fontWeight: '600' }}
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
                             <span style={{ color: '#fff' }}>
@@ -427,7 +427,7 @@ const ResumeBuilder = () => {
 
             <div className="resume-layout-grid">
                 {/* Form Side */}
-                <div className="resume-form-container">
+                <div className="resume-form-container mobile-resume-form" style={{ padding: '2rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '24px', border: '1px solid rgba(255, 255, 255, 0.05)', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
                     {/* 1. Personal Info */}
                     <SectionCard title="Personal Details" icon="user">
