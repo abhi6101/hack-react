@@ -349,6 +349,11 @@ const Home = () => {
                                     Build Resume
                                 </Link>
                             </div>
+
+                            {/* Leaderboard directly below the buttons */}
+                            <div className="hero-leaderboard-wrapper" style={{ marginTop: '3rem', maxWidth: '600px' }}>
+                                <LeaderboardComponent limit={3} />
+                            </div>
                         </motion.div>
 
 
@@ -537,17 +542,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Leaderboard Mobile Wrapper */}
-            <div className="mobile-only leaderboard-mobile-wrapper" style={{ margin: '10px 0' }}>
-                <LeaderboardComponent limit={3} />
-            </div>
-
-
-
-
-
-
-            {/* Testimonials Section (Removed per user request) */}
+            {/* Removed old Leaderboard Mobile Wrapper */}            {/* Testimonials Section (Removed per user request) */}
             {/* <motion.section
                 className="testimonials"
                 initial="hidden"
