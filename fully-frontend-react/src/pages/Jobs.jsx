@@ -302,7 +302,12 @@ const Jobs = () => {
 
                     <div className={`papers-header-right mobile-filters-wrapper ${isSearchFocused ? 'active-search' : (showCategoryMenu ? 'active-category' : (showSortMenu ? 'active-sort' : ''))}`} style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '600px', flexWrap: 'wrap', alignItems: 'center' }}>
                         {/* Search */}
-                        <div className="global-search-container mobile-filter-search" style={{
+                        <div className={`global-search-container mobile-filter-search ${isSearchFocused ? 'is-focused' : ''}`} 
+                            onClick={() => {
+                                setIsSearchFocused(true);
+                                setTimeout(() => document.getElementById('mobileSearchInput')?.focus(), 100);
+                            }}
+                            style={{
                             position: 'relative',
                             flex: 1.5,
                             minWidth: '140px',
@@ -319,6 +324,7 @@ const Jobs = () => {
                         }}>
                             <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
                             <input
+                                id="mobileSearchInput"
                                 type="text"
                                 placeholder="Search jobs..."
                                 value={filters.search}
