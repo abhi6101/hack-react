@@ -340,29 +340,6 @@ const Home = () => {
                             <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
                                 Top recruiters from 100+ companies.
                             </p>
-                            
-                            <div className={`home-mobile-filters mobile-only ${isHomeSearchFocused ? 'active-search' : ''}`}>
-                                <div className={`home-search-btn ${isHomeSearchFocused ? 'is-focused' : ''}`} onClick={() => {
-                                    setIsHomeSearchFocused(true);
-                                    setTimeout(() => document.getElementById('homeMobileSearchInput')?.focus(), 100);
-                                }}>
-                                    <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
-                                    <input
-                                        id="homeMobileSearchInput"
-                                        type="text"
-                                        placeholder="Search jobs..."
-                                        value={homeSearchQuery}
-                                        onChange={(e) => setHomeSearchQuery(e.target.value)}
-                                        onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/jobs?search=${encodeURIComponent(homeSearchQuery)}`); }}
-                                        onBlur={(e) => { if (!e.target.value) setIsHomeSearchFocused(false); }}
-                                        style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.95rem', width: '100%', outline: 'none' }}
-                                    />
-                                </div>
-                                <div className="home-sort-btn" onClick={() => navigate('/jobs')}>
-                                    <span>Newest First</span>
-                                    <i className="fas fa-chevron-down"></i>
-                                </div>
-                            </div>
                         </motion.div>
 
 
@@ -419,31 +396,6 @@ const Home = () => {
                         </div>
                     </div>
 
-                </div>
-            </section>
-
-            {/* Mobile Job Marquee Section */}
-            <section className="job-marquee-container">
-                <div className="job-marquee-track">
-                    {[
-                        { title: 'Frontend Developer', company: 'TechNova', salary: '₹8-12 LPA', type: 'Full Time' },
-                        { title: 'Data Scientist', company: 'DataCorp', salary: '₹12-18 LPA', type: 'Remote' },
-                        { title: 'UI/UX Intern', company: 'DesignCo', salary: '₹20k/mo', type: 'Internship' },
-                        { title: 'Backend Engineer', company: 'ServerPro', salary: '₹10-15 LPA', type: 'Full Time' },
-                        { title: 'Frontend Developer', company: 'TechNova', salary: '₹8-12 LPA', type: 'Full Time' },
-                        { title: 'Data Scientist', company: 'DataCorp', salary: '₹12-18 LPA', type: 'Remote' },
-                        { title: 'UI/UX Intern', company: 'DesignCo', salary: '₹20k/mo', type: 'Internship' },
-                        { title: 'Backend Engineer', company: 'ServerPro', salary: '₹10-15 LPA', type: 'Full Time' }
-                    ].map((job, idx) => (
-                        <div className="job-marquee-card" key={idx} onClick={() => navigate('/jobs')} style={{ cursor: 'pointer', transition: 'all 0.2s ease' }} onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.98)'} onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}>
-                            <h3 style={{ fontSize: '1.1rem', margin: 0, color: 'var(--primary)' }}>{job.title}</h3>
-                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#fff' }}><i className="fas fa-building"></i> {job.company}</p>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                                <span><i className="fas fa-rupee-sign"></i> {job.salary}</span>
-                                <span><i className="fas fa-briefcase"></i> {job.type}</span>
-                            </div>
-                        </div>
-                    ))}
                 </div>
             </section>
 
