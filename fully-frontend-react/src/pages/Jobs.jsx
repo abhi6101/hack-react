@@ -411,7 +411,8 @@ const Jobs = () => {
                                         ].map(option => (
                                             <div
                                                 key={option.value}
-                                                onClick={() => {
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
                                                     handleFilterChange('category', option.value);
                                                     setShowCategoryMenu(false);
                                                 }}
@@ -488,7 +489,7 @@ const Jobs = () => {
                                             position: 'absolute',
                                             top: '120%',
                                             right: 0,
-                                            width: '100%',
+                                            width: '220px',
                                             background: 'rgba(22, 22, 34, 0.95)',
                                             backdropFilter: 'blur(10px)',
                                             border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -507,7 +508,8 @@ const Jobs = () => {
                                         ].map(option => (
                                             <div
                                                 key={option.value}
-                                                onClick={() => {
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
                                                     handleFilterChange('sort', option.value);
                                                     setShowSortMenu(false);
                                                 }}
