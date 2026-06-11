@@ -1101,36 +1101,58 @@ main {
 @keyframes scroll-left-jobs { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 0.75rem)); } }
 @media (min-width: 769px) { .job-marquee-container { display: none; } }
 
+
+
 /* ULTRA COMPACT MOBILE REDESIGN */
 @media (max-width: 768px) {
     .desktop-only { display: none !important; }
     .mobile-only { display: flex !important; }
-    
-    /* Zero dead space resets */
-    .hero-content { margin-top: 0 !important; padding-top: 1rem !important; }
-    .hero-main-container { padding-top: 0 !important; gap: 0.5rem !important; }
-    .leaderboard-wrapper { display: none !important; }
-    
-    /* Logo slider miniaturization */
-    .logo-item { width: 80px !important; height: 40px !important; padding: 0.5rem !important; border-radius: 8px !important; }
-    .logo-marquee-container { margin-bottom: 0 !important; }
-    .partners-scroll-section { padding: 0 !important; margin-top: -1rem !important; }
-    .partners-header { display: none !important; } /* Hide the text above logos to save space */
-    
-    /* Swipeable Job Cards */
-    .job-marquee-track { animation: none !important; overflow-x: auto !important; scroll-snap-type: x mandatory; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch; display: flex; gap: 1rem; width: 100vw; margin-left: -5vw; padding-left: 5vw; padding-right: 5vw; box-sizing: border-box; }
-    .job-marquee-track::-webkit-scrollbar { display: none; }
-    .job-marquee-card { scroll-snap-align: center; min-width: 220px !important; padding: 1rem !important; }
-    .job-marquee-container { margin: 1rem 0 0 !important; }
 
-    /* Moments Grid */
-    .mobile-moments-grid { display: grid !important; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; max-width: 300px; margin: 0 auto; }
-    .gallery { padding-top: 1rem !important; margin-top: 0 !important; }
-    .gallery h2 { margin-bottom: 1rem !important; }
+    /* Zero dead space resets */
+    section { padding-top: 1rem !important; padding-bottom: 1rem !important; margin-bottom: 0 !important; }
+    .hero-content { margin-top: 0 !important; padding-top: 0 !important; }
+    .hero-main-container { padding-top: 0 !important; gap: 0 !important; }
+    .leaderboard-wrapper { display: none !important; }
+    .hero-subheadline { margin-top: 0.25rem !important; margin-bottom: 0.5rem !important; }
+    h2 { margin-bottom: 0.5rem !important; }
+
+    /* Home Mobile Filters */
+    .home-mobile-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; width: 100%; justify-content: flex-start; align-items: center; margin: 0 auto 1rem !important; }
+    .home-search-btn { transition: all 0.3s ease-in-out; flex: 0 0 45px !important; height: 45px !important; min-width: 45px !important; padding: 0 !important; border-radius: 50% !important; display: flex; justify-content: center; align-items: center; cursor: pointer; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); position: relative; }
+    .home-search-btn:not(.is-focused) input { display: none !important; }
+    .home-search-btn:not(.is-focused) i { position: static !important; transform: none !important; margin: auto; }
+    .home-sort-btn { transition: all 0.3s ease-in-out; flex: 1 1 calc(100% - 60px) !important; min-width: 0 !important; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; height: 45px; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; color: var(--text-secondary); cursor: pointer; }
+    .home-mobile-filters.active-search .home-search-btn { flex: 1 1 100% !important; border-radius: 50px !important; padding: 0 1rem 0 2.5rem !important; justify-content: flex-start; }
+    .home-mobile-filters.active-search .home-search-btn input { display: block !important; width: 100%; pointer-events: auto; }
+    .home-mobile-filters.active-search .home-search-btn i { position: absolute !important; left: 1rem !important; top: 50% !important; transform: translateY(-50%) !important; margin: 0; }
+    .home-mobile-filters.active-search .home-sort-btn { flex: 1 1 100% !important; margin-top: 0.25rem !important; }
+
+    /* Logo slider miniaturization */
+    .logo-marquee-container { margin-bottom: 0 !important; max-height: 60px; display: flex; align-items: center; overflow: hidden; }
+    .logo-scroll-track { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: center; }
+    .logo-item { width: 80px !important; height: 40px !important; padding: 0.5rem !important; border-radius: 8px !important; flex-shrink: 0; margin: 0; }
+    .partners-scroll-section { padding: 0.5rem 0 !important; margin: 0 !important; }
+    .partners-header { display: none !important; }
+
+    /* Swipeable Job Cards */
+    .job-marquee-track { animation: scroll-left-jobs 20s linear infinite !important; overflow-x: auto !important; scroll-snap-type: x mandatory; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch; display: flex; flex-wrap: nowrap !important; gap: 0.5rem; width: max-content; }
+    .job-marquee-track::-webkit-scrollbar { display: none; }
+    .job-marquee-card { scroll-snap-align: center; width: 85vw !important; min-width: 85vw !important; padding: 1rem !important; flex-shrink: 0; margin: 0; }
+    .job-marquee-container { margin: 0.5rem 0 !important; overflow: hidden; width: 100%; }
 
     /* Process Row tighten */
-    .how-it-works-section { padding-top: 1rem !important; padding-bottom: 1rem !important; }
-    .how-steps-list { margin-top: 0 !important; }
+    .how-it-works-section { padding: 0.5rem 2% !important; }
+    .how-steps-list { margin-top: 0 !important; display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: flex-start !important; gap: 0.5rem !important; width: 100%; }
+    .how-step-item { flex: 1 1 33% !important; display: flex !important; flex-direction: column !important; align-items: center !important; gap: 0.5rem !important; padding: 0 !important; background: transparent !important; }
+    .how-step-item:hover { transform: none !important; }
+    .step-icon-box { width: 35px !important; height: 35px !important; min-width: 35px !important; font-size: 1rem !important; border-radius: 50% !important; margin: 0 auto; }
+    .step-text h3 { font-size: 0.75rem !important; text-align: center !important; margin: 0 !important; white-space: nowrap; }
+    .step-text p { display: none !important; }
+
+    /* Moments Grid */
+    .mobile-moments-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; grid-template-rows: repeat(2, 1fr) !important; gap: 0.5rem; max-width: 300px; margin: 0 auto; aspect-ratio: 1/1; }
+    .moment-thumb { width: 100%; height: 100%; background-size: cover; background-position: center; border-radius: 12px; }
+    .gallery { padding-top: 0.5rem !important; margin-top: 0 !important; padding-bottom: 0.5rem !important; }
 }
 
 @media (min-width: 769px) {

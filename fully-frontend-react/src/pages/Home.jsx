@@ -261,6 +261,8 @@ const LearningHubScroll = () => {
 const Home = () => {
     const [user, setUser] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isHomeSearchFocused, setIsHomeSearchFocused] = useState(false);
+    const [homeSearchQuery, setHomeSearchQuery] = useState('');
 
     const galleryImages = [
         "/images/4E9A7129-copy.jpg",
@@ -339,11 +341,24 @@ const Home = () => {
                                 Top recruiters from 100+ companies.
                             </p>
                             
-                            <div className="home-mobile-filters mobile-only" style={{ display: 'flex', gap: '0.5rem', width: '100%', maxWidth: '400px', margin: '1rem auto 0' }}>
-                                <div className="home-search-btn" onClick={() => navigate('/jobs')} style={{ flex: '0 0 45px', height: '45px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}>
+                            <div className={`home-mobile-filters mobile-only ${isHomeSearchFocused ? 'active-search' : ''}`}>
+                                <div className={`home-search-btn ${isHomeSearchFocused ? 'is-focused' : ''}`} onClick={() => {
+                                    setIsHomeSearchFocused(true);
+                                    setTimeout(() => document.getElementById('homeMobileSearchInput')?.focus(), 100);
+                                }}>
                                     <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
+                                    <input
+                                        id="homeMobileSearchInput"
+                                        type="text"
+                                        placeholder="Search jobs..."
+                                        value={homeSearchQuery}
+                                        onChange={(e) => setHomeSearchQuery(e.target.value)}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/jobs?search=${encodeURIComponent(homeSearchQuery)}`); }}
+                                        onBlur={(e) => { if (!e.target.value) setIsHomeSearchFocused(false); }}
+                                        style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.95rem', width: '100%', outline: 'none' }}
+                                    />
                                 </div>
-                                <div className="home-sort-btn" onClick={() => navigate('/jobs')} style={{ flex: '1', height: '45px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                                <div className="home-sort-btn" onClick={() => navigate('/jobs')}>
                                     <span>Newest First</span>
                                     <i className="fas fa-chevron-down"></i>
                                 </div>
@@ -581,15 +596,10 @@ const Home = () => {
                 </div>
 
                 {/* Mobile 2x2 Grid */}
-                <div className="mobile-only mobile-moments-grid" style={{ display: 'none' }}>
+                <div className="mobile-only mobile-moments-grid">
                     {galleryImages.slice(0, 4).map((img, idx) => (
                         <div key={idx} className="moment-thumb" style={{
-                            backgroundImage: `url(${img})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            borderRadius: '50%',
-                            width: '100%',
-                            aspectRatio: '1/1'
+                            backgroundImage: `url(${img})`
                         }}></div>
                     ))}
                 </div>
