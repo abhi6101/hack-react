@@ -1191,3 +1191,9 @@ a:hover {
   .mobile-clickable-card:active { transform: scale(0.95) !important; background: rgba(255, 255, 255, 0.08) !important; }
   .papers-header-container { gap: 0.5rem !important; }
 }
+
+/* QUIZ MOBILE OVERRIDES */
+@media (max-width: 768px) {
+  .mobile-quiz-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; margin-top: 1rem !important; grid-auto-rows: 1fr; align-items: stretch; }
+  .mobile-quiz-card { padding: 1rem 0.5rem !important; min-height: auto !important; margin: 0 !important; }
+}

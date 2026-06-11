@@ -412,9 +412,9 @@ const Papers = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div className="papers-header-container">
                 <div className="papers-header-left">
-                    <h1 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Previous Year Question Papers</h1>
+                    <h1 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Previous Year Papers</h1>
                     <p className="sr-only" style={{ display: 'none' }}>
-                        Download the complete archive of previous year question papers for the IMCA program.
+                        Download the complete archive of Previous Year Papers for the IMCA program.
                     </p>
                 </div>
 
@@ -861,7 +861,7 @@ const Papers = () => {
     return (
         <div className="papers-page-wrapper">
             <Helmet>
-                <title>Previous Year Question Papers | IMCA Exams | Hack-2-Hired</title>
+                <title>Previous Year Papers | IMCA Exams | Hack-2-Hired</title>
                 <meta name="description" content="Download exclusive RGPV question papers and Integrated MCA (IMCA) previous year exams. Access the complete collection of 1st to 10th semester papers." />
                 <meta name="keywords" content="imca previous year question paper, previous pg question papers, rmca lmca imca question papers, imca bca integrated honor solved question papers, RGPV question papers, RGPV IMCA papers, IMCA 8th sem papers, Integrated MCA question papers, RGPV previous year papers, Hack2Hired" />
             </Helmet>
