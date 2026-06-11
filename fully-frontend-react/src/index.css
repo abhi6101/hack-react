@@ -112,3 +112,65 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
   .desktop-hero-heading { font-size: 4rem !important; line-height: 1.1 !important; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
   .desktop-hero-sub { font-size: 1.3rem !important; color: #94a3b8 !important; }
 }
+
+/* GLOBAL PADDING REDUCTION AND HOW-IT-WORKS DESKTOP */
+section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+.hero { padding-top: 5rem !important; padding-bottom: 2rem !important; }
+@media (min-width: 1024px) {
+  .how-it-works-container { flex-direction: row !important; align-items: center; justify-content: space-between; gap: 4rem; }
+  .how-left-side, .how-right-side { flex: 1; }
+}
+
+/* JOBS PAGE OVERRIDES */
+.job-list { display: grid; gap: 1.5rem; }
+@media (min-width: 1024px) {
+  .job-list { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  .job-list { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem; -webkit-overflow-scrolling: touch; }
+  .job-card { scroll-snap-align: start; min-width: 85vw; flex: 0 0 auto; }
+  .papers-header-right { flex-wrap: nowrap !important; }
+  .mobile-filter-search { flex: 1 !important; min-width: 0 !important; }
+  .mobile-filter-category, .mobile-filter-sort { flex: 0 0 auto !important; width: 40px !important; overflow: hidden; }
+  .mobile-filter-category .custom-dropdown span, .mobile-filter-sort .custom-dropdown span { display: none !important; }
+  .mobile-filter-category .custom-dropdown i, .mobile-filter-sort .custom-dropdown i { margin: 0 auto; }
+}
+.job-actions { display: flex !important; flex-direction: row !important; gap: 0.5rem; margin-top: auto; }
+.job-actions button, .job-actions a { flex: 1; padding: 0.8rem 0.5rem; text-align: center; justify-content: center; font-size: 0.9rem; }
+
+.mobile-jobs-page-wrapper { padding-top: 80px !important; }
+.papers-header-container h1 { text-align: center; width: 100%; margin-bottom: 1rem; }
+
+/* ACADEMICS GRID OVERRIDES */
+.semester-grid, .subject-grid, .notes-grid, .quiz-grid { display: grid; gap: 1.5rem; }
+@media (min-width: 1024px) {
+  .semester-grid, .subject-grid, .notes-grid, .quiz-grid { grid-template-columns: repeat(4, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  .semester-grid, .subject-grid, .notes-grid, .quiz-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+/* TEXT WRAPPING */
+.folder-name, .subject-card h3, .quiz-card h3, .paper-title { white-space: normal !important; word-break: break-word !important; text-overflow: clip !important; overflow: visible !important; display: block !important; -webkit-line-clamp: unset !important; }
+/* FILTER DROPDOWN WIDTH */
+.dropdown-menu { min-width: 250px !important; white-space: normal !important; }
+
+/* GLOBAL BACKGROUND OVERRIDE */
+body, #root, .dashboard-container, .mobile-jobs-page-wrapper, .papers-page-wrapper, .interview-page-container, .resume-builder-wrapper { background: radial-gradient(circle at 50% 0%, #1a1e2e 0%, #020617 100%) !important; background-color: #020617 !important; background-attachment: fixed !important; }
+/* ACADEMICS INTERACTIVE CARDS */
+.subject-card, .quiz-card, .paper-card-premium { cursor: pointer; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease !important; }
+.subject-card:hover, .quiz-card:hover, .paper-card-premium:hover { transform: scale(1.03) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.4) !important; }
+/* NAV ACTIVE STATES */
+.nav-links a.active, .mobile-nav-item.active { color: #00d4ff !important; text-shadow: 0 0 10px rgba(0, 212, 255, 0.6) !important; }
+
+/* RESUME BUILDER AND FORMS OVERRIDES */
+.mobile-resume-header h1 { white-space: normal !important; word-break: break-word !important; text-align: center !important; }
+.section-header { text-align: center !important; justify-content: center !important; }
+.mobile-resume-form .input-group { margin-bottom: 0.5rem !important; }
+.template-selector select { width: 100% !important; }
+.upload-method-card-wrapper { display: flex !important; flex-direction: row !important; gap: 1rem !important; width: 100% !important; justify-content: center !important; }
+.upload-method-card { flex: 1 !important; }
+.floating-action-bar { display: none !important; } /* Hide the old flat green bar that was converted to a card */
+
+/* SKELETON GLOBAL THEME */
+.skeleton-card, .skeleton-item, .skeleton-box { background: rgba(255,255,255,0.02) !important; border: 1px solid rgba(255,255,255,0.05) !important; border-radius: 16px !important; }
+.skeleton-line, .skeleton-text, .skeleton-pill { background: rgba(255,255,255,0.05) !important; border-radius: 8px !important; }

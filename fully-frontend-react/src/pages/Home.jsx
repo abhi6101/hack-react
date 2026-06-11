@@ -334,43 +334,20 @@ const Home = () => {
                     >
 
                         <motion.div variants={fadeInUp}>
-                            {/* MOBILE HERO (Original) */}
-                            <div className="mobile-only-hero">
-                                <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
-                                    Get Your Dream Job
-                                </h1>
-                                <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                                    Top recruiters from 100+ companies.
-                                </p>
-                            </div>
-
-                            {/* DESKTOP HERO (Enhanced) */}
-                            <div className="desktop-only-hero">
-                                <h1 id="heroHeadingDesktop" className="desktop-hero-heading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800', textAlign: 'left' }}>
-                                    Bridge the Gap from <span className="text-gradient">Campus to Career</span>
-                                </h1>
-                                <p className="hero-subheadline desktop-hero-sub" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem', textAlign: 'left' }}>
-                                    Connect with top recruiters from <span style={{color: '#fff', fontWeight: 600}}>100+ global tech giants</span> and land your perfect role.
-                                </p>
-                                
-                                <div className="desktop-hero-ctas" style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'flex-start' }}>
-                                    <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', fontWeight: '600', textDecoration: 'none', border: 'none' }}>
-                                        Find Jobs
-                                    </Link>
-                                    <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontWeight: '600', textDecoration: 'none' }}>
-                                        Build Resume
-                                    </Link>
-                                </div>
-
-                                <div className="desktop-trusted-by" style={{ marginTop: '3rem', textAlign: 'left' }}>
-                                    <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Trusted by Industry Leaders</p>
-                                    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', opacity: 0.6 }}>
-                                        <i className="fab fa-google" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
-                                        <i className="fab fa-microsoft" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
-                                        <i className="fab fa-amazon" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
-                                        <i className="fab fa-apple" style={{ fontSize: '1.8rem', color: '#fff' }}></i>
-                                    </div>
-                                </div>
+                            <h1 id="heroHeadingDesktop" className="hero-heading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
+                                Bridge the Gap from <span className="text-gradient">Campus to Career</span>
+                            </h1>
+                            <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem' }}>
+                                Connect with top recruiters from <span style={{color: '#fff', fontWeight: 600}}>100+ global tech giants</span> and land your perfect role.
+                            </p>
+                            
+                            <div className="hero-ctas" style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                                <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', fontWeight: '600', textDecoration: 'none', border: 'none' }}>
+                                    Find Jobs
+                                </Link>
+                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontWeight: '600', textDecoration: 'none' }}>
+                                    Build Resume
+                                </Link>
                             </div>
                         </motion.div>
 
@@ -396,61 +373,85 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Partners Logo Scrolling Section */}
-            <section className="partners-scroll-section">
+            {/* Trusted By Section */}
+            <section className="partners-static-section" style={{ padding: '2rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <div className="container">
-                    <div className="partners-header">
-                        <h2 className="partners-title">
+                    <div className="partners-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <h2 className="partners-title" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '2px' }}>
                             Trusted By <span>100+ Companies</span>
                         </h2>
-                        <p className="partners-subtitle">
-                            Join thousands of leading companies that trust us to connect them with top talent and help professionals find their dream careers.
-                        </p>
                     </div>
 
-                    <div className="logo-marquee-container">
-                        <div className="logo-scroll-track">
-                            {[
-                                'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
-                                'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
-                                'Slack.png', 'Figma.png', 'Pinterest.png',
-                                'Google.png', 'Amazon.png', 'Microsoft.png', 'Meta.png',
-                                'Netflix.png', 'Spotify.png', 'Oracle.png', 'Walmart.png',
-                                'Slack.png', 'Figma.png', 'Pinterest.png'
-                            ].map((logo, index) => (
-                                <div className="logo-item" key={index}>
-                                    <img src={`/images/${logo}`} alt="Partner Logo" />
-                                </div>
-                            ))}
-                        </div>
+                    <div className="trusted-logos-row" style={{ display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        {[
+                            { name: 'Google', icon: 'fab fa-google' },
+                            { name: 'Microsoft', icon: 'fab fa-microsoft' },
+                            { name: 'Amazon', icon: 'fab fa-amazon' },
+                            { name: 'Apple', icon: 'fab fa-apple' },
+                            { name: 'Meta', icon: 'fab fa-meta' },
+                        ].map((company, index) => (
+                            <div className="trusted-logo-item" key={index} style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '0.5rem', 
+                                color: '#94a3b8', 
+                                transition: 'all 0.3s ease',
+                                cursor: 'pointer'
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.transform = 'scale(1)'; }}
+                            >
+                                <i className={company.icon} style={{ fontSize: '2rem' }}></i>
+                                <span style={{ fontSize: '1.2rem', fontWeight: '600' }}>{company.name}</span>
+                            </div>
+                        ))}
                     </div>
-
                 </div>
             </section>
 
-            {/* NEW: Mobile Upload Paper CTA */}
-            <div className="mobile-only upload-cta-wrapper" style={{ display: 'flex', justifyContent: 'center', padding: '10px 0', margin: '20px 20px 0 20px' }}>
-                <button 
-                    onClick={() => navigate('/upload-paper')}
-                    style={{
-                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                        color: 'white',
-                        border: 'none',
-                        padding: '12px 24px',
-                        borderRadius: '50px',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        width: '100%',
-                        justifyContent: 'center',
-                        cursor: 'pointer'
-                    }}
-                >
-                    <i className="fas fa-cloud-upload-alt"></i> Share Question Papers
-                </button>
+            {/* NEW: Upload Paper CTA Card */}
+            <div className="upload-cta-wrapper" style={{ display: 'flex', justifyContent: 'center', padding: '20px', margin: '20px auto', maxWidth: '400px' }}>
+                <div style={{
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(16, 185, 129, 0.2)',
+                    padding: '1.5rem',
+                    borderRadius: '24px',
+                    boxShadow: '0 8px 32px rgba(16, 185, 129, 0.15)',
+                    width: '100%',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '1rem'
+                }}>
+                    <i className="fas fa-cloud-upload-alt" style={{ fontSize: '2.5rem', color: '#10b981' }}></i>
+                    <div style={{ color: '#fff' }}>
+                        <h3 style={{ fontSize: '1.2rem', marginBottom: '0.2rem' }}>Got Previous Year Papers?</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Help your juniors by sharing your exam papers.</p>
+                    </div>
+                    <button 
+                        onClick={() => navigate('/upload-paper')}
+                        style={{
+                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            borderRadius: '12px',
+                            fontWeight: 'bold',
+                            fontSize: '0.95rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            cursor: 'pointer',
+                            transition: 'transform 0.2s',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                        Share Papers Now
+                    </button>
+                </div>
             </div>
 
             {/* NEW: How It Works Section */}
