@@ -60,15 +60,45 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
   .papers-header-right .dropdown-trigger { border-radius: 16px !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; background: rgba(255, 255, 255, 0.03) !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important; }
 }
 
-/* PAPER CARD MOBILE OVERRIDES */
+/* PAPER ARCHIVE MOBILE OVERRIDES */
 @media (max-width: 768px) {
-  .papers-grid { width: 100% !important; box-sizing: border-box !important; }
-  .paper-card-premium { padding: 1rem !important; width: 100% !important; box-sizing: border-box !important; }
-  .paper-card-premium .paper-title { word-break: break-word !important; white-space: normal !important; }
-  .paper-card-premium .card-buttons-container { flex-direction: column !important; }
-  .paper-card-premium .download-btn-premium { width: 100% !important; flex: none !important; }
-}
+  /* 1. Header Layout & Spacing */
+  .mobile-papers-container { padding: 80px 1rem 20px !important; }
+  .paper-list-view { padding-top: 0 !important; }
+  .view-header { 
+      padding: 0 0 1rem 0 !important; 
+      flex-direction: row !important; 
+      align-items: center !important; 
+      gap: 0.8rem !important; 
+      margin-bottom: 1rem !important;
+  }
+  .view-header h2 { font-size: 1.3rem !important; margin: 0 !important; }
+  .view-header p { display: none !important; }
 
-@media (max-width: 768px) {
-  .view-header { padding: 1rem !important; flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
+  /* 2. Question Paper Card Refinement */
+  .papers-grid { width: 100% !important; box-sizing: border-box !important; gap: 1rem !important; }
+  .paper-card-premium { 
+      padding: 1rem 1rem !important; 
+      width: 100% !important; 
+      box-sizing: border-box !important; 
+      gap: 0.8rem !important;
+  }
+  .paper-card-premium .paper-title { 
+      word-break: break-word !important; 
+      white-space: normal !important; 
+      font-size: 1rem !important;
+      line-height: 1.4 !important;
+  }
+  .paper-card-premium .tag-group { margin-top: 0 !important; gap: 0.3rem !important; }
+  .paper-card-premium .card-top .file-icon i { font-size: 1.5rem !important; }
+  
+  /* 3. Button Optimization */
+  .paper-card-premium .card-buttons-container { flex-direction: column !important; gap: 0.5rem !important; margin-top: 0.5rem !important; }
+  .paper-card-premium .download-btn-premium { 
+      width: 100% !important; 
+      flex: none !important; 
+      padding: 0.6rem 1rem !important; 
+      font-size: 0.9rem !important;
+      margin-top: 0 !important;
+  }
 }

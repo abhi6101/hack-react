@@ -869,7 +869,7 @@ const Papers = () => {
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
 
-            <main className="container" style={{ padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
+            <main className="container mobile-papers-container" style={{ padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
                 
                 
                 <AnimatePresence mode="wait">
