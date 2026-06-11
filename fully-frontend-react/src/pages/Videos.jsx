@@ -34,9 +34,9 @@ const Videos = () => {
             </Helmet>
             <div className="papers-header-container" style={{ marginBottom: '24px' }}>
                 <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Curated Study Videos</h2>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Curated Study Videos</h2>
                 </div>
-                <div className="papers-header-right" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <div className="papers-header-right" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
                         flex: 1.5,

@@ -176,7 +176,7 @@ const Gallery = () => {
             </Helmet>
             <div className="papers-header-container gallery-header-container" style={{ padding: '1rem 2rem', marginBottom: '24px' }}>
                 <div className="papers-header-left">
-                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', whiteSpace: 'nowrap', fontWeight: '800', lineHeight: '1' }}>Moments & Memories</h2>
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', fontWeight: '800', lineHeight: '1' }}>Moments & Memories</h2>
                         <p className="sr-only">A collection of moments from our campus life, events, and sessions.</p>
                     </div>
                     <div className="papers-header-right">
