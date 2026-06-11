@@ -291,10 +291,10 @@ const Jobs = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingTop: '104px' }}>
+        <div className="mobile-jobs-page-wrapper" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingTop: '104px' }}>
             {/* Wrapper to ensure footer stays down if content short */}
 
-            <div className="container">
+            <div className="container mobile-jobs-container">
                 <div className="papers-header-container">
                     <div className="papers-header-left">
                         <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Job Opportunities</h2>
