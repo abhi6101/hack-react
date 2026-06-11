@@ -333,12 +333,21 @@ const Home = () => {
 
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
-                                Get Your Dream Job with <br />
-                                <span className="hero-brand-text">Get Hired</span>
+                                Get Your Dream Job
                             </h1>
-                            <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem' }}>
+                            <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
                                 Top recruiters from 100+ companies.
                             </p>
+                            
+                            <div className="home-mobile-filters mobile-only" style={{ display: 'flex', gap: '0.5rem', width: '100%', maxWidth: '400px', margin: '1rem auto 0' }}>
+                                <div className="home-search-btn" onClick={() => navigate('/jobs')} style={{ flex: '0 0 45px', height: '45px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}>
+                                    <i className="fas fa-search" style={{ color: 'var(--text-secondary)' }}></i>
+                                </div>
+                                <div className="home-sort-btn" onClick={() => navigate('/jobs')} style={{ flex: '1', height: '45px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                                    <span>Newest First</span>
+                                    <i className="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
                         </motion.div>
 
 
@@ -454,7 +463,7 @@ const Home = () => {
                                     <i className="fas fa-file-invoice"></i>
                                 </div>
                                 <div className="step-text">
-                                    <h3>Build Your Resume</h3>
+                                    <h3>Resume</h3>
                                     <p>Create a standout resume with your skills.</p>
                                 </div>
                             </div>
@@ -464,7 +473,7 @@ const Home = () => {
                                     <i className="fas fa-briefcase"></i>
                                 </div>
                                 <div className="step-text">
-                                    <h3>Apply for Job</h3>
+                                    <h3>Apply</h3>
                                     <p>Find and apply for jobs that match your skills.</p>
                                 </div>
                             </div>
@@ -474,7 +483,7 @@ const Home = () => {
                                     <i className="fas fa-check-circle"></i>
                                 </div>
                                 <div className="step-text">
-                                    <h3>Get Hired</h3>
+                                    <h3>Hired</h3>
                                     <p>Connect with employers and start your new job.</p>
                                 </div>
                             </div>
@@ -525,7 +534,7 @@ const Home = () => {
             {/* Gallery Section */}
             <section className="gallery">
                 <h2>Moments & Memories</h2>
-                <div className="slideshow-container moments-slideshow" style={{ position: 'relative', overflow: 'hidden', height: '500px', borderRadius: '16px' }}>
+                <div className="slideshow-container moments-slideshow desktop-only" style={{ position: 'relative', overflow: 'hidden', height: '500px', borderRadius: '16px' }}>
 
                     {/* Active Image */}
                     <div className="mySlides fade" style={{ display: 'block', height: '100%', width: '100%' }}>
@@ -550,8 +559,8 @@ const Home = () => {
                     }}>&#10095;</a>
                 </div>
 
-                {/* Dots */}
-                <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                {/* Dots (Desktop Only) */}
+                <div className="desktop-only" style={{ textAlign: 'center', marginTop: '1rem' }}>
                     {galleryImages.map((_, idx) => (
                         <span
                             key={idx}
@@ -568,6 +577,20 @@ const Home = () => {
                             }}
                             onClick={() => setCurrentImageIndex(idx)}
                         ></span>
+                    ))}
+                </div>
+
+                {/* Mobile 2x2 Grid */}
+                <div className="mobile-only mobile-moments-grid" style={{ display: 'none' }}>
+                    {galleryImages.slice(0, 4).map((img, idx) => (
+                        <div key={idx} className="moment-thumb" style={{
+                            backgroundImage: `url(${img})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            borderRadius: '50%',
+                            width: '100%',
+                            aspectRatio: '1/1'
+                        }}></div>
                     ))}
                 </div>
             </section>
