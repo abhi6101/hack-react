@@ -106,6 +106,18 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
 /* DESKTOP/MOBILE HERO TOGGLE */
 .desktop-only-hero { display: none; }
 .mobile-only-hero { display: block; }
+@media (max-width: 768px) {
+  .hero-heading { font-size: 2.2rem !important; line-height: 1.2 !important; text-align: center; display: block; white-space: normal !important; }
+  .hero-subheadline { font-size: 1rem !important; text-align: center; }
+  .hero-text-content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .hero-ctas { flex-direction: column !important; width: 100%; gap: 12px !important; margin-top: 1.5rem !important; }
+  .hero-ctas .cta-btn { width: 100%; text-align: center; justify-content: center; }
+  .hero { padding-top: 2rem !important; padding-bottom: 1rem !important; }
+  section { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .mobile-share-papers-cta { width: 100%; max-width: 100%; margin-top: 1.5rem !important; }
+  .hero-leaderboard-wrapper { width: 100%; }
+}
+
 @media (min-width: 1024px) {
   .desktop-only-hero { display: block; }
   .mobile-only-hero { display: none; }
@@ -116,6 +128,18 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
 /* GLOBAL PADDING REDUCTION AND HOW-IT-WORKS DESKTOP */
 section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
 .hero { padding-top: 5rem !important; padding-bottom: 2rem !important; }
+@media (max-width: 768px) {
+  .hero-heading { font-size: 2.2rem !important; line-height: 1.2 !important; text-align: center; display: block; white-space: normal !important; }
+  .hero-subheadline { font-size: 1rem !important; text-align: center; }
+  .hero-text-content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .hero-ctas { flex-direction: column !important; width: 100%; gap: 12px !important; margin-top: 1.5rem !important; }
+  .hero-ctas .cta-btn { width: 100%; text-align: center; justify-content: center; }
+  .hero { padding-top: 2rem !important; padding-bottom: 1rem !important; }
+  section { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .mobile-share-papers-cta { width: 100%; max-width: 100%; margin-top: 1.5rem !important; }
+  .hero-leaderboard-wrapper { width: 100%; }
+}
+
 @media (min-width: 1024px) {
   .how-it-works-container { flex-direction: row !important; align-items: center; justify-content: space-between; gap: 2rem; justify-content: center; }
   .how-left-side, .how-right-side { flex: 0 1 450px; } .how-it-works-container { position: relative; }
@@ -123,6 +147,18 @@ section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
 
 /* JOBS PAGE OVERRIDES */
 .job-list { display: grid; gap: 1.5rem; }
+@media (max-width: 768px) {
+  .hero-heading { font-size: 2.2rem !important; line-height: 1.2 !important; text-align: center; display: block; white-space: normal !important; }
+  .hero-subheadline { font-size: 1rem !important; text-align: center; }
+  .hero-text-content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .hero-ctas { flex-direction: column !important; width: 100%; gap: 12px !important; margin-top: 1.5rem !important; }
+  .hero-ctas .cta-btn { width: 100%; text-align: center; justify-content: center; }
+  .hero { padding-top: 2rem !important; padding-bottom: 1rem !important; }
+  section { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .mobile-share-papers-cta { width: 100%; max-width: 100%; margin-top: 1.5rem !important; }
+  .hero-leaderboard-wrapper { width: 100%; }
+}
+
 @media (min-width: 1024px) {
   .job-list { grid-template-columns: repeat(3, 1fr) !important; }
 }
@@ -143,6 +179,18 @@ section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
 
 /* ACADEMICS GRID OVERRIDES */
 .semester-grid, .subject-grid, .notes-grid, .quiz-grid { display: grid; gap: 1.5rem; }
+@media (max-width: 768px) {
+  .hero-heading { font-size: 2.2rem !important; line-height: 1.2 !important; text-align: center; display: block; white-space: normal !important; }
+  .hero-subheadline { font-size: 1rem !important; text-align: center; }
+  .hero-text-content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .hero-ctas { flex-direction: column !important; width: 100%; gap: 12px !important; margin-top: 1.5rem !important; }
+  .hero-ctas .cta-btn { width: 100%; text-align: center; justify-content: center; }
+  .hero { padding-top: 2rem !important; padding-bottom: 1rem !important; }
+  section { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .mobile-share-papers-cta { width: 100%; max-width: 100%; margin-top: 1.5rem !important; }
+  .hero-leaderboard-wrapper { width: 100%; }
+}
+
 @media (min-width: 1024px) {
   .semester-grid, .subject-grid, .notes-grid, .quiz-grid { grid-template-columns: repeat(4, 1fr) !important; }
 }
@@ -186,6 +234,18 @@ body, #root, .dashboard-container, .mobile-jobs-page-wrapper, .papers-page-wrapp
 
 /* HOW IT WORKS CONNECTOR */
 .connector-svg { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 200px; height: 100%; z-index: 0; pointer-events: none; }
+@media (max-width: 768px) {
+  .hero-heading { font-size: 2.2rem !important; line-height: 1.2 !important; text-align: center; display: block; white-space: normal !important; }
+  .hero-subheadline { font-size: 1rem !important; text-align: center; }
+  .hero-text-content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .hero-ctas { flex-direction: column !important; width: 100%; gap: 12px !important; margin-top: 1.5rem !important; }
+  .hero-ctas .cta-btn { width: 100%; text-align: center; justify-content: center; }
+  .hero { padding-top: 2rem !important; padding-bottom: 1rem !important; }
+  section { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .mobile-share-papers-cta { width: 100%; max-width: 100%; margin-top: 1.5rem !important; }
+  .hero-leaderboard-wrapper { width: 100%; }
+}
+
 @media (min-width: 1024px) { .connector-svg { display: block; } }
 @keyframes dashAnim { to { stroke-dashoffset: -40; } }
 .animated-path { stroke-dasharray: 10 10; animation: dashAnim 1s linear infinite; stroke: rgba(0, 212, 255, 0.4); stroke-width: 3; fill: none; }

@@ -333,7 +333,7 @@ const Home = () => {
                         style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                     >
 
-                        <motion.div variants={fadeInUp}>
+                        <motion.div variants={fadeInUp} className="hero-text-content">
                             <h1 id="heroHeadingDesktop" className="hero-heading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
                                 Bridge the Gap from <span className="text-gradient">Campus to Career</span>
                             </h1>
@@ -341,7 +341,7 @@ const Home = () => {
                                 Connect with top recruiters from <span style={{color: '#fff', fontWeight: 600}}>100+ global tech giants</span> and land your perfect role.
                             </p>
                             
-                            <div className="hero-ctas" style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                            <div className="hero-ctas" style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap' }}>
                                 <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', fontWeight: '600', textDecoration: 'none', border: 'none' }}>
                                     Find Jobs
                                 </Link>
@@ -350,8 +350,22 @@ const Home = () => {
                                 </Link>
                             </div>
 
-                            {/* Leaderboard directly below the buttons */}
-                            <div className="hero-leaderboard-wrapper" style={{ marginTop: '3rem', maxWidth: '600px' }}>
+                            {/* Share Papers CTA (Redesigned & Repositioned) */}
+                            <div className="mobile-share-papers-cta" style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '16px', padding: '12px 16px', cursor: 'pointer' }} onClick={() => navigate('/upload-paper')}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <i className="fas fa-cloud-upload-alt" style={{ fontSize: '1.5rem', color: '#10b981' }}></i>
+                                    <div style={{ textAlign: 'left' }}>
+                                        <h3 style={{ fontSize: '0.9rem', margin: 0, color: '#fff', fontWeight: '600' }}>Share Papers</h3>
+                                        <p style={{ fontSize: '0.75rem', margin: 0, color: 'var(--text-secondary)' }}>Help your juniors.</p>
+                                    </div>
+                                </div>
+                                <button style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                    Share Now
+                                </button>
+                            </div>
+
+                            {/* Leaderboard directly below the buttons/CTA */}
+                            <div className="hero-leaderboard-wrapper" style={{ marginTop: '2rem', maxWidth: '600px' }}>
                                 <LeaderboardComponent limit={3} />
                             </div>
                         </motion.div>
@@ -430,54 +444,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* NEW: Upload Paper CTA Card */}
-            <div className="upload-cta-wrapper" style={{ display: 'flex', justifyContent: 'center', padding: '20px', margin: '40px auto', maxWidth: '800px' }}>
-                <div style={{
-                    background: 'rgba(16, 185, 129, 0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(16, 185, 129, 0.3)',
-                    padding: '2rem',
-                    borderRadius: '32px',
-                    boxShadow: '0 0 40px rgba(16, 185, 129, 0.2)',
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '2rem',
-                    flexWrap: 'wrap'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: '1 1 300px' }}>
-                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: '#10b981' }}></i>
-                        <div style={{ color: '#fff', textAlign: 'left' }}>
-                            <h3 style={{ fontSize: '1.4rem', marginBottom: '0.3rem', fontWeight: '700' }}>Got Previous Year Papers?</h3>
-                            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0 }}>Help your juniors by sharing your exam papers.</p>
-                        </div>
-                    </div>
-                    <button 
-                        onClick={() => navigate('/upload-paper')}
-                        style={{
-                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                            color: 'white',
-                            border: 'none',
-                            padding: '12px 28px',
-                            borderRadius: '16px',
-                            fontWeight: 'bold',
-                            fontSize: '1.1rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s',
-                            boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                    >
-                        Share Papers Now
-                    </button>
-                </div>
-            </div>
+            {/* Removed Old Upload Paper CTA Card */}
 
             {/* NEW: How It Works Section */}
             <section className="how-it-works-section">

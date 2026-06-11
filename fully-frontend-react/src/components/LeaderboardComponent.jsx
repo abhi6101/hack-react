@@ -43,7 +43,7 @@ const LeaderboardComponent = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     {leaders.map((user, index) => (
                         <div key={user.id} 
-                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: index === 0 ? '1px solid rgba(251, 191, 36, 0.5)' : index === 1 ? '1px solid rgba(148, 163, 184, 0.5)' : index === 2 ? '1px solid rgba(180, 83, 9, 0.5)' : '1px solid transparent', transition: 'all 0.3s ease' }}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', border: index === 0 ? '1px solid rgba(251, 191, 36, 0.8)' : '1px solid rgba(255, 255, 255, 0.1)', transition: 'all 0.3s ease' }}
                             onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.3)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
                             onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
@@ -56,12 +56,12 @@ const LeaderboardComponent = () => {
                                 }}>
                                     #{index + 1}
                                 </div>
-                                <div style={{ minWidth: 0, overflow: 'hidden' }}>
-                                    <h4 style={{ margin: 0, fontSize: '1rem', color: index === 0 ? '#fbbf24' : '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <div style={{ minWidth: 0 }}>
+                                    <h4 style={{ margin: 0, fontSize: '1rem', color: index === 0 ? '#fbbf24' : '#fff', whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: '1.2' }}>
                                         {user.name || user.username}
-                                        {index === 0 && <span style={{ marginLeft: '5px' }}>👑</span>}
+                                        {index === 0 && <i className="fas fa-check-circle" style={{ marginLeft: '5px', fontSize: '0.8rem' }}></i>}
                                     </h4>
-                                    {index === 0 && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--primary)', whiteSpace: 'nowrap' }}>Verified Contributor</p>}
+                                    {index === 0 && <p style={{ margin: '2px 0 0 0', fontSize: '0.75rem', color: 'var(--primary)', whiteSpace: 'normal', lineHeight: '1.2' }}>Verified Contributor</p>}
                                 </div>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, marginLeft: 'auto' }}>
