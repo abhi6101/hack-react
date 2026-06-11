@@ -1076,3 +1076,27 @@ main {
 @media (max-width: 1024px) {
     .badge-container { justify-content: center; }
 }
+
+/* MOBILE HOMEPAGE REDESIGN OVERRIDES */
+@media (max-width: 768px) {
+  main { padding-bottom: 90px; }
+  .how-it-works-header, .how-left-side, .how-step-item p { display: none !important; }
+  .how-it-works-section { padding: 2rem 5% !important; }
+  .how-steps-list { flex-direction: row !important; justify-content: space-between; gap: 0.5rem !important; }
+  .how-step-item { flex-direction: column !important; align-items: center !important; gap: 0.5rem !important; padding: 0 !important; background: transparent !important; }
+  .step-icon-box { width: 50px !important; height: 50px !important; min-width: 50px !important; font-size: 1.2rem !important; }
+  .step-text h3 { font-size: 0.85rem !important; text-align: center; margin: 0 !important; white-space: pre-wrap; line-height: 1.2; }
+  .moments-slideshow { height: 250px !important; }
+  .gallery h2 { font-size: 1.8rem !important; text-align: center; }
+  .gallery img { object-fit: contain !important; }
+  .hero-boy-img { object-fit: contain; }
+  .partners-scroll-section { padding-bottom: 1rem !important; }
+  .logo-marquee-container { margin-bottom: 1.5rem !important; }
+}
+
+/* Job Listing Marquee */
+.job-marquee-container { overflow: hidden; white-space: nowrap; position: relative; width: 100%; margin: 2rem 0; }
+.job-marquee-track { display: inline-flex; gap: 1.5rem; animation: scroll-left-jobs 30s linear infinite; }
+.job-marquee-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; min-width: 280px; display: flex; flex-direction: column; gap: 0.5rem; }
+@keyframes scroll-left-jobs { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 0.75rem)); } }
+@media (min-width: 769px) { .job-marquee-container { display: none; } }

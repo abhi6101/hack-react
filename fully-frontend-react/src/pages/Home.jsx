@@ -334,8 +334,11 @@ const Home = () => {
                         <motion.div variants={fadeInUp}>
                             <h1 id="heroHeading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
                                 Get Your Dream Job with <br />
-                                <span className="hero-brand-text">Hack-2-Hired</span>
+                                <span className="hero-brand-text">Get Hired</span>
                             </h1>
+                            <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem' }}>
+                                Top recruiters from 100+ companies.
+                            </p>
                         </motion.div>
 
 
@@ -392,6 +395,31 @@ const Home = () => {
                         </div>
                     </div>
 
+                </div>
+            </section>
+
+            {/* Mobile Job Marquee Section */}
+            <section className="job-marquee-container">
+                <div className="job-marquee-track">
+                    {[
+                        { title: 'Frontend Developer', company: 'TechNova', salary: '₹8-12 LPA', type: 'Full Time' },
+                        { title: 'Data Scientist', company: 'DataCorp', salary: '₹12-18 LPA', type: 'Remote' },
+                        { title: 'UI/UX Intern', company: 'DesignCo', salary: '₹20k/mo', type: 'Internship' },
+                        { title: 'Backend Engineer', company: 'ServerPro', salary: '₹10-15 LPA', type: 'Full Time' },
+                        { title: 'Frontend Developer', company: 'TechNova', salary: '₹8-12 LPA', type: 'Full Time' },
+                        { title: 'Data Scientist', company: 'DataCorp', salary: '₹12-18 LPA', type: 'Remote' },
+                        { title: 'UI/UX Intern', company: 'DesignCo', salary: '₹20k/mo', type: 'Internship' },
+                        { title: 'Backend Engineer', company: 'ServerPro', salary: '₹10-15 LPA', type: 'Full Time' }
+                    ].map((job, idx) => (
+                        <div className="job-marquee-card" key={idx}>
+                            <h3 style={{ fontSize: '1.1rem', margin: 0, color: 'var(--primary)' }}>{job.title}</h3>
+                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#fff' }}><i className="fas fa-building"></i> {job.company}</p>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                                <span><i className="fas fa-rupee-sign"></i> {job.salary}</span>
+                                <span><i className="fas fa-briefcase"></i> {job.type}</span>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
@@ -497,7 +525,7 @@ const Home = () => {
             {/* Gallery Section */}
             <section className="gallery">
                 <h2>Moments & Memories</h2>
-                <div className="slideshow-container" style={{ position: 'relative', overflow: 'hidden', height: '500px', borderRadius: '16px' }}>
+                <div className="slideshow-container moments-slideshow" style={{ position: 'relative', overflow: 'hidden', height: '500px', borderRadius: '16px' }}>
 
                     {/* Active Image */}
                     <div className="mySlides fade" style={{ display: 'block', height: '100%', width: '100%' }}>
