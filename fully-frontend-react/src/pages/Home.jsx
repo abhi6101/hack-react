@@ -348,9 +348,6 @@ const Home = () => {
 
 
 
-                        <motion.div variants={fadeInUp} className="leaderboard-wrapper" style={{ marginTop: '2rem', width: '100%', maxWidth: '400px', boxSizing: 'border-box' }}>
-                            <LeaderboardComponent />
-                        </motion.div>
                     </motion.div>
 
                     <motion.div
@@ -398,6 +395,31 @@ const Home = () => {
 
                 </div>
             </section>
+
+            {/* NEW: Mobile Upload Paper CTA */}
+            <div className="mobile-only upload-cta-wrapper" style={{ display: 'flex', justifyContent: 'center', padding: '10px 0', margin: '20px 20px 0 20px' }}>
+                <button 
+                    onClick={() => navigate('/upload-paper')}
+                    style={{
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        color: 'white',
+                        border: 'none',
+                        padding: '12px 24px',
+                        borderRadius: '50px',
+                        fontWeight: 'bold',
+                        fontSize: '1rem',
+                        boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        width: '100%',
+                        justifyContent: 'center',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <i className="fas fa-cloud-upload-alt"></i> Share Question Papers
+                </button>
+            </div>
 
             {/* NEW: How It Works Section */}
             <section className="how-it-works-section">
@@ -458,31 +480,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            {/* NEW: Mobile Upload Paper CTA */}
-            <div className="mobile-only upload-cta-wrapper" style={{ display: 'flex', justifyContent: 'center', padding: '10px 0', margin: '0 20px' }}>
-                <button 
-                    onClick={() => navigate('/upload-paper')}
-                    style={{
-                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                        color: 'white',
-                        border: 'none',
-                        padding: '12px 24px',
-                        borderRadius: '50px',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        width: '100%',
-                        justifyContent: 'center',
-                        cursor: 'pointer'
-                    }}
-                >
-                    <i className="fas fa-cloud-upload-alt"></i> Share Question Papers
-                </button>
-            </div>
 
             {/* Leaderboard Mobile Wrapper */}
             <div className="mobile-only leaderboard-mobile-wrapper" style={{ margin: '10px 0' }}>
