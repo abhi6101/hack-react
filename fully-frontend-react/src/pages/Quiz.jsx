@@ -148,7 +148,7 @@ const Quiz = () => {
     };
 
     return (
-        <div className="container" style={{ minHeight: '100vh', padding: '104px 2rem 50px', position: 'relative', zIndex: 2 }}>
+        <div className="container mobile-quiz-container" style={{ minHeight: '100vh', padding: '104px 2rem 50px', position: 'relative', zIndex: 2 }}>
             <Helmet>
                 <title>Placement Preparation Quizzes | Hack-2-Hired</title>
                 <meta name="description" content="Test your knowledge with our free placement preparation quizzes. Practice HTML, CSS, JavaScript, React, Java, DSA, and more to ace your technical interviews." />
@@ -156,7 +156,7 @@ const Quiz = () => {
             </Helmet>
             {step === 'subject-selection' && (
                 <section id="subject-selection" className="quiz-step active" style={{ padding: 0 }}>
-                    <div className="papers-header-container" style={{ marginBottom: '1.5rem', gap: '0.5rem' }}>
+                    <div className="papers-header-container mobile-quiz-header" style={{ marginBottom: '1.5rem' }}>
                         <div className="papers-header-left" style={{ textAlign: 'center', width: '100%' }}>
                             <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>
                                 <i className="fas fa-brain" style={{ color: 'var(--primary)', marginRight: '10px' }}></i>
@@ -164,56 +164,9 @@ const Quiz = () => {
                             </h2>
                             <p className="sr-only">Select a subject to test your knowledge and prepare for interviews.</p>
                         </div>
-                        <div className={`papers-header-right mobile-filters-wrapper ${isSearchFocused ? 'active-search' : ''}`} style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
-                            <div className={`global-search-container mobile-filter-search ${isSearchFocused ? 'is-focused' : ''}`}
-                                onClick={() => {
-                                    setIsSearchFocused(true);
-                                    setTimeout(() => document.getElementById('quizMobileSearchInput')?.focus(), 100);
-                                }}
-                                style={{
-                                position: 'relative',
-                                background: 'rgba(255,255,255,0.05)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '50px',
-                                padding: '8px 16px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                backdropFilter: 'blur(15px)',
-                                transition: 'all 0.3s ease',
-                                width: '100%',
-                                maxWidth: '300px'
-                            }}>
-                                <i className="fas fa-search" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
-                                <input
-                                    id="quizMobileSearchInput"
-                                    type="text"
-                                    placeholder="Search Quizzes..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    onFocus={() => setIsSearchFocused(true)}
-                                    onBlur={(e) => { if (!e.target.value) setIsSearchFocused(false); }}
-                                    style={{
-                                        background: 'transparent',
-                                        border: 'none',
-                                        color: '#fff',
-                                        fontSize: '0.95rem',
-                                        width: '100%',
-                                        outline: 'none',
-                                    }}
-                                />
-                                {searchTerm && (
-                                    <i 
-                                        className="fas fa-times" 
-                                        onClick={() => setSearchTerm('')}
-                                        style={{ color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
-                                    ></i>
-                                )}
-                            </div>
-                        </div>
                     </div>
                     <div id="subject-menu" className="subject-grid mobile-quiz-grid">
-                        {subjects.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()) || s.desc.toLowerCase().includes(searchTerm.toLowerCase())).map(s => (
+                        {subjects.map(s => (
                             <div key={s.id} className="subject-btn mobile-quiz-card" onClick={() => handleStartQuiz(s.id)}>
                                 <i className={s.icon} style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}></i>
                                 <div className="subject-name" style={{ fontSize: '1rem', fontWeight: 'bold' }}>{s.name}</div>

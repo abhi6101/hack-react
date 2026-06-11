@@ -1197,3 +1197,9 @@ a:hover {
   .mobile-quiz-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; margin-top: 1rem !important; grid-auto-rows: 1fr; align-items: stretch; }
   .mobile-quiz-card { padding: 1rem 0.5rem !important; min-height: auto !important; margin: 0 !important; }
 }
+
+/* QUIZ LAYOUT REFINEMENT */
+@media (max-width: 768px) {
+  .mobile-quiz-container { padding-top: 80px !important; }
+  .mobile-quiz-header { padding: 0.5rem 1rem !important; margin-bottom: 0.5rem !important; }
+}
