@@ -874,3 +874,10 @@
   .job-title { margin-bottom: 0 !important; }
   .job-company { margin-bottom: 0 !important; }
 }
+
+/* FIX DROPDOWN JUMP BUG */
+@media (max-width: 768px) {
+  .mobile-filters-wrapper.active-sort { flex-wrap: nowrap !important; }
+  .mobile-filters-wrapper.active-sort .mobile-filter-sort { flex: 1 1 auto !important; order: 0 !important; margin-top: 0 !important; min-width: 0 !important; }
+  .mobile-filters-wrapper.active-sort .mobile-filter-search { flex: 0 0 45px !important; order: 0 !important; min-width: 45px !important; }
+}
