@@ -1158,3 +1158,23 @@ a:hover {
         padding: 2rem !important;
     }
 }
+
+/* MOBILE PAPERS REDESIGN */
+@media (max-width: 768px) {
+    .papers-header-container { padding: 0 1rem !important; flex-direction: column !important; align-items: stretch !important; gap: 0.5rem !important; margin-bottom: 0 !important; }
+    .papers-header-left h1 { font-size: 1.5rem !important; text-align: left; margin-bottom: 0.25rem !important; }
+    .papers-header-right { width: 100% !important; margin-top: 0 !important; }
+    .dept-selector-inline { width: 100% !important; }
+    .custom-dropdown { width: 100% !important; }
+    .dropdown-trigger { width: 100% !important; border: 1px solid rgba(255,255,255,0.1) !important; background: rgba(255, 255, 255, 0.05) !important; padding: 0.8rem 1rem !important; justify-content: space-between !important; border-radius: 8px !important; box-sizing: border-box; }
+    .dropdown-trigger span:nth-child(2) { flex: 1; text-align: right; margin-right: 0.5rem; }
+
+    .semester-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; padding: 0.5rem 1rem 90px !important; margin-top: 0.5rem !important; }
+    .semester-card { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; padding: 1.25rem 0.5rem !important; min-height: auto !important; height: auto !important; gap: 0.5rem !important; border-radius: 12px !important; background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; transition: transform 0.2s ease, background 0.2s ease !important; margin: 0 !important; }
+    .semester-card:active { transform: scale(0.95) !important; background: rgba(255, 255, 255, 0.08) !important; }
+    .card-icon { width: auto !important; height: auto !important; background: none !important; margin: 0 !important; display: flex !important; justify-content: center !important; align-items: center !important; }
+    .card-icon i { font-size: 1.75rem !important; color: var(--primary) !important; }
+    .card-content { width: 100% !important; text-align: center !important; padding: 0 !important; }
+    .card-content h2 { font-size: 1rem !important; margin: 0 !important; }
+    .card-content p { display: none !important; }
+}
