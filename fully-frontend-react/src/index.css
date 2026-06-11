@@ -37,7 +37,11 @@ body, html, #root, .App, .dashboard-container {
 }
 
 /* SKELETON THEME CONSISTENCY */
-.skeleton-loader {
+.skeleton-loader, .skeleton-card, .job-card.skeleton-card {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.skeleton-line, .skeleton-content, .skeleton-card .title, .skeleton-card .subtitle {
     background: rgba(255, 255, 255, 0.05) !important;
 }
 .skeleton-container, .skeleton-wrapper, .job-skeleton {
