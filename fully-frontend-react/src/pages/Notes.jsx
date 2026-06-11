@@ -925,7 +925,7 @@ const Notes = ({ isAdminView }) => {
                                     background: 'rgba(255, 255, 255, 0.03)',
                                     border: '1px solid rgba(255, 255, 255, 0.1)',
                                     borderRadius: '16px',
-                                    padding: '1.2rem',
+                                    padding: '0.8rem',
                                     cursor: 'pointer',
                                     transition: 'transform 0.2s, background 0.2s',
                                     display: 'flex',
@@ -935,17 +935,17 @@ const Notes = ({ isAdminView }) => {
                                 }}
                             >
                                 <div style={{ width: '100%', textAlign: 'center' }}>
-                                    <div className="subject-icon-compact" style={{ marginBottom: '0.8rem' }}>
-                                        <i className="fas fa-folder-open" style={{ fontSize: '2rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.4))' }}></i>
+                                    <div className="subject-icon-compact" style={{ marginBottom: '0.5rem' }}>
+                                        <i className="fas fa-folder-open" style={{ fontSize: '1.5rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.4))' }}></i>
                                     </div>
-                                    <h3 className="subject-card-title" style={{ fontSize: '1rem', color: '#fff', margin: '0 0 0.5rem 0', fontWeight: '700', lineHeight: '1.3', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{folder.name}</h3>
+                                    <h3 className="subject-card-title" style={{ fontSize: '0.95rem', color: '#fff', margin: '0 0 0.5rem 0', fontWeight: '700', lineHeight: '1.3' }}>{folder.name}</h3>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
                                         {folder.meta.semester ? <span><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Sem {folder.meta.semester}</span> : null}
                                         {folder.meta.branch ? <span><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {folder.meta.branch}</span> : null}
                                     </div>
                                 </div>
-                                <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', color: '#00d4ff', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                                    Explore <i className="fas fa-arrow-right"></i>
+                                <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', color: '#00d4ff', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                    Explore <i className="fas fa-arrow-right" style={{ fontSize: '0.75rem' }}></i>
                                 </div>
                             </div>
                         ))}

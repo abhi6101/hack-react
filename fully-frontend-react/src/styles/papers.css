@@ -1183,8 +1183,11 @@ a:hover {
     .card-content p { display: none !important; }
 }
 
+
+
 /* NOTES MOBILE OVERRIDES */
 @media (max-width: 768px) {
-  .notes-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; margin-top: 1rem !important; }
+  .notes-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin-top: 1rem !important; grid-auto-rows: 1fr; align-items: stretch; }
   .mobile-clickable-card:active { transform: scale(0.95) !important; background: rgba(255, 255, 255, 0.08) !important; }
+  .papers-header-container { gap: 0.5rem !important; }
 }
