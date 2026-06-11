@@ -26,6 +26,7 @@ const Jobs = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showSortMenu, setShowSortMenu] = useState(false);
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [showCategoryMenu, setShowCategoryMenu] = useState(false);
     const [applicationData, setApplicationData] = useState({
         applicantName: '',
@@ -299,9 +300,9 @@ const Jobs = () => {
                         <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Job Opportunities</h2>
                     </div>
 
-                    <div className="papers-header-right" style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '600px', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <div className={`papers-header-right mobile-filters-wrapper ${isSearchFocused ? 'active-search' : (showCategoryMenu ? 'active-category' : (showSortMenu ? 'active-sort' : ''))}`} style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '600px', flexWrap: 'wrap', alignItems: 'center' }}>
                         {/* Search */}
-                        <div className="global-search-container" style={{
+                        <div className="global-search-container mobile-filter-search" style={{
                             position: 'relative',
                             flex: 1.5,
                             minWidth: '140px',
@@ -322,6 +323,8 @@ const Jobs = () => {
                                 placeholder="Search jobs..."
                                 value={filters.search}
                                 onChange={(e) => handleFilterChange('search', e.target.value)}
+                                onFocus={() => setIsSearchFocused(true)}
+                                onBlur={() => setIsSearchFocused(false)}
                                 style={{
                                     background: 'transparent',
                                     border: 'none',
@@ -341,7 +344,7 @@ const Jobs = () => {
                                 ></i>
                             )}
                         </div>
-                        <div className="category-options" style={{ position: 'relative', flex: '1 1 140px', minWidth: '140px' }}>
+                        <div className="category-options mobile-filter-category" style={{ position: 'relative', flex: '1 1 140px', minWidth: '140px' }}>
                             <div
                                 className="custom-dropdown"
                                 onClick={() => { setShowCategoryMenu(!showCategoryMenu); setShowSortMenu(false); }}
@@ -437,7 +440,7 @@ const Jobs = () => {
                         </AnimatePresence>
                     </div>
 
-                    <div className="sort-wrapper" style={{ position: 'relative', flex: '1 1 140px', minWidth: '140px' }}>
+                    <div className="sort-wrapper mobile-filter-sort" style={{ position: 'relative', flex: '1 1 140px', minWidth: '140px' }}>
                             <div
                                 className="custom-dropdown"
                                 onClick={() => { setShowSortMenu(!showSortMenu); setShowCategoryMenu(false); }}
