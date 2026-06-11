@@ -365,8 +365,8 @@ const ResumeBuilder = () => {
         <div className="papers-page-wrapper">
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
-            <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
-            <div className="papers-header-container" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div className="container mobile-resume-container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
+            <div className="papers-header-container mobile-resume-header" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
                 <div className="papers-header-left" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 2.5rem)', display: 'block', overflow: 'visible', maxWidth: '100%', fontWeight: '800', lineHeight: '1.2', textAlign: 'center' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
                     <p className="sr-only">Create a professional, clean resume in seconds.</p>
