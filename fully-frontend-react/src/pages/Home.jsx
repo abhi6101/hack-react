@@ -435,7 +435,7 @@ const Home = () => {
                         { title: 'UI/UX Intern', company: 'DesignCo', salary: '₹20k/mo', type: 'Internship' },
                         { title: 'Backend Engineer', company: 'ServerPro', salary: '₹10-15 LPA', type: 'Full Time' }
                     ].map((job, idx) => (
-                        <div className="job-marquee-card" key={idx}>
+                        <div className="job-marquee-card" key={idx} onClick={() => navigate('/jobs')} style={{ cursor: 'pointer', transition: 'all 0.2s ease' }} onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.98)'} onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}>
                             <h3 style={{ fontSize: '1.1rem', margin: 0, color: 'var(--primary)' }}>{job.title}</h3>
                             <p style={{ margin: 0, fontSize: '0.9rem', color: '#fff' }}><i className="fas fa-building"></i> {job.company}</p>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
