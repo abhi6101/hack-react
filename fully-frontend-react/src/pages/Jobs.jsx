@@ -341,7 +341,7 @@ const Jobs = () => {
                                 ></i>
                             )}
                         </div>
-                        <div className="category-options" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                        <div className="category-options" style={{ position: 'relative', flex: '1 1 140px', minWidth: '140px' }}>
                             <div
                                 className="custom-dropdown"
                                 onClick={() => { setShowCategoryMenu(!showCategoryMenu); setShowSortMenu(false); }}
@@ -356,14 +356,13 @@ const Jobs = () => {
                                     borderRadius: '50px',
                                     cursor: 'pointer',
                                     width: '100%',
-                                    minWidth: 0,
                                     boxSizing: 'border-box',
                                     justifyContent: 'space-between',
                                     color: '#fff',
                                     fontSize: '0.95rem'
                                 }}
                             >
-                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0, paddingRight: '10px', textAlign: 'left' }}>
+                                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, paddingRight: '10px', textAlign: 'left' }}>
                                     {filters.category === 'all' && 'All Jobs'}
                                     {filters.category === 'it' && 'IT Engineering'}
                                     {filters.category === 'engineering' && 'Engineering'}
@@ -438,7 +437,7 @@ const Jobs = () => {
                         </AnimatePresence>
                     </div>
 
-                    <div className="sort-wrapper" style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                    <div className="sort-wrapper" style={{ position: 'relative', flex: '1 1 140px', minWidth: '140px' }}>
                             <div
                                 className="custom-dropdown"
                                 onClick={() => { setShowSortMenu(!showSortMenu); setShowCategoryMenu(false); }}

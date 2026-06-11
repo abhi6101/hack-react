@@ -412,7 +412,7 @@ const Papers = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div className="papers-header-container">
                 <div className="papers-header-left">
-                    <h1 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Previous Year Question Papers</h1>
+                    <h1 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Previous Year Question Papers</h1>
                     <p className="sr-only" style={{ display: 'none' }}>
                         Download the complete archive of previous year question papers for the IMCA program.
                     </p>

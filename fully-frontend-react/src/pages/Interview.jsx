@@ -298,10 +298,10 @@ const Interview = () => {
 
 <div className="papers-header-container">
     <div className="papers-header-left">
-        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Available Job Drives</h2>
+        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Available Job Drives</h2>
     </div>
     
-    <div className="papers-header-right" style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '500px', flexWrap: 'nowrap', alignItems: 'center' }}>
+    <div className="papers-header-right" style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '500px', flexWrap: 'wrap', alignItems: 'center' }}>
         {/* Search */}
         <div className="global-search-container" style={{
             position: 'relative',
