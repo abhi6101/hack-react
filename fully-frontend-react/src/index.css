@@ -28,3 +28,25 @@
   .mobile-resume-container { padding-top: 80px !important; }
   .mobile-resume-header { gap: 0.8rem !important; margin-bottom: 1rem !important; }
 }
+
+/* GLOBAL THEME STANDARDIZATION */
+body, html, #root, .App, .dashboard-container {
+    background: radial-gradient(circle at center top, #0f172a 0%, #020617 100%) !important;
+    background-attachment: fixed !important;
+    background-color: #020617 !important;
+}
+
+/* SKELETON THEME CONSISTENCY */
+.skeleton-loader {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+.skeleton-container, .skeleton-wrapper, .job-skeleton {
+    background: transparent !important;
+}
+
+/* BOTTOM NAVIGATION BAR COORDINATION */
+nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
+    background: rgba(2, 6, 23, 0.85) !important;
+    backdrop-filter: blur(15px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
