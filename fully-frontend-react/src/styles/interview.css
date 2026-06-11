@@ -812,3 +812,16 @@
         gap: 1rem !important;
     }
 }
+
+/* INTERVIEW MOBILE OVERRIDES */
+@media (max-width: 768px) {
+  .compact-stats-bar { flex-direction: row !important; gap: 0.5rem !important; padding: 0.8rem 1rem !important; justify-content: space-between !important; margin-bottom: 1rem !important; align-items: center !important; }
+  .compact-stats-bar .stat-item { flex-direction: row !important; gap: 0.4rem !important; }
+  .compact-stats-bar .stat-info { display: flex; flex-direction: column; align-items: flex-start; }
+  .compact-stats-bar .stat-value-small { font-size: 1rem !important; }
+  .compact-stats-bar .stat-label-small { font-size: 0.6rem !important; white-space: nowrap; }
+  .compact-stats-bar .stat-icon-small { width: 30px !important; height: 30px !important; font-size: 0.8rem !important; }
+  .job-card { padding: 1.2rem !important; text-align: center; }
+  .job-header { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .job-meta { flex-direction: column; gap: 0.5rem !important; align-items: center !important; }
+}

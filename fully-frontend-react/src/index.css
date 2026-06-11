@@ -1,0 +1,14 @@
+
+/* UPLOAD & RESUME MOBILE COMPACT OVERRIDES */
+@media (max-width: 768px) {
+  .upload-wizard-card { padding: 1.5rem !important; }
+  .upload-wizard-card > div:first-child { margin-bottom: 1rem !important; }
+  .upload-method-card { padding: 1rem 0.5rem !important; }
+  .upload-method-card h4 { font-size: 0.9rem !important; }
+  .upload-method-card div { width: 40px !important; height: 40px !important; margin-bottom: 0.5rem !important; }
+  .upload-method-card div i { font-size: 1.2rem !important; }
+  div[style*="gap: 20px"] { flex-direction: row !important; gap: 10px !important; }
+  .input-group { margin-bottom: 8px !important; }
+  .input-group label { margin-bottom: 4px !important; font-size: 0.85rem !important; }
+  .input-group input, .input-group select { padding: 0.5rem 1rem !important; font-size: 0.9rem !important; }
+}
