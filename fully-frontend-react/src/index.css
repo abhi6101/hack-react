@@ -50,3 +50,8 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
     backdrop-filter: blur(15px) !important;
     border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
+
+/* COURSE DROPDOWN CARD OVERRIDES */
+@media (max-width: 768px) {
+  .papers-header-right .dropdown-trigger { border-radius: 16px !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; background: rgba(255, 255, 255, 0.03) !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important; }
+}
