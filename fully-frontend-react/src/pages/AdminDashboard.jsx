@@ -3007,7 +3007,7 @@ const AdminDashboard = () => {
                 <nav className="sidebar-menu">
                     <ul className="accordion-menu">
                         {menuGroups.map(group => {
-                            const groupItems = menuItems.filter(item => group.items.includes(item.id) && item.roles.includes(role));
+                            const groupItems = menuItems.filter(item => group.items.includes(item.id) && item.roles.some(r => r.toUpperCase() === String(role).toUpperCase()));
                             if (groupItems.length === 0) return null;
                             const isExpanded = expandedMenu === group.title;
                             
