@@ -59,3 +59,16 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
 @media (max-width: 768px) {
   .papers-header-right .dropdown-trigger { border-radius: 16px !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; background: rgba(255, 255, 255, 0.03) !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important; }
 }
+
+/* PAPER CARD MOBILE OVERRIDES */
+@media (max-width: 768px) {
+  .papers-grid { width: 100% !important; box-sizing: border-box !important; }
+  .paper-card-premium { padding: 1rem !important; width: 100% !important; box-sizing: border-box !important; }
+  .paper-card-premium .paper-title { word-break: break-word !important; white-space: normal !important; }
+  .paper-card-premium .card-buttons-container { flex-direction: column !important; }
+  .paper-card-premium .download-btn-premium { width: 100% !important; flex: none !important; }
+}
+
+@media (max-width: 768px) {
+  .view-header { padding: 1rem !important; flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
+}
