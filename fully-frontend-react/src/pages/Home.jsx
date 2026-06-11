@@ -388,7 +388,7 @@ const Home = () => {
                     </div>
 
                     <div className="glass-marquee-container">
-                        <div className="glass-marquee-track">
+                        <div className="glass-marquee-track" style={{ display: "flex", flexWrap: "nowrap", width: "max-content", gap: "2rem" }}>
                             {[
                                 { name: 'Google', icon: 'fab fa-google' },
                                 { name: 'Microsoft', icon: 'fab fa-microsoft' },

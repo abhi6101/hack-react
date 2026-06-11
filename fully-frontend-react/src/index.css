@@ -181,7 +181,7 @@ body, #root, .dashboard-container, .mobile-jobs-page-wrapper, .papers-page-wrapp
 .glass-marquee-container::before, .glass-marquee-container::after { content: ''; position: absolute; top: 0; width: 150px; height: 100%; z-index: 2; pointer-events: none; }
 .glass-marquee-container::before { left: 0; background: linear-gradient(to right, #020617 0%, transparent 100%); }
 .glass-marquee-container::after { right: 0; background: linear-gradient(to left, #020617 0%, transparent 100%); }
-.glass-marquee-track { display: inline-flex; gap: 2rem; animation: scrollMarquee 30s linear infinite; }
+.glass-marquee-track { display: flex; flex-wrap: nowrap; gap: 2rem; width: max-content; animation: scrollMarquee 30s linear infinite; }
 .glass-marquee-track:hover { animation-play-state: paused; }
 
 /* HOW IT WORKS CONNECTOR */
