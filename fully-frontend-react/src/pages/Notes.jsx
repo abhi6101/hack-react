@@ -148,6 +148,7 @@ const Notes = ({ isAdminView }) => {
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [semesterFilter, setSemesterFilter] = useState('');
     const [branchFilter, setBranchFilter] = useState('');
     const [deptList, setDeptList] = useState([]);
@@ -590,8 +591,13 @@ const Notes = ({ isAdminView }) => {
                     </p>
                 </div>
 
-                <div className="papers-header-right" style={{ gap: '1rem', width: '100%', maxWidth: '500px', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <div className="global-search-container" style={{
+                <div className={`papers-header-right mobile-filters-wrapper ${isSearchFocused ? 'active-search' : ''}`} style={{ gap: '1rem', width: '100%', maxWidth: '500px', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <div className={`global-search-container mobile-filter-search ${isSearchFocused ? 'is-focused' : ''}`} 
+                        onClick={() => {
+                            setIsSearchFocused(true);
+                            setTimeout(() => document.getElementById('notesMobileSearchInput')?.focus(), 100);
+                        }}
+                        style={{
                         position: 'relative',
                         flex: 1.5,
                         minWidth: '140px',
@@ -608,10 +614,13 @@ const Notes = ({ isAdminView }) => {
                     }}>
                         <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
                         <input
+                            id="notesMobileSearchInput"
                             type="text"
                             placeholder="Search subjects..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={() => setIsSearchFocused(true)}
+                            onBlur={(e) => { if (!e.target.value) setIsSearchFocused(false); }}
                             style={{
                                 background: 'transparent',
                                 border: 'none',
@@ -632,7 +641,7 @@ const Notes = ({ isAdminView }) => {
                         )}
                     </div>
 
-                    <div className="dept-selector-inline" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 1000 }}>
+                    <div className="dept-selector-inline mobile-filter-sort" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 1000 }}>
                         <div
                             className={`custom-dropdown ${userRole === 'STUDENT' ? 'disabled' : ''}`}
                             onClick={() => { if (userRole !== 'STUDENT') setShowBranchMenu(!showBranchMenu); }}
@@ -908,24 +917,36 @@ const Notes = ({ isAdminView }) => {
                 ) : (
                     <div className="notes-grid">
                         {filteredRoots.map(folder => (
-                            <div key={folder.name} className="subject-card">
-                                <div style={{ width: '100%' }}>
-                                    <div className="subject-icon-large">
-                                        <i className="fas fa-folder-open"></i>
+                            <div 
+                                key={folder.name} 
+                                className="subject-card mobile-clickable-card"
+                                onClick={() => setSelectedFolder(folder)}
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.03)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '16px',
+                                    padding: '1.2rem',
+                                    cursor: 'pointer',
+                                    transition: 'transform 0.2s, background 0.2s',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    height: '100%'
+                                }}
+                            >
+                                <div style={{ width: '100%', textAlign: 'center' }}>
+                                    <div className="subject-icon-compact" style={{ marginBottom: '0.8rem' }}>
+                                        <i className="fas fa-folder-open" style={{ fontSize: '2rem', color: '#00d4ff', filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.4))' }}></i>
                                     </div>
-                                    <h3 style={{ fontSize: '1.2rem', color: '#fff', marginTop: '1.2rem', marginBottom: '0.8rem', fontWeight: '700' }}>{folder.name}</h3>
-                                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                    <h3 className="subject-card-title" style={{ fontSize: '1rem', color: '#fff', margin: '0 0 0.5rem 0', fontWeight: '700', lineHeight: '1.3', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{folder.name}</h3>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
                                         {folder.meta.semester ? <span><i className="fas fa-calendar-alt" style={{ color: '#10B981' }}></i> Sem {folder.meta.semester}</span> : null}
                                         {folder.meta.branch ? <span><i className="fas fa-graduation-cap" style={{ color: '#F59E0B' }}></i> {folder.meta.branch}</span> : null}
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => setSelectedFolder(folder)}
-                                    className="download-btn-premium"
-                                    style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', borderRadius: '12px', padding: '0.8rem', fontSize: '0.9rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s ease', marginTop: '1rem' }}
-                                >
-                                    Explore Units <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
-                                </button>
+                                <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', color: '#00d4ff', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                                    Explore <i className="fas fa-arrow-right"></i>
+                                </div>
                             </div>
                         ))}
                     </div>

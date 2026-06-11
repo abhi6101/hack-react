@@ -1182,3 +1182,9 @@ a:hover {
     .card-content h2 { font-size: 1rem !important; margin: 0 !important; }
     .card-content p { display: none !important; }
 }
+
+/* NOTES MOBILE OVERRIDES */
+@media (max-width: 768px) {
+  .notes-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; margin-top: 1rem !important; }
+  .mobile-clickable-card:active { transform: scale(0.95) !important; background: rgba(255, 255, 255, 0.08) !important; }
+}
