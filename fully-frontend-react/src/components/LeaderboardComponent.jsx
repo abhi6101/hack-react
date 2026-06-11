@@ -25,14 +25,14 @@ const LeaderboardComponent = () => {
 
     if (loading) {
         return (
-            <div style={{ background: 'var(--surface-bg)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.02)', backdropFilter: 'blur(10px)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <i className="fas fa-circle-notch fa-spin" style={{ color: 'var(--primary)', fontSize: '2rem' }}></i>
             </div>
         );
     }
 
     return (
-        <div style={{ background: 'var(--surface-bg)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+        <div style={{ background: 'rgba(255, 255, 255, 0.02)', backdropFilter: 'blur(10px)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
             <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <i className="fas fa-trophy" style={{ color: '#fbbf24' }}></i> Top Contributors
             </h3>
@@ -43,7 +43,7 @@ const LeaderboardComponent = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     {leaders.map((user, index) => (
                         <div key={user.id} 
-                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: index === 0 ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid transparent', transition: 'all 0.3s ease' }}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: index === 0 ? '1px solid rgba(251, 191, 36, 0.5)' : index === 1 ? '1px solid rgba(148, 163, 184, 0.5)' : index === 2 ? '1px solid rgba(180, 83, 9, 0.5)' : '1px solid transparent', transition: 'all 0.3s ease' }}
                             onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.3)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
                             onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >

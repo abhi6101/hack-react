@@ -382,53 +382,72 @@ const Home = () => {
                         </h2>
                     </div>
 
-                    <div className="trusted-logos-row" style={{ display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        {[
-                            { name: 'Google', icon: 'fab fa-google' },
-                            { name: 'Microsoft', icon: 'fab fa-microsoft' },
-                            { name: 'Amazon', icon: 'fab fa-amazon' },
-                            { name: 'Apple', icon: 'fab fa-apple' },
-                            { name: 'Meta', icon: 'fab fa-meta' },
-                        ].map((company, index) => (
-                            <div className="trusted-logo-item" key={index} style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '0.5rem', 
-                                color: '#94a3b8', 
-                                transition: 'all 0.3s ease',
-                                cursor: 'pointer'
-                            }}
-                            onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.transform = 'scale(1)'; }}
-                            >
-                                <i className={company.icon} style={{ fontSize: '2rem' }}></i>
-                                <span style={{ fontSize: '1.2rem', fontWeight: '600' }}>{company.name}</span>
-                            </div>
-                        ))}
+                    <div className="glass-marquee-container">
+                        <div className="glass-marquee-track">
+                            {[
+                                { name: 'Google', icon: 'fab fa-google' },
+                                { name: 'Microsoft', icon: 'fab fa-microsoft' },
+                                { name: 'Amazon', icon: 'fab fa-amazon' },
+                                { name: 'Apple', icon: 'fab fa-apple' },
+                                { name: 'Meta', icon: 'fab fa-meta' },
+                                { name: 'Netflix', icon: 'fab fa-netflix' },
+                                { name: 'Spotify', icon: 'fab fa-spotify' },
+                                { name: 'Google', icon: 'fab fa-google' },
+                                { name: 'Microsoft', icon: 'fab fa-microsoft' },
+                                { name: 'Amazon', icon: 'fab fa-amazon' },
+                                { name: 'Apple', icon: 'fab fa-apple' },
+                                { name: 'Meta', icon: 'fab fa-meta' },
+                                { name: 'Netflix', icon: 'fab fa-netflix' },
+                                { name: 'Spotify', icon: 'fab fa-spotify' }
+                            ].map((company, index) => (
+                                <div className="trusted-logo-item" key={index} style={{ 
+                                    display: 'inline-flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.8rem', 
+                                    color: '#94a3b8', 
+                                    transition: 'all 0.3s ease',
+                                    cursor: 'pointer',
+                                    background: 'rgba(255, 255, 255, 0.03)',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    padding: '1rem 2rem',
+                                    borderRadius: '16px'
+                                }}
+                                onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'; }}
+                                >
+                                    <i className={company.icon} style={{ fontSize: '1.8rem' }}></i>
+                                    <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>{company.name}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* NEW: Upload Paper CTA Card */}
-            <div className="upload-cta-wrapper" style={{ display: 'flex', justifyContent: 'center', padding: '20px', margin: '20px auto', maxWidth: '400px' }}>
+            <div className="upload-cta-wrapper" style={{ display: 'flex', justifyContent: 'center', padding: '20px', margin: '40px auto', maxWidth: '800px' }}>
                 <div style={{
                     background: 'rgba(16, 185, 129, 0.1)',
                     backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(16, 185, 129, 0.2)',
-                    padding: '1.5rem',
-                    borderRadius: '24px',
-                    boxShadow: '0 8px 32px rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    padding: '2rem',
+                    borderRadius: '32px',
+                    boxShadow: '0 0 40px rgba(16, 185, 129, 0.2)',
                     width: '100%',
-                    textAlign: 'center',
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'row',
                     alignItems: 'center',
-                    gap: '1rem'
+                    justifyContent: 'space-between',
+                    gap: '2rem',
+                    flexWrap: 'wrap'
                 }}>
-                    <i className="fas fa-cloud-upload-alt" style={{ fontSize: '2.5rem', color: '#10b981' }}></i>
-                    <div style={{ color: '#fff' }}>
-                        <h3 style={{ fontSize: '1.2rem', marginBottom: '0.2rem' }}>Got Previous Year Papers?</h3>
-                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Help your juniors by sharing your exam papers.</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: '1 1 300px' }}>
+                        <i className="fas fa-cloud-upload-alt" style={{ fontSize: '3rem', color: '#10b981' }}></i>
+                        <div style={{ color: '#fff', textAlign: 'left' }}>
+                            <h3 style={{ fontSize: '1.4rem', marginBottom: '0.3rem', fontWeight: '700' }}>Got Previous Year Papers?</h3>
+                            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0 }}>Help your juniors by sharing your exam papers.</p>
+                        </div>
                     </div>
                     <button 
                         onClick={() => navigate('/upload-paper')}
@@ -436,15 +455,16 @@ const Home = () => {
                             background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                             color: 'white',
                             border: 'none',
-                            padding: '10px 20px',
-                            borderRadius: '12px',
+                            padding: '12px 28px',
+                            borderRadius: '16px',
                             fontWeight: 'bold',
-                            fontSize: '0.95rem',
+                            fontSize: '1.1rem',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '8px',
+                            gap: '10px',
                             cursor: 'pointer',
                             transition: 'transform 0.2s',
+                            boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -463,7 +483,10 @@ const Home = () => {
                     </p>
                 </div>
 
-                <div className="how-it-works-container">
+                <div className="how-it-works-container" style={{ position: 'relative' }}>
+                    <svg className="connector-svg" viewBox="0 0 200 400" preserveAspectRatio="none">
+                        <path className="animated-path" d="M 0 200 C 100 200, 100 50, 200 50 M 0 200 C 100 200, 100 200, 200 200 M 0 200 C 100 200, 100 350, 200 350" />
+                    </svg>
                     {/* Left: Illustration */}
                     <div className="how-left-side">
                         <div className="girl-image-container">
@@ -561,28 +584,54 @@ const Home = () => {
             {/* Gallery Section */}
             <section className="gallery">
                 <h2>Moments & Memories</h2>
-                <div className="slideshow-container moments-slideshow desktop-only" style={{ position: 'relative', overflow: 'hidden', height: '500px', borderRadius: '16px' }}>
+                <div className="slideshow-container moments-slideshow desktop-only" style={{ position: 'relative', overflow: 'hidden', height: '500px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <AnimatePresence>
+                        {galleryImages.map((img, idx) => {
+                            let position = 'other';
+                            if (idx === currentImageIndex) position = 'center';
+                            else if (idx === (currentImageIndex - 1 + galleryImages.length) % galleryImages.length) position = 'left';
+                            else if (idx === (currentImageIndex + 1) % galleryImages.length) position = 'right';
 
-                    {/* Active Image */}
-                    <div className="mySlides fade" style={{ display: 'block', height: '100%', width: '100%' }}>
-                        <img
-                            src={galleryImages[currentImageIndex]}
-                            alt={`Moments & Memories ${currentImageIndex + 1}`}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                    </div>
+                            if (position === 'other') return null;
+
+                            return (
+                                <motion.div
+                                    key={idx}
+                                    initial={false}
+                                    animate={{
+                                        x: position === 'center' ? 0 : position === 'left' ? '-40%' : '40%',
+                                        scale: position === 'center' ? 1 : 0.8,
+                                        zIndex: position === 'center' ? 10 : 5,
+                                        filter: position === 'center' ? 'blur(0px)' : 'blur(4px)',
+                                        opacity: position === 'center' ? 1 : 0.7
+                                    }}
+                                    transition={{ duration: 0.5, type: 'spring', stiffness: 300, damping: 30 }}
+                                    style={{
+                                        position: 'absolute',
+                                        width: '60%',
+                                        height: '90%',
+                                        borderRadius: '16px',
+                                        overflow: 'hidden',
+                                        boxShadow: position === 'center' ? '0 20px 40px rgba(0,0,0,0.5)' : 'none'
+                                    }}
+                                >
+                                    <img src={img} alt="Gallery item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
 
                     {/* Navigation Arrows */}
                     <a className="prev" onClick={prevSlide} style={{
                         cursor: 'pointer', position: 'absolute', top: '50%', width: 'auto', padding: '16px', marginTop: '-22px',
                         color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.6s ease', borderRadius: '0 3px 3px 0',
-                        userSelect: 'none', left: '0', background: 'rgba(0,0,0,0.3)'
+                        userSelect: 'none', left: '20px', background: 'rgba(0,0,0,0.5)', zIndex: 20
                     }}>&#10094;</a>
 
                     <a className="next" onClick={nextSlide} style={{
                         cursor: 'pointer', position: 'absolute', top: '50%', width: 'auto', padding: '16px', marginTop: '-22px',
                         color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.6s ease', borderRadius: '3px 0 0 3px',
-                        userSelect: 'none', right: '0', background: 'rgba(0,0,0,0.3)'
+                        userSelect: 'none', right: '20px', background: 'rgba(0,0,0,0.5)', zIndex: 20
                     }}>&#10095;</a>
                 </div>
 

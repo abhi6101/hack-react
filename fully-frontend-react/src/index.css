@@ -117,8 +117,8 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
 section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
 .hero { padding-top: 5rem !important; padding-bottom: 2rem !important; }
 @media (min-width: 1024px) {
-  .how-it-works-container { flex-direction: row !important; align-items: center; justify-content: space-between; gap: 4rem; }
-  .how-left-side, .how-right-side { flex: 1; }
+  .how-it-works-container { flex-direction: row !important; align-items: center; justify-content: space-between; gap: 2rem; justify-content: center; }
+  .how-left-side, .how-right-side { flex: 0 1 450px; } .how-it-works-container { position: relative; }
 }
 
 /* JOBS PAGE OVERRIDES */
@@ -174,3 +174,18 @@ body, #root, .dashboard-container, .mobile-jobs-page-wrapper, .papers-page-wrapp
 /* SKELETON GLOBAL THEME */
 .skeleton-card, .skeleton-item, .skeleton-box { background: rgba(255,255,255,0.02) !important; border: 1px solid rgba(255,255,255,0.05) !important; border-radius: 16px !important; }
 .skeleton-line, .skeleton-text, .skeleton-pill { background: rgba(255,255,255,0.05) !important; border-radius: 8px !important; }
+
+/* MARQUEE ANIMATION */
+@keyframes scrollMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.glass-marquee-container { overflow: hidden; white-space: nowrap; width: 100%; position: relative; padding: 1rem 0; }
+.glass-marquee-container::before, .glass-marquee-container::after { content: ''; position: absolute; top: 0; width: 150px; height: 100%; z-index: 2; pointer-events: none; }
+.glass-marquee-container::before { left: 0; background: linear-gradient(to right, #020617 0%, transparent 100%); }
+.glass-marquee-container::after { right: 0; background: linear-gradient(to left, #020617 0%, transparent 100%); }
+.glass-marquee-track { display: inline-flex; gap: 2rem; animation: scrollMarquee 30s linear infinite; }
+.glass-marquee-track:hover { animation-play-state: paused; }
+
+/* HOW IT WORKS CONNECTOR */
+.connector-svg { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 200px; height: 100%; z-index: 0; pointer-events: none; }
+@media (min-width: 1024px) { .connector-svg { display: block; } }
+@keyframes dashAnim { to { stroke-dashoffset: -40; } }
+.animated-path { stroke-dasharray: 10 10; animation: dashAnim 1s linear infinite; stroke: rgba(0, 212, 255, 0.4); stroke-width: 3; fill: none; }
