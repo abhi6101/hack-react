@@ -584,13 +584,13 @@ const Notes = ({ isAdminView }) => {
             {/* Unified Header section matching Papers.jsx */}
             <div className="papers-header-container">
                 <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
                     <p style={{ display: 'none' }} className="sr-only">
                         Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
                     </p>
                 </div>
 
-                <div className="papers-header-right" style={{ gap: '1rem', width: '100%', maxWidth: '500px', display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
+                <div className="papers-header-right" style={{ gap: '1rem', width: '100%', maxWidth: '500px', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                     <div className="global-search-container" style={{
                         position: 'relative',
                         flex: 1.5,
