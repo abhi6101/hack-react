@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../config';
 import FloatingCodeBackground from '../components/FloatingCodeBackground';
 import Typewriter from '../components/Typewriter';
