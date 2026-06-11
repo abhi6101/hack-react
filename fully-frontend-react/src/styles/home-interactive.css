@@ -1160,3 +1160,12 @@ main {
   .gallery { padding-top: 0.5rem !important; margin-top: 0 !important; padding-bottom: 0.5rem !important; }
 }
 
+
+/* FINAL MOBILE REFINEMENTS */
+@media (max-width: 768px) {
+  main { padding-bottom: 90px !important; }
+  .hero-content { margin-top: 30px !important; }
+  .leaderboard-wrapper, .leaderboard-mobile-wrapper .leaderboard-wrapper { display: flex !important; flex-direction: column !important; }
+  .leaderboard-mobile-wrapper { padding: 0 10px !important; }
+  .leaderboard-mobile-wrapper .leaderboard-card { margin-bottom: 0 !important; }
+}
