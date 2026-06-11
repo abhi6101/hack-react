@@ -485,7 +485,7 @@ const Home = () => {
 
                 <div className="how-it-works-container" style={{ position: 'relative' }}>
                     <svg className="connector-svg" viewBox="0 0 200 400" preserveAspectRatio="none">
-                        <path className="animated-path" d="M 0 200 C 100 200, 100 50, 200 50 M 0 200 C 100 200, 100 200, 200 200 M 0 200 C 100 200, 100 350, 200 350" />
+                        <path className="animated-path" d="M 0 200 C 100 200, 100 50, 200 50 M 0 200 C 100 200, 100 200, 200 200 M 0 200 C 100 200, 100 350, 200 350" fill="none" />
                     </svg>
                     {/* Left: Illustration */}
                     <div className="how-left-side">
@@ -602,7 +602,6 @@ const Home = () => {
                                         x: position === 'center' ? 0 : position === 'left' ? '-40%' : '40%',
                                         scale: position === 'center' ? 1 : 0.8,
                                         zIndex: position === 'center' ? 10 : 5,
-                                        filter: position === 'center' ? 'blur(0px)' : 'blur(4px)',
                                         opacity: position === 'center' ? 1 : 0.7
                                     }}
                                     transition={{ duration: 0.5, type: 'spring', stiffness: 300, damping: 30 }}
@@ -612,7 +611,9 @@ const Home = () => {
                                         height: '90%',
                                         borderRadius: '16px',
                                         overflow: 'hidden',
-                                        boxShadow: position === 'center' ? '0 20px 40px rgba(0,0,0,0.5)' : 'none'
+                                        boxShadow: position === 'center' ? '0 20px 40px rgba(0,0,0,0.5)' : 'none',
+                                        filter: position === 'center' ? 'blur(0px)' : 'blur(4px)',
+                                        transition: 'filter 0.5s'
                                     }}
                                 >
                                     <img src={img} alt="Gallery item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -657,13 +658,20 @@ const Home = () => {
                 </div>
 
                 {/* Mobile 2x2 Grid */}
-                <div className="mobile-only mobile-moments-grid">
-                    {galleryImages.slice(0, 4).map((img, idx) => (
-                        <div key={idx} className="moment-thumb" style={{
-                            backgroundImage: `url(${img})`
-                        }}></div>
-                    ))}
+                <div className="mobile-moments-grid-container" style={{ display: 'none' }}>
+                    <div className="mobile-moments-grid">
+                        {galleryImages.slice(0, 4).map((img, idx) => (
+                            <div key={idx} className="moment-thumb" style={{
+                                backgroundImage: `url(${img})`
+                            }}></div>
+                        ))}
+                    </div>
                 </div>
+                <style jsx>{`
+                    @media (max-width: 768px) {
+                        .mobile-moments-grid-container { display: block !important; }
+                    }
+                `}</style>
             </section>
 
 
