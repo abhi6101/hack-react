@@ -342,12 +342,7 @@ const Home = () => {
 
 
 
-                        <motion.div className="cta-btns" variants={fadeInUp} style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
-                            {!user?.username && (
-                                <Link to="/register" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', boxShadow: '0 0 15px rgba(0, 212, 255, 0.4)', borderRadius: '50px', fontWeight: '600', padding: '0.8rem 2rem' }}>Get Started</Link>
-                            )}
-                            <Link to="/courses" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', borderRadius: '50px', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '0.8rem 2rem', background: 'transparent' }}>Explore More</Link>
-                        </motion.div>
+
 
                         <motion.div variants={fadeInUp} className="leaderboard-wrapper" style={{ marginTop: '2rem', width: '100%', maxWidth: '400px', boxSizing: 'border-box' }}>
                             <LeaderboardComponent />

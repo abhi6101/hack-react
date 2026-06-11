@@ -55,7 +55,8 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
             items: [
                 { path: '/gallery', icon: 'fa-images', label: 'Campus Gallery' },
                 { path: '/blog', icon: 'fa-blog', label: 'Placement Blog' },
-                { path: '/contact', icon: 'fa-envelope', label: 'Help & Support' }
+                { path: '/contact', icon: 'fa-envelope', label: 'Help & Support' },
+                ...(['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'].includes(localStorage.getItem('userRole')) ? [{ path: '/admin', icon: 'fa-shield-alt', label: 'Admin Portal' }] : [])
             ]
         }
     ].filter(group => group.items.length > 0);
