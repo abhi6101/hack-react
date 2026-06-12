@@ -341,32 +341,13 @@ const Home = () => {
                                 Connect with top recruiters from <span style={{color: '#fff', fontWeight: 600}}>100+ global tech giants</span> and land your perfect role.
                             </p>
                             
-                            <div className="hero-ctas" style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap' }}>
-                                <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%)', color: '#000', fontWeight: '600', textDecoration: 'none', border: 'none' }}>
+                            <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                                <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'var(--primary)', color: '#000', fontWeight: '600', textDecoration: 'none', border: '1px solid var(--primary)', transition: 'all 0.3s ease' }}>
                                     Find Jobs
                                 </Link>
-                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontWeight: '600', textDecoration: 'none' }}>
+                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontWeight: '600', textDecoration: 'none', transition: 'all 0.3s ease' }}>
                                     Build Resume
                                 </Link>
-                            </div>
-
-                            {/* Share Papers CTA (Redesigned & Repositioned) */}
-                            <div className="mobile-share-papers-cta" style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '16px', padding: '12px 16px', cursor: 'pointer' }} onClick={() => navigate('/upload-paper')}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                    <i className="fas fa-cloud-upload-alt" style={{ fontSize: '1.5rem', color: '#10b981' }}></i>
-                                    <div style={{ textAlign: 'left' }}>
-                                        <h3 style={{ fontSize: '0.9rem', margin: 0, color: '#fff', fontWeight: '600' }}>Share Papers</h3>
-                                        <p style={{ fontSize: '0.75rem', margin: 0, color: 'var(--text-secondary)' }}>Help your juniors.</p>
-                                    </div>
-                                </div>
-                                <button style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                                    Share Now
-                                </button>
-                            </div>
-
-                            {/* Leaderboard directly below the buttons/CTA */}
-                            <div className="hero-leaderboard-wrapper" style={{ marginTop: '2rem', maxWidth: '600px' }}>
-                                <LeaderboardComponent limit={3} />
                             </div>
                         </motion.div>
 
@@ -383,12 +364,39 @@ const Home = () => {
                         initial={{ opacity: 0, x: 100 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+                        style={{ position: 'relative' }}
                     >
-                        <div className="boy-image-container">
-                            <img src="/images/Boy.png" alt="Career Aspirant" className="hero-boy-img" />
-                            <div className="image-glow-effect"></div>
+                        <div className="hero-illustration-wrapper" style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {/* Glowing geometric background */}
+                            <div style={{ position: 'absolute', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,212,255,0) 70%)', borderRadius: '50%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(30px)' }}></div>
+                            <div style={{ position: 'absolute', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', top: '30%', left: '60%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(40px)' }}></div>
+                            
+                            <div className="boy-image-container" style={{ position: 'relative', zIndex: 1 }}>
+                                <img src="/images/Boy.png" alt="Career Aspirant" className="hero-boy-img" style={{ dropShadow: '0 20px 40px rgba(0,0,0,0.4)' }} />
+                                <div className="image-glow-effect"></div>
+                            </div>
                         </div>
                     </motion.div>
+                </div>
+            </section>
+
+            {/* Trust Stats Section (New) */}
+            <section className="trust-stats-section" style={{ padding: '2rem 0', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="container">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', textAlign: 'center' }}>
+                        <div>
+                            <h3 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: 'var(--primary)' }}>10,000+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Students Placed</p>
+                        </div>
+                        <div>
+                            <h3 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: 'var(--primary)' }}>500+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Jobs Posted</p>
+                        </div>
+                        <div>
+                            <h3 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: 'var(--primary)' }}>50+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Partner Colleges</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -459,16 +467,32 @@ const Home = () => {
                     <svg className="connector-svg" viewBox="0 0 200 400" preserveAspectRatio="none">
                         <path className="animated-path" d="M 0 200 C 100 200, 100 50, 200 50 M 0 200 C 100 200, 100 200, 200 200 M 0 200 C 100 200, 100 350, 200 350" fill="none" />
                     </svg>
-                    {/* Left: Illustration */}
-                    <div className="how-left-side">
-                        <div className="girl-image-container">
-                            <img src="/images/Girl.png" alt="How it works" className="how-girl-img" />
-                            {/* Floating Profile Card */}
-                            <div className="floating-profile-card">
-                                <img src="/images/avatar1.png" alt="Profile" />
-                                <h4>Complete your profile</h4>
-                                <p>70% Completed</p>
+                    {/* Left: Product Mockup */}
+                    <div className="how-left-side" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+                        <div className="product-mockup glass-card" style={{ width: '100%', maxWidth: '450px', height: '320px', borderRadius: '16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', backdropFilter: 'blur(12px)', overflow: 'hidden', position: 'relative' }}>
+                            {/* Browser Header */}
+                            <div style={{ height: '40px', background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', padding: '0 1rem', gap: '8px' }}>
+                                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }}></div>
+                                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#eab308' }}></div>
+                                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#22c55e' }}></div>
                             </div>
+                            {/* Mockup Body */}
+                            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                <div style={{ width: '60%', height: '24px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}></div>
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <div style={{ width: '30%', height: '80px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
+                                    <div style={{ width: '70%', height: '80px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
+                                </div>
+                                <div style={{ width: '100%', height: '60px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
+                                <div style={{ width: '80%', height: '60px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
+                            </div>
+                        </div>
+
+                        {/* Floating Profile Card */}
+                        <div className="floating-profile-card glass-card" style={{ position: 'absolute', bottom: '-20px', right: '0', backdropFilter: 'blur(12px)', background: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <img src="/images/avatar1.png" alt="Profile" />
+                            <h4>Complete your profile</h4>
+                            <p>70% Completed</p>
                         </div>
                     </div>
 
@@ -543,6 +567,37 @@ const Home = () => {
                 </div>
             </motion.section> */}
 
+            {/* Community Champions Section */}
+            <section className="community-champions-section" style={{ padding: '6rem 0', background: 'linear-gradient(to bottom, rgba(15,23,42,0), rgba(15,23,42,0.5))', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="container">
+                    <div className="section-header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>Community <span className="text-gradient">Champions</span></h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
+                            Recognizing the top contributors who help their peers succeed.
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'flex-start', justifyContent: 'center' }}>
+                        <div style={{ flex: '1 1 500px', maxWidth: '700px' }}>
+                            <LeaderboardComponent limit={5} />
+                        </div>
+                        
+                        {/* Share Papers CTA (Redesigned & Repositioned) */}
+                        <div className="mobile-share-papers-cta glass-card" style={{ flex: '1 1 300px', maxWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '16px', padding: '2rem', cursor: 'pointer', textAlign: 'center', backdropFilter: 'blur(12px)', transition: 'all 0.3s ease' }} onClick={() => navigate('/upload-paper')} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.15)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                                <i className="fas fa-cloud-upload-alt" style={{ fontSize: '1.8rem', color: '#10b981' }}></i>
+                            </div>
+                            <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0', color: '#fff', fontWeight: '600' }}>Share Your Papers</h3>
+                            <p style={{ fontSize: '0.9rem', margin: '0 0 1.5rem 0', color: 'var(--text-secondary)' }}>Help your juniors by contributing study materials. Every contribution counts!</p>
+                            
+                            <button style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white', border: 'none', padding: '0.8rem 2rem', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', width: '100%', transition: 'all 0.3s ease' }}>
+                                Contribute Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Gallery Section */}
             <section className="gallery">
                 <h2>Moments & Memories</h2>
@@ -573,9 +628,9 @@ const Home = () => {
                                         height: '90%',
                                         borderRadius: '16px',
                                         overflow: 'hidden',
-                                        boxShadow: position === 'center' ? '0 20px 40px rgba(0,0,0,0.5)' : 'none',
+                                        boxShadow: position === 'center' ? '0 0 40px rgba(0, 212, 255, 0.4)' : 'none',
                                         filter: position === 'center' ? 'blur(0px)' : 'blur(4px)',
-                                        transition: 'filter 0.5s'
+                                        transition: 'filter 0.5s, box-shadow 0.5s'
                                     }}
                                 >
                                     <img src={img} alt="Gallery item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -586,15 +641,13 @@ const Home = () => {
 
                     {/* Navigation Arrows */}
                     <a className="prev" onClick={prevSlide} style={{
-                        cursor: 'pointer', position: 'absolute', top: '50%', width: 'auto', padding: '16px', marginTop: '-22px',
-                        color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.6s ease', borderRadius: '0 3px 3px 0',
-                        userSelect: 'none', left: '20px', background: 'rgba(0,0,0,0.5)', zIndex: 20
+                        cursor: 'pointer', position: 'absolute', top: '50%', transform: 'translateY(-50%)', width: '50px', height: '50px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.3s ease', borderRadius: '50%', userSelect: 'none', left: '20px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', zIndex: 20, boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
                     }}>&#10094;</a>
 
                     <a className="next" onClick={nextSlide} style={{
-                        cursor: 'pointer', position: 'absolute', top: '50%', width: 'auto', padding: '16px', marginTop: '-22px',
-                        color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.6s ease', borderRadius: '3px 0 0 3px',
-                        userSelect: 'none', right: '20px', background: 'rgba(0,0,0,0.5)', zIndex: 20
+                        cursor: 'pointer', position: 'absolute', top: '50%', transform: 'translateY(-50%)', width: '50px', height: '50px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px', transition: '0.3s ease', borderRadius: '50%', userSelect: 'none', right: '20px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', zIndex: 20, boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
                     }}>&#10095;</a>
                 </div>
 
@@ -636,6 +689,16 @@ const Home = () => {
                 `}</style>
             </section>
 
+            {/* Final CTA Section */}
+            <section className="final-cta-section" style={{ padding: '5rem 0', background: 'linear-gradient(to top, rgba(0, 212, 255, 0.05), transparent)', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                <div className="container">
+                    <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem', color: '#fff' }}>Ready to start your career?</h2>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginBottom: '2rem' }}>Join thousands of students landing their dream jobs every day.</p>
+                    <Link to="/login" className="btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1.2rem', borderRadius: '50px', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', fontWeight: 'bold', display: 'inline-block', boxShadow: '0 10px 20px rgba(0, 212, 255, 0.3)', transition: 'all 0.3s ease', textDecoration: 'none' }} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 212, 255, 0.5)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 212, 255, 0.3)'; }}>
+                        Get Started Now
+                    </Link>
+                </div>
+            </section>
 
         </main>
     );
