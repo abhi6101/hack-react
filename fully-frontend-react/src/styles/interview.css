@@ -825,3 +825,113 @@
   .job-header { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .job-meta { flex-direction: column; gap: 0.5rem !important; align-items: center !important; }
 }
+
+/* Container Spacing */
+.interview-container-optimized {
+    padding-top: 85px !important;
+}
+
+.main-page-heading {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+/* Header & Search Layout */
+.layout-centered {
+    align-items: center !important;
+    margin-bottom: 20px !important;
+}
+
+.modern-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 10px;
+    padding: 10px 15px;
+    color: white;
+    width: 100%;
+}
+
+.dropdown-trigger-box {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    min-width: 130px;
+}
+
+/* Stats Bar Truncation Fix */
+.compact-stats-bar {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    padding: 12px !important;
+    gap: 8px !important;
+}
+
+.stat-label-small {
+    font-size: 0.65rem !important;
+    white-space: normal !important; /* Fixes text cutting off */
+    line-height: 1.2;
+}
+
+/* Job Card UI Refinement */
+.improved-card {
+    padding: 18px !important;
+    border-radius: 18px !important;
+    background: rgba(18, 18, 28, 0.8) !important;
+}
+
+.job-header-main {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.company-logo-square {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #00d4ff, #007aff);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.job-company-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #b0b0b0;
+}
+
+.location-text i { color: #00d4ff; }
+
+/* Meta Grid Layout */
+.meta-grid-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+.meta-cell { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
+.meta-cell.full-span { grid-column: span 2; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4px; }
+
+/* Global Button width */
+.w-100 { width: 100% !important; justify-content: center; }
+
+/* Modal Close Fix */
+.close-btn {
+    top: 20px !important;
+    right: 20px !important;
+    font-size: 1.4rem !important;
+}

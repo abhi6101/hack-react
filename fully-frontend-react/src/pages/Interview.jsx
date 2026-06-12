@@ -252,37 +252,57 @@ const Interview = () => {
         const slotsLeft = total - booked;
 
         return (
-            <div key={interview.id} className={index === 0 ? "job-card first-card" : "job-card"} style={{ animationDelay: `${index * 0.1}s` }}>
+            <div key={interview.id} className="job-card improved-card" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="job-header">
-                    <h3 className="job-title">{interview.role || 'SDE'}</h3>
-                    <div className="job-company">
-                        <i className="fas fa-building"></i> {interview.company}
+                    <div className="job-header-main">
+                        <div className="company-logo-square">
+                            {interview.company.charAt(0)}
+                        </div>
+                        <div className="title-area">
+                            <h3 className="job-title">{interview.role || 'SDE'}</h3>
+                            <div className="job-company-info">
+                                <span className="company-text">{interview.company}</span>
+                                <span className="location-text">
+                                    <i className="fas fa-map-marker-alt"></i> {interview.location}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <span className="job-type full-time"><i className="fas fa-map-marker-alt"></i> {interview.location}</span>
                 </div>
+
                 <div className="job-content">
-                    <p className="job-description">
+                    <div className="eligibility-tag">
                         <strong>Eligibility:</strong> {interview.eligibility}
-                    </p>
-                    <div className="job-meta">
-                        <span className="job-meta-item">
-                            <i className="fas fa-calendar-alt"></i> {new Date(interview.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        </span>
-                        <span className="job-meta-item">
-                            <i className="fas fa-clock"></i> {interview.time}
-                        </span>
-                        <span className="job-meta-item" style={{ color: slotsLeft < 5 ? '#ff477b' : 'inherit' }}>
-                            <i className="fas fa-users"></i> {slotsLeft} slots left
-                        </span>
                     </div>
+                    
+                    {/* Grouped Date/Time into a grid to save vertical space */}
+                    <div className="meta-grid-info">
+                        <div className="meta-cell">
+                            <i className="fas fa-calendar-alt"></i>
+                            <span>{new Date(interview.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>
+                        </div>
+                        <div className="meta-cell">
+                            <i className="fas fa-clock"></i>
+                            <span>{interview.time.split('-')[0]}</span>
+                        </div>
+                        <div className="meta-cell full-span" style={{ color: slotsLeft < 5 ? '#ff477b' : '#00d4ff' }}>
+                            <i className="fas fa-users"></i>
+                            <span>{slotsLeft} slots available</span>
+                        </div>
+                    </div>
+
                     <div className="job-actions">
                         {hasApplied(interview.id) ? (
-                            <button className="btn btn-applied" disabled>
+                            <button className="btn btn-applied w-100" disabled>
                                 <i className="fas fa-check"></i> Applied
                             </button>
                         ) : (
-                            <button className="btn apply-btn" disabled={slotsLeft === 0} onClick={() => handleApplyClick(interview)} style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none' }}>
-                                <i className="fas fa-paper-plane"></i> {slotsLeft === 0 ? 'Full' : 'Apply Now'}
+                            <button 
+                                className="btn apply-btn w-100" 
+                                disabled={slotsLeft === 0} 
+                                onClick={() => handleApplyClick(interview)}
+                            >
+                                <i className="fas fa-paper-plane"></i> {slotsLeft === 0 ? 'Drive Full' : 'Apply Now'}
                             </button>
                         )}
                     </div>
@@ -297,70 +317,28 @@ const Interview = () => {
             <div className="decorative-blob blob-2"></div>
             <div className="container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
 
-<div className="papers-header-container">
+<div className="papers-header-container layout-centered">
     <div className="papers-header-left">
-        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Available Job Drives</h2>
+        <h2 className="main-page-heading">Available Job Drives</h2>
     </div>
-    <div className={`papers-header-right mobile-filters-wrapper ${isSearchFocused ? 'active-search' : ''}`} style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '500px', flexWrap: 'wrap', alignItems: 'center' }}>
-          {/* Search */}
-          <div className={`global-search-container mobile-filter-search ${isSearchFocused ? 'is-focused' : ''}`} 
-              onClick={() => {
-                  setIsSearchFocused(true);
-                  setTimeout(() => document.getElementById('interviewMobileSearchInput')?.focus(), 100);
-              }}
-              style={{
-              position: 'relative',
-              flex: 1.5,
-              minWidth: '140px',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(0, 212, 255, 0.3)',
-              borderRadius: '50px',
-              padding: '0 1rem 0 2.5rem',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              backdropFilter: 'blur(15px)',
-              transition: 'all 0.3s ease'
-          }}>
-              <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
+    <div className="papers-header-right filter-row" style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '500px', flexWrap: 'wrap', alignItems: 'center' }}>
+          {/* Search - Icon removed per feedback */}
+          <div className="search-box-clean" style={{ flex: 1.5, minWidth: '140px' }}>
               <input
                   id="interviewMobileSearchInput"
                   type="text"
-                  placeholder="Search by company..."
+                  placeholder="Search company..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={(e) => { if (!e.target.value) setIsSearchFocused(false); }}
-                  style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: '#fff',
-                      fontSize: '0.95rem',
-                      width: '100%',
-                      height: '100%',
-                      outline: 'none',
-                      padding: '0'
-                  }}
+                  className="modern-input"
               />
-              {searchTerm && (
-                  <i 
-                      className="fas fa-times" 
-                      onClick={() => setSearchTerm('')}
-                      style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
-                  ></i>
-              )}
           </div>
 
-          {/* Location Filter */}
-          <div className="dept-selector-inline mobile-filter-sort" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 1000 }}>
-            <div style={{ position: 'relative', width: '100%', cursor: 'pointer' }} onClick={() => setShowLocationMenu(!showLocationMenu)}>
-                <div className="dropdown-trigger" style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0 1rem', height: '40px', borderRadius: '50px', border: '1px solid rgba(0, 212, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff', fontSize: '0.95rem' }}>
-                        {filterLocation === 'all' ? 'All Locations' : filterLocation}
-                    </span>
-                    <i className={`fas fa-chevron-down ${showLocationMenu ? 'open' : ''}`} style={{ color: 'var(--primary)', fontSize: '0.8rem', marginLeft: '0.5rem' }}></i>
-                </div>
+          <div className="location-box-clean" style={{ flex: 1, minWidth: '140px', position: 'relative', zIndex: 1000 }}>
+            <div className="dropdown-trigger-box" onClick={() => setShowLocationMenu(!showLocationMenu)}>
+                <span>{filterLocation === 'all' ? 'All Locations' : filterLocation}</span>
+                <i className={`fas fa-chevron-down ${showLocationMenu ? 'open' : ''}`}></i>
+            </div>
 
                 <AnimatePresence>
                     {showLocationMenu && (
