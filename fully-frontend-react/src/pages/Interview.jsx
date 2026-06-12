@@ -365,7 +365,7 @@ const Interview = () => {
         </div>
     </div>
 </div>
-{/* Compact Stats Bar */}
+{/* Compact Stats Bar - Labels updated to be shorter for mobile */}
 <div className="compact-stats-bar">
     <div className="stat-item">
         <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
@@ -373,7 +373,7 @@ const Interview = () => {
         </div>
         <div className="stat-info">
             <span className="stat-value-small">{stats.total}</span>
-            <span className="stat-label-small">Total Drives</span>
+            <span className="stat-label-small">Drives</span>
         </div>
     </div>
     <div className="stat-item">
@@ -382,7 +382,7 @@ const Interview = () => {
         </div>
         <div className="stat-info">
             <span className="stat-value-small">{stats.available}</span>
-            <span className="stat-label-small">Slots Available</span>
+            <span className="stat-label-small">Slots</span>
         </div>
     </div>
     <div className="stat-item">
@@ -391,7 +391,7 @@ const Interview = () => {
         </div>
         <div className="stat-info">
             <span className="stat-value-small">{stats.applied}</span>
-            <span className="stat-label-small">Applications Sent</span>
+            <span className="stat-label-small">Applied</span>
         </div>
     </div>
 </div>
