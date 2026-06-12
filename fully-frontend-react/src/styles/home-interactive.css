@@ -1111,8 +1111,9 @@ main {
   .mobile-only { display: flex !important; }
 
   /* Page structure constraints */
-  main { display: flex !important; flex-direction: column !important; min-height: auto !important; height: auto !important; padding-bottom: 90px !important; }
-  .hero, .hero-main-container, .hero-content { min-height: auto !important; height: auto !important; margin: 0 !important; padding: 0 !important; flex: 0 0 auto !important; }
+  main { display: flex !important; flex-direction: column !important; min-height: auto !important; height: auto !important; padding-bottom: 50px !important; }
+  .hero { min-height: auto !important; height: auto !important; margin: 0 !important; padding: 80px 0 0 0 !important; flex: 0 0 auto !important; }
+  .hero-main-container, .hero-content { min-height: auto !important; height: auto !important; margin: 0 !important; padding: 0 !important; flex: 0 0 auto !important; }
   .hero-image-side { display: none !important; height: 0 !important; overflow: hidden !important; }
   section { margin-bottom: 40px !important; padding: 0 !important; min-height: auto !important; height: auto !important; }
   .leaderboard-wrapper { display: flex !important; flex-direction: column !important; background: transparent !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
@@ -1174,8 +1175,8 @@ main {
 
 /* FINAL MOBILE REFINEMENTS */
 @media (max-width: 768px) {
-  main { padding-bottom: 90px !important; padding-top: 80px !important; box-sizing: border-box; }
-  .hero-content { margin-top: 20px !important; }
+  main { padding-bottom: 90px !important; box-sizing: border-box; }
+  .hero-content { margin-top: 10px !important; }
   .leaderboard-wrapper, .leaderboard-mobile-wrapper .leaderboard-wrapper { display: flex !important; flex-direction: column !important; }
   
   /* Fix logo grid overflow */
