@@ -641,69 +641,7 @@ const Notes = ({ isAdminView }) => {
                         )}
                     </div>
 
-                    <div className="dept-selector-inline mobile-filter-sort" style={{ position: 'relative', flex: 1, minWidth: '140px', height: '40px', zIndex: 1000 }}>
-                        <div
-                            className={`custom-dropdown ${userRole === 'STUDENT' ? 'disabled' : ''}`}
-                            onClick={() => { if (userRole !== 'STUDENT') setShowBranchMenu(!showBranchMenu); }}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                background: 'rgba(255,255,255,0.05)',
-                                border: '1px solid rgba(0, 212, 255, 0.3)',
-                                borderRadius: '50px',
-                                padding: '0 1rem',
-                                height: '100%',
-                                color: '#fff',
-                                cursor: userRole === 'STUDENT' ? 'not-allowed' : 'pointer',
-                                fontSize: '0.95rem',
-                                opacity: userRole === 'STUDENT' ? 0.6 : 1,
-                                minWidth: 'unset',
-                                width: '100%'
-                            }}
-                        >
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, marginRight: '8px' }}>
-                                {branchFilter === '' ? 'All Branches' : branchFilter}
-                            </span>
-                            <i className={`fas fa-chevron-down ${showBranchMenu ? 'open' : ''}`} style={{ color: 'var(--primary)', fontSize: '0.8rem', flexShrink: 0 }}></i>
-                        </div>
 
-                        <AnimatePresence>
-                            {showBranchMenu && userRole !== 'STUDENT' && (
-                                <motion.div
-                                    className="dropdown-menu surface-glow"
-                                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                    style={{ right: 0, left: 'auto', minWidth: '100%', top: 'calc(100% + 5px)' }}
-                                >
-                                    <div
-                                        className={`dropdown-item ${branchFilter === '' ? 'active' : ''}`}
-                                        onClick={() => { setBranchFilter(''); setShowBranchMenu(false); }}
-                                    >
-                                        All Branches
-                                    </div>
-                                    {deptList.map(dept => (
-                                        <div
-                                            key={dept.id}
-                                            className={`dropdown-item ${branchFilter === dept.code ? 'active' : ''}`}
-                                            onClick={() => { setBranchFilter(dept.code); setShowBranchMenu(false); }}
-                                        >
-                                            {dept.name.length > 30 ? `${dept.name.substring(0, 30)}...` : dept.name} ({dept.code})
-                                        </div>
-                                    ))}
-                                    {!deptList.some(d => d.code === 'IMCA') && (
-                                        <div
-                                            className={`dropdown-item ${branchFilter === 'IMCA' ? 'active' : ''}`}
-                                            onClick={() => { setBranchFilter('IMCA'); setShowBranchMenu(false); }}
-                                        >
-                                            IMCA
-                                        </div>
-                                    )}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
 
                     {isAdmin && (
                         <motion.button
