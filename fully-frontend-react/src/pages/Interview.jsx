@@ -293,8 +293,12 @@ const Interview = () => {
 
                     <div className="job-actions">
                         {hasApplied(interview.id) ? (
-                            <button className="btn btn-applied w-100" disabled>
-                                <i className="fas fa-check"></i> Applied
+                            <button 
+                                className="btn btn-success w-100" 
+                                onClick={() => navigate(`/interview/${interview.id}`)}
+                                style={{ background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', color: 'white' }}
+                            >
+                                <i className="fas fa-arrow-right"></i> View Details
                             </button>
                         ) : (
                             <button 

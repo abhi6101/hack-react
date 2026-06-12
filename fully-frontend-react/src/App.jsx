@@ -18,6 +18,7 @@ import ResetSuccess from './pages/ResetSuccess';
 import Jobs from './pages/Jobs';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Interview from './pages/Interview';
+import InterviewDetails from './pages/InterviewDetails';
 import Papers from './pages/Papers';
 import Notes from './pages/Notes';
 import Quiz from './pages/Quiz';
@@ -121,6 +122,7 @@ function App() {
                                 <Route path="/jobs" element={<Jobs />} />
                                 <Route path="/resume-builder" element={<ResumeBuilder />} />
                                 <Route path="/interview" element={<Interview />} />
+                                <Route path="/interview/:id" element={<InterviewDetails />} />
                                 <Route path="/papers" element={<Papers />} />
                                 <Route path="/upload-paper" element={<UploadPaper />} />
                                 <Route path="/notes" element={<Notes />} />
