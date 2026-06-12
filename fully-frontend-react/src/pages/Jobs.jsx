@@ -296,8 +296,8 @@ const Jobs = () => {
 
             <div className="container mobile-jobs-container">
                 <div className="papers-header-container">
-                    <div className="papers-header-left">
-                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Job Opportunities</h2>
+                    <div className="papers-header-left" style={{ width: '100%', textAlign: 'center', paddingTop: '1rem' }}>
+                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', textAlign: 'center' }}>Job Opportunities</h2>
                     </div>
 
                     <div className={`papers-header-right mobile-filters-wrapper ${isSearchFocused ? 'active-search' : (showCategoryMenu ? 'active-category' : (showSortMenu ? 'active-sort' : ''))}`} style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '600px', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -546,7 +546,7 @@ const Jobs = () => {
                     </div>
                 </div>
 
-                <div className="job-list" id="jobList">
+                <div className="job-list" id="jobList" style={{ marginTop: '2rem' }}>
                     {/* Skeleton Loading */}
                     {loading && Array(6).fill(0).map((_, i) => (
                         <div className="job-card skeleton-card" key={i}>
