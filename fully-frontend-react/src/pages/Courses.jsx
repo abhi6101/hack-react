@@ -32,11 +32,11 @@ const Courses = () => {
                 <meta name="keywords" content="online courses, career boosting, placement ready, web development course, programming course" />
             </Helmet>
             
-            <div className="course-controls course-header-container papers-header-container" style={{ marginBottom: '24px' }}>
-                <div className="course-header-left papers-header-left" style={{ flex: 1 }}>
+            <div className="course-controls course-header-container papers-header-container blog-header-container" style={{ marginBottom: '24px' }}>
+                <div className="course-header-left papers-header-left blog-header-left" style={{ flex: 1 }}>
                     <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', lineHeight: '1', color: 'var(--text-primary)' }}>Career boosting courses</h2>
                 </div>
-                    <div className="papers-header-right" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'flex-end', flex: 2, flexWrap: 'wrap' }}>
+                    <div className="papers-header-right blog-header-right" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'flex-end', flex: 2, flexWrap: 'wrap' }}>
                         <div className="global-search-container" style={{
                             position: 'relative',
                             flex: 1.5,
