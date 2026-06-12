@@ -1120,9 +1120,14 @@ main {
   
   /* Company Logos Mobile Fixes */
   .trusted-logo-item span { display: none !important; }
-  .trusted-logo-item { padding: 0.5rem !important; gap: 0 !important; margin: 0 !important; }
-  .glass-marquee-container { margin-bottom: 0 !important; overflow: hidden !important; width: 100vw !important; position: relative; left: 50%; right: 50%; margin-left: -50vw !important; margin-right: -50vw !important; }
-  .glass-marquee-track { gap: 1.5rem !important; display: flex !important; flex-wrap: nowrap !important; width: max-content !important; animation: mobileMarqueeScroll 15s linear infinite !important; }
+  .trusted-logo-item { padding: 0.5rem !important; gap: 0 !important; margin: 0 !important; height: 50px !important; }
+  .glass-marquee-container { margin-bottom: 0 !important; overflow: hidden !important; width: 100vw !important; position: relative; left: 50%; margin-left: -50vw !important; height: 60px !important; min-height: 60px !important; }
+  .glass-marquee-track { gap: 1.5rem !important; display: flex !important; flex-wrap: nowrap !important; width: max-content !important; height: 60px !important; align-items: center !important; animation: mobileMarqueeScroll 15s linear infinite !important; }
+  
+  /* Nuke extra space below logos */
+  .how-it-works-section { margin-top: 0 !important; padding-top: 0 !important; }
+  .partners-static-section { margin-bottom: 0 !important; padding-bottom: 0 !important; border-bottom: none !important; }
+  .how-it-works-section .container { margin-top: 0 !important; padding-top: 0 !important; }
 }
 
 @keyframes mobileMarqueeScroll {
