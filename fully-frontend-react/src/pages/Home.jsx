@@ -434,9 +434,9 @@ const Home = () => {
             </section>
 
             {/* Trusted By Section */}
-            <section className="partners-static-section" style={{ padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <section className="partners-static-section" style={{ padding: '0 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <div className="container">
-                    <div className="partners-header" style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                    <div className="partners-header" style={{ textAlign: 'center', marginBottom: '0.4rem' }}>
                         <h2 className="partners-title" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '2px' }}>
                             Trusted By <span>100+ Companies</span>
                         </h2>
@@ -493,7 +493,7 @@ const Home = () => {
                     </p>
                 </div>
 
-                <div className="container" style={{ position: 'relative', marginTop: '1.5rem', paddingBottom: '1.5rem' }}>
+                <div className="container" style={{ position: 'relative', marginTop: '1.5rem', paddingBottom: '0.5rem' }}>
                     {/* Horizontal Dashed Line */}
                     <div className="desktop-only" style={{ position: 'absolute', top: '40px', left: '15%', right: '15%', height: '2px', borderTop: '2px dashed rgba(255,255,255,0.1)', zIndex: 0 }}></div>
                     
