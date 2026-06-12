@@ -490,3 +490,21 @@
         right: -15px !important;
     }
 }
+
+/* Gallery Mobile Overrides */
+@media (max-width: 768px) {
+    .gallery-header-container {
+        margin-bottom: 2rem !important;
+        padding: 1rem !important;
+        gap: 1.5rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .gallery-header-container .papers-header-right {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+}
+

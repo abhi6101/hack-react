@@ -648,3 +648,22 @@ a:hover {
     width: auto !important;
     border-radius: 12px !important;
 }
+
+/* Blog Mobile Overrides */
+@media (max-width: 768px) {
+    .blog-header-container {
+        margin-bottom: 2rem !important;
+        padding: 1.5rem !important;
+        gap: 1.5rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        border-radius: 16px !important;
+    }
+    .blog-header-container .blog-header-right {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+}
+
