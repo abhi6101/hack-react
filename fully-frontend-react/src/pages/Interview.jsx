@@ -364,7 +364,7 @@ const Interview = () => {
             </div>
         </div>
     </div>
-</div>
+
 {/* Compact Stats Bar - Labels updated to be shorter for mobile */}
 <div className="compact-stats-bar">
     <div className="stat-item">
