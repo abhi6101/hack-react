@@ -1126,7 +1126,8 @@ main {
   
   /* Nuke extra space below logos */
   .how-it-works-section { margin-top: 0 !important; padding-top: 0 !important; }
-  .partners-static-section { margin-bottom: 0 !important; padding-bottom: 0 !important; border-bottom: none !important; }
+  .partners-static-section { display: none !important; }
+  .community-champions-section { margin-bottom: 0 !important; padding-bottom: 0 !important; border-bottom: none !important; }
   .how-it-works-section .container { margin-top: 0 !important; padding-top: 0 !important; }
 }
 
