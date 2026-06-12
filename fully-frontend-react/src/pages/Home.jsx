@@ -402,6 +402,37 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* Community Champions Section - Moved below Hero */}
+            <section className="community-champions-section" style={{ padding: '4rem 0', background: 'linear-gradient(to bottom, rgba(15,23,42,0), rgba(15,23,42,0.5))', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="container">
+                    <div className="section-header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>Community <span className="text-gradient">Champions</span></h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
+                            Recognizing the top contributors who help their peers succeed.
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'stretch', justifyContent: 'center' }}>
+                        <div style={{ flex: '2 1 400px', maxWidth: '800px' }}>
+                            <LeaderboardComponent limit={5} />
+                        </div>
+                        
+                        {/* Share Papers CTA (Redesigned & Repositioned) */}
+                        <div className="mobile-share-papers-cta glass-card" style={{ flex: '1 1 300px', maxWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '16px', padding: '2rem', cursor: 'pointer', textAlign: 'center', backdropFilter: 'blur(12px)', transition: 'all 0.3s ease' }} onClick={() => navigate('/upload-paper')} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.15)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                                <i className="fas fa-cloud-upload-alt" style={{ fontSize: '1.8rem', color: '#10b981' }}></i>
+                            </div>
+                            <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0', color: '#fff', fontWeight: '600' }}>Share Your Papers</h3>
+                            <p style={{ fontSize: '0.9rem', margin: '0 0 1.5rem 0', color: 'var(--text-secondary)' }}>Help your juniors by contributing study materials. Every contribution counts!</p>
+                            
+                            <button style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white', border: 'none', padding: '0.8rem 2rem', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', width: '100%', transition: 'all 0.3s ease' }}>
+                                Contribute Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Trusted By Section */}
             <section className="partners-static-section" style={{ padding: '2rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <div className="container">
@@ -411,8 +442,8 @@ const Home = () => {
                         </h2>
                     </div>
 
-                    <div className="glass-marquee-container">
-                        <div className="glass-marquee-track" style={{ display: "flex", flexWrap: "nowrap", width: "max-content", gap: "2rem" }}>
+                    <div className="glass-marquee-container" style={{ overflow: 'hidden', width: '100%' }}>
+                        <div className="glass-marquee-track" style={{ display: "flex", flexWrap: "nowrap", width: "max-content", gap: "2rem", margin: "0 auto" }}>
                             {[
                                 { name: 'Google', icon: 'fab fa-google', color: '#4285F4' },
                                 { name: 'Microsoft', icon: 'fab fa-microsoft', color: '#00A4EF' },
@@ -528,36 +559,7 @@ const Home = () => {
                 </div>
             </motion.section> */}
 
-            {/* Community Champions Section */}
-            <section className="community-champions-section" style={{ padding: '6rem 0', background: 'linear-gradient(to bottom, rgba(15,23,42,0), rgba(15,23,42,0.5))', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                <div className="container">
-                    <div className="section-header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                        <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>Community <span className="text-gradient">Champions</span></h2>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
-                            Recognizing the top contributors who help their peers succeed.
-                        </p>
-                    </div>
-
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'stretch', justifyContent: 'center' }}>
-                        <div style={{ flex: '2 1 400px', maxWidth: '800px' }}>
-                            <LeaderboardComponent limit={5} />
-                        </div>
-                        
-                        {/* Share Papers CTA (Redesigned & Repositioned) */}
-                        <div className="mobile-share-papers-cta glass-card" style={{ flex: '1 1 300px', maxWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '16px', padding: '2rem', cursor: 'pointer', textAlign: 'center', backdropFilter: 'blur(12px)', transition: 'all 0.3s ease' }} onClick={() => navigate('/upload-paper')} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.15)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-                            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                                <i className="fas fa-cloud-upload-alt" style={{ fontSize: '1.8rem', color: '#10b981' }}></i>
-                            </div>
-                            <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0', color: '#fff', fontWeight: '600' }}>Share Your Papers</h3>
-                            <p style={{ fontSize: '0.9rem', margin: '0 0 1.5rem 0', color: 'var(--text-secondary)' }}>Help your juniors by contributing study materials. Every contribution counts!</p>
-                            
-                            <button style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white', border: 'none', padding: '0.8rem 2rem', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', width: '100%', transition: 'all 0.3s ease' }}>
-                                Contribute Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* Community Champions Section (Moved) */}
 
             {/* Gallery Section */}
             <section className="gallery">
@@ -652,16 +654,7 @@ const Home = () => {
                 `}</style>
             </section>
 
-            {/* Final CTA Section */}
-            <section className="final-cta-section" style={{ padding: '6rem 0', background: 'radial-gradient(circle at center, rgba(0,212,255,0.15) 0%, transparent 60%)', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center', backgroundColor: '#0B1120' }}>
-                <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                    <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '1rem', color: '#fff' }}>Ready to start your career?</h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginBottom: '2.5rem' }}>Join thousands of students landing their dream jobs every day.</p>
-                    <Link to="/login" className="btn btn-primary" style={{ padding: '1.2rem 3rem', fontSize: '1.2rem', borderRadius: '50px', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '300px', boxShadow: '0 10px 30px rgba(0, 212, 255, 0.4)', transition: 'all 0.3s ease', textDecoration: 'none' }} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 212, 255, 0.6)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 212, 255, 0.4)'; }}>
-                        Get Started Now
-                    </Link>
-                </div>
-            </section>
+
 
         </main>
     );

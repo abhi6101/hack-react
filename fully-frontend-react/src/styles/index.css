@@ -207,8 +207,8 @@ section {
 }
 
 /* Force transparency on all hero content children to eliminate black boxes */
-.hero *,
-.hero-content *,
+.hero *:not(.btn):not(.cta-btn),
+.hero-content *:not(.btn):not(.cta-btn),
 #heroHeading *,
 #userWelcome *,
 #heroSubtitle *,
