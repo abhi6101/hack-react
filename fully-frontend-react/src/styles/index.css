@@ -612,6 +612,7 @@ section {
 
 .gallery {
     background: transparent;
+    padding: 1.5rem 5% 2rem 5%;
 }
 
 .gallery .slideshow-container {

@@ -1,19 +1,19 @@
 /* SKELETON LOADING ANIMATIONS */
 .skeleton-base {
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 16px;
     overflow: hidden;
     position: relative;
 }
 .skeleton-pulse-bg {
-    background: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.15) !important;
 }
 .skeleton-pulse {
     animation: skeleton-pulse 1.5s ease-in-out infinite alternate;
 }
 @keyframes skeleton-pulse {
-    0% { opacity: 0.6; }
+    0% { opacity: 0.4; }
     100% { opacity: 1; }
 }
 
@@ -61,28 +61,6 @@ body, html, #root, .App, .dashboard-container {
     width: 100%;
 }
 
-/* GLOBAL SKELETON THEME */
-.skeleton-base {
-    background-color: #1e293b !important;
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-.skeleton-pulse {
-    animation: skeleton-pulse-anim 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes skeleton-pulse-anim {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-.skeleton-pulse-bg {
-    background-color: #334155 !important;
-    border-radius: 4px;
-}
 
 /* BOTTOM NAVIGATION BAR COORDINATION */
 nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
