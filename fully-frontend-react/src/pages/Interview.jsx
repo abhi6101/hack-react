@@ -327,36 +327,7 @@ const Interview = () => {
     </div>
 </div>
 
-{/* Compact Stats Bar - Labels updated to be shorter for mobile */}
-<div className="compact-stats-bar" style={{ padding: '10px 2rem' }}>
-    <div className="stat-item">
-        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
-            <i className="fas fa-layer-group"></i>
-        </div>
-        <div className="stat-info">
-            <span className="stat-value-small" style={{ fontSize: '1rem', fontWeight: 'bold' }}>Round 1</span>
-        </div>
-    </div>
-    <div className="stat-item">
-        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
-            <i className="fas fa-clock"></i>
-        </div>
-        <div className="stat-info">
-            <span className="stat-value-small" style={{ fontSize: '1rem', fontWeight: 'bold' }}>45 Min</span>
-        </div>
-    </div>
-    <div className="stat-item">
-        <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
-            <i className="fas fa-satellite-dish"></i>
-        </div>
-        <div className="stat-info">
-            <span className="stat-value-small" style={{ fontSize: '1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                Live
-                <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#00ff88', borderRadius: '50%', boxShadow: '0 0 8px #00ff88' }}></span>
-            </span>
-        </div>
-    </div>
-</div>
+
                 {/* Right Content - Interview Grid */}
                 <main className="interview-content">
 
