@@ -341,13 +341,21 @@ const Home = () => {
                                 Connect with top recruiters from <span style={{color: '#fff', fontWeight: 600}}>100+ global tech giants</span> and land your perfect role.
                             </p>
                             
-                            <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                                <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: '#00d4ff', color: '#000', fontWeight: '700', textDecoration: 'none', border: '1px solid #00d4ff', transition: 'all 0.3s ease' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                            <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
+                                <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: '#00d4ff', color: '#000', fontWeight: '700', textDecoration: 'none', border: '1px solid #00d4ff', transition: 'all 0.3s ease', width: '100%', maxWidth: '350px' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                                     Find Jobs
                                 </Link>
-                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.4)', color: '#fff', fontWeight: '600', textDecoration: 'none', transition: 'all 0.3s ease' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.borderColor = '#00d4ff'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.4)', color: '#fff', fontWeight: '600', textDecoration: 'none', transition: 'all 0.3s ease', width: '100%', maxWidth: '350px' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.borderColor = '#00d4ff'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                                     Build Resume
                                 </Link>
+                            </div>
+                            
+                            {/* Mobile Only Stat Pill */}
+                            <div className="mobile-only" style={{ marginTop: '1.5rem', display: 'none', justifyContent: 'center' }}>
+                                <div style={{ background: 'rgba(0, 212, 255, 0.1)', border: '1px solid rgba(0, 212, 255, 0.3)', borderRadius: '20px', padding: '0.4rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <span style={{ color: '#00d4ff', fontWeight: 'bold', fontSize: '0.9rem' }}>500+</span>
+                                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Jobs Posted</span>
+                                </div>
                             </div>
                         </motion.div>
 
@@ -381,7 +389,7 @@ const Home = () => {
             </section>
 
             {/* Trust Stats Ribbon (Refactored) */}
-            <div className="trust-stats-section" style={{ height: '80px', display: 'flex', alignItems: 'center', background: 'rgba(30, 41, 59, 0.5)', borderBottom: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 10 }}>
+            <div className="trust-stats-section desktop-only" style={{ height: '80px', display: 'flex', alignItems: 'center', background: 'rgba(30, 41, 59, 0.5)', borderBottom: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 10 }}>
                 <div className="container" style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', alignItems: 'center', height: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>

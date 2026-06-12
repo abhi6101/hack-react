@@ -501,9 +501,17 @@
 
 /* On mobile (<768px): keep auth visible in top-right, compact style */
 @media (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 5% !important;
+        height: 60px !important;
+        min-height: 60px !important;
+    }
+
     .navbar-auth {
         display: flex;
         gap: 0.4rem;
+        margin-left: auto; /* Ensure it stays on the right */
+        margin-right: 1rem; /* Space before hamburger */
     }
 
     /* Hide user full-name on mobile, keep avatar only */
@@ -514,6 +522,11 @@
     /* Compact user chip - avatar only */
     .navbar-user-chip {
         padding: 0.3rem;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     /* Keep "Sign In" text visible but smaller */
