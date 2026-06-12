@@ -366,7 +366,7 @@ const Home = () => {
                         transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
                         style={{ position: 'relative' }}
                     >
-                        <div className="hero-illustration-wrapper" style={{ position: 'relative', width: '100%', height: '90%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
+                        <div className="hero-illustration-wrapper" style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', paddingTop: '1rem' }}>
                             {/* Glowing geometric background */}
                             <div style={{ position: 'absolute', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,212,255,0) 70%)', borderRadius: '50%', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(30px)' }}></div>
                             <div style={{ position: 'absolute', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', top: '20%', left: '60%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(40px)' }}></div>
@@ -380,33 +380,33 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Trust Stats Section (New) */}
-            <section className="trust-stats-section" style={{ padding: '1rem 0', background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 10 }}>
-                <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>10,000+</h3>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Students Placed</p>
+            {/* Trust Stats Ribbon (Refactored) */}
+            <div className="trust-stats-section" style={{ height: '80px', display: 'flex', alignItems: 'center', background: 'rgba(30, 41, 59, 0.5)', borderBottom: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 10 }}>
+                <div className="container" style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', alignItems: 'center', height: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>10,000+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Students Placed</p>
                         </div>
                         <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }} className="desktop-only"></div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>500+</h3>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Jobs Posted</p>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>500+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Jobs Posted</p>
                         </div>
                         <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }} className="desktop-only"></div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>50+</h3>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Partner Colleges</p>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>50+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Partner Colleges</p>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
             {/* Community Champions Section - Moved below Hero */}
-            <section className="community-champions-section" style={{ padding: '4rem 0', background: 'linear-gradient(to bottom, rgba(15,23,42,0), rgba(15,23,42,0.5))', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <section className="community-champions-section" style={{ padding: '1.5rem 0', background: 'linear-gradient(to bottom, rgba(15,23,42,0), rgba(15,23,42,0.5))', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <div className="container">
-                    <div className="section-header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                        <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>Community <span className="text-gradient">Champions</span></h2>
+                    <div className="section-header" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem' }}>Community <span className="text-gradient">Champions</span></h2>
                         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
                             Recognizing the top contributors who help their peers succeed.
                         </p>
@@ -434,9 +434,9 @@ const Home = () => {
             </section>
 
             {/* Trusted By Section */}
-            <section className="partners-static-section" style={{ padding: '2rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <section className="partners-static-section" style={{ padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <div className="container">
-                    <div className="partners-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                    <div className="partners-header" style={{ textAlign: 'center', marginBottom: '1rem' }}>
                         <h2 className="partners-title" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '2px' }}>
                             Trusted By <span>100+ Companies</span>
                         </h2>
@@ -468,10 +468,10 @@ const Home = () => {
                                     transition: 'all 0.3s ease',
                                     cursor: 'pointer',
                                     padding: '1rem 2rem',
-                                    filter: 'grayscale(100%)'
+                                    filter: 'grayscale(100%) opacity(0.6)'
                                 }}
-                                onMouseEnter={(e) => { e.currentTarget.style.color = company.color; e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.filter = 'grayscale(0%)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'grayscale(100%)'; }}
+                                onMouseEnter={(e) => { e.currentTarget.style.color = company.color; e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.filter = 'grayscale(0%) opacity(1)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'grayscale(100%) opacity(0.6)'; }}
                                 >
                                     <i className={company.icon} style={{ fontSize: '1.8rem' }}></i>
                                     <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>{company.name}</span>
@@ -493,11 +493,11 @@ const Home = () => {
                     </p>
                 </div>
 
-                <div className="container" style={{ position: 'relative', marginTop: '4rem', paddingBottom: '4rem' }}>
+                <div className="container" style={{ position: 'relative', marginTop: '1.5rem', paddingBottom: '1.5rem' }}>
                     {/* Horizontal Dashed Line */}
                     <div className="desktop-only" style={{ position: 'absolute', top: '40px', left: '15%', right: '15%', height: '2px', borderTop: '2px dashed rgba(255,255,255,0.1)', zIndex: 0 }}></div>
                     
-                    <div className="how-steps-horizontal" style={{ display: 'flex', justifyContent: 'space-between', gap: '2rem', position: 'relative', zIndex: 1, flexWrap: 'wrap' }}>
+                    <div className="how-steps-horizontal" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', position: 'relative', zIndex: 1 }}>
                         <div className="step-card" style={{ flex: '1 1 250px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', backgroundColor: '#0B1120' }}>
                                 <i className="fas fa-file-invoice" style={{ fontSize: '2rem', color: '#10b981' }}></i>
@@ -582,7 +582,7 @@ const Home = () => {
                                         x: position === 'center' ? 0 : position === 'left' ? '-40%' : '40%',
                                         scale: position === 'center' ? 1 : 0.8,
                                         zIndex: position === 'center' ? 10 : 5,
-                                        opacity: position === 'center' ? 1 : 0.7
+                                        opacity: position === 'center' ? 1 : 0.5
                                     }}
                                     transition={{ duration: 0.5, type: 'spring', stiffness: 300, damping: 30 }}
                                     style={{

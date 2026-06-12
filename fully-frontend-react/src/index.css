@@ -31,9 +31,16 @@
 
 /* GLOBAL THEME STANDARDIZATION */
 body, html, #root, .App, .dashboard-container {
-    background: radial-gradient(circle at center top, #1E293B 0%, #0B1120 100%) !important;
-    background-attachment: fixed !important;
+    background: #0B1120 !important;
     background-color: #0B1120 !important;
+}
+
+/* Global Container Alignment for Main Sections */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
 }
 
 /* GLOBAL SKELETON THEME */
@@ -125,8 +132,8 @@ nav.admin-bottom-nav, nav.user-bottom-nav, .mobile-bottom-nav {
 }
 
 /* GLOBAL PADDING REDUCTION AND HOW-IT-WORKS DESKTOP */
-section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
-.hero { padding-top: 5rem !important; padding-bottom: 2rem !important; }
+section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+.hero { padding-top: 5rem !important; padding-bottom: 1rem !important; }
 @media (min-width: 1024px) {
   .how-it-works-container { flex-direction: row !important; align-items: center; justify-content: space-between; gap: 2rem; justify-content: center; }
   .how-left-side, .how-right-side { flex: 0 1 450px; } .how-it-works-container { position: relative; }
@@ -228,7 +235,7 @@ p {
   .hero-text-content { text-align: center; display: flex; flex-direction: column; align-items: center; }
   .hero-ctas { flex-direction: column !important; width: 100%; gap: 12px !important; margin-top: 1.5rem !important; }
   .hero-ctas .cta-btn { width: 100%; text-align: center; justify-content: center; }
-  .hero { padding-top: 2rem !important; padding-bottom: 1rem !important; }
+  .hero { padding-top: 2rem !important; padding-bottom: 0.5rem !important; }
   section { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
   .mobile-share-papers-cta { width: 100%; max-width: 100%; margin-top: 1.5rem !important; }
   .hero-leaderboard-wrapper { width: 100%; }
