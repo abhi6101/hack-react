@@ -464,14 +464,14 @@ const Home = () => {
                                     display: 'inline-flex', 
                                     alignItems: 'center', 
                                     gap: '0.8rem', 
-                                    color: '#64748b', 
+                                    color: company.color, 
                                     transition: 'all 0.3s ease',
                                     cursor: 'pointer',
                                     padding: '1rem 2rem',
-                                    filter: 'grayscale(100%) opacity(0.6)'
+                                    filter: 'opacity(0.85)'
                                 }}
-                                onMouseEnter={(e) => { e.currentTarget.style.color = company.color; e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.filter = 'grayscale(0%) opacity(1)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'grayscale(100%) opacity(0.6)'; }}
+                                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.filter = 'opacity(1)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'opacity(0.85)'; }}
                                 >
                                     <i className={company.icon} style={{ fontSize: '1.8rem' }}></i>
                                     <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>{company.name}</span>
