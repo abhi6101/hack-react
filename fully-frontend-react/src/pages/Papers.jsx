@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
-
 import Typewriter from '../components/Typewriter';
 import '../styles/papers.css';
+import SkeletonCard from '../components/SkeletonCard';
 
 const Papers = () => {
     const navigate = useNavigate();
@@ -553,27 +553,7 @@ const Papers = () => {
                 <div className="subject-grid">
                     {loading ? (
                         Array(8).fill(0).map((_, i) => (
-                            <div 
-                                key={`skel-sub-${i}`} 
-                                className="subject-folder" 
-                                style={{ 
-                                    animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
-                                    background: 'rgba(30, 41, 59, 0.8)', 
-                                    borderColor: 'rgba(255, 255, 255, 0.05)',
-                                    pointerEvents: 'none'
-                                }}
-                            >
-                                <div className="folder-icon-wrapper">
-                                    <div style={{ width: '45px', height: '45px', borderRadius: '12px', background: 'rgba(255,255,255,0.1)' }}></div>
-                                </div>
-                                <div className="folder-info" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <div style={{ height: '1.2rem', width: '70%', background: 'rgba(255,255,255,0.1)', borderRadius: '6px' }}></div>
-                                    <div style={{ height: '0.8rem', width: '40%', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}></div>
-                                </div>
-                                <div className="folder-arrow">
-                                    <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}></div>
-                                </div>
-                            </div>
+                            <SkeletonCard key={`skel-sub-${i}`} type="paper" />
                         ))
                     ) : subjects.length === 0 ? (
                         <div className="empty-state surface-glow" style={{ textAlign: 'center', padding: '6rem 2rem', borderRadius: '24px', gridColumn: '1/-1' }}>

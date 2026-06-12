@@ -31,21 +31,32 @@
 
 /* GLOBAL THEME STANDARDIZATION */
 body, html, #root, .App, .dashboard-container {
-    background: radial-gradient(circle at center top, #0f172a 0%, #020617 100%) !important;
+    background: radial-gradient(circle at center top, #1E293B 0%, #0B1120 100%) !important;
     background-attachment: fixed !important;
-    background-color: #020617 !important;
+    background-color: #0B1120 !important;
 }
 
-/* SKELETON THEME CONSISTENCY */
-.skeleton-loader, .skeleton-card, .job-card.skeleton-card {
-    background: rgba(255, 255, 255, 0.02) !important;
+/* GLOBAL SKELETON THEME */
+.skeleton-base {
+    background-color: #1e293b !important;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
-.skeleton-line, .skeleton-content, .skeleton-card .title, .skeleton-card .subtitle {
-    background: rgba(255, 255, 255, 0.05) !important;
+
+.skeleton-pulse {
+    animation: skeleton-pulse-anim 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-.skeleton-container, .skeleton-wrapper, .job-skeleton {
-    background: transparent !important;
+
+@keyframes skeleton-pulse-anim {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.skeleton-pulse-bg {
+    background-color: #334155 !important;
+    border-radius: 4px;
 }
 
 /* BOTTOM NAVIGATION BAR COORDINATION */

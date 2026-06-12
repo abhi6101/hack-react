@@ -342,10 +342,10 @@ const Home = () => {
                             </p>
                             
                             <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                                <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'var(--primary)', color: '#000', fontWeight: '600', textDecoration: 'none', border: '1px solid var(--primary)', transition: 'all 0.3s ease' }}>
+                                <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: '#00d4ff', color: '#000', fontWeight: '700', textDecoration: 'none', border: '1px solid #00d4ff', transition: 'all 0.3s ease' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                                     Find Jobs
                                 </Link>
-                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontWeight: '600', textDecoration: 'none', transition: 'all 0.3s ease' }}>
+                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.4)', color: '#fff', fontWeight: '600', textDecoration: 'none', transition: 'all 0.3s ease' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.borderColor = '#00d4ff'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                                     Build Resume
                                 </Link>
                             </div>
@@ -366,13 +366,13 @@ const Home = () => {
                         transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
                         style={{ position: 'relative' }}
                     >
-                        <div className="hero-illustration-wrapper" style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <div className="hero-illustration-wrapper" style={{ position: 'relative', width: '100%', height: '90%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
                             {/* Glowing geometric background */}
-                            <div style={{ position: 'absolute', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,212,255,0) 70%)', borderRadius: '50%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(30px)' }}></div>
-                            <div style={{ position: 'absolute', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', top: '30%', left: '60%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(40px)' }}></div>
+                            <div style={{ position: 'absolute', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,212,255,0) 70%)', borderRadius: '50%', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(30px)' }}></div>
+                            <div style={{ position: 'absolute', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', top: '20%', left: '60%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(40px)' }}></div>
                             
-                            <div className="boy-image-container" style={{ position: 'relative', zIndex: 1 }}>
-                                <img src="/images/Boy.png" alt="Career Aspirant" className="hero-boy-img" style={{ dropShadow: '0 20px 40px rgba(0,0,0,0.4)' }} />
+                            <div className="boy-image-container" style={{ position: 'relative', zIndex: 1, paddingBottom: '20px' }}>
+                                <img src="/images/Boy.png" alt="Career Aspirant" className="hero-boy-img" style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }} />
                                 <div className="image-glow-effect"></div>
                             </div>
                         </div>
@@ -381,20 +381,22 @@ const Home = () => {
             </section>
 
             {/* Trust Stats Section (New) */}
-            <section className="trust-stats-section" style={{ padding: '2rem 0', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                <div className="container">
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', textAlign: 'center' }}>
-                        <div>
-                            <h3 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: 'var(--primary)' }}>10,000+</h3>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Students Placed</p>
+            <section className="trust-stats-section" style={{ padding: '1rem 0', background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 10 }}>
+                <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>10,000+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Students Placed</p>
                         </div>
-                        <div>
-                            <h3 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: 'var(--primary)' }}>500+</h3>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Jobs Posted</p>
+                        <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }} className="desktop-only"></div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>500+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Jobs Posted</p>
                         </div>
-                        <div>
-                            <h3 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: 'var(--primary)' }}>50+</h3>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Partner Colleges</p>
+                        <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }} className="desktop-only"></div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0, color: '#00d4ff', textShadow: '0 0 10px rgba(0, 212, 255, 0.5)' }}>50+</h3>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Partner Colleges</p>
                         </div>
                     </div>
                 </div>
@@ -412,36 +414,33 @@ const Home = () => {
                     <div className="glass-marquee-container">
                         <div className="glass-marquee-track" style={{ display: "flex", flexWrap: "nowrap", width: "max-content", gap: "2rem" }}>
                             {[
-                                { name: 'Google', icon: 'fab fa-google' },
-                                { name: 'Microsoft', icon: 'fab fa-microsoft' },
-                                { name: 'Amazon', icon: 'fab fa-amazon' },
-                                { name: 'Apple', icon: 'fab fa-apple' },
-                                { name: 'Meta', icon: 'fab fa-meta' },
-                                { name: 'Netflix', icon: 'fab fa-netflix' },
-                                { name: 'Spotify', icon: 'fab fa-spotify' },
-                                { name: 'Google', icon: 'fab fa-google' },
-                                { name: 'Microsoft', icon: 'fab fa-microsoft' },
-                                { name: 'Amazon', icon: 'fab fa-amazon' },
-                                { name: 'Apple', icon: 'fab fa-apple' },
-                                { name: 'Meta', icon: 'fab fa-meta' },
-                                { name: 'Netflix', icon: 'fab fa-netflix' },
-                                { name: 'Spotify', icon: 'fab fa-spotify' }
+                                { name: 'Google', icon: 'fab fa-google', color: '#4285F4' },
+                                { name: 'Microsoft', icon: 'fab fa-microsoft', color: '#00A4EF' },
+                                { name: 'Amazon', icon: 'fab fa-amazon', color: '#FF9900' },
+                                { name: 'Apple', icon: 'fab fa-apple', color: '#FFFFFF' },
+                                { name: 'Meta', icon: 'fab fa-meta', color: '#0668E1' },
+                                { name: 'Netflix', icon: 'fab fa-netflix', color: '#E50914' },
+                                { name: 'Spotify', icon: 'fab fa-spotify', color: '#1DB954' },
+                                { name: 'Google', icon: 'fab fa-google', color: '#4285F4' },
+                                { name: 'Microsoft', icon: 'fab fa-microsoft', color: '#00A4EF' },
+                                { name: 'Amazon', icon: 'fab fa-amazon', color: '#FF9900' },
+                                { name: 'Apple', icon: 'fab fa-apple', color: '#FFFFFF' },
+                                { name: 'Meta', icon: 'fab fa-meta', color: '#0668E1' },
+                                { name: 'Netflix', icon: 'fab fa-netflix', color: '#E50914' },
+                                { name: 'Spotify', icon: 'fab fa-spotify', color: '#1DB954' }
                             ].map((company, index) => (
                                 <div className="trusted-logo-item" key={index} style={{ 
                                     display: 'inline-flex', 
                                     alignItems: 'center', 
                                     gap: '0.8rem', 
-                                    color: '#94a3b8', 
+                                    color: '#64748b', 
                                     transition: 'all 0.3s ease',
                                     cursor: 'pointer',
-                                    background: 'rgba(255, 255, 255, 0.03)',
-                                    backdropFilter: 'blur(10px)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
                                     padding: '1rem 2rem',
-                                    borderRadius: '16px'
+                                    filter: 'grayscale(100%)'
                                 }}
-                                onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'; }}
+                                onMouseEnter={(e) => { e.currentTarget.style.color = company.color; e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.filter = 'grayscale(0%)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'grayscale(100%)'; }}
                                 >
                                     <i className={company.icon} style={{ fontSize: '1.8rem' }}></i>
                                     <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>{company.name}</span>
@@ -463,71 +462,33 @@ const Home = () => {
                     </p>
                 </div>
 
-                <div className="how-it-works-container" style={{ position: 'relative' }}>
-                    <svg className="connector-svg" viewBox="0 0 200 400" preserveAspectRatio="none">
-                        <path className="animated-path" d="M 0 200 C 100 200, 100 50, 200 50 M 0 200 C 100 200, 100 200, 200 200 M 0 200 C 100 200, 100 350, 200 350" fill="none" />
-                    </svg>
-                    {/* Left: Product Mockup */}
-                    <div className="how-left-side" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
-                        <div className="product-mockup glass-card" style={{ width: '100%', maxWidth: '450px', height: '320px', borderRadius: '16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', backdropFilter: 'blur(12px)', overflow: 'hidden', position: 'relative' }}>
-                            {/* Browser Header */}
-                            <div style={{ height: '40px', background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', padding: '0 1rem', gap: '8px' }}>
-                                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }}></div>
-                                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#eab308' }}></div>
-                                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#22c55e' }}></div>
+                <div className="container" style={{ position: 'relative', marginTop: '4rem', paddingBottom: '4rem' }}>
+                    {/* Horizontal Dashed Line */}
+                    <div className="desktop-only" style={{ position: 'absolute', top: '40px', left: '15%', right: '15%', height: '2px', borderTop: '2px dashed rgba(255,255,255,0.1)', zIndex: 0 }}></div>
+                    
+                    <div className="how-steps-horizontal" style={{ display: 'flex', justifyContent: 'space-between', gap: '2rem', position: 'relative', zIndex: 1, flexWrap: 'wrap' }}>
+                        <div className="step-card" style={{ flex: '1 1 250px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', backgroundColor: '#0B1120' }}>
+                                <i className="fas fa-file-invoice" style={{ fontSize: '2rem', color: '#10b981' }}></i>
                             </div>
-                            {/* Mockup Body */}
-                            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                <div style={{ width: '60%', height: '24px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}></div>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    <div style={{ width: '30%', height: '80px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
-                                    <div style={{ width: '70%', height: '80px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
-                                </div>
-                                <div style={{ width: '100%', height: '60px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
-                                <div style={{ width: '80%', height: '60px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}></div>
-                            </div>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem' }}>1. Build Resume</h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>Create a standout resume tailored for applicant tracking systems.</p>
                         </div>
 
-                        {/* Floating Profile Card */}
-                        <div className="floating-profile-card glass-card" style={{ position: 'absolute', bottom: '-20px', right: '0', backdropFilter: 'blur(12px)', background: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                            <img src="/images/avatar1.png" alt="Profile" />
-                            <h4>Complete your profile</h4>
-                            <p>70% Completed</p>
+                        <div className="step-card" style={{ flex: '1 1 250px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(0, 212, 255, 0.1)', border: '1px solid rgba(0, 212, 255, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', backgroundColor: '#0B1120' }}>
+                                <i className="fas fa-briefcase" style={{ fontSize: '2rem', color: '#00d4ff' }}></i>
+                            </div>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem' }}>2. Find & Apply</h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>Search for roles that match your skill set and apply seamlessly.</p>
                         </div>
-                    </div>
 
-                    {/* Right: Step List */}
-                    <div className="how-right-side">
-                        <div className="how-steps-list">
-                            <div className="how-step-item">
-                                <div className="step-icon-box">
-                                    <i className="fas fa-file-invoice"></i>
-                                </div>
-                                <div className="step-text">
-                                    <h3>Resume</h3>
-                                    <p>Create a standout resume with your skills.</p>
-                                </div>
+                        <div className="step-card" style={{ flex: '1 1 250px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', backgroundColor: '#0B1120' }}>
+                                <i className="fas fa-check-circle" style={{ fontSize: '2rem', color: '#8b5cf6' }}></i>
                             </div>
-
-                            <div className="how-step-item">
-                                <div className="step-icon-box">
-                                    <i className="fas fa-briefcase"></i>
-                                </div>
-                                <div className="step-text">
-                                    <h3>Apply</h3>
-                                    <p>Find and apply for jobs that match your skills.</p>
-                                </div>
-                            </div>
-
-                            <div className="how-step-item">
-                                <div className="step-icon-box">
-                                    <i className="fas fa-check-circle"></i>
-                                </div>
-                                <div className="step-text">
-                                    <h3>Hired</h3>
-                                    <p>Connect with employers and start your new job.</p>
-                                </div>
-                            </div>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem' }}>3. Get Hired</h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>Connect with employers, ace the interviews, and start your career.</p>
                         </div>
                     </div>
                 </div>
@@ -577,8 +538,8 @@ const Home = () => {
                         </p>
                     </div>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'flex-start', justifyContent: 'center' }}>
-                        <div style={{ flex: '1 1 500px', maxWidth: '700px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'stretch', justifyContent: 'center' }}>
+                        <div style={{ flex: '2 1 400px', maxWidth: '800px' }}>
                             <LeaderboardComponent limit={5} />
                         </div>
                         
@@ -625,12 +586,14 @@ const Home = () => {
                                     style={{
                                         position: 'absolute',
                                         width: '60%',
-                                        height: '90%',
+                                        height: 'auto',
+                                        aspectRatio: '16/9',
                                         borderRadius: '16px',
                                         overflow: 'hidden',
                                         boxShadow: position === 'center' ? '0 0 40px rgba(0, 212, 255, 0.4)' : 'none',
                                         filter: position === 'center' ? 'blur(0px)' : 'blur(4px)',
-                                        transition: 'filter 0.5s, box-shadow 0.5s'
+                                        opacity: position === 'center' ? 1 : 0.5,
+                                        transition: 'filter 0.5s, box-shadow 0.5s, opacity 0.5s'
                                     }}
                                 >
                                     <img src={img} alt="Gallery item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -690,11 +653,11 @@ const Home = () => {
             </section>
 
             {/* Final CTA Section */}
-            <section className="final-cta-section" style={{ padding: '5rem 0', background: 'linear-gradient(to top, rgba(0, 212, 255, 0.05), transparent)', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
-                <div className="container">
-                    <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem', color: '#fff' }}>Ready to start your career?</h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginBottom: '2rem' }}>Join thousands of students landing their dream jobs every day.</p>
-                    <Link to="/login" className="btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1.2rem', borderRadius: '50px', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', fontWeight: 'bold', display: 'inline-block', boxShadow: '0 10px 20px rgba(0, 212, 255, 0.3)', transition: 'all 0.3s ease', textDecoration: 'none' }} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 212, 255, 0.5)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 212, 255, 0.3)'; }}>
+            <section className="final-cta-section" style={{ padding: '6rem 0', background: 'radial-gradient(circle at center, rgba(0,212,255,0.15) 0%, transparent 60%)', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center', backgroundColor: '#0B1120' }}>
+                <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+                    <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '1rem', color: '#fff' }}>Ready to start your career?</h2>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginBottom: '2.5rem' }}>Join thousands of students landing their dream jobs every day.</p>
+                    <Link to="/login" className="btn btn-primary" style={{ padding: '1.2rem 3rem', fontSize: '1.2rem', borderRadius: '50px', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '300px', boxShadow: '0 10px 30px rgba(0, 212, 255, 0.4)', transition: 'all 0.3s ease', textDecoration: 'none' }} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 212, 255, 0.6)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 212, 255, 0.4)'; }}>
                         Get Started Now
                     </Link>
                 </div>

@@ -6,7 +6,7 @@ import { useAlert } from '../components/CustomAlert';
 import { useToast } from '../components/CustomToast';
 import AuthPromptModal from '../components/AuthPromptModal';
 import '../styles/jobs.css';
-import '../styles/skeleton.css';
+import SkeletonCard from '../components/SkeletonCard';
 
 const Jobs = () => {
     const { showAlert } = useAlert();
@@ -549,11 +549,7 @@ const Jobs = () => {
                 <div className="job-list" id="jobList">
                     {/* Skeleton Loading */}
                     {loading && Array(6).fill(0).map((_, i) => (
-                        <div className="job-card skeleton-card" key={i}>
-                            <div className="skeleton-line title"></div>
-                            <div className="skeleton-line subtitle"></div>
-                            <div className="skeleton-content"></div>
-                        </div>
+                        <SkeletonCard key={i} type="job" />
                     ))}
 
                     {error && <div className="error-message">{error}</div>}
