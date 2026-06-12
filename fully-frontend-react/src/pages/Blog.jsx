@@ -7,14 +7,20 @@ import '../styles/blog.css';
 const Blog = () => {
     const [posts, setPosts] = useState(blogPosts);
     const [activeCategory, setActiveCategory] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const handleFilter = (category) => {
+    const handleFilter = (category, search) => {
         setActiveCategory(category);
-        if (category === "all") {
-            setPosts(blogPosts);
-        } else {
-            setPosts(blogPosts.filter(post => post.tags.map(t => t.toLowerCase().replace(' ', '-')).includes(category)));
+        setSearchQuery(search);
+        
+        let filtered = blogPosts;
+        if (category !== "all") {
+            filtered = filtered.filter(post => post.tags.map(t => t.toLowerCase().replace(' ', '-')).includes(category));
         }
+        if (search) {
+            filtered = filtered.filter(post => post.title.toLowerCase().includes(search.toLowerCase()) || post.content.toLowerCase().includes(search.toLowerCase()));
+        }
+        setPosts(filtered);
     };
 
     return (
@@ -31,11 +37,31 @@ const Blog = () => {
                     <p className="sr-only">Get expert advice, industry trends, and placement preparation tips from our career specialists. Read our latest blog posts to boost your career.</p>
                 </div>
                 
-                <div className="papers-header-right blog-header-right" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'nowrap', justifyContent: 'flex-end', width: '100%', maxWidth: '300px' }}>
-                    <div className="category-dropdown" style={{ position: 'relative', width: '100%' }}>
+                <div className="papers-header-right blog-header-right" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end', width: '100%', maxWidth: '600px' }}>
+                    <div className="search-bar" style={{ position: 'relative', flex: '1 1 200px' }}>
+                        <i className="fas fa-search" style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }}></i>
+                        <input
+                            type="text"
+                            placeholder="Search articles..."
+                            value={searchQuery}
+                            onChange={(e) => handleFilter(activeCategory, e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '0.9rem 1.5rem 0.9rem 2.8rem',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                color: '#fff',
+                                border: '1px solid rgba(0, 212, 255, 0.3)',
+                                borderRadius: '50px',
+                                fontSize: '0.95rem',
+                                outline: 'none',
+                                transition: 'all 0.3s ease'
+                            }}
+                        />
+                    </div>
+                    <div className="category-dropdown" style={{ position: 'relative', flex: '1 1 150px' }}>
                         <select
                             value={activeCategory}
-                            onChange={(e) => handleFilter(e.target.value)}
+                            onChange={(e) => handleFilter(e.target.value, searchQuery)}
                             style={{
                                 width: '100%',
                                 padding: '0.9rem 1.5rem',
@@ -62,35 +88,29 @@ const Blog = () => {
             </div>
 
             <div style={{ paddingBottom: '0' }}>
-                <section id="blog-posts-section" className="blog-posts" style={{ justifyContent: 'center', padding: 0 }}>
+                <section id="blog-posts-section" className="premium-grid" style={{ padding: '2rem 0' }}>
                     {posts.length === 0 ? (
-                        <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1 / -1' }}>No posts found in this category.</p>
+                        <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1 / -1' }}>No posts found.</p>
                     ) : (
                         posts.map((post, index) => (
-                            <article key={post.id} className="post surface-glow" style={{ animationDelay: `${index * 0.07}s` }}>
-                                <img src={post.image} alt={post.title} loading="lazy" onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
-                                <div className="post-content">
-                                    <h2 className="post-title">{post.title}</h2>
-                                    <p className="post-description">{post.content.replace(/<[^>]+>/g, '').substring(0, 150)}...</p>
+                            <div key={post.id} className="premium-card" style={{ animationDelay: `${index * 0.07}s` }}>
+                                <img src={post.image} className="premium-card-image" alt={post.title} loading="lazy" onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200' }} />
+                                <div className="premium-card-body">
+                                    <span className="premium-card-badge">{post.tags[0]}</span>
+                                    <h3 className="premium-card-title">{post.title}</h3>
+                                    <p className="premium-card-desc">{post.content.replace(/<[^>]+>/g, '').substring(0, 150)}...</p>
                                     
-                                    <div className="post-footer">
-                                        <div className="post-meta">
-                                            <span><i className="fas fa-calendar-alt"></i> {post.date}</span>
-                                            <span><i className="fas fa-eye"></i> {post.views}</span>
-                                        </div>
-                                        <Link to={`/blog/${post.slug}`} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.4)'; }} onMouseOut={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}>Read More <i className="fas fa-arrow-right"></i></Link>
+                                    <div className="premium-card-footer">
+                                        <span><i className="fas fa-calendar-alt" style={{marginRight: '4px'}}></i> {post.date}</span>
+                                        <Link to={`/blog/${post.slug}`} className="premium-card-footer-action">
+                                            Read More <i className="fas fa-arrow-right" style={{fontSize: '0.8rem'}}></i>
+                                        </Link>
                                     </div>
                                 </div>
-                            </article>
+                            </div>
                         ))
                     )}
                 </section>
-
-                <nav className="pagination" aria-label="Blog post navigation">
-                    {/* Pagination can be added here if needed */}
-                </nav>
-
-
             </div>
         </div>
     );
