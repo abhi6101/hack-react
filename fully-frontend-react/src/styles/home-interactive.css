@@ -1171,3 +1171,14 @@ main {
   .share-papers-cta { background: rgba(30, 41, 59, 0.8) !important; border-radius: 16px !important; padding: 1.5rem !important; width: 90% !important; margin: 2rem auto !important; border: 1px solid rgba(255,255,255,0.1) !important; }
   .share-papers-cta button, .share-papers-cta .cta-btn { width: 100% !important; }
 }
+
+/* FINAL MOBILE REFINEMENTS */
+@media (max-width: 768px) {
+  main { padding-bottom: 90px !important; padding-top: 80px !important; box-sizing: border-box; }
+  .hero-content { margin-top: 20px !important; }
+  .leaderboard-wrapper, .leaderboard-mobile-wrapper .leaderboard-wrapper { display: flex !important; flex-direction: column !important; }
+  
+  /* Fix logo grid overflow */
+  .logo-scroll-track { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 1rem !important; animation: none !important; align-items: center; justify-items: center; width: 100% !important; padding: 1rem !important; box-sizing: border-box !important; }
+  .logo-marquee-container { box-sizing: border-box !important; overflow: hidden !important; width: 100% !important; max-width: 100vw !important; }
+}
