@@ -1120,9 +1120,16 @@ main {
   /* Company Logos Mobile Fixes */
   .trusted-logo-item span { display: none !important; }
   .trusted-logo-item { padding: 0.5rem !important; gap: 0 !important; margin: 0 !important; }
-  .glass-marquee-container { margin-bottom: 0 !important; overflow: visible !important; }
-  .glass-marquee-track { gap: 1.5rem !important; display: flex !important; flex-wrap: wrap !important; justify-content: center !important; width: 100% !important; margin: 0 auto !important; }
+  .glass-marquee-container { margin-bottom: 0 !important; overflow: hidden !important; width: 100vw !important; position: relative; left: 50%; right: 50%; margin-left: -50vw !important; margin-right: -50vw !important; }
+  .glass-marquee-track { gap: 1.5rem !important; display: flex !important; flex-wrap: nowrap !important; width: max-content !important; animation: mobileMarqueeScroll 15s linear infinite !important; }
+}
 
+@keyframes mobileMarqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
   .leaderboard-wrapper { display: flex !important; flex-direction: column !important; background: transparent !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
   .hero-subheadline { margin-top: 0.25rem !important; margin-bottom: 0.5rem !important; }
   h2 { margin-bottom: 0.5rem !important; }
