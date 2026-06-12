@@ -9,7 +9,6 @@ import API_BASE_URL from '../config';
 import '../styles/jobs.css';
 import '../styles/interview.css';
 import '../styles/papers.css';
-import SkeletonCard from '../components/SkeletonCard';
 
 const mockInterviewData = [
     {
@@ -425,7 +424,11 @@ const Interview = () => {
                     <div className="interview-grid">
                         {loading ? (
                             Array(4).fill(0).map((_, i) => (
-                                <SkeletonCard key={`skel-${i}`} type="interview" />
+                                <div className="job-card skeleton-card" key={`skel-${i}`}>
+                                    <div className="skeleton-line title"></div>
+                                    <div className="skeleton-line subtitle"></div>
+                                    <div className="skeleton-content"></div>
+                                </div>
                             ))
                         ) : filteredInterviews.length > 0 ? (
                             filteredInterviews.map(renderCard)

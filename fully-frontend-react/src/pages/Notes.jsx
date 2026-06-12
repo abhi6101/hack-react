@@ -6,8 +6,6 @@ import { useToast } from '../components/CustomToast';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
-import JSZip from 'jszip';
-import SkeletonCard from '../components/SkeletonCard';
 import '../styles/papers.css'; // Reuses the unified glassmorphic layout
 
 const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDeleteFile, isAdmin, getToken, notesDownloadEnabled }) => {
@@ -663,7 +661,26 @@ const Notes = ({ isAdminView }) => {
                 {loading ? (
                     <div className="notes-grid" style={{ marginTop: '2rem' }}>
                         {Array(4).fill(0).map((_, i) => (
-                            <SkeletonCard key={`skel-${i}`} type="note" />
+                            <div key={`skel-${i}`} className="subject-card" style={{ 
+                                background: 'transparent', 
+                                border: '1px solid rgba(255,255,255,0.05)', 
+                                borderRadius: '16px', 
+                                padding: '0.8rem',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                height: '100%'
+                            }}>
+                                <div style={{ width: '100%', textAlign: 'center', animation: 'pulse 1.5s infinite', opacity: 0.7 }}>
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', margin: '0 auto 0.5rem' }}></div>
+                                    <div style={{ width: '80%', height: '1rem', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px', margin: '0 auto 0.5rem' }}></div>
+                                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                        <div style={{ width: '40px', height: '0.8rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
+                                        <div style={{ width: '60px', height: '0.8rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
+                                    </div>
+                                </div>
+                                <div style={{ width: '60px', height: '1rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px', margin: '0.8rem auto 0', animation: 'pulse 1.5s infinite', opacity: 0.7 }}></div>
+                            </div>
                         ))}
                     </div>
                 ) : filteredRoots.length === 0 ? (
