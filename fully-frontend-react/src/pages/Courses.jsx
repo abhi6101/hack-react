@@ -121,35 +121,33 @@ const Courses = () => {
                     </div>
                 </div>
 
-                <div className="premium-grid" id="courseList" style={{ paddingTop: '1.5rem' }}>
+                <div className="course-list" id="courseList">
                     {courses.length === 0 ? (
                         <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1 / -1' }}>No courses found matching your criteria.</p>
                     ) : (
                         courses.map((course, index) => (
-                            <div key={course.id} className="premium-card" style={{ animationDelay: `${index * 0.05}s` }}>
+                            <div key={course.id} className="course-card surface-glow" style={{ animationDelay: `${index * 0.05}s` }}>
                                 {course.image ? (
                                     <>
-                                        <img src={course.image} className="premium-card-image" alt={course.title} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
-                                        <div className="premium-card-image" style={{ display: 'none', background: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' }}>
-                                            <i className="fas fa-laptop-code" style={{fontSize: '3rem', color: 'var(--primary)'}}></i>
+                                        <img src={course.image} alt={course.title} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                                        <div className="course-image-fallback" style={{ display: 'none' }}>
+                                            <i className="fas fa-laptop-code"></i>
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="premium-card-image" style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' }}>
-                                        <i className="fas fa-laptop-code" style={{fontSize: '3rem', color: 'var(--primary)'}}></i>
+                                    <div className="course-image-fallback" style={{ display: 'flex' }}>
+                                        <i className="fas fa-laptop-code"></i>
                                     </div>
                                 )}
-                                <div className="premium-card-body">
-                                    <span className="premium-card-badge">{course.level}</span>
-                                    <h3 className="premium-card-title">{course.title}</h3>
-                                    <p className="premium-card-desc">{course.description}</p>
-                                    
-                                    <div className="premium-card-footer">
-                                        <span><i className="fas fa-clock" style={{marginRight: '4px'}}></i> {course.duration} &bull; <i className="fas fa-users" style={{marginLeft: '4px', marginRight: '4px'}}></i> {course.students.toLocaleString()}</span>
-                                        <Link to={`/courses/${course.slug}`} className="premium-card-footer-action">
-                                            View Course <i className="fas fa-arrow-right" style={{fontSize: '0.8rem'}}></i>
-                                        </Link>
+                                <span className="course-badge">{course.level}</span>
+                                <div className="course-content">
+                                    <h2>{course.title}</h2>
+                                    <p className="course-desc-clamped">{course.description}</p>
+                                    <div className="course-meta">
+                                        <span><i className="fas fa-clock"></i> {course.duration}</span>
+                                        <span><i className="fas fa-users"></i> {course.students.toLocaleString()} Students</span>
                                     </div>
+                                    <Link to={`/courses/${course.slug}`} className="btn" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', border: 'none', width: '100%', marginTop: '1.5rem', borderRadius: '12px', padding: '0.8rem', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }} onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.4)'; }} onMouseOut={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}>View Course <i className="fas fa-arrow-right"></i></Link>
                                 </div>
                             </div>
                         ))
