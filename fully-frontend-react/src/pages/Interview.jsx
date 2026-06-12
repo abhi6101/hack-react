@@ -323,79 +323,37 @@ const Interview = () => {
 
 <div className="papers-header-container layout-centered">
     <div className="papers-header-left">
-        <h2 className="main-page-heading">Available Job Drives</h2>
+        <h2 className="main-page-heading" style={{ marginBottom: '15px' }}>Interview Details</h2>
     </div>
-    <div className="papers-header-right filter-row" style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '500px', flexWrap: 'wrap', alignItems: 'center' }}>
-          {/* Search - Icon removed per feedback */}
-          <div className="search-box-clean" style={{ flex: 1.5, minWidth: '140px' }}>
-              <input
-                  id="interviewMobileSearchInput"
-                  type="text"
-                  placeholder="Search company..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="modern-input"
-              />
-          </div>
-
-          <div className="location-box-clean" style={{ flex: 1, minWidth: '140px', position: 'relative', zIndex: 1000 }}>
-            <div className="dropdown-trigger-box" onClick={() => setShowLocationMenu(!showLocationMenu)}>
-                <span>{filterLocation === 'all' ? 'All Locations' : filterLocation}</span>
-                <i className={`fas fa-chevron-down ${showLocationMenu ? 'open' : ''}`}></i>
-            </div>
-
-                <AnimatePresence>
-                    {showLocationMenu && (
-                        <motion.div
-                            className="dropdown-menu surface-glow"
-                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                            style={{ right: 0, left: 'auto', minWidth: '100%', top: 'calc(100% + 5px)' }}
-                        >
-                            {locations.map(loc => (
-                                <div
-                                    key={loc}
-                                    className={`dropdown-item ${filterLocation === loc ? 'active' : ''}`}
-                                    onClick={() => { setFilterLocation(loc); setShowLocationMenu(false); }}
-                                >
-                                    {loc === 'all' ? 'All Locations' : loc}
-                                </div>
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        </div>
-    </div>
+</div>
 
 {/* Compact Stats Bar - Labels updated to be shorter for mobile */}
-<div className="compact-stats-bar">
+<div className="compact-stats-bar" style={{ padding: '10px 2rem' }}>
     <div className="stat-item">
         <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #4361ee 0%, #3730a3 100%)' }}>
-            <i className="fas fa-calendar-check"></i>
+            <i className="fas fa-layer-group"></i>
         </div>
         <div className="stat-info">
-            <span className="stat-value-small">{stats.total}</span>
-            <span className="stat-label-small">Drives</span>
+            <span className="stat-value-small" style={{ fontSize: '1rem', fontWeight: 'bold' }}>Round 1</span>
         </div>
     </div>
     <div className="stat-item">
         <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #06ffa5 0%, #00d9ff 100%)' }}>
-            <i className="fas fa-door-open"></i>
+            <i className="fas fa-clock"></i>
         </div>
         <div className="stat-info">
-            <span className="stat-value-small">{stats.available}</span>
-            <span className="stat-label-small">Slots</span>
+            <span className="stat-value-small" style={{ fontSize: '1rem', fontWeight: 'bold' }}>45 Min</span>
         </div>
     </div>
     <div className="stat-item">
         <div className="stat-icon-small" style={{ background: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)' }}>
-            <i className="fas fa-paper-plane"></i>
+            <i className="fas fa-satellite-dish"></i>
         </div>
         <div className="stat-info">
-            <span className="stat-value-small">{stats.applied}</span>
-            <span className="stat-label-small">Applied</span>
+            <span className="stat-value-small" style={{ fontSize: '1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                Live
+                <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#00ff88', borderRadius: '50%', boxShadow: '0 0 8px #00ff88' }}></span>
+            </span>
         </div>
     </div>
 </div>
