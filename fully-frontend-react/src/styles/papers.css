@@ -1203,3 +1203,6 @@ a:hover {
   .mobile-quiz-container { padding-top: 80px !important; }
   .mobile-quiz-header { padding: 0.5rem 1rem !important; margin-bottom: 0.5rem !important; }
 }
+
+.grid-span-full { grid-column: 1 / -1; }
+

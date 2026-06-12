@@ -781,81 +781,82 @@ const Notes = ({ isAdminView }) => {
                                 ) : (
                                     <div className="notes-units-grid">
                                         {Object.values(selectedFolder.children).map(child => (
-                                            <div 
-                                                key={child.name} 
-                                                className={`unit-folder-card ${selectedUnit && selectedUnit.name === child.name ? 'active' : ''}`}
-                                                onClick={() => setSelectedUnit(selectedUnit?.name === child.name ? null : child)}
-                                            >
-                                                <i className="fas fa-folder" style={{ color: '#ffd700', fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.2))' }}></i>
-                                                <span style={{ color: '#fff', fontWeight: '600', fontSize: '1rem' }}>{child.name}</span>
-                                            </div>
+                                            <React.Fragment key={child.name}>
+                                                <div 
+                                                    className={`unit-folder-card ${selectedUnit && selectedUnit.name === child.name ? 'active' : ''}`}
+                                                    onClick={() => setSelectedUnit(selectedUnit?.name === child.name ? null : child)}
+                                                >
+                                                    <i className="fas fa-folder" style={{ color: '#ffd700', fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.2))' }}></i>
+                                                    <span style={{ color: '#fff', fontWeight: '600', fontSize: '1rem' }}>{child.name}</span>
+                                                </div>
+                                                
+                                                {selectedUnit && selectedUnit.name === child.name && (
+                                                    <div className="file-table-container grid-span-full">
+                                                        <table className="file-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>File Name</th>
+                                                                    <th style={{ width: '200px' }}>Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {Object.values(selectedUnit.children).map(fileNode => {
+                                                                    if (fileNode.isDirectory) return null;
+                                                                    const ext = fileNode.name.substring(fileNode.name.lastIndexOf('.')).toLowerCase();
+                                                                    let fileIcon = 'fa-file-alt'; let iconColor = '#9CA3AF';
+                                                                    if (ext === '.pdf') { fileIcon = 'fa-file-pdf'; iconColor = '#EF4444'; }
+                                                                    else if (ext === '.ppt' || ext === '.pptx') { fileIcon = 'fa-file-powerpoint'; iconColor = '#F97316'; }
+                                                                    else if (ext === '.doc' || ext === '.docx') { fileIcon = 'fa-file-word'; iconColor = '#3B82F6'; }
+                                                                    else if (ext === '.xls' || ext === '.xlsx' || ext === '.csv') { fileIcon = 'fa-file-excel'; iconColor = '#10B981'; }
+                                                                    else if (ext === '.txt') { fileIcon = 'fa-file-lines'; iconColor = '#D1D5DB'; }
+
+                                                                    const isLocked = !getToken();
+
+                                                                    return (
+                                                                        <tr key={fileNode.name}>
+                                                                            <td>
+                                                                                <i className={`fas ${fileIcon} file-icon`} style={{ color: iconColor }}></i>
+                                                                                {fileNode.name}
+                                                                            </td>
+                                                                            <td>
+                                                                                {isLocked ? (
+                                                                                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'flex-end', width: '100%' }}>
+                                                                                        <i className="fas fa-lock"></i> Locked
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div className="btn-group">
+                                                                                        <button 
+                                                                                            onClick={(e) => { e.stopPropagation(); handleViewFile(fileNode); }}
+                                                                                            style={{ background: 'transparent', border: '1px solid rgba(0, 212, 255, 0.3)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#00d4ff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                                                                        >
+                                                                                            <i className="fas fa-eye"></i> View
+                                                                                        </button>
+                                                                                        <button 
+                                                                                            onClick={(e) => { e.stopPropagation(); handleDownloadFile(fileNode); }}
+                                                                                            style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#fff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                                                                        >
+                                                                                            <i className="fas fa-download"></i> Download
+                                                                                        </button>
+                                                                                        {isAdmin && handleDeleteFile && (
+                                                                                            <button 
+                                                                                                onClick={(e) => { e.stopPropagation(); handleDeleteFile(fileNode); }}
+                                                                                                style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                                                                            >
+                                                                                                <i className="fas fa-trash-alt"></i>
+                                                                                            </button>
+                                                                                        )}
+                                                                                    </div>
+                                                                                )}
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                )}
+                                            </React.Fragment>
                                         ))}
-                                    </div>
-                                )}
-                                
-                                {selectedUnit && (
-                                    <div className="file-table-container">
-                                        <table className="file-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>File Name</th>
-                                                    <th style={{ width: '200px' }}>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {Object.values(selectedUnit.children).map(fileNode => {
-                                                    if (fileNode.isDirectory) return null;
-                                                    const ext = fileNode.name.substring(fileNode.name.lastIndexOf('.')).toLowerCase();
-                                                    let fileIcon = 'fa-file-alt'; let iconColor = '#9CA3AF';
-                                                    if (ext === '.pdf') { fileIcon = 'fa-file-pdf'; iconColor = '#EF4444'; }
-                                                    else if (ext === '.ppt' || ext === '.pptx') { fileIcon = 'fa-file-powerpoint'; iconColor = '#F97316'; }
-                                                    else if (ext === '.doc' || ext === '.docx') { fileIcon = 'fa-file-word'; iconColor = '#3B82F6'; }
-                                                    else if (ext === '.xls' || ext === '.xlsx' || ext === '.csv') { fileIcon = 'fa-file-excel'; iconColor = '#10B981'; }
-                                                    else if (ext === '.txt') { fileIcon = 'fa-file-lines'; iconColor = '#D1D5DB'; }
-
-                                                    const isLocked = !getToken();
-
-                                                    return (
-                                                        <tr key={fileNode.name}>
-                                                            <td>
-                                                                <i className={`fas ${fileIcon} file-icon`} style={{ color: iconColor }}></i>
-                                                                {fileNode.name}
-                                                            </td>
-                                                            <td>
-                                                                {isLocked ? (
-                                                                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'flex-end', width: '100%' }}>
-                                                                        <i className="fas fa-lock"></i> Locked
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="btn-group">
-                                                                        <button 
-                                                                            onClick={(e) => { e.stopPropagation(); handleViewFile(fileNode); }}
-                                                                            style={{ background: 'transparent', border: '1px solid rgba(0, 212, 255, 0.3)', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#00d4ff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                                                                        >
-                                                                            <i className="fas fa-eye"></i> View
-                                                                        </button>
-                                                                        <button 
-                                                                            onClick={(e) => { e.stopPropagation(); handleDownloadFile(fileNode); }}
-                                                                            style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#fff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                                                                        >
-                                                                            <i className="fas fa-download"></i> Download
-                                                                        </button>
-                                                                        {isAdmin && handleDeleteFile && (
-                                                                            <button 
-                                                                                onClick={(e) => { e.stopPropagation(); handleDeleteFile(fileNode); }}
-                                                                                style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#EF4444', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                                                                            >
-                                                                                <i className="fas fa-trash-alt"></i>
-                                                                            </button>
-                                                                        )}
-                                                                    </div>
-                                                                )}
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })}
-                                            </tbody>
-                                        </table>
                                     </div>
                                 )}
                             </div>
