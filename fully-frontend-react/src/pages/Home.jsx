@@ -485,8 +485,8 @@ const Home = () => {
             {/* Removed Old Upload Paper CTA Card */}
 
             {/* NEW: How It Works Section */}
-            <section className="how-it-works-section">
-                <div className="how-it-works-header">
+            <section className="how-it-works-section" style={{ marginTop: '0', paddingTop: '1rem' }}>
+                <div className="how-it-works-header" style={{ marginBottom: '1.5rem' }}>
                     <h2 className="how-it-works-title">How it <span>Works</span></h2>
                     <p className="how-it-works-subtitle">
                         Seamlessly move through the process and secure your ideal role.
