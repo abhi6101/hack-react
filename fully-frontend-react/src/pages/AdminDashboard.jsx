@@ -3295,11 +3295,11 @@ const AdminDashboard = () => {
 
             <main className="admin-main">
                 {activeTab !== 'students' && (
-                <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: activeTab === 'profile-details' ? 'nowrap' : 'wrap', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div className="header-left">
-                        <h1 style={{ fontSize: activeTab === 'applications' ? '1.5rem' : (activeTab === 'users' ? '1.35rem' : '1.05rem'), margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: activeTab === 'applications' ? '800' : '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
+                <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: 'nowrap', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="header-left" style={{ minWidth: 0, paddingRight: '10px' }}>
+                        <h1 style={{ fontSize: activeTab === 'applications' ? 'clamp(1rem, 4vw, 1.5rem)' : (activeTab === 'users' ? '1.35rem' : '1.05rem'), margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: activeTab === 'applications' ? '800' : '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
-                    <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center', whiteSpace: activeTab === 'profile-details' ? 'nowrap' : 'normal' }}>
+                    <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center', whiteSpace: activeTab === 'profile-details' ? 'nowrap' : 'normal', flexShrink: 0 }}>
                         {activeTab === 'profile-details' && (
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                 <button 
@@ -3505,7 +3505,7 @@ const AdminDashboard = () => {
                             </div>
                         )}
                         {activeTab === 'applications' && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'flex-end', flexGrow: 1 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'flex-end' }}>
                                 <div className="search-box-modern desktop-only" style={{ width: '250px' }}>
                                     <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}></i>
                                     <input
@@ -3519,7 +3519,7 @@ const AdminDashboard = () => {
                                 <button
                                     className="btn btn-secondary"
                                     onClick={() => downloadCSV(applications, 'job_applications.csv')}
-                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', height: '36px' }}
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', height: '36px', flexShrink: 0 }}
                                 >
                                     <i className="fas fa-file-csv"></i> Export
                                 </button>
