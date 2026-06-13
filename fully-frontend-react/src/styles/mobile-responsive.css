@@ -1,6 +1,11 @@
 /* ===== MOBILE RESPONSIVE STYLES - GLOBAL ===== */
 /* Apply to all pages for consistent mobile experience */
 
+/* Utility: hide on desktop, show on mobile */
+.mobile-only {
+    display: none !important;
+}
+
 /* Global Mobile Constraints - Prevent Content Shift */
 @media (max-width: 768px) {
     * {

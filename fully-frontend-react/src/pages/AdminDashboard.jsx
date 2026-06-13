@@ -3198,26 +3198,28 @@ const AdminDashboard = () => {
                     </div>
                     <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                         {activeTab === 'jobs' && (
-                            <button
-                                onClick={() => setIsJobFormOpen(!isJobFormOpen)}
-                                style={{
-                                    padding: '6px 12px',
-                                    borderRadius: '8px',
-                                    border: '1px solid rgba(0, 204, 255, 0.35)',
-                                    background: 'rgba(0, 204, 255, 0.1)',
-                                    color: '#00ccff',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '5px',
-                                    fontWeight: '600',
-                                    fontSize: '0.8rem',
-                                    transition: 'all 0.2s ease',
-                                    whiteSpace: 'nowrap'
-                                }}
-                            >
-                                <i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job
-                            </button>
+                            <span className="mobile-only">
+                                <button
+                                    onClick={() => setIsJobFormOpen(!isJobFormOpen)}
+                                    style={{
+                                        padding: '6px 12px',
+                                        borderRadius: '8px',
+                                        border: '1px solid rgba(0, 204, 255, 0.35)',
+                                        background: 'rgba(0, 204, 255, 0.1)',
+                                        color: '#00ccff',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                        fontWeight: '600',
+                                        fontSize: '0.8rem',
+                                        transition: 'all 0.2s ease',
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                >
+                                    <i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job
+                                </button>
+                            </span>
                         )}
                         {activeTab === 'dashboard' && (
                             <>
