@@ -2668,9 +2668,6 @@ const AdminDashboard = () => {
                         )}
 
                         <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-calendar-check"></i> Scheduled Interviews</h3>
-                            </div>
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
