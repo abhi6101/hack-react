@@ -253,7 +253,7 @@ const AdminDashboard = () => {
     const [loadingPaperLogs, setLoadingPaperLogs] = useState(false);
     const [paperLogSearch, setPaperLogSearch] = useState('');
 
-
+    const [isUploadingNotes, setIsUploadingNotes] = useState(false);
 
     const fetchCompanyStats = async () => {
         setLoadingStats(true);
@@ -3083,7 +3083,7 @@ const AdminDashboard = () => {
             case 'paper-logs':
                 return renderPaperViewLogs();
             case 'study-notes':
-                return <Notes isAdminView={true} />;
+                return <Notes isAdminView={true} isUploadingNotes={isUploadingNotes} setIsUploadingNotes={setIsUploadingNotes} />;
             case 'question-papers':
                 return (
                     <div className="users-management-page animate-in">
@@ -3360,13 +3360,13 @@ const AdminDashboard = () => {
                         )}
                         {activeTab === 'study-notes' && (
                             <button
-                                onClick={() => window.dispatchEvent(new CustomEvent('open-notes-upload'))}
+                                onClick={() => setIsUploadingNotes(!isUploadingNotes)}
                                 style={{
                                     padding: '6px 14px',
                                     borderRadius: '8px',
-                                    border: '1px solid rgba(0,204,255,0.35)',
-                                    background: 'rgba(0,204,255,0.1)',
-                                    color: '#00ccff',
+                                    border: `1px solid ${isUploadingNotes ? 'rgba(239, 68, 68, 0.35)' : 'rgba(0,204,255,0.35)'}`,
+                                    background: isUploadingNotes ? 'rgba(239, 68, 68, 0.1)' : 'rgba(0,204,255,0.1)',
+                                    color: isUploadingNotes ? '#ef4444' : '#00ccff',
                                     cursor: 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -3377,8 +3377,8 @@ const AdminDashboard = () => {
                                     whiteSpace: 'nowrap'
                                 }}
                             >
-                                <i className="fas fa-plus" style={{ fontSize: '0.75rem' }}></i>
-                                Upload Notes
+                                <i className={`fas ${isUploadingNotes ? 'fa-times' : 'fa-plus'}`} style={{ fontSize: '0.75rem' }}></i>
+                                {isUploadingNotes ? 'Close Form' : 'Upload Notes'}
                             </button>
                         )}
                         {activeTab === 'interview-applications' && (

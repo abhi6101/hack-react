@@ -138,7 +138,7 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
     );
 };
 
-const Notes = ({ isAdminView }) => {
+const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const { showToast } = useToast();
@@ -156,7 +156,15 @@ const Notes = ({ isAdminView }) => {
 
     // UI & Modal States
     const [showAuthModal, setShowAuthModal] = useState(false);
-    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [internalShowUploadModal, setInternalShowUploadModal] = useState(false);
+    const showUploadModal = isAdminView && isUploadingNotes !== undefined ? isUploadingNotes : internalShowUploadModal;
+    const setShowUploadModal = (val) => {
+        if (isAdminView && setIsUploadingNotes) {
+            setIsUploadingNotes(val);
+        } else {
+            setInternalShowUploadModal(val);
+        }
+    };
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
     const [dragActive, setDragActive] = useState(false);
@@ -603,80 +611,6 @@ const Notes = ({ isAdminView }) => {
                 <meta name="keywords" content="RGPV IMCA notes, Integrated MCA study material, IMCA syllabus, BCA notes, Hack2Hired notes, RGPV exam preparation" />
             </Helmet>
 
-            {/* Unified Header section matching Papers.jsx */}
-            <div className="papers-header-container">
-                <div className="papers-header-left">
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700', color: 'var(--text-primary)' }}>Study Notes <span style={{ color: 'var(--primary)' }}>Explorer</span></h2>
-                    <p style={{ display: 'none' }} className="sr-only">
-                        Browse full course syllabus folders, unit notes, and lecture resources mapped exactly in their original hierarchy.
-                    </p>
-                </div>
-
-                <div className={`papers-header-right mobile-filters-wrapper ${isSearchFocused ? 'active-search' : ''}`} style={{ gap: '1rem', width: '100%', maxWidth: '500px', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <div className={`global-search-container mobile-filter-search ${isSearchFocused ? 'is-focused' : ''}`} 
-                        onClick={() => {
-                            setIsSearchFocused(true);
-                            setTimeout(() => document.getElementById('notesMobileSearchInput')?.focus(), 100);
-                        }}
-                        style={{
-                        position: 'relative',
-                        flex: 1.5,
-                        minWidth: '140px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(0, 212, 255, 0.3)',
-                        borderRadius: '50px',
-                        padding: '0 1rem 0 2.5rem',
-                        height: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        backdropFilter: 'blur(15px)',
-                        transition: 'all 0.3s ease'
-                    }}>
-                        <i className="fas fa-search" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}></i>
-                        <input
-                            id="notesMobileSearchInput"
-                            type="text"
-                            placeholder="Search subjects..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onFocus={() => setIsSearchFocused(true)}
-                            onBlur={(e) => { if (!e.target.value) setIsSearchFocused(false); }}
-                            style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: '#fff',
-                                fontSize: '0.95rem',
-                                width: '100%',
-                                height: '100%',
-                                outline: 'none',
-                                padding: '0'
-                            }}
-                        />
-                        {searchQuery && (
-                            <i 
-                                className="fas fa-times" 
-                                onClick={() => setSearchQuery('')}
-                                style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem' }}
-                            ></i>
-                        )}
-                    </div>
-
-
-
-                    {isAdmin && (
-                        <motion.button
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                            className="btn btn-primary"
-                            onClick={() => setShowUploadModal(true)}
-                            style={{ position: 'relative', zIndex: 10, borderRadius: '50px', padding: '0 1.2rem', height: '40px', display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'fit-content', whiteSpace: 'nowrap', fontWeight: '600' }}
-                        >
-                            <i className="fas fa-plus"></i> Upload
-                        </motion.button>
-                    )}
-                </div>
-            </div>
 
                 {/* Explorer Display Viewport */}
                 {loading ? (
@@ -959,21 +893,7 @@ const Notes = ({ isAdminView }) => {
                                 boxShadow: '0 20px 40px rgba(0,0,0,0.6)'
                             }}
                         >
-                            <button
-                                onClick={() => setShowUploadModal(false)}
-                                style={{
-                                    position: 'absolute',
-                                    top: '1rem',
-                                    right: '1rem',
-                                    background: 'transparent',
-                                    border: 'none',
-                                    color: 'var(--text-secondary)',
-                                    fontSize: '1.2rem',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                <i className="fas fa-times"></i>
-                            </button>
+
 
                             <h2 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.6rem)', marginBottom: '0.5rem', textAlign: 'center', fontWeight: '800' }}>
                                 Upload Study <span>Directory</span>
