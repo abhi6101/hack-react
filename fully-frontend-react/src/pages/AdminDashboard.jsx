@@ -2216,11 +2216,10 @@ const AdminDashboard = () => {
                                         <table className="modern-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Identify</th>
-                                                    <th>Account Credentials</th>
-                                                    <th>Professional Role</th>
+                                                    <th>Account</th>
+                                                    <th>Role</th>
                                                     <th>Assignment</th>
-                                                    <th style={{ textAlign: 'right' }}>Management</th>
+                                                    <th style={{ textAlign: 'right' }}></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -2231,22 +2230,18 @@ const AdminDashboard = () => {
                                                     u.role?.toLowerCase().includes(userSearch.toLowerCase())
                                                 ).map(user => (
                                                     <tr key={user.id} className="row-hover">
-                                                        <td data-label="Identify">
-                                                            <div className="user-avatar-small">
-                                                                {user.username.charAt(0).toUpperCase()}
-                                                            </div>
-                                                        </td>
-                                                        <td data-label="Account Credentials">
-                                                            <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{user.username}</div>
+
+                                                        <td data-label="Account">
+                                                            <div style={{ fontWeight: '600', color: 'var(--text-primary)', fontFamily: 'monospace', letterSpacing: '0.5px' }}>{user.username}</div>
                                                             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.email}</div>
                                                         </td>
-                                                        <td data-label="Professional Role">
-                                                            <span className={`badge-role role-${user.role.toLowerCase().replace('_', '-')}`}>
+                                                        <td data-label="Role">
+                                                            <span className={`badge-role role-${user.role.toLowerCase().replace('_', '-')}`} style={user.role === 'USER' ? { backgroundColor: '#064e3b', color: '#4ade80', border: 'none' } : {}}>
                                                                 {user.role}
                                                             </span>
                                                         </td>
                                                         <td data-label="Assignment">
-                                                            <div style={{ fontSize: '0.9rem' }}>
+                                                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', fontFamily: 'sans-serif' }}>
                                                                 {user.companyName ? (
                                                                     <span style={{ color: 'var(--accent)' }}><i className="fas fa-building"></i> {user.companyName}</span>
                                                                 ) : user.adminBranch ? (
@@ -2258,7 +2253,7 @@ const AdminDashboard = () => {
                                                                 )}
                                                             </div>
                                                         </td>
-                                                        <td data-label="Management">
+                                                        <td data-label="">
                                                             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
                                                                 <button
                                                                     className="action-btn-modern edit-btn"
