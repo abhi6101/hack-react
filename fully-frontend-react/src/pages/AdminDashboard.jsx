@@ -37,8 +37,8 @@ const ToggleSwitch = ({ checked, onChange, disabled }) => (
     </label>
 );
 const TableSkeleton = ({ cols = 4, rows = 5 }) => (
-    <div className="table-responsive" style={{ padding: '1rem', overflowX: 'auto' }}>
-        <table className="table" style={{ width: '100%', minWidth: '600px' }}>
+    <div className="table-responsive" style={{ padding: '1rem', overflowX: 'auto', width: '100%' }}>
+        <table className="table" style={{ width: '100%' }}>
             <thead>
                 <tr>
                     {Array.from({ length: cols }).map((_, i) => (
@@ -1669,7 +1669,7 @@ const AdminDashboard = () => {
                                     </p>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.5rem' }}>
                                     {[
                                         { key: 'masterEmailEnabled', title: 'Master Switch', descOn: 'System emails are ACTIVE', descOff: 'ALL emails are BLOCKED', icon: 'fas fa-power-off', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false },
                                         { key: 'newJobEmailEnabled', title: 'New Job Alerts', descOn: 'Emails to students when jobs are posted', descOff: 'Emails to students when jobs are posted', icon: 'fas fa-bullhorn', activeHex: '#f472b6', activeRgb: '244, 114, 182', disabled: !emailSettings.masterEmailEnabled },
@@ -1923,7 +1923,7 @@ const AdminDashboard = () => {
                                     </button>
                                 )}
                             </div>
-                            {loadingJobs && <div id="loadingJobsIndicator" className="loading-indicator">Loading jobs...</div>}
+                            {loadingJobs && <TableSkeleton cols={5} rows={5} />}
                             {!loadingJobs && (
                                 <div className="table-responsive">
                                     {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
@@ -2190,10 +2190,7 @@ const AdminDashboard = () => {
                             </div>
 
                             {loadingUsers ? (
-                                <div className="loader-container">
-                                    <div className="pulse-loader"></div>
-                                    <p>Retrieving secure registry...</p>
-                                </div>
+                                <TableSkeleton cols={5} rows={6} />
                             ) : (
                                 <div className="table-container">
                                     {filteredUsers.filter(u =>
@@ -2312,7 +2309,7 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         {loadingApplications ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
+                            <TableSkeleton cols={7} rows={5} />
                         ) : applications.length > 0 ? (
                             <div className="table-responsive" style={{ padding: '1rem' }}>
                                 <table className="table">
@@ -2503,7 +2500,7 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         {loadingInterviewApps ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading applications...</p>
+                            <TableSkeleton cols={6} rows={5} />
                         ) : interviewApplications.length > 0 ? (
                             <div className="table-responsive" style={{ padding: '1rem' }}>
                                 <table className="table">
