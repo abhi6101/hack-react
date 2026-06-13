@@ -34,19 +34,19 @@ const Videos = () => {
             </Helmet>
             
             {/* Header Card Area */}
-            <div style={{ 
-                background: 'rgba(255, 255, 255, 0.02)', 
-                border: '1px solid rgba(255, 255, 255, 0.05)', 
-                borderRadius: '24px', 
+            <div className="videos-header-container" style={{ 
+                background: 'linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9))', 
+                border: '1px solid rgba(255, 255, 255, 0.1)', 
+                borderRadius: '20px', 
                 padding: '2rem', 
                 display: 'flex', 
                 flexDirection: 'column', 
                 gap: '1.5rem', 
-                marginBottom: '2rem',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+                marginBottom: '1.5rem',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
                 backdropFilter: 'blur(10px)'
             }}>
-                <h2 style={{ margin: 0, fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', fontWeight: '800', color: '#fff', textAlign: 'center', letterSpacing: '-0.5px' }}>
+                <h2 style={{ margin: 0, fontSize: 'clamp(1.6rem, 5vw, 2.5rem)', fontWeight: '800', color: '#fff', textAlign: 'center', letterSpacing: '-0.5px', textShadow: '0 2px 10px rgba(255,255,255,0.1)' }}>
                     Curated Study Videos
                 </h2>
                 
@@ -55,8 +55,8 @@ const Videos = () => {
                         position: 'relative',
                         width: '100%',
                         maxWidth: '600px',
-                        background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid rgba(0, 212, 255, 0.2)',
+                        background: 'rgba(0, 212, 255, 0.05)',
+                        border: '1px solid rgba(0, 212, 255, 0.3)',
                         borderRadius: '50px',
                         padding: '0 1.5rem 0 3rem',
                         height: '50px',
@@ -97,17 +97,18 @@ const Videos = () => {
                 </div>
             </div>
             
-            <div className="category-filters-container" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+            <div className="category-filters-container" style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
                 {['All', 'Frontend', 'Backend', 'Database'].map(cat => (
                     <button 
                         key={cat} 
+                        className="filter-btn"
                         style={{ 
                             background: cat === 'All' ? 'var(--primary)' : 'rgba(255,255,255,0.03)', 
                             color: cat === 'All' ? '#000' : 'var(--text-secondary)', 
                             border: `1px solid ${cat === 'All' ? 'var(--primary)' : 'rgba(255,255,255,0.1)'}`, 
-                            padding: '0.6rem 1.5rem', 
+                            padding: '0.5rem 1.2rem', 
                             borderRadius: '50px', 
-                            fontSize: '0.95rem', 
+                            fontSize: '0.9rem', 
                             fontWeight: '600', 
                             cursor: 'pointer', 
                             transition: 'all 0.3s ease',
