@@ -5,6 +5,33 @@ import API_BASE_URL from '../config';
 const ADMIN_API_URL = `${API_BASE_URL}/admin`;
 const PUBLIC_API_URL = `${API_BASE_URL}/public`;
 
+const TableSkeleton = ({ cols = 4, rows = 5 }) => (
+    <div className="table-responsive" style={{ padding: '1rem', overflowX: 'auto', width: '100%' }}>
+        <table className="table" style={{ width: '100%' }}>
+            <thead>
+                <tr>
+                    {Array.from({ length: cols }).map((_, i) => (
+                        <th key={i} style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                            <div className="skeleton skeleton-text" style={{ width: '60%', height: '16px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
+                        </th>
+                    ))}
+                </tr>
+            </thead>
+            <tbody>
+                {Array.from({ length: rows }).map((_, rowIndex) => (
+                    <tr key={rowIndex}>
+                        {Array.from({ length: cols }).map((_, colIndex) => (
+                            <td key={colIndex} style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                                <div className="skeleton skeleton-text" style={{ width: colIndex === 0 ? '80%' : '50%', height: '16px', background: 'rgba(255, 255, 255, 0.05)' }}></div>
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+);
+
 const LeaderboardAdmin = () => {
     const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -55,9 +82,14 @@ const LeaderboardAdmin = () => {
 
     if (loading) {
         return (
-            <div className="empty-state surface-glow">
-                <i className="fas fa-spinner fa-spin" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
-                <h3>Loading Leaderboard...</h3>
+            <div className="animate-in">
+                <div className="section-header">
+                    <h2>Leaderboard Management</h2>
+                    <p>View top contributors and reset their points if necessary.</p>
+                </div>
+                <div className="table-responsive surface-glow" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                    <TableSkeleton cols={4} rows={5} />
+                </div>
             </div>
         );
     }
