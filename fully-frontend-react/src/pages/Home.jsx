@@ -323,7 +323,7 @@ const Home = () => {
 
 
             {/* Hero Section */}
-            <section className="hero" style={{ paddingTop: '5rem' }}>
+            <section className="hero" style={{ paddingTop: '7rem' }}>
                 <div className="hero-main-container">
                     <motion.div
                         className="hero-content"
@@ -338,9 +338,9 @@ const Home = () => {
                                 Bridge the Gap from <span className="text-gradient">Campus to Career</span>
                             </h1>
                             <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem' }}>
-                                Connect with top recruiters from <span style={{color: '#fff', fontWeight: 600}}>100+ global tech giants</span> and land your perfect role.
+                                Connect with top recruiters from <span style={{ color: '#fff', fontWeight: 600 }}>100+ global tech giants</span> and land your perfect role.
                             </p>
-                            
+
                             <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                                 <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', borderRadius: '12px', background: '#00d4ff', color: '#000', fontWeight: '700', textDecoration: 'none', border: '1px solid #00d4ff', transition: 'all 0.3s ease', flex: 1, minWidth: '140px', textAlign: 'center' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                                     Find Jobs
@@ -349,7 +349,7 @@ const Home = () => {
                                     Build Resume
                                 </Link>
                             </div>
-                            
+
                             {/* Mobile Only Stat Pill */}
                             <div className="mobile-only" style={{ marginTop: '1.5rem', display: 'none', justifyContent: 'center' }}>
                                 <div style={{ background: 'rgba(0, 212, 255, 0.1)', border: '1px solid rgba(0, 212, 255, 0.3)', borderRadius: '20px', padding: '0.4rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -378,7 +378,7 @@ const Home = () => {
                             {/* Glowing geometric background */}
                             <div style={{ position: 'absolute', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,212,255,0) 70%)', borderRadius: '50%', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(30px)' }}></div>
                             <div style={{ position: 'absolute', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', top: '20%', left: '60%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(40px)' }}></div>
-                            
+
                             <div className="boy-image-container" style={{ position: 'relative', zIndex: 1, paddingBottom: '20px' }}>
                                 <img src="/images/Boy.png" alt="Career Aspirant" className="hero-boy-img" style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }} />
                                 <div className="image-glow-effect"></div>
@@ -424,7 +424,7 @@ const Home = () => {
                         <div style={{ flex: '2 1 400px', maxWidth: '800px' }}>
                             <LeaderboardComponent limit={5} />
                         </div>
-                        
+
                         {/* Share Papers CTA (Redesigned & Repositioned) */}
                         <div className="mobile-share-papers-cta glass-card" style={{ flex: '1 1 300px', maxWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '16px', padding: '2rem', cursor: 'pointer', textAlign: 'center', backdropFilter: 'blur(12px)', transition: 'all 0.3s ease' }} onClick={() => navigate('/upload-paper')} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.15)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
                             <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
@@ -432,7 +432,7 @@ const Home = () => {
                             </div>
                             <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0', color: '#fff', fontWeight: '600' }}>Share Your Papers</h3>
                             <p style={{ fontSize: '0.9rem', margin: '0 0 1.5rem 0', color: 'var(--text-secondary)' }}>Help your juniors by contributing study materials. Every contribution counts!</p>
-                            
+
                             <button style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white', border: 'none', padding: '0.8rem 2rem', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', width: '100%', transition: 'all 0.3s ease' }}>
                                 Contribute Now
                             </button>
@@ -468,18 +468,18 @@ const Home = () => {
                                 { name: 'Netflix', icon: 'fab fa-netflix', color: '#E50914' },
                                 { name: 'Spotify', icon: 'fab fa-spotify', color: '#1DB954' }
                             ].map((company, index) => (
-                                <div className="trusted-logo-item" key={index} style={{ 
-                                    display: 'inline-flex', 
-                                    alignItems: 'center', 
-                                    gap: '0.8rem', 
-                                    color: company.color, 
+                                <div className="trusted-logo-item" key={index} style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.8rem',
+                                    color: company.color,
                                     transition: 'all 0.3s ease',
                                     cursor: 'pointer',
                                     padding: '1rem 2rem',
                                     filter: 'opacity(0.85)'
                                 }}
-                                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.filter = 'opacity(1)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'opacity(0.85)'; }}
+                                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.filter = 'opacity(1)'; }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'opacity(0.85)'; }}
                                 >
                                     <i className={company.icon} style={{ fontSize: '1.8rem' }}></i>
                                     <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>{company.name}</span>
@@ -504,7 +504,7 @@ const Home = () => {
                 <div className="container" style={{ position: 'relative', marginTop: '1.5rem', paddingBottom: '0.5rem' }}>
                     {/* Horizontal Dashed Line */}
                     <div className="desktop-only" style={{ position: 'absolute', top: '40px', left: '15%', right: '15%', height: '2px', borderTop: '2px dashed rgba(255,255,255,0.1)', zIndex: 0 }}></div>
-                    
+
                     <div className="how-steps-horizontal" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', position: 'relative', zIndex: 1 }}>
                         <div className="step-card" style={{ flex: '1 1 250px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', backgroundColor: '#0B1120' }}>
