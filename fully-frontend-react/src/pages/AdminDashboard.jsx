@@ -70,9 +70,12 @@ const AdminDashboard = () => {
     const { showToast } = useToast();
 
     const handleLogout = () => {
+        if (window.innerWidth <= 768) {
+            const confirmLogout = window.confirm("Are you sure you want to log out?");
+            if (!confirmLogout) return;
+        }
         localStorage.clear();
-        navigate('/');
-        window.location.reload();
+        navigate('/login');
     };
 
     // CSV Export Helper
@@ -3202,7 +3205,7 @@ const AdminDashboard = () => {
                 </nav>
 
                 <div className="sidebar-footer" style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <button className="btn w-100" style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '12px', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <button className="btn w-100" style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '12px', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '10px' }} onClick={() => navigate('/')}>
                         <i className="fas fa-external-link-alt"></i> Portal
                     </button>
                     <button className="btn w-100 mt-2" style={{ background: 'rgba(239, 68, 68, 0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#f87171', borderRadius: '12px', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '10px' }} onClick={handleLogout}>
