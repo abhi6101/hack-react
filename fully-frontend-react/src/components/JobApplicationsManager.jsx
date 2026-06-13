@@ -31,9 +31,29 @@ const JobApplicationsManager = ({ jobs, applications, onStatusUpdate, onLoadAppl
 
     return (
         <div className="job-applications-manager">
-            <div className="applications-header">
-                <h3><i className="fas fa-briefcase"></i> Job Applications Management</h3>
-                <div className="job-filter">
+            <div className="applications-header" style={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h3 style={{ fontSize: '1.2rem', whiteSpace: 'nowrap', margin: 0 }}><i className="fas fa-briefcase"></i> Job Applications Management</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => {
+                            const csvContent = "data:text/csv;charset=utf-8," 
+                                + ["Student Name,Email,Job Applied,Status"].join(",") + "\n" 
+                                + filteredApps.map(e => `${e.studentName || 'N/A'},${e.studentEmail || 'N/A'},${e.jobTitle || 'N/A'},${e.status}`).join("\n");
+                            const encodedUri = encodeURI(csvContent);
+                            const link = document.createElement("a");
+                            link.setAttribute("href", encodedUri);
+                            link.setAttribute("download", "job_applications.csv");
+                            document.body.appendChild(link);
+                            link.click();
+                        }}
+                        style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', height: '36px', flexShrink: 0 }}
+                    >
+                        <i className="fas fa-file-csv"></i> Export
+                    </button>
+                </div>
+            </div>
+            <div className="job-filter" style={{ marginTop: '1rem' }}>
                     <label><i className="fas fa-filter"></i> Filter by Job:</label>
                     <select
                         value={selectedJobId}
@@ -51,7 +71,6 @@ const JobApplicationsManager = ({ jobs, applications, onStatusUpdate, onLoadAppl
                         })}
                     </select>
                 </div>
-            </div>
 
             {filteredApps.length === 0 ? (
                 <div className="no-applications">

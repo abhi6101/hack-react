@@ -53,7 +53,33 @@ const LeaderboardAdmin = () => {
 
     useEffect(() => {
         fetchLeaderboard();
-    }, []);
+        
+        const handleRefresh = () => fetchLeaderboard();
+        window.addEventListener('refreshLeaderboard', handleRefresh);
+        
+        const handleExport = () => {
+            if (!leaderboard || leaderboard.length === 0) return;
+            const headers = ['Rank', 'Name', 'Username', 'Points'];
+            const csvContent = [
+                headers.join(','),
+                ...leaderboard.map((user, idx) => `"${idx + 1}","${user.name || ''}","${user.username || ''}","${user.contributionPoints || 0}"`)
+            ].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'leaderboard.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+        window.addEventListener('exportLeaderboard', handleExport);
+        
+        return () => {
+            window.removeEventListener('refreshLeaderboard', handleRefresh);
+            window.removeEventListener('exportLeaderboard', handleExport);
+        };
+    }, [leaderboard]);
 
     const handleResetPoints = async (userId, username) => {
         if (!window.confirm(`Are you sure you want to reset points for ${username} to 0?`)) return;
@@ -81,21 +107,13 @@ const LeaderboardAdmin = () => {
     };
 
     const actionRow = (
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem', width: '100%', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem', width: '100%', flexWrap: 'nowrap', justifyContent: 'flex-start' }}>
             <input 
                 type="text" 
                 className="form-control desktop-only" 
                 placeholder="Search contributors..." 
-                style={{ flex: '1 1 300px', maxWidth: '400px' }} 
+                style={{ width: '100%', maxWidth: '400px' }} 
             />
-            <div style={{ display: 'flex', gap: '10px', flex: '1 1 100%', minWidth: '200px' }}>
-                <button className="btn btn-primary" style={{ flex: 1, height: '42px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                    <i className="fas fa-file-export"></i> Export
-                </button>
-                <button className="btn btn-secondary" onClick={fetchLeaderboard} style={{ flex: 1, height: '42px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                    <i className="fas fa-sync-alt"></i> Refresh
-                </button>
-            </div>
         </div>
     );
 
@@ -158,7 +176,7 @@ const LeaderboardAdmin = () => {
                                         </div>
                                     </td>
                                     <td style={{ padding: '1rem' }}>
-                                        <span style={{ color: '#00d4ff', fontWeight: 'bold' }}>{user.contributionPoints} pts</span>
+                                        <span style={{ color: '#00d4ff', fontWeight: 'bold' }}>{user.contributionPoints}</span>
                                     </td>
                                     <td style={{ padding: '1rem' }}>
                                         <button 

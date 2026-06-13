@@ -219,6 +219,7 @@ const AdminDashboard = () => {
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
     const [isJobFormOpen, setIsJobFormOpen] = useState(false);
+    const [isDeptFormOpen, setIsDeptFormOpen] = useState(false);
     const [isUserFormOpen, setIsUserFormOpen] = useState(false);
     const [isGalleryFormOpen, setIsGalleryFormOpen] = useState(false);
     const [isInterviewFormOpen, setIsInterviewFormOpen] = useState(false);
@@ -1471,26 +1472,7 @@ const AdminDashboard = () => {
                 }
             `}</style>
             
-            <div className="logs-top-actions">
-                <button className="log-action-btn" onClick={() => downloadCSV(paperViewLogs, 'paper_view_logs.csv')}>
-                    <i className="fas fa-file-csv"></i> Export CSV
-                </button>
-                <button className="log-action-btn" onClick={loadPaperViewLogs}>
-                    <i className="fas fa-sync-alt"></i> Refresh
-                </button>
-            </div>
-            
-            <div className="search-box-modern search-bar-full">
-                <i className="fas fa-search" style={{ position: 'absolute', left: '12px' }}></i>
-                <input
-                    type="text"
-                    placeholder="Search logs by student, username, or paper title..."
-                    value={paperLogSearch}
-                    onChange={(e) => setPaperLogSearch(e.target.value)}
-                    style={{ width: '100%', boxSizing: 'border-box' }}
-                />
-            </div>
-
+            {/* Logs controls moved to global header */}
             {loadingPaperLogs ? (
                 <TableSkeleton cols={5} rows={2} />
             ) : paperViewLogs.length === 0 ? (
@@ -1517,8 +1499,9 @@ const AdminDashboard = () => {
                                         {(log.studentName || 'U')[0].toUpperCase()}
                                     </div>
                                     <div className="log-student-info">
-                                        <span className="log-student-name">{log.studentName || 'Unknown Student'}</span>
-                                        <span className="log-username">@{log.username}</span>
+                                        <span className="log-student-name">
+                                            {log.studentName || 'Unknown Student'} {log.computerCode ? `(${log.computerCode})` : ''}
+                                        </span>
                                     </div>
                                 </div>
                                 <span className={`badge-pill ${log.action === 'DOWNLOAD' ? 'downloaded' : 'viewed'}`}>
@@ -1591,66 +1574,17 @@ const AdminDashboard = () => {
 
     const renderStudentMonitor = () => (
         <div className="users-management-page animate-in" style={{ paddingBottom: '80px' }}>
-            {/* Compact Inline Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', gap: '0.75rem' }}>
-                <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap' }}>
-                    Student Monitor
-                </h2>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                    {/* Export CSV slim button */}
-                    <button
-                        onClick={() => downloadCSV(studentActivity, 'student_activity.csv')}
-                        title="Export CSV"
-                        style={{
-                            height: '34px',
-                            padding: '0 10px',
-                            background: 'transparent',
-                            border: '1px solid rgba(0, 204, 255, 0.35)',
-                            color: '#00ccff',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            fontSize: '0.75rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            whiteSpace: 'nowrap'
-                        }}
-                    >
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="7 10 12 15 17 10"/>
-                            <line x1="12" y1="15" x2="12" y2="3"/>
-                        </svg>
-                        CSV
-                    </button>
-                    {/* Refresh icon button */}
-                    <button
-                        onClick={fetchStudentActivity}
-                        title="Refresh"
-                        style={{
-                            width: '34px',
-                            height: '34px',
-                            background: 'rgba(255,255,255,0.04)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            color: '#aaa',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="23 4 23 10 17 10"/>
-                            <polyline points="1 20 1 14 7 14"/>
-                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
 
-            {/* Student Cards */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem' }}>
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search students..."
+                    style={{ flex: 1, height: '42px', borderRadius: '10px' }}
+                    value={userSearch}
+                    onChange={(e) => setUserSearch(e.target.value)}
+                />
+            </div>            {/* Student Cards */}
             {loadingActivity ? (
                 <TableSkeleton cols={2} rows={4} />
             ) : studentActivity.length === 0 ? (
@@ -2142,22 +2076,6 @@ const AdminDashboard = () => {
                         </section>
 
                         <section className="card surface-glow">
-                            <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.5rem', width: '100%', boxSizing: 'border-box' }}>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
-                                    <h3 style={{ margin: 0, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <i className="fas fa-briefcase"></i> Posted Jobs
-                                    </h3>
-                                </span>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                                    <button
-                                        onClick={loadJobs}
-                                        title="Refresh List"
-                                        style={{ color: 'var(--text-primary)', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
-                                    >
-                                        <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
-                                    </button>
-                                </span>
-                            </div>
                             {loadingJobs && <TableSkeleton cols={5} rows={2} />}
                             {!loadingJobs && (
                                 <>
@@ -2468,16 +2386,16 @@ const AdminDashboard = () => {
 
                         <section className="card surface-glow" style={{ border: '1px solid rgba(255,255,255,0.05)' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', alignItems: 'stretch', padding: '1.5rem 2rem', marginBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'nowrap' }}>
                                     <h3 style={{ margin: 0, whiteSpace: 'nowrap' }}>Registered Workforce</h3>
                                     {role === 'DEPT_ADMIN' && (
-                                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
+                                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0, whiteSpace: 'nowrap' }}>
                                             Displaying students from {localStorage.getItem('adminBranch')}
                                         </p>
                                     )}
                                 </div>
-                                <div style={{ display: 'flex', gap: '1rem', width: '100%', alignItems: 'center' }}>
-                                    <div style={{ flex: '1 1 50%', display: 'flex' }}>
+                                <div style={{ display: 'flex', gap: '1rem', width: '100%', alignItems: 'center', flexWrap: 'nowrap' }}>
+                                    <div style={{ flex: 1, display: 'flex' }}>
                                         <div className="search-box-modern" style={{ width: '100%' }}>
                                             <i className="fas fa-search" style={{ position: 'absolute', left: '12px' }}></i>
                                             <input
@@ -2489,7 +2407,7 @@ const AdminDashboard = () => {
                                             />
                                         </div>
                                     </div>
-                                    <div style={{ flex: '1 1 50%', display: 'flex' }}>
+                                    <div style={{ flex: 1, display: 'flex' }}>
                                         <button className="btn-icon" title="Refresh List" onClick={loadUsers} style={{ width: '100%', height: '38px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                             <i className="fas fa-sync-alt"></i>
                                             <span style={{ fontSize: '0.85rem', fontWeight: '600' }}>Refresh</span>
@@ -2928,9 +2846,7 @@ const AdminDashboard = () => {
                         )}
 
                         <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-images"></i> Gallery Management</h3>
-                            </div>
+                            <div className="table-responsive surface-glow-premium" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', overflow: 'hidden' }}>
                             {loadingGallery ? (
                                 <TableSkeleton cols={5} rows={2} />
                             ) : galleryItems.length > 0 ? (
@@ -2991,10 +2907,11 @@ const AdminDashboard = () => {
                             ) : (
                                 <p style={{ padding: '2rem', textAlign: 'center' }}>No gallery items found.</p>
                             )}
+                            </div>
                         </section>
                     </div>
                 );
-            case 'companies':
+            case 'companies': {
                 const companyAdmins = users.filter(u => u.role === 'COMPANY_ADMIN');
 
                 const toggleCompanyStatus = async (userId) => {
@@ -3019,9 +2936,6 @@ const AdminDashboard = () => {
 
                 return (
                     <section className="card surface-glow">
-                        <div className="card-header">
-                            <h3><i className="fas fa-building"></i> Company Management</h3>
-                        </div>
                         {loadingUsers ? (
                             <TableSkeleton cols={4} rows={2} />
                         ) : companyAdmins.length > 0 ? (
@@ -3084,70 +2998,45 @@ const AdminDashboard = () => {
                         )}
                     </section>
                 );
+            }
             case 'menu':
                 return <AdminMobileMenu menuGroups={menuGroups} menuItems={menuItems} role={role} setActiveTab={setActiveTab} />;
             case 'departments':
                 return (
                     <section className="card surface-glow">
-                        <div className="card-header">
-                            <h3><i className="fas fa-university"></i> Manage Departments</h3>
-                        </div>
-                        <div className="form-grid" style={{ marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                            <div style={{ display: 'flex', gap: '1rem', mb: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
-                                <button type="button" onClick={() => setDeptMode('single')} className={`btn ${deptMode === 'single' ? 'btn-primary' : 'btn-secondary'}`}>Single Dept</button>
-                                <button type="button" onClick={() => setDeptMode('bulk')} className={`btn ${deptMode === 'bulk' ? 'btn-primary' : 'btn-secondary'}`}>Bulk Program (e.g. B.Tech)</button>
-                            </div>
-
-                            {deptMode === 'single' ? (
-                                <form onSubmit={handleDeptSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%', marginTop: '1rem' }}>
+                        {isDeptFormOpen && (
+                            <div className="form-grid" style={{ marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
+                                <form onSubmit={handleDeptSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%' }}>
                                     <div className="form-group" style={{ margin: 0 }}>
                                         <label>Dept Name</label>
-                                        <input type="text" className="form-control" placeholder="e.g. Master of Computer Applications" required value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} />
+                                        <input type="text" className="form-control" placeholder="e.g. Master of Computer Applications" required value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} style={{ padding: '0.4rem', fontSize: '0.85rem', height: '34px' }} />
                                     </div>
                                     <div className="form-group" style={{ margin: 0 }}>
                                         <label>Dept Code (Unique)</label>
-                                        <input type="text" className="form-control" placeholder="e.g. MCA" required value={deptForm.code} onChange={e => setDeptForm({ ...deptForm, code: e.target.value.toUpperCase() })} />
+                                        <input type="text" className="form-control" placeholder="e.g. MCA" required value={deptForm.code} onChange={e => setDeptForm({ ...deptForm, code: e.target.value.toUpperCase() })} style={{ padding: '0.4rem', fontSize: '0.85rem', height: '34px' }} />
                                     </div>
                                     <div className="form-group" style={{ margin: 0 }}>
                                         <label>HOD Name</label>
-                                        <input type="text" className="form-control" placeholder="HOD Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} />
+                                        <input type="text" className="form-control" placeholder="HOD Name" value={deptForm.hodName} onChange={e => setDeptForm({ ...deptForm, hodName: e.target.value })} style={{ padding: '0.4rem', fontSize: '0.85rem', height: '34px' }} />
                                     </div>
                                     <div className="form-group" style={{ margin: 0 }}>
                                         <label>Semesters</label>
-                                        <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} />
+                                        <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={deptForm.maxSemesters || 8} onChange={e => setDeptForm({ ...deptForm, maxSemesters: parseInt(e.target.value) })} style={{ padding: '0.4rem', fontSize: '0.85rem', height: '34px' }} />
                                     </div>
-                                    <button type="submit" className="btn btn-primary" style={{ height: '42px' }}>
-                                        <i className={`fas fa-${editingDept ? 'save' : 'plus'}`}></i> {editingDept ? 'Update Dept' : 'Add Dept'}
-                                    </button>
-                                    {editingDept && (
-                                        <button type="button" className="btn btn-secondary" style={{ height: '42px' }} onClick={() => { setEditingDept(null); setDeptForm({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 }); }}>
-                                            <i className="fas fa-times"></i> Cancel
+                                    <div style={{ display: 'flex', gap: '10px', gridColumn: '1 / -1' }}>
+                                        <button type="submit" className="btn btn-primary" style={{ flex: 1, height: '38px', borderRadius: '10px' }}>
+                                            {editingDept ? 'Update Dept' : 'Add Dept'}
                                         </button>
-                                    )}
+                                        {editingDept && (
+                                            <button type="button" className="btn btn-secondary" style={{ flex: 1, height: '38px', borderRadius: '10px' }} onClick={() => { setEditingDept(null); setDeptForm({ name: '', code: '', hodName: '', contactEmail: '', maxSemesters: 8 }); }}>
+                                                Cancel
+                                            </button>
+                                        )}
+                                    </div>
                                 </form>
-                            ) : (
-                                <form onSubmit={handleBulkSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end', width: '100%', marginTop: '1rem' }}>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Category</label>
-                                        <input type="text" className="form-control" placeholder="e.g. Engineering" required value={bulkForm.category} onChange={e => setBulkForm({ ...bulkForm, category: e.target.value })} />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Degree</label>
-                                        <input type="text" className="form-control" placeholder="e.g. B.Tech" required value={bulkForm.degree} onChange={e => setBulkForm({ ...bulkForm, degree: e.target.value })} />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <label>Duration (Semesters)</label>
-                                        <input type="number" className="form-control" placeholder="8" min="1" max="14" required value={bulkForm.maxSemesters} onChange={e => setBulkForm({ ...bulkForm, maxSemesters: parseInt(e.target.value) })} />
-                                    </div>
-                                    <div className="form-group full-width" style={{ margin: 0, gridColumn: '1 / -1' }}>
-                                        <label>Branches (Comma Separated)</label>
-                                        <textarea className="form-control" rows="2" placeholder="e.g. CSE Core, AIML, Civil, Electrical, Mechanical, Cyber Security" required value={bulkForm.branches} onChange={e => setBulkForm({ ...bulkForm, branches: e.target.value })}></textarea>
-                                        <small style={{ color: 'rgba(255,255,255,0.5)' }}>Used to generate: "B.Tech in CSE Core" (Code: BTECH_CSE_CORE)</small>
-                                    </div>
-                                    <button type="submit" className="btn btn-success" style={{ height: '42px', gridColumn: '1 / -1' }}><i className="fas fa-layer-group"></i> Create Program & Branches</button>
-                                </form>
-                            )}
-                        </div>
+                            </div>
+                        )}
+
 
                         {loadingDepts ? <TableSkeleton cols={4} rows={2} /> : (
                             <div className="table-responsive">
@@ -3294,12 +3183,29 @@ const AdminDashboard = () => {
             </aside>
 
             <main className="admin-main">
-                {activeTab !== 'students' && (
                 <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: 'nowrap', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="header-left" style={{ minWidth: 0, paddingRight: '10px' }}>
                         <h1 style={{ fontSize: activeTab === 'applications' ? 'clamp(1rem, 4vw, 1.5rem)' : (activeTab === 'users' ? '1.35rem' : '1.05rem'), margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: activeTab === 'applications' ? '800' : '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
                     <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center', whiteSpace: activeTab === 'profile-details' ? 'nowrap' : 'normal', flexShrink: 0 }}>
+                        {activeTab === 'students' && (
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <button
+                                    onClick={() => downloadCSV(studentActivity, 'student_activity.csv')}
+                                    title="Export CSV"
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.3s' }}
+                                >
+                                    <i className="fas fa-file-csv"></i> Export CSV
+                                </button>
+                                <button
+                                    onClick={fetchStudentActivity}
+                                    title="Refresh Data"
+                                    style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', flexShrink: 0 }}
+                                >
+                                    <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
+                                </button>
+                            </div>
+                        )}
                         {activeTab === 'profile-details' && (
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                 <button 
@@ -3380,7 +3286,15 @@ const AdminDashboard = () => {
                             </span>
                         )}
                         {activeTab === 'jobs' && (
-                            <span className="mobile-only">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <button
+                                    onClick={loadJobs}
+                                    title="Refresh"
+                                    style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', flexShrink: 0 }}
+                                >
+                                    <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
+                                </button>
+                                <span className="mobile-only">
                                 <button
                                     onClick={() => { setIsJobFormOpen(!isJobFormOpen); if (isJobFormOpen) setEditingJob(null); }}
                                     style={{
@@ -3409,6 +3323,7 @@ const AdminDashboard = () => {
                                     }
                                 </button>
                             </span>
+                            </div>
                         )}
                         {activeTab === 'users' && !isCompanyAdmin && (
                             <button
@@ -3491,8 +3406,8 @@ const AdminDashboard = () => {
                             </button>
                         )}
                         {activeTab === 'interview-applications' && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexGrow: 1, minWidth: '200px' }}>
-                                <div className="search-box-modern" style={{ width: '100%', maxWidth: '350px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
+                                <div className="search-box-modern" style={{ width: '200px' }}>
                                     <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}></i>
                                     <input
                                         type="text"
@@ -3505,7 +3420,7 @@ const AdminDashboard = () => {
                             </div>
                         )}
                         {activeTab === 'applications' && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'flex-end' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'flex-end', flexWrap: 'nowrap' }}>
                                 <div className="search-box-modern desktop-only" style={{ width: '250px' }}>
                                     <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}></i>
                                     <input
@@ -3516,12 +3431,33 @@ const AdminDashboard = () => {
                                         style={{ width: '100%', height: '36px', paddingLeft: '2.4rem', borderRadius: '8px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
                                     />
                                 </div>
+                            </div>
+                        )}
+                        {activeTab === 'paper-view-logs' && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'flex-end', flexWrap: 'nowrap' }}>
+                                <div className="search-box-modern desktop-only" style={{ width: '250px' }}>
+                                    <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Search logs..."
+                                        value={paperLogSearch}
+                                        onChange={(e) => setPaperLogSearch(e.target.value)}
+                                        style={{ width: '100%', height: '36px', paddingLeft: '2.4rem', borderRadius: '8px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                                    />
+                                </div>
                                 <button
-                                    className="btn btn-secondary"
-                                    onClick={() => downloadCSV(applications, 'job_applications.csv')}
-                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', height: '36px', flexShrink: 0 }}
+                                    onClick={() => downloadCSV(paperViewLogs, 'paper_view_logs.csv')}
+                                    title="Export CSV"
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.3s', height: '36px' }}
                                 >
                                     <i className="fas fa-file-csv"></i> Export
+                                </button>
+                                <button
+                                    onClick={loadPaperViewLogs}
+                                    title="Refresh Data"
+                                    style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', flexShrink: 0 }}
+                                >
+                                    <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
                                 </button>
                             </div>
                         )}
@@ -3567,9 +3503,30 @@ const AdminDashboard = () => {
                                 </button>
                             </>
                         )}
+                        {activeTab === 'departments' && (
+                            <button
+                                onClick={() => { setIsDeptFormOpen(!isDeptFormOpen); if (isDeptFormOpen) setEditingDept(null); }}
+                                style={{
+                                    padding: '6px 12px',
+                                    borderRadius: '8px',
+                                    border: isDeptFormOpen ? '1px solid rgba(239,68,68,0.4)' : '1px solid rgba(0, 204, 255, 0.35)',
+                                    background: isDeptFormOpen ? 'rgba(239,68,68,0.1)' : 'rgba(0, 204, 255, 0.1)',
+                                    color: isDeptFormOpen ? '#f87171' : '#00ccff',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    fontWeight: '600',
+                                    fontSize: '0.8rem',
+                                    transition: 'all 0.2s ease',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                {isDeptFormOpen ? 'Close Form' : 'Add Department'}
+                            </button>
+                        )}
                     </div>
                 </header>
-                )}
 
                 <div className="content-container">
                     {renderContent()}

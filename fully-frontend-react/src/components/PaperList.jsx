@@ -136,7 +136,7 @@ const PaperList = () => {
                         <button
                             className="btn-premium"
                             onClick={async () => {
-                                if (!window.confirm(`Are you sure you want to delete ALL ${filteredPapers.length} currently shown papers? This cannot be undone.`)) return;
+                                if (!window.confirm("Are you sure you want to delete all papers?")) return;
 
                                 setLoading(true);
                                 let successCount = 0;
