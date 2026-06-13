@@ -1357,101 +1357,215 @@ const AdminDashboard = () => {
     );
 
     const renderPaperViewLogs = () => (
-        <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-                <div>
-                    <h2>Paper View Logs</h2>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.6rem' }}>
-                    <div className="search-box-modern">
-                        <i className="fas fa-search"></i>
-                        <input
-                            type="text"
-                            placeholder="Search by student or paper..."
-                            value={paperLogSearch}
-                            onChange={(e) => setPaperLogSearch(e.target.value)}
-                        />
-                    </div>
-                    <div style={{ display: 'flex', gap: '0.6rem' }}>
-                        <button className="btn-secondary" onClick={() => downloadCSV(paperViewLogs, 'paper_view_logs.csv')}>
-                            <i className="fas fa-file-csv"></i> Export CSV
-                        </button>
-                        <button className="btn-secondary" onClick={loadPaperViewLogs}>
-                            <i className="fas fa-sync-alt"></i> Refresh
-                        </button>
-                    </div>
-                </div>
+        <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
+            <style>{`
+                .logs-top-actions {
+                    display: flex;
+                    width: 100%;
+                    gap: 10px;
+                    margin-bottom: 1rem;
+                    justify-content: flex-end;
+                }
+                .log-action-btn {
+                    width: calc(50% - 5px);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 10px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    border: 1px solid rgba(255,255,255,0.1);
+                    background: rgba(255,255,255,0.05);
+                    color: white;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .log-action-btn:hover {
+                    background: rgba(255,255,255,0.1);
+                }
+                .search-bar-full {
+                    width: 100%;
+                    margin-bottom: 1.5rem;
+                }
+                .log-cards-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 1.25rem;
+                }
+                .log-card-premium {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    border-radius: 12px;
+                    padding: 1.25rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    transition: transform 0.2s;
+                }
+                .log-card-premium:hover {
+                    transform: translateY(-2px);
+                    border-color: rgba(0, 212, 255, 0.2);
+                }
+                .log-identity-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+                .log-avatar {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    background: var(--primary);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 1.1rem;
+                    flex-shrink: 0;
+                }
+                .log-student-info {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: baseline;
+                    gap: 0.5rem;
+                }
+                .log-student-name {
+                    font-weight: 600;
+                    color: #fff;
+                    font-size: 1rem;
+                }
+                .log-username {
+                    color: var(--text-secondary);
+                    font-size: 0.85rem;
+                }
+                .log-paper-details {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.25rem;
+                }
+                .log-paper-title {
+                    font-weight: 700;
+                    color: var(--primary);
+                    font-size: 1.05rem;
+                }
+                .log-subline {
+                    color: var(--text-secondary);
+                    font-size: 0.8rem;
+                }
+                .log-card-footer {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    margin-top: auto;
+                }
+                .log-timestamp {
+                    color: rgba(255,255,255,0.4);
+                    font-size: 0.8rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+                .badge-pill {
+                    padding: 4px 10px;
+                    border-radius: 50px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+                .badge-pill.viewed {
+                    background: rgba(59, 130, 246, 0.15);
+                    color: #60a5fa;
+                }
+                .badge-pill.downloaded {
+                    background: rgba(34, 197, 94, 0.15);
+                    color: #4ade80;
+                }
+                @media (min-width: 741px) {
+                    .log-action-btn {
+                        width: 140px;
+                    }
+                }
+            `}</style>
+            
+            <div className="logs-top-actions">
+                <button className="log-action-btn" onClick={() => downloadCSV(paperViewLogs, 'paper_view_logs.csv')}>
+                    <i className="fas fa-file-csv"></i> Export CSV
+                </button>
+                <button className="log-action-btn" onClick={loadPaperViewLogs}>
+                    <i className="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+            
+            <div className="search-box-modern search-bar-full">
+                <i className="fas fa-search" style={{ position: 'absolute', left: '12px' }}></i>
+                <input
+                    type="text"
+                    placeholder="Search logs by student, username, or paper title..."
+                    value={paperLogSearch}
+                    onChange={(e) => setPaperLogSearch(e.target.value)}
+                    style={{ width: '100%', boxSizing: 'border-box' }}
+                />
             </div>
 
             {loadingPaperLogs ? (
                 <TableSkeleton cols={5} rows={2} />
+            ) : paperViewLogs.length === 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '4rem 2rem' }}>
+                    <i className="fas fa-history" style={{ fontSize: '4.5rem', color: 'rgba(0,212,255,0.15)', marginBottom: '1.5rem' }}></i>
+                    <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', fontWeight: '500', margin: 0 }}>No view logs recorded yet.</p>
+                </div>
             ) : (
-                <div className="table-container">
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>Student Details</th>
-                                <th>Computer Code</th>
-                                <th>Paper Title</th>
-                                <th>Subject / Branch / Sem</th>
-                                <th>Action</th>
-                                <th>Activity Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {paperViewLogs.length === 0 ? (
-                                <tr><td colSpan="6" style={{ textAlign: 'center' }}>No view logs recorded yet.</td></tr>
-                            ) : (
-                                paperViewLogs.filter(log => {
-                                    const searchLower = paperLogSearch.toLowerCase();
-                                    return (
-                                        (log.studentName && log.studentName.toLowerCase().includes(searchLower)) ||
-                                        (log.username && log.username.toLowerCase().includes(searchLower)) ||
-                                        (log.computerCode && log.computerCode.toLowerCase().includes(searchLower)) ||
-                                        (log.paperTitle && log.paperTitle.toLowerCase().includes(searchLower)) ||
-                                        (log.subject && log.subject.toLowerCase().includes(searchLower))
-                                    );
-                                }).map(log => (
-                                    <tr key={log.id} style={{ transition: 'all 0.2s' }}>
-                                        <td>
-                                            <div style={{ fontWeight: '600', color: '#fff' }}>{log.studentName || 'Unknown Student'}</div>
-                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>@{log.username}</div>
-                                        </td>
-                                        <td>
-                                            <span className="badge badge-secondary" style={{ fontFamily: 'monospace', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                                {log.computerCode || 'N/A'}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div style={{ fontWeight: '500', color: 'var(--primary)' }}>{log.paperTitle}</div>
-                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>ID: #{log.paperId}</div>
-                                        </td>
-                                        <td>
-                                            <div style={{ textTransform: 'capitalize' }}>{log.subject}</div>
-                                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                                                {log.branch} • Sem {log.semester} ({log.year})
-                                            </div>
-                                        </td>
-                                        <td>
-                                            {log.action === 'DOWNLOAD' ? (
-                                                <span style={{ color: '#22c55e', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '500' }}>
-                                                    <i className="fas fa-download"></i> Downloaded
-                                                </span>
-                                            ) : (
-                                                <span style={{ color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '500' }}>
-                                                    <i className="far fa-eye"></i> Viewed
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                            <i className="far fa-clock" style={{ marginRight: '6px' }}></i>
-                                            {log.viewedAt ? new Date(log.viewedAt).toLocaleString() : 'N/A'}
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                <div className="log-cards-grid">
+                    {paperViewLogs.filter(log => {
+                        const searchLower = paperLogSearch.toLowerCase();
+                        return (
+                            (log.studentName && log.studentName.toLowerCase().includes(searchLower)) ||
+                            (log.username && log.username.toLowerCase().includes(searchLower)) ||
+                            (log.computerCode && log.computerCode.toLowerCase().includes(searchLower)) ||
+                            (log.paperTitle && log.paperTitle.toLowerCase().includes(searchLower)) ||
+                            (log.subject && log.subject.toLowerCase().includes(searchLower))
+                        );
+                    }).map(log => (
+                        <div key={log.id} className="log-card-premium">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div className="log-identity-row">
+                                    <div className="log-avatar">
+                                        {(log.studentName || 'U')[0].toUpperCase()}
+                                    </div>
+                                    <div className="log-student-info">
+                                        <span className="log-student-name">{log.studentName || 'Unknown Student'}</span>
+                                        <span className="log-username">@{log.username}</span>
+                                    </div>
+                                </div>
+                                <span className={`badge-pill ${log.action === 'DOWNLOAD' ? 'downloaded' : 'viewed'}`}>
+                                    <i className={log.action === 'DOWNLOAD' ? 'fas fa-download' : 'far fa-eye'}></i>
+                                    {log.action === 'DOWNLOAD' ? 'Downloaded' : 'Viewed'}
+                                </span>
+                            </div>
+                            
+                            <div className="log-paper-details">
+                                <div className="log-paper-title">{log.paperTitle}</div>
+                                <div className="log-subline">
+                                    <span style={{ textTransform: 'capitalize' }}>{log.subject}</span> • {log.branch} • Sem {log.semester}
+                                </div>
+                            </div>
+                            
+                            <div className="log-card-footer">
+                                <div className="log-timestamp">
+                                    <i className="far fa-clock"></i> {log.viewedAt ? new Date(log.viewedAt).toLocaleString() : 'N/A'}
+                                </div>
+                                {log.computerCode && (
+                                    <div style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)' }}>
+                                        #{log.computerCode}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
