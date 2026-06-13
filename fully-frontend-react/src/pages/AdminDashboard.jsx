@@ -2387,8 +2387,8 @@ const AdminDashboard = () => {
                         )}
 
                         <section className="card surface-glow" style={{ border: '1px solid rgba(255,255,255,0.05)' }}>
-                            <div className="card-header" style={{ padding: '1.5rem 2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', alignItems: 'stretch' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', alignItems: 'stretch', padding: '1.5rem 2rem', marginBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                                     <h3 style={{ margin: 0, whiteSpace: 'nowrap' }}>Registered Workforce</h3>
                                     {role === 'DEPT_ADMIN' && (
                                         <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
