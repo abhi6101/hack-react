@@ -555,6 +555,27 @@ const Notes = ({ isAdminView }) => {
         }
     };
 
+    // Listen to global open upload modal event for Admin Dashboard
+    useEffect(() => {
+        const handleOpenUpload = () => {
+            setShowUploadModal(true);
+        };
+        window.addEventListener('open-notes-upload', handleOpenUpload);
+        return () => window.removeEventListener('open-notes-upload', handleOpenUpload);
+    }, []);
+
+    // Lock body scroll when upload modal is open
+    useEffect(() => {
+        if (showUploadModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [showUploadModal]);
+
     const getVisibilityLabel = (vis) => {
         if (vis?.toUpperCase() === 'ALL') return 'Public';
         if (vis?.toUpperCase() === 'BRANCH') return 'Branch';
@@ -899,7 +920,6 @@ const Notes = ({ isAdminView }) => {
                         ))}
                     </div>
                 )}
-
             {/* Custom Modal: UPLOAD NOTES DIRECTORY FOLDER */}
             <AnimatePresence>
                 {showUploadModal && (
@@ -909,13 +929,14 @@ const Notes = ({ isAdminView }) => {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        background: 'rgba(5, 5, 8, 0.85)',
+                        background: 'rgba(5, 5, 8, 0.95)',
                         backdropFilter: 'blur(10px)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        zIndex: 2000,
-                        padding: '1rem'
+                        zIndex: 99999,
+                        padding: '1rem',
+                        overflowY: 'auto'
                     }}>
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
@@ -923,13 +944,19 @@ const Notes = ({ isAdminView }) => {
                             exit={{ scale: 0.9, opacity: 0 }}
                             className="login-card surface-glow"
                             style={{
-                                maxWidth: '550px',
+                                maxWidth: '500px',
                                 width: '100%',
-                                padding: '2.5rem',
-                                background: 'rgba(22, 22, 34, 0.85)',
-                                border: '1px solid rgba(0, 212, 255, 0.15)',
+                                padding: '1.8rem',
+                                background: 'rgba(22, 22, 34, 0.98)',
+                                border: '1px solid rgba(0, 212, 255, 0.25)',
                                 borderRadius: '24px',
-                                position: 'relative'
+                                position: 'relative',
+                                maxHeight: '92vh',
+                                overflowY: 'auto',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '1rem',
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.6)'
                             }}
                         >
                             <button
@@ -948,21 +975,21 @@ const Notes = ({ isAdminView }) => {
                                 <i className="fas fa-times"></i>
                             </button>
 
-                            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+                            <h2 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.6rem)', marginBottom: '0.5rem', textAlign: 'center', fontWeight: '800' }}>
                                 Upload Study <span>Directory</span>
                             </h2>
 
-                            <form onSubmit={handleUploadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                            <form onSubmit={handleUploadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
 
 
                                 <div style={{ display: 'flex', gap: '1rem' }}>
                                     <div className="input-group" style={{ flex: 1 }}>
-                                        <label>Semester Target</label>
+                                        <label style={{ fontSize: '0.8rem', marginBottom: '0.3rem', display: 'block' }}>Semester Target</label>
                                         <select
                                             value={uploadSemester}
                                             onChange={(e) => setUploadSemester(e.target.value)}
                                             className="papers-search-input"
-                                            style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.9rem', color: '#fff' }}
+                                            style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem', color: '#fff', fontSize: '0.85rem', width: '100%' }}
                                         >
                                             <option value="" style={{ color: '#000' }}>All Semesters</option>
                                             {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
@@ -972,12 +999,12 @@ const Notes = ({ isAdminView }) => {
                                     </div>
 
                                     <div className="input-group" style={{ flex: 1 }}>
-                                        <label>Branch Target</label>
+                                        <label style={{ fontSize: '0.8rem', marginBottom: '0.3rem', display: 'block' }}>Branch Target</label>
                                         <select
                                             value={uploadBranch}
                                             onChange={(e) => setUploadBranch(e.target.value)}
                                             className="papers-search-input"
-                                            style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.9rem', color: '#fff' }}
+                                            style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem', color: '#fff', fontSize: '0.85rem', width: '100%' }}
                                         >
                                             <option value="" style={{ color: '#000' }}>All Branches</option>
                                             {deptList.map(dept => (
@@ -989,12 +1016,12 @@ const Notes = ({ isAdminView }) => {
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Access Visibility Permission</label>
+                                    <label style={{ fontSize: '0.8rem', marginBottom: '0.3rem', display: 'block' }}>Access Visibility Permission</label>
                                     <select
                                         value={uploadVisibility}
                                         onChange={(e) => setUploadVisibility(e.target.value)}
                                         className="papers-search-input"
-                                        style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.9rem', color: '#fff' }}
+                                        style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem', color: '#fff', fontSize: '0.85rem', width: '100%' }}
                                     >
                                         <option value="ALL" style={{ color: '#000' }}>Show to All Students (Visible to everyone)</option>
                                         <option value="BRANCH" style={{ color: '#000' }}>Branch/Semester Specific (Access controlled)</option>
@@ -1012,30 +1039,30 @@ const Notes = ({ isAdminView }) => {
                                         border: `2px dashed ${dragActive ? 'var(--primary)' : 'rgba(255,255,255,0.15)'}`,
                                         background: dragActive ? 'rgba(0, 212, 255, 0.05)' : 'rgba(255,255,255,0.01)',
                                         borderRadius: '16px',
-                                        padding: '2rem 1rem',
+                                        padding: '1.2rem 1rem',
                                         textAlign: 'center',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
-                                        gap: '0.5rem',
+                                        gap: '0.4rem',
                                         cursor: 'pointer',
                                         transition: 'all 0.3s ease'
                                     }}
                                 >
-                                    <i className="fas fa-folder-open" style={{ fontSize: '2.5rem', color: dragActive ? 'var(--primary)' : 'var(--text-secondary)' }}></i>
+                                    <i className="fas fa-folder-open" style={{ fontSize: '2rem', color: dragActive ? 'var(--primary)' : 'var(--text-secondary)' }}></i>
                                     {uploadFiles.length > 0 ? (
                                         <div style={{ width: '100%', textAlign: 'left' }}>
-                                            <span style={{ color: '#10B981', fontWeight: 'bold', display: 'block', marginBottom: '0.6rem', textAlign: 'center' }}>
-                                                ✓ {uploadFiles.length} PDFs detected — folder tree:
+                                            <span style={{ color: '#10B981', fontWeight: 'bold', display: 'block', marginBottom: '0.4rem', textAlign: 'center', fontSize: '0.85rem' }}>
+                                                ✓ {uploadFiles.length} PDFs detected:
                                             </span>
                                             {/* Folder Tree Preview */}
                                             <div style={{
                                                 background: 'rgba(0,0,0,0.3)',
                                                 borderRadius: '10px',
-                                                padding: '0.8rem 1rem',
+                                                padding: '0.6rem 0.8rem',
                                                 fontFamily: 'monospace',
-                                                fontSize: '0.75rem',
-                                                maxHeight: '160px',
+                                                fontSize: '0.72rem',
+                                                maxHeight: '110px',
                                                 overflowY: 'auto',
                                                 color: 'var(--text-secondary)'
                                             }}>
@@ -1047,8 +1074,8 @@ const Notes = ({ isAdminView }) => {
                                                         folderMap[root] = (folderMap[root] || 0) + 1;
                                                     });
                                                     return Object.entries(folderMap).map(([root, count]) => (
-                                                        <div key={root} style={{ marginBottom: '0.4rem', display: 'flex', justifyContent: 'space-between' }}>
-                                                            <div style={{ color: '#ffd700', fontWeight: 'bold' }}>
+                                                        <div key={root} style={{ marginBottom: '0.3rem', display: 'flex', justifyContent: 'space-between' }}>
+                                                            <div style={{ color: '#ffd700', fontWeight: 'bold', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '70%' }}>
                                                                 <i className="fas fa-folder" style={{ marginRight: '0.4rem', fontSize: '0.7rem' }}></i>
                                                                 {root}
                                                             </div>
@@ -1057,12 +1084,12 @@ const Notes = ({ isAdminView }) => {
                                                     ));
                                                 })()}
                                             </div>
-                                            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+                                            <div style={{ marginTop: '0.6rem', textAlign: 'center' }}>
                                                 <button
                                                     type="button"
                                                     onClick={(e) => { e.stopPropagation(); fileInputRef.current && fileInputRef.current.click(); }}
                                                     className="btn btn-outline"
-                                                    style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem', borderRadius: '8px' }}
+                                                    style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', borderRadius: '8px' }}
                                                 >
                                                     <i className="fas fa-plus"></i> Add Another Folder
                                                 </button>
@@ -1070,8 +1097,8 @@ const Notes = ({ isAdminView }) => {
                                         </div>
                                     ) : (
                                         <>
-                                            <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Drag & Drop Complete Study Folders Here</span>
-                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Or click to browse (supports queuing multiple folders)</span>
+                                            <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Drag & Drop Complete Study Folders Here</span>
+                                            <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Or click to browse (supports queuing multiple folders)</span>
                                         </>
                                     )}
                                 </div>
@@ -1103,15 +1130,15 @@ const Notes = ({ isAdminView }) => {
                                 />
 
                                 {uploading && uploadProgress.total > 0 && (
-                                    <div style={{ margin: '0.5rem 0', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', padding: '0.8rem 1rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-                                            <span>
+                                    <div style={{ margin: '0.3rem 0', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', padding: '0.6rem 0.8rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>
+                                            <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '75%' }}>
                                                 <i className="fas fa-cloud-upload-alt" style={{ color: 'var(--primary)', marginRight: '0.4rem' }}></i>
                                                 Uploading: <span style={{ color: '#fff', fontWeight: '500' }}>{uploadProgress.currentFileName || '...'}</span>
                                             </span>
                                             <span style={{ fontWeight: 'bold', color: '#fff' }}>{uploadProgress.current} / {uploadProgress.total}</span>
                                         </div>
-                                        <div style={{ height: '6px', borderRadius: '99px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+                                        <div style={{ height: '5px', borderRadius: '99px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
                                             <div style={{
                                                 height: '100%',
                                                 borderRadius: '99px',
@@ -1130,14 +1157,15 @@ const Notes = ({ isAdminView }) => {
                                     className="btn btn-primary"
                                     disabled={uploading}
                                     style={{
-                                        marginTop: '1rem',
+                                        marginTop: '0.5rem',
                                         borderRadius: '12px',
-                                        padding: '0.9rem',
+                                        padding: '0.8rem',
                                         fontWeight: '700',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        gap: '0.6rem'
+                                        gap: '0.6rem',
+                                        fontSize: '0.9rem'
                                     }}
                                 >
                                     {uploading ? (

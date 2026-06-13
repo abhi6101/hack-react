@@ -220,6 +220,7 @@ const AdminDashboard = () => {
     const [editingJob, setEditingJob] = useState(null);
     const [isJobFormOpen, setIsJobFormOpen] = useState(false);
     const [isUserFormOpen, setIsUserFormOpen] = useState(false);
+    const [isGalleryFormOpen, setIsGalleryFormOpen] = useState(false);
     const [isInterviewFormOpen, setIsInterviewFormOpen] = useState(false);
     const [editingInterview, setEditingInterview] = useState(null);
 
@@ -698,6 +699,7 @@ const AdminDashboard = () => {
             if (res.ok) {
                 setMessage({ text: 'Photo uploaded successfully!', type: 'success' });
                 setGalleryForm({ title: '', type: 'campus', description: '', image: null });
+                setIsGalleryFormOpen(false);
                 loadGalleryItems();
             } else {
                 setMessage({ text: 'Failed to upload photo.', type: 'error' });
@@ -2831,10 +2833,17 @@ const AdminDashboard = () => {
             case 'gallery':
                 return (
                     <div className="users-management-page animate-in">
-                        <section className="card surface-glow" style={{ marginBottom: '2.5rem' }}>
-                            <div className="card-header">
-                                <h3><i className="fas fa-camera"></i> Share New Photo</h3>
-                            </div>
+                        {isGalleryFormOpen && (
+                            <section className="card surface-glow animate-slide-up" style={{ marginBottom: '2.5rem' }}>
+                                <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <h3><i className="fas fa-camera"></i> Share New Photo</h3>
+                                    <button 
+                                        className="btn btn-outline-sm mobile-only" 
+                                        onClick={() => setIsGalleryFormOpen(false)}
+                                    >
+                                        <i className="fas fa-times"></i> Close
+                                    </button>
+                                </div>
                             <div style={{ padding: '2rem' }}>
                                 {message.text && (
                                     <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ marginBottom: '1.5rem' }}>
@@ -2901,6 +2910,7 @@ const AdminDashboard = () => {
                                 </form>
                             </div>
                         </section>
+                        )}
 
                         <section className="card surface-glow">
                             <div className="card-header">
@@ -3363,6 +3373,56 @@ const AdminDashboard = () => {
                             >
                                 <i className={`fas ${isUserFormOpen ? 'fa-times' : 'fa-user-plus'}`} style={{ fontSize: '0.75rem' }}></i>
                                 {isUserFormOpen ? 'Close' : 'Add User'}
+                            </button>
+                        )}
+                        {activeTab === 'gallery' && (
+                            <button
+                                onClick={() => setIsGalleryFormOpen(prev => !prev)}
+                                style={{
+                                    padding: '6px 14px',
+                                    borderRadius: '8px',
+                                    border: isGalleryFormOpen
+                                        ? '1px solid rgba(239,68,68,0.4)'
+                                        : '1px solid rgba(0,204,255,0.35)',
+                                    background: isGalleryFormOpen
+                                        ? 'rgba(239,68,68,0.1)'
+                                        : 'rgba(0,204,255,0.1)',
+                                    color: isGalleryFormOpen ? '#f87171' : '#00ccff',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontWeight: '600',
+                                    fontSize: '0.8rem',
+                                    transition: 'all 0.25s ease',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                <i className={`fas ${isGalleryFormOpen ? 'fa-times' : 'fa-camera'}`} style={{ fontSize: '0.75rem' }}></i>
+                                {isGalleryFormOpen ? 'Close' : 'Share Photo'}
+                            </button>
+                        )}
+                        {activeTab === 'study-notes' && (
+                            <button
+                                onClick={() => window.dispatchEvent(new CustomEvent('open-notes-upload'))}
+                                style={{
+                                    padding: '6px 14px',
+                                    borderRadius: '8px',
+                                    border: '1px solid rgba(0,204,255,0.35)',
+                                    background: 'rgba(0,204,255,0.1)',
+                                    color: '#00ccff',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontWeight: '600',
+                                    fontSize: '0.8rem',
+                                    transition: 'all 0.25s ease',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                <i className="fas fa-plus" style={{ fontSize: '0.75rem' }}></i>
+                                Upload Notes
                             </button>
                         )}
                         {activeTab === 'dashboard' && (

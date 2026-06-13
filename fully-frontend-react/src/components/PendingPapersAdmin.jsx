@@ -87,10 +87,6 @@ const PendingPapersAdmin = () => {
     if (loading) {
         return (
             <div style={{ background: 'var(--surface-bg)', padding: '20px', borderRadius: '12px' }}>
-                <h2>Pending Smart Uploads</h2>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
-                    Review and approve papers uploaded by students. Approving awards the student 50 points.
-                </p>
                 <div className="table-responsive surface-glow" style={{ borderRadius: '16px', overflow: 'hidden' }}>
                     <TableSkeleton cols={5} rows={2} />
                 </div>
@@ -100,10 +96,6 @@ const PendingPapersAdmin = () => {
 
     return (
         <div style={{ background: 'var(--surface-bg)', padding: '20px', borderRadius: '12px' }}>
-            <h2>Pending Smart Uploads</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
-                Review and approve papers uploaded by students. Approving awards the student 50 points.
-            </p>
 
             {papers.length === 0 ? (
                 <div className="alert alert-info" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

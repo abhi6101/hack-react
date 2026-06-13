@@ -1,0 +1,98 @@
+    const renderStudentMonitor = () => (
+        <div className="users-management-page animate-in">
+            {/* Header + Toolbar */}
+            <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2 style={{ margin: 0 }}>Student Monitor</h2>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                        onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} 
+                        style={{ 
+                            padding: '0 1rem',
+                            height: '44px',
+                            background: 'rgba(0, 212, 255, 0.1)', 
+                            border: '1px solid rgba(0, 212, 255, 0.2)', 
+                            color: '#00d4ff', 
+                            borderRadius: '12px', 
+                            fontWeight: '600', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            gap: '0.5rem',
+                            backdropFilter: 'blur(5px)',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <i className="far fa-file-alt"></i> Export CSV
+                    </button>
+                    <button 
+                        onClick={fetchStudentActivity} 
+                        style={{ 
+                            width: '44px', 
+                            height: '44px', 
+                            background: 'rgba(255, 255, 255, 0.05)', 
+                            border: '1px solid rgba(255, 255, 255, 0.1)', 
+                            color: '#fff', 
+                            borderRadius: '12px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <i className="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <section className="card" style={{ border: 'none', background: 'transparent', boxShadow: 'none', padding: 0 }}>
+                {loadingActivity ? (
+                    <TableSkeleton cols={4} rows={2} />
+                ) : (
+                    <div className="table-responsive" style={{ padding: 0 }}>
+                        <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Branch</th>
+                                <th>Last Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {studentActivity.length === 0 ? (
+                                <tr>
+                                    <td colSpan="4">
+                                        <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                                            <i className="fas fa-users-slash" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
+                                            <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No students found.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                studentActivity.map(student => (
+                                    <tr key={student.id}>
+                                        <td style={{ fontWeight: '500' }}>{student.username || student.name || 'Unknown'}</td>
+                                        <td style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{student.email}</td>
+                                        <td>{student.branch}</td>
+                                        <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                            {student.lastLoginDate ? new Date(student.lastLoginDate).toLocaleString() : 'Never'}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+            </section>
+        </div>
+    );
+
+    const renderContent = () => {
+        switch (activeTab) {
+            case 'students':
+                return renderStudentMonitor();
+            case 'dashboard':
+                const pendingVerifications = allProfiles.filter(p => p.approvalStatus === 'PENDING').length;
+                const totalStudents = users.filter(u => u.role === 'USER').length;
+                const recentActivities = [
