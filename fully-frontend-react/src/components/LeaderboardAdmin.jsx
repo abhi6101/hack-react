@@ -138,8 +138,10 @@ const LeaderboardAdmin = () => {
                                         </div>
                                     </td>
                                     <td>
-                                        <div style={{ fontWeight: 'bold' }}>{user.name}</div>
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>@{user.username}</div>
+                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                            <span style={{ fontWeight: 'bold' }}>{user.name}</span>
+                                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>@{user.username}</span>
+                                        </div>
                                     </td>
                                     <td>
                                         <span style={{ color: '#00d4ff', fontWeight: 'bold' }}>{user.contributionPoints} pts</span>
