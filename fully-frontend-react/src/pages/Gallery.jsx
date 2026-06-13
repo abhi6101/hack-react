@@ -51,7 +51,7 @@ const Gallery = () => {
 
             // Try to fetch dynamic items from backend
             try {
-                const res = await fetch('/gallery');
+                const res = await fetch(`${API_BASE_URL}/gallery`);
                 if (res.ok) {
                     const data = await res.json();
                     // Combine static + dynamic (dynamic first or last? Let's assume dynamic is newer, so first)
@@ -101,7 +101,7 @@ const Gallery = () => {
         }
 
         try {
-            const res = await fetch('/gallery', {
+            const res = await fetch(`${API_BASE_URL}/gallery`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
