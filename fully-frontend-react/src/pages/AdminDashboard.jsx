@@ -2231,21 +2231,21 @@ const AdminDashboard = () => {
                                                     u.role?.toLowerCase().includes(userSearch.toLowerCase())
                                                 ).map(user => (
                                                     <tr key={user.id} className="row-hover">
-                                                        <td>
+                                                        <td data-label="Identify">
                                                             <div className="user-avatar-small">
                                                                 {user.username.charAt(0).toUpperCase()}
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Account Credentials">
                                                             <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{user.username}</div>
                                                             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.email}</div>
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Professional Role">
                                                             <span className={`badge-role role-${user.role.toLowerCase().replace('_', '-')}`}>
                                                                 {user.role}
                                                             </span>
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Assignment">
                                                             <div style={{ fontSize: '0.9rem' }}>
                                                                 {user.companyName ? (
                                                                     <span style={{ color: 'var(--accent)' }}><i className="fas fa-building"></i> {user.companyName}</span>
@@ -2258,7 +2258,7 @@ const AdminDashboard = () => {
                                                                 )}
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Management">
                                                             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
                                                                 <button
                                                                     className="action-btn-modern edit-btn"
