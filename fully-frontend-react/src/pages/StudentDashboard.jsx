@@ -106,9 +106,15 @@ const StudentDashboard = () => {
             })
             .catch(err => { console.error('Failed to load user data'); return null; });
 
-        const fetchJobs = fetch(`${API_BASE_URL}/job-applications/my`, { headers })
-            .then(async res => res.ok ? await res.json() : [])
-            .catch(err => { console.error('Failed to load job applications'); return []; });
+        const userStr = localStorage.getItem('user');
+        const userObj = userStr ? JSON.parse(userStr) : {};
+        const isStudent = userObj.role === 'STUDENT' || !userObj.role;
+
+        const fetchJobs = isStudent 
+            ? fetch(`${API_BASE_URL}/job-applications/my`, { headers })
+                .then(async res => res.ok ? await res.json() : [])
+                .catch(err => { console.error('Failed to load job applications'); return []; })
+            : Promise.resolve([]);
 
         const fetchInterviews = fetch(`${API_BASE_URL}/interview-drives`, { headers })
             .then(async res => res.ok ? await res.json() : [])
