@@ -1702,9 +1702,9 @@ const AdminDashboard = () => {
                                                 <div style={{ width: '48px', height: '48px', borderRadius: '12px', flexShrink: 0, background: bgRgba, display: 'flex', alignItems: 'center', justifyContent: 'center', color: iconColor, fontSize: '1.3rem', border: `1px solid ${borderColor}` }}>
                                                     <i className={item.icon}></i>
                                                 </div>
-                                                <div style={{ flex: 1 }}>
-                                                    <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: '600' }}>{item.title}</h4>
-                                                    <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{isActive ? item.descOn : item.descOff}</p>
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: '600', wordBreak: 'break-word' }}>{item.title}</h4>
+                                                    <p className="desktop-only" style={{ margin: '0.25rem 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{isActive ? item.descOn : item.descOff}</p>
                                                 </div>
                                                 <div>
                                                     <ToggleSwitch checked={isActive} onChange={() => toggleEmailSetting(item.key, isActive)} disabled={effectiveDisabled} />
