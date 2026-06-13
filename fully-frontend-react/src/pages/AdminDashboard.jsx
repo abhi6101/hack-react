@@ -1487,30 +1487,66 @@ const AdminDashboard = () => {
 
     const renderStudentMonitor = () => (
         <div className="users-management-page animate-in">
-            <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
-                    <div>
-                        <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.3rem', color: 'var(--text-primary)' }}>
-                            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary), #00a8cc)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 4px 15px rgba(0, 212, 255, 0.3)' }}>
-                                <i className="fas fa-user-graduate"></i>
-                            </div>
-                            Student Monitor
-                        </h3>
-                    </div>
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'nowrap', width: '100%' }} className="desktop-auto-width">
-                        <button className="btn-premium" onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} style={{ flex: 1, justifyContent: 'center' }}>
-                            <i className="fas fa-file-csv"></i> Export CSV
-                        </button>
-                        <button className="btn-outline" onClick={fetchStudentActivity} style={{ flex: 1, padding: '0.75rem 1.5rem', borderRadius: '12px', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', cursor: 'pointer', transition: 'all 0.3s' }}>
-                            <i className="fas fa-sync-alt"></i> Refresh
-                        </button>
-                    </div>
+            {/* Header + Toolbar */}
+            <div style={{ marginBottom: '1.5rem' }}>
+                <h2 style={{ 
+                    margin: '0 0 1rem 0', 
+                    fontSize: '1.75rem', 
+                    fontFamily: 'sans-serif', 
+                    fontWeight: 'bold', 
+                    background: 'linear-gradient(90deg, #00d4ff, #ffffff)', 
+                    WebkitBackgroundClip: 'text', 
+                    WebkitTextFillColor: 'transparent',
+                    display: 'inline-block'
+                }}>
+                    Student Monitor
+                </h2>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'nowrap' }}>
+                    <button 
+                        onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} 
+                        style={{ 
+                            flex: 1, 
+                            height: '44px',
+                            background: 'rgba(0, 212, 255, 0.1)', 
+                            border: '1px solid rgba(0, 212, 255, 0.2)', 
+                            color: '#00d4ff', 
+                            borderRadius: '12px', 
+                            fontWeight: '600', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            gap: '0.5rem',
+                            backdropFilter: 'blur(5px)',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <i className="far fa-file-alt"></i> Export CSV
+                    </button>
+                    <button 
+                        onClick={fetchStudentActivity} 
+                        style={{ 
+                            width: '44px', 
+                            height: '44px', 
+                            background: 'rgba(255, 255, 255, 0.05)', 
+                            border: '1px solid rgba(255, 255, 255, 0.1)', 
+                            color: '#fff', 
+                            borderRadius: '12px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <i className="fas fa-sync-alt"></i>
+                    </button>
                 </div>
+            </div>
 
+            <section className="card" style={{ border: 'none', background: 'transparent', boxShadow: 'none', padding: 0 }}>
                 {loadingActivity ? (
                     <TableSkeleton cols={4} rows={2} />
                 ) : (
-                    <div className="table-responsive" style={{ padding: '1rem' }}>
+                    <div className="table-responsive" style={{ padding: 0 }}>
                         <table className="table">
                         <thead>
                             <tr>
