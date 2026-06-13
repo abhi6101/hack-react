@@ -49,9 +49,11 @@ const Jobs = () => {
 
     useEffect(() => {
         const token = getToken();
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : {};
         if (!token) {
             setShowLoginPrompt(true);
-        } else {
+        } else if (user.role === 'STUDENT' || !user.role) {
             fetchAppliedJobs(token);
         }
     }, [navigate]);
