@@ -1782,13 +1782,6 @@ const AdminDashboard = () => {
             case 'jobs':
                 return (
                     <div className="jobs-management-page animate-in">
-                        {/* Mobile Sticky Header */}
-                        <div className="mobile-jobs-header">
-                            <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'white' }}>Manage Jobs</h2>
-                            <button className="btn btn-primary btn-sm rounded-circle" style={{ width: '36px', height: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setIsJobFormOpen(!isJobFormOpen)}>
-                                <i className={isJobFormOpen ? "fas fa-times" : "fas fa-plus"}></i>
-                            </button>
-                        </div>
 
                         {/* Job Form Drawer/Modal */}
                         <section id="jobs-section" className={`card surface-glow job-form-drawer ${isJobFormOpen || editingJob ? 'open' : ''}`}>
@@ -3115,47 +3108,72 @@ const AdminDashboard = () => {
                     <div className="header-left">
                         <h1 style={{ fontSize: '1.8rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '800' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
-                    {activeTab === 'dashboard' && (
-                        <div className="header-right" style={{ display: 'flex', gap: '10px' }}>
-                            <button 
-                                onClick={() => navigate('/')} 
-                                style={{ 
-                                    padding: '8px 12px', 
-                                    borderRadius: '10px', 
-                                    border: '1px solid rgba(14, 165, 233, 0.2)', 
-                                    background: 'rgba(14, 165, 233, 0.05)', 
-                                    color: 'var(--primary)', 
-                                    cursor: 'pointer', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '6px', 
-                                    transition: 'all 0.3s ease', 
-                                    fontWeight: '600', 
-                                    fontSize: '0.85rem'
+                    <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        {activeTab === 'jobs' && (
+                            <button
+                                onClick={() => setIsJobFormOpen(!isJobFormOpen)}
+                                style={{
+                                    padding: '6px 12px',
+                                    borderRadius: '8px',
+                                    border: '1px solid rgba(0, 204, 255, 0.35)',
+                                    background: 'rgba(0, 204, 255, 0.1)',
+                                    color: '#00ccff',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    fontWeight: '600',
+                                    fontSize: '0.8rem',
+                                    transition: 'all 0.2s ease',
+                                    whiteSpace: 'nowrap'
                                 }}
                             >
-                                <i className="fas fa-home"></i> <span className="desktop-only">Portal</span>
+                                <i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job
                             </button>
-                            <button onClick={() => { localStorage.clear(); navigate('/login'); }} 
-                                style={{ 
-                                    padding: '8px 12px', 
-                                    borderRadius: '10px', 
-                                    border: '1px solid rgba(255, 71, 123, 0.2)', 
-                                    background: 'rgba(255, 71, 123, 0.05)', 
-                                    color: 'var(--accent)', 
-                                    cursor: 'pointer', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '6px', 
-                                    transition: 'all 0.3s ease', 
-                                    fontWeight: '600', 
-                                    fontSize: '0.85rem'
-                                }}
-                            >
-                                <i className="fas fa-sign-out-alt"></i> <span className="desktop-only">Logout</span>
-                            </button>
-                        </div>
-                    )}
+                        )}
+                        {activeTab === 'dashboard' && (
+                            <>
+                                <button
+                                    onClick={() => navigate('/')}
+                                    style={{
+                                        padding: '8px 12px',
+                                        borderRadius: '10px',
+                                        border: '1px solid rgba(14, 165, 233, 0.2)',
+                                        background: 'rgba(14, 165, 233, 0.05)',
+                                        color: 'var(--primary)',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        transition: 'all 0.3s ease',
+                                        fontWeight: '600',
+                                        fontSize: '0.85rem'
+                                    }}
+                                >
+                                    <i className="fas fa-home"></i> <span className="desktop-only">Portal</span>
+                                </button>
+                                <button
+                                    onClick={() => { localStorage.clear(); navigate('/login'); }}
+                                    style={{
+                                        padding: '8px 12px',
+                                        borderRadius: '10px',
+                                        border: '1px solid rgba(255, 71, 123, 0.2)',
+                                        background: 'rgba(255, 71, 123, 0.05)',
+                                        color: 'var(--accent)',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        transition: 'all 0.3s ease',
+                                        fontWeight: '600',
+                                        fontSize: '0.85rem'
+                                    }}
+                                >
+                                    <i className="fas fa-sign-out-alt"></i> <span className="desktop-only">Logout</span>
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </header>
 
                 <div className="content-container">

@@ -6,11 +6,11 @@ const AdminBottomNav = ({ activeTab, setActiveTab }) => {
     const navigate = useNavigate();
 
     const navItems = [
-        { id: 'home',     icon: 'fa-home',         label: 'Home',     action: () => navigate('/') },
-        { id: 'users',    icon: 'fa-user',         label: 'Users',    action: () => setActiveTab('users') },
-        { id: 'jobs',     icon: 'fa-briefcase',     label: 'Jobs',     action: () => setActiveTab('jobs') },
-        { id: 'students', icon: 'fa-id-badge', label: 'Students', action: () => setActiveTab('students') },
-        { id: 'menu',     icon: 'fa-bars',          label: 'Menu',     action: () => setActiveTab('menu') },
+        { id: 'home',     icon: 'fas fa-home',           label: 'Home',     action: () => navigate('/') },
+        { id: 'users',    icon: 'fas fa-user-friends',   label: 'Users',    action: () => setActiveTab('users') },
+        { id: 'jobs',     icon: 'fas fa-briefcase',      label: 'Jobs',     action: () => setActiveTab('jobs') },
+        { id: 'students', icon: 'fas fa-user-graduate',  label: 'Students', action: () => setActiveTab('students') },
+        { id: 'menu',     icon: 'fas fa-bars',           label: 'Menu',     action: () => setActiveTab('menu') },
     ];
 
     return (
@@ -26,7 +26,7 @@ const AdminBottomNav = ({ activeTab, setActiveTab }) => {
                     }`}
                     onClick={item.action}
                 >
-                    <i className={`far ${item.icon}`}></i>
+                    <i className={item.icon}></i>
                     <span>{item.label}</span>
                 </button>
             ))}
