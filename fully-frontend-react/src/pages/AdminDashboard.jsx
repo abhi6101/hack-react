@@ -217,6 +217,7 @@ const AdminDashboard = () => {
     const [editingJob, setEditingJob] = useState(null);
     const [isJobFormOpen, setIsJobFormOpen] = useState(false);
     const [isUserFormOpen, setIsUserFormOpen] = useState(false);
+    const [isInterviewFormOpen, setIsInterviewFormOpen] = useState(false);
     const [editingInterview, setEditingInterview] = useState(null);
 
     const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
@@ -2569,6 +2570,7 @@ const AdminDashboard = () => {
             case 'interviews':
                 return (
                     <div className="users-management-page animate-in">
+                        {(isInterviewFormOpen || editingInterview) && (
                         <section className="card surface-glow" style={{ marginBottom: '2.5rem' }}>
                             <div className="card-header">
                                 <h3><i className={editingInterview ? "fas fa-edit" : "fas fa-calendar-plus"}></i> {editingInterview ? 'Edit Interview' : 'Post New Interview'}</h3>
@@ -2611,13 +2613,14 @@ const AdminDashboard = () => {
                                         <i className="fas fa-save"></i> {editingInterview ? 'Update Interview' : 'Post Interview'}
                                     </button>
                                     {editingInterview && (
-                                        <button type="button" className="btn btn-secondary" onClick={() => { setEditingInterview(null); clearInterviewForm(); }}>
+                                        <button type="button" className="btn btn-secondary" onClick={() => { setEditingInterview(null); clearInterviewForm(); setIsInterviewFormOpen(false); }}>
                                             Cancel
                                         </button>
                                     )}
                                 </div>
                             </form>
                         </section>
+                        )}
 
                         <section className="card surface-glow">
                             <div className="card-header">
@@ -3198,6 +3201,37 @@ const AdminDashboard = () => {
                         <h1 style={{ fontSize: '1.05rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
                     <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        {activeTab === 'interviews' && (
+                            <span className="mobile-only">
+                                <button
+                                    onClick={() => { setIsInterviewFormOpen(prev => !prev); if (isInterviewFormOpen) { setEditingInterview(null); clearInterviewForm(); } }}
+                                    style={{
+                                        padding: '6px 12px',
+                                        borderRadius: '8px',
+                                        border: (isInterviewFormOpen || editingInterview)
+                                            ? '1px solid rgba(239,68,68,0.4)'
+                                            : '1px solid rgba(0, 204, 255, 0.35)',
+                                        background: (isInterviewFormOpen || editingInterview)
+                                            ? 'rgba(239,68,68,0.1)'
+                                            : 'rgba(0, 204, 255, 0.1)',
+                                        color: (isInterviewFormOpen || editingInterview) ? '#f87171' : '#00ccff',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                        fontWeight: '600',
+                                        fontSize: '0.8rem',
+                                        transition: 'all 0.2s ease',
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                >
+                                    {(isInterviewFormOpen || editingInterview)
+                                        ? <><i className="fas fa-times" style={{ fontSize: '0.75rem' }}></i> Close</>
+                                        : <><i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Interview</>
+                                    }
+                                </button>
+                            </span>
+                        )}
                         {activeTab === 'jobs' && (
                             <span className="mobile-only">
                                 <button
