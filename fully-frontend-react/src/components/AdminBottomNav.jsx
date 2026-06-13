@@ -7,9 +7,9 @@ const AdminBottomNav = ({ activeTab, setActiveTab }) => {
 
     const navItems = [
         { id: 'home',     icon: 'fa-home',         label: 'Home',     action: () => navigate('/') },
-        { id: 'users',    icon: 'fa-users',         label: 'Users',    action: () => setActiveTab('users') },
+        { id: 'users',    icon: 'fa-user',         label: 'Users',    action: () => setActiveTab('users') },
         { id: 'jobs',     icon: 'fa-briefcase',     label: 'Jobs',     action: () => setActiveTab('jobs') },
-        { id: 'students', icon: 'fa-user-graduate', label: 'Students', action: () => setActiveTab('students') },
+        { id: 'students', icon: 'fa-id-badge', label: 'Students', action: () => setActiveTab('students') },
         { id: 'menu',     icon: 'fa-bars',          label: 'Menu',     action: () => setActiveTab('menu') },
     ];
 
@@ -26,7 +26,7 @@ const AdminBottomNav = ({ activeTab, setActiveTab }) => {
                     }`}
                     onClick={item.action}
                 >
-                    <i className={`fas ${item.icon}`}></i>
+                    <i className={`far ${item.icon}`}></i>
                     <span>{item.label}</span>
                 </button>
             ))}

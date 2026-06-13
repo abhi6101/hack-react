@@ -215,6 +215,7 @@ const AdminDashboard = () => {
     };
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
+    const [isJobFormOpen, setIsJobFormOpen] = useState(false);
     const [editingInterview, setEditingInterview] = useState(null);
 
     const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
@@ -1756,10 +1757,22 @@ const AdminDashboard = () => {
                 );
             case 'jobs':
                 return (
-                    <>
-                        <section id="jobs-section" className="card surface-glow" style={{ marginBottom: '2.5rem' }}>
-                            <div className="card-header">
+                    <div className="jobs-management-page animate-in">
+                        {/* Mobile Sticky Header */}
+                        <div className="mobile-jobs-header">
+                            <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'white' }}>Manage Jobs</h2>
+                            <button className="btn btn-primary btn-sm rounded-circle" style={{ width: '36px', height: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setIsJobFormOpen(!isJobFormOpen)}>
+                                <i className={isJobFormOpen ? "fas fa-times" : "fas fa-plus"}></i>
+                            </button>
+                        </div>
+
+                        {/* Job Form Drawer/Modal */}
+                        <section id="jobs-section" className={`card surface-glow job-form-drawer ${isJobFormOpen || editingJob ? 'open' : ''}`}>
+                            <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h3><i className={editingJob ? "fas fa-edit" : "fas fa-plus-circle"}></i> {editingJob ? 'Edit Job' : 'Post New Job'}</h3>
+                                <button className="btn btn-outline-sm mobile-only" onClick={() => { setIsJobFormOpen(false); setEditingJob(null); }}>
+                                    <i className="fas fa-times"></i>
+                                </button>
                             </div>
                             {message.text && (
                                 <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ display: 'flex' }}>
@@ -1821,8 +1834,9 @@ const AdminDashboard = () => {
                                     <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
                                         {departments.length > 0 ? departments.map(dept => (
                                             <div key={dept.code} style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                                                    <input type="checkbox"
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                                    <span style={{ color: '#60a5fa', fontWeight: 'bold' }}>{dept.name} ({dept.code})</span>
+                                                    <ToggleSwitch
                                                         checked={formData.eligibleBranches?.includes(dept.code)}
                                                         onChange={(e) => {
                                                             const branches = formData.eligibleBranches || [];
@@ -1830,13 +1844,13 @@ const AdminDashboard = () => {
                                                             else setFormData({ ...formData, eligibleBranches: branches.filter(b => b !== dept.code) });
                                                         }}
                                                     />
-                                                    {dept.name} ({dept.code})
-                                                </label>
+                                                </div>
                                                 {formData.eligibleBranches?.includes(dept.code) && (
-                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginLeft: '1.5rem' }}>
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1rem' }}>
                                                         {Array.from({ length: dept.maxSemesters || 8 }, (_, i) => i + 1).map(sem => (
-                                                            <label key={`${dept.code}-${sem}`} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>
-                                                                <input type="checkbox"
+                                                            <div key={`${dept.code}-${sem}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.05)', padding: '0.5rem', borderRadius: '4px', minWidth: '100px', flex: '1 1 auto' }}>
+                                                                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)' }}>Sem {sem}</span>
+                                                                <ToggleSwitch
                                                                     checked={formData.eligibleSemesters?.includes(sem)}
                                                                     onChange={(e) => {
                                                                         const sems = formData.eligibleSemesters || [];
@@ -1844,8 +1858,7 @@ const AdminDashboard = () => {
                                                                         else setFormData({ ...formData, eligibleSemesters: sems.filter(s => s !== sem) });
                                                                     }}
                                                                 />
-                                                                Sem {sem}
-                                                            </label>
+                                                            </div>
                                                         ))}
                                                     </div>
                                                 )}
@@ -1934,7 +1947,7 @@ const AdminDashboard = () => {
                             </div>
                             {loadingJobs && <TableSkeleton cols={5} rows={2} />}
                             {!loadingJobs && (
-                                <div className="table-responsive">
+                                <div className="table-responsive desktop-only-table">
                                     {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
                                         <table id="jobsTable">
                                             <thead>
@@ -1950,7 +1963,7 @@ const AdminDashboard = () => {
                                                         <td className="action-btns">
                                                             {(!isCompanyAdmin || job.company_name === myCompanyName) ? (
                                                                 <>
-                                                                    <button className="btn btn-secondary" onClick={() => startEditJob(job)} style={{ marginRight: '0.5rem' }}>
+                                                                    <button className="btn btn-secondary" onClick={() => { setIsJobFormOpen(true); startEditJob(job); }} style={{ marginRight: '0.5rem' }}>
                                                                         <i className="fas fa-edit"></i>
                                                                     </button>
                                                                     <button className="btn btn-danger" onClick={() => deleteJob(job.id)}>
@@ -1967,9 +1980,61 @@ const AdminDashboard = () => {
                                         </table>
                                     )}
                                 </div>
+                                
+                                {/* Mobile Job Cards */}
+                                <div className="mobile-job-cards mobile-only">
+                                    {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
+                                        jobs.map(job => (
+                                            <div key={job.id} className="mobile-job-card">
+                                                <div className="job-card-top">
+                                                    <h4 className="job-title">{job.title}</h4>
+                                                    <span className="badge-role role-user" style={{ backgroundColor: '#064e3b', color: '#4ade80', border: 'none', fontSize: '0.7rem', padding: '0.2rem 0.5rem', borderRadius: '12px' }}>
+                                                        JOB
+                                                    </span>
+                                                </div>
+                                                <div className="job-card-account">
+                                                    <span className="account-id">{job.company_name || `JOB-${job.id}`}</span>
+                                                </div>
+                                                
+                                                <div className="mobile-expandable-cell">
+                                                    <input type="checkbox" id={`expand-job-${job.id}`} className="expand-checkbox" />
+                                                    <label htmlFor={`expand-job-${job.id}`} className="expand-label mobile-only" style={{ marginTop: '0.5rem' }}>
+                                                        <span>Details</span>
+                                                        <i className="fas fa-chevron-down" style={{ transition: 'transform 0.3s' }}></i>
+                                                    </label>
+                                                    <div className="expandable-content" style={{ fontSize: '0.85rem', fontWeight: 'bold', fontFamily: 'sans-serif' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                                            <span style={{ color: '#888888' }}>Last Date:</span>
+                                                            <span style={{ color: 'white' }}>{new Date(job.last_date).toLocaleDateString('en-IN')}</span>
+                                                        </div>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                                                            <span style={{ color: '#888888' }}>Salary:</span>
+                                                            <span style={{ color: '#4ade80' }}>₹{job.salary.toLocaleString()}</span>
+                                                        </div>
+                                                        
+                                                        <div className="job-card-actions">
+                                                            {(!isCompanyAdmin || job.company_name === myCompanyName) ? (
+                                                                <>
+                                                                    <button className="btn btn-secondary thumb-btn" onClick={() => { setIsJobFormOpen(true); startEditJob(job); }}>
+                                                                        <i className="fas fa-edit"></i> Edit
+                                                                    </button>
+                                                                    <button className="btn btn-danger thumb-btn" onClick={() => deleteJob(job.id)}>
+                                                                        <i className="fas fa-trash"></i> Delete
+                                                                    </button>
+                                                                </>
+                                                            ) : (
+                                                                <span className="badge badge-secondary" style={{ opacity: 0.7, width: '100%', textAlign: 'center' }}>View Only</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
                             )}
                         </section>
-                    </>
+                    </div>
                 );
             case 'users': {
                 const filteredUsers = users.filter(user => {

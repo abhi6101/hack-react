@@ -1662,3 +1662,92 @@ td {
         flex: 0 0 auto !important;
     }
 }
+
+/* --- Manage Jobs Redesign --- */
+.mobile-jobs-header {
+    display: none;
+}
+.desktop-only-table {
+    display: block;
+}
+.mobile-only {
+    display: none !important;
+}
+
+@media (max-width: 767px) {
+    .mobile-jobs-header {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(13, 17, 23, 0.85);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        margin-top: -1rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .desktop-only-table {
+        display: none !important;
+    }
+    .mobile-only {
+        display: flex !important;
+    }
+    .job-form-drawer {
+        display: none !important;
+    }
+    .job-form-drawer.open {
+        display: block !important;
+    }
+    .mobile-job-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .mobile-job-card {
+        background: #0D1117;
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    .job-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+    }
+    .job-card-top .job-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+    }
+    .job-card-account {
+        margin-bottom: 1rem;
+    }
+    .job-card-account .account-id {
+        font-family: monospace;
+        color: #888888;
+        font-size: 0.85rem;
+    }
+    .thumb-btn {
+        flex: 1;
+        border-radius: 20px !important;
+        padding: 0.75rem !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .job-card-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        width: 100%;
+    }
+}
