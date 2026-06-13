@@ -2576,7 +2576,7 @@ const AdminDashboard = () => {
                                 </div>
                             </section>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '4rem 2rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                                 <i className="fas fa-inbox" style={{ fontSize: '4.5rem', color: 'rgba(0,212,255,0.15)', marginBottom: '1.5rem' }}></i>
                                 <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', fontWeight: '500', margin: 0 }}>No applications yet.</p>
                             </div>
@@ -3204,9 +3204,9 @@ const AdminDashboard = () => {
 
             <main className="admin-main">
                 {activeTab !== 'students' && (
-                <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: 'wrap' }}>
+                <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="header-left">
-                        <h1 style={{ fontSize: activeTab === 'users' ? '1.35rem' : '1.05rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
+                        <h1 style={{ fontSize: activeTab === 'applications' ? '1.5rem' : (activeTab === 'users' ? '1.35rem' : '1.05rem'), margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: activeTab === 'applications' ? '800' : '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
                     <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                         {activeTab === 'question-papers' && (
@@ -3396,15 +3396,8 @@ const AdminDashboard = () => {
                             </div>
                         )}
                         {activeTab === 'applications' && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flexGrow: 1 }}>
-                                <button
-                                    className="btn btn-secondary"
-                                    onClick={() => downloadCSV(applications, 'job_applications.csv')}
-                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', height: '36px' }}
-                                >
-                                    <i className="fas fa-file-csv"></i> Export
-                                </button>
-                                <div className="search-box-modern" style={{ flexGrow: 1, minWidth: '200px', maxWidth: '350px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'flex-end', flexGrow: 1 }}>
+                                <div className="search-box-modern desktop-only" style={{ width: '250px' }}>
                                     <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}></i>
                                     <input
                                         type="text"
@@ -3414,6 +3407,13 @@ const AdminDashboard = () => {
                                         style={{ width: '100%', height: '36px', paddingLeft: '2.4rem', borderRadius: '8px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
                                     />
                                 </div>
+                                <button
+                                    className="btn btn-secondary"
+                                    onClick={() => downloadCSV(applications, 'job_applications.csv')}
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', height: '36px' }}
+                                >
+                                    <i className="fas fa-file-csv"></i> Export
+                                </button>
                             </div>
                         )}
                         {activeTab === 'dashboard' && (
