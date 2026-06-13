@@ -1117,8 +1117,7 @@ const AdminDashboard = () => {
 
     const handleDeleteAllJobs = async () => {
         if (!isSuperAdmin) return;
-        if (!window.confirm('🚨 DANGER: This will permanently delete ALL jobs from the system. This action cannot be undone. Are you absolutely sure?')) return;
-        if (!window.confirm('FINAL CONFIRMATION: Perform mass deletion of all job listings?')) return;
+        if (!window.confirm('Are you sure you want to delete all the jobs?')) return;
 
         try {
             const res = await fetch(`${ADMIN_API_URL}/jobs/all`, {
@@ -2078,15 +2077,6 @@ const AdminDashboard = () => {
                                     >
                                         <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
                                     </button>
-                                    {isSuperAdmin && jobs.length > 0 && (
-                                        <button
-                                            onClick={handleDeleteAllJobs}
-                                            title="Delete All Jobs"
-                                            style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
-                                        >
-                                            <i className="fas fa-trash-alt" style={{ fontSize: '0.9rem' }}></i>
-                                        </button>
-                                    )}
                                 </span>
                             </div>
                             {loadingJobs && <TableSkeleton cols={5} rows={2} />}
@@ -2177,6 +2167,17 @@ const AdminDashboard = () => {
                                         ))
                                     )}
                                 </div>
+                                {isSuperAdmin && jobs.length > 0 && (
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem', padding: '0 1.5rem 1.5rem' }}>
+                                        <button
+                                            onClick={handleDeleteAllJobs}
+                                            className="btn btn-danger"
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: '600' }}
+                                        >
+                                            <i className="fas fa-trash-alt"></i> Delete All Jobs
+                                        </button>
+                                    </div>
+                                )}
                                 </>
                             )}
                         </section>
