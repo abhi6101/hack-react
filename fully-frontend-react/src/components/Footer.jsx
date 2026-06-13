@@ -5,33 +5,6 @@ import '../styles/footer.css'; // Import the new footer styles
 const Footer = () => {
     return (
         <footer className="modern-footer">
-            <div className="modern-footer-top">
-                <div className="modern-footer-column">
-                    <h3>Links</h3>
-                    <ul>
-                        <li><Link to="/">Download App</Link></li>
-                        <li><Link to="/jobs">Free Job Alerts</Link></li>
-                        <li><Link to="/jobs">Careers</Link></li>
-                        <li><Link to="/contact">Contact Us</Link></li>
-                        <li><Link to="/contact">Vulnerability Disclosure</Link></li>
-                    </ul>
-                </div>
-                <div className="modern-footer-column">
-                    <h3>Legal</h3>
-                    <ul>
-                        <li><Link to="/">Privacy Policy</Link></li>
-                        <li><Link to="/">User Terms & Conditions</Link></li>
-                    </ul>
-                </div>
-                <div className="modern-footer-column">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><Link to="/blog">Blog</Link></li>
-                        <li><Link to="/">Sitemap</Link></li>
-                    </ul>
-                </div>
-            </div>
-
             <div className="modern-footer-bottom">
                 <div className="modern-footer-bottom-content">
                     <div className="footer-brand-social">
