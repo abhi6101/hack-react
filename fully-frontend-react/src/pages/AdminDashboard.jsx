@@ -198,6 +198,7 @@ const AdminDashboard = () => {
     const [showJobSearchInput, setShowJobSearchInput] = useState(false);
     const [interviewSearch, setInterviewSearch] = useState('');
     const [appSearch, setAppSearch] = useState('');
+    const [showAppSearchInput, setShowAppSearchInput] = useState(false);
     const [globalSearch, setGlobalSearch] = useState('');
 
     const clearUserForm = () => {
@@ -2511,110 +2512,123 @@ const AdminDashboard = () => {
             }
             case 'profile-details':
                 return renderProfileDetails();
-            case 'applications':
+            case 'applications': {
+                const filteredApplications = applications.filter(app =>
+                    app.applicantName?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                    app.companyName?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                    app.jobTitle?.toLowerCase().includes(appSearch.toLowerCase()) ||
+                    app.applicantEmail?.toLowerCase().includes(appSearch.toLowerCase())
+                );
+
                 return (
-                    <div className="users-management-page animate-in">
-                        <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+                    <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
+                        {/* Consolidated Header Row */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
+                            <h2 style={{ fontSize: '1.8rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
                                 Job Applications
                             </h2>
-                        </div>
-                        <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                            <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                                <div>
-                                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-file-alt" style={{ color: 'var(--primary)' }}></i> Job Applications</h3>
-                                </div>
-                                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                                    <div className="search-box-modern">
-                                        <i className="fas fa-search"></i>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <button 
+                                    className="btn btn-secondary" 
+                                    onClick={() => downloadCSV(applications, 'job_applications.csv')} 
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'all 0.3s' }}
+                                >
+                                    <i className="fas fa-file-csv"></i> Export
+                                </button>
+                                {showAppSearchInput && (
+                                    <div className="search-box-modern animate-in" style={{ width: '180px' }}>
+                                        <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
                                         <input
                                             type="text"
                                             placeholder="Search apps..."
                                             value={appSearch}
                                             onChange={(e) => setAppSearch(e.target.value)}
+                                            style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
                                         />
                                     </div>
-                                    <button className="btn-secondary" onClick={() => downloadCSV(applications, 'job_applications.csv')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                        <i className="fas fa-file-csv"></i> Export
-                                    </button>
-                                </div>
+                                )}
+                                <button 
+                                    onClick={() => setShowAppSearchInput(!showAppSearchInput)} 
+                                    style={{ background: showAppSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)', border: showAppSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255,255,255,0.1)', color: showAppSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
+                                >
+                                    <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
+                                </button>
                             </div>
+                        </div>
+
                         {loadingApplications ? (
                             <TableSkeleton cols={7} rows={2} />
-                        ) : applications.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Student</th>
-                                            <th>Contact</th>
-                                            <th>Job/Company</th>
-                                            <th>Applied</th>
-                                            <th>Resume</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {applications.filter(app =>
-                                            app.applicantName?.toLowerCase().includes(appSearch.toLowerCase()) ||
-                                            app.companyName?.toLowerCase().includes(appSearch.toLowerCase()) ||
-                                            app.jobTitle?.toLowerCase().includes(appSearch.toLowerCase()) ||
-                                            app.applicantEmail?.toLowerCase().includes(appSearch.toLowerCase())
-                                        ).map(app => (
-                                            <tr key={app.id}>
-                                                <td><strong>{app.applicantName}</strong></td>
-                                                <td style={{ fontSize: '0.8rem' }}>{app.applicantEmail}</td>
-                                                <td>
-                                                    <div style={{ fontWeight: '500' }}>{app.jobTitle}</div>
-                                                    <div style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>{app.companyName}</div>
-                                                </td>
-                                                <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
-                                                <td>
-                                                    {app.resumePath ? (
-                                                        <button
-                                                            className="action-btn-modern edit-btn"
-                                                            onClick={() => {
-                                                                const filename = app.resumePath.split('/').pop();
-                                                                window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
-                                                            }}
-                                                        >
-                                                            <i className="fas fa-file-pdf"></i>
-                                                        </button>
-                                                    ) : <span style={{ opacity: 0.5 }}>None</span>}
-                                                </td>
-                                                <td>
-                                                    <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'REJECTED' ? 'super-admin' : 'admin'}`}>
-                                                        {app.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <select
-                                                        value={app.status}
-                                                        onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
-                                                        className="form-control"
-                                                        style={{ width: 'auto', padding: '0.4rem' }}
-                                                    >
-                                                        <option value="PENDING">Pending</option>
-                                                        <option value="SHORTLISTED">Shortlist</option>
-                                                        <option value="REJECTED">Reject</option>
-                                                        <option value="SELECTED">Select</option>
-                                                    </select>
-                                                </td>
+                        ) : filteredApplications.length > 0 ? (
+                            <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', padding: 0 }}>
+                                <div className="table-responsive" style={{ padding: '1rem' }}>
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Student</th>
+                                                <th>Contact</th>
+                                                <th>Job/Company</th>
+                                                <th>Applied</th>
+                                                <th>Resume</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            {filteredApplications.map(app => (
+                                                <tr key={app.id}>
+                                                    <td><strong>{app.applicantName}</strong></td>
+                                                    <td style={{ fontSize: '0.8rem' }}>{app.applicantEmail}</td>
+                                                    <td>
+                                                        <div style={{ fontWeight: '500' }}>{app.jobTitle}</div>
+                                                        <div style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>{app.companyName}</div>
+                                                    </td>
+                                                    <td>{new Date(app.appliedAt).toLocaleDateString()}</td>
+                                                    <td>
+                                                        {app.resumePath ? (
+                                                            <button
+                                                                className="action-btn-modern edit-btn"
+                                                                onClick={() => {
+                                                                    const filename = app.resumePath.split('/').pop();
+                                                                    window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-file-pdf"></i>
+                                                            </button>
+                                                        ) : <span style={{ opacity: 0.5 }}>None</span>}
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'REJECTED' ? 'super-admin' : 'admin'}`}>
+                                                            {app.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <select
+                                                            value={app.status}
+                                                            onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+                                                            className="form-control"
+                                                            style={{ width: 'auto', padding: '0.4rem' }}
+                                                        >
+                                                            <option value="PENDING">Pending</option>
+                                                            <option value="SHORTLISTED">Shortlist</option>
+                                                            <option value="REJECTED">Reject</option>
+                                                            <option value="SELECTED">Select</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
                         ) : (
-                            <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-                                <i className="fas fa-inbox" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
-                                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No applications yet.</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '4rem 2rem' }}>
+                                <i className="fas fa-inbox" style={{ fontSize: '4.5rem', color: 'rgba(0,212,255,0.15)', marginBottom: '1.5rem' }}></i>
+                                <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', fontWeight: '500', margin: 0 }}>No applications yet.</p>
                             </div>
                         )}
-                        </section>
                     </div>
                 );
+            }
             case 'interviews':
                 return (
                     <div className="users-management-page animate-in">
