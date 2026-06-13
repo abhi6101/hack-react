@@ -58,7 +58,7 @@ const Contact = () => {
                             <i className="fas fa-map-marker-alt"></i>
                             <div>
                                 <h4>Main Office</h4>
-                                <p>103, Sukhmani Apt, Bhawarkuan, Indore, MP 452014</p>
+                                <p>Infront of westend A.B road, Indore, MP 452012</p>
                             </div>
                         </div>
                         <div className="social-links">
