@@ -7,12 +7,12 @@
   "theme_color": "#0B1120",
   "icons": [
     {
-      "src": "/images/logo-c.png",
+      "src": "/images/hack2hired_Logo_Icon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/images/logo-c.png",
+      "src": "/images/hack2hired_Logo_Icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }

@@ -69,6 +69,12 @@ const AdminDashboard = () => {
     const { showAlert } = useAlert();
     const { showToast } = useToast();
 
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/');
+        window.location.reload();
+    };
+
     // CSV Export Helper
     const downloadCSV = (data, filename) => {
         if (!data || data.length === 0) {
