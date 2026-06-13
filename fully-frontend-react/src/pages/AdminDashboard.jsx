@@ -2232,16 +2232,22 @@ const AdminDashboard = () => {
                                                     <tr key={user.id} className="row-hover">
 
                                                         <td data-label="Account">
-                                                            <div style={{ fontWeight: '600', color: 'var(--text-primary)', fontFamily: 'monospace', letterSpacing: '0.5px' }}>{user.username}</div>
-                                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.email}</div>
+                                                            <div style={{ fontWeight: '600', color: 'var(--text-primary)', fontFamily: 'monospace', letterSpacing: '0.5px' }}>
+                                                                {user.email ? user.email.split('@')[0] : user.username}
+                                                            </div>
                                                         </td>
                                                         <td data-label="Role">
                                                             <span className={`badge-role role-${user.role.toLowerCase().replace('_', '-')}`} style={user.role === 'USER' ? { backgroundColor: '#064e3b', color: '#4ade80', border: 'none' } : {}}>
                                                                 {user.role}
                                                             </span>
                                                         </td>
-                                                        <td data-label="Assignment">
-                                                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', fontFamily: 'sans-serif' }}>
+                                                        <td data-label="" className="mobile-expandable-cell">
+                                                            <input type="checkbox" id={`expand-assignment-${user.id}`} className="expand-checkbox" />
+                                                            <label htmlFor={`expand-assignment-${user.id}`} className="expand-label mobile-only">
+                                                                <span>Assignment</span>
+                                                                <i className="fas fa-chevron-down" style={{ transition: 'transform 0.3s' }}></i>
+                                                            </label>
+                                                            <div className="expandable-content" style={{ fontSize: '0.9rem', fontWeight: 'bold', fontFamily: 'sans-serif' }}>
                                                                 {user.companyName ? (
                                                                     <span style={{ color: 'var(--accent)' }}><i className="fas fa-building"></i> {user.companyName}</span>
                                                                 ) : user.adminBranch ? (
