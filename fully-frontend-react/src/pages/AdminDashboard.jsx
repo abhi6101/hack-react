@@ -1576,14 +1576,7 @@ const AdminDashboard = () => {
         <div className="users-management-page animate-in" style={{ paddingBottom: '80px' }}>
 
             <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem' }}>
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search students..."
-                    style={{ flex: 1, height: '42px', borderRadius: '10px' }}
-                    value={userSearch}
-                    onChange={(e) => setUserSearch(e.target.value)}
-                />
+                <span style={{color: 'var(--text-secondary)', fontStyle: 'italic', fontSize: '0.9rem'}}>Showing registered students</span>
             </div>            {/* Student Cards */}
             {loadingActivity ? (
                 <TableSkeleton cols={2} rows={4} />
@@ -3049,8 +3042,10 @@ const AdminDashboard = () => {
                                                 <td>{d.name}</td>
                                                 <td>{d.hodName || '-'}</td>
                                                 <td>
-                                                    <button className="btn btn-primary btn-sm" onClick={() => startEditDept(d)} style={{ marginRight: '0.5rem' }}><i className="fas fa-edit"></i> Edit</button>
-                                                    <button className="btn btn-danger btn-sm" onClick={() => deleteDept(d.id)}><i className="fas fa-trash"></i> Delete</button>
+                                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                                        <button className="btn btn-primary btn-sm" onClick={() => startEditDept(d)}><i className="fas fa-edit"></i> Edit</button>
+                                                        <button className="btn btn-danger btn-sm" onClick={() => deleteDept(d.id)}><i className="fas fa-trash"></i> Delete</button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -3179,17 +3174,34 @@ const AdminDashboard = () => {
                     </ul>
                 </nav>
 
-
+                <div className="sidebar-footer" style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <button className="btn w-100" style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '12px', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <i className="fas fa-external-link-alt"></i> Portal
+                    </button>
+                    <button className="btn w-100 mt-2" style={{ background: 'rgba(239, 68, 68, 0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#f87171', borderRadius: '12px', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '10px' }} onClick={handleLogout}>
+                        <i className="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
             </aside>
 
             <main className="admin-main">
                 <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: 'nowrap', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="header-left" style={{ minWidth: 0, paddingRight: '10px' }}>
-                        <h1 style={{ fontSize: activeTab === 'applications' ? 'clamp(1rem, 4vw, 1.5rem)' : (activeTab === 'users' ? '1.35rem' : '1.05rem'), margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: activeTab === 'applications' ? '800' : '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
+                        <h1 style={{ fontSize: 'clamp(1rem, 4vw, 1.5rem)', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '800', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
-                    <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center', whiteSpace: activeTab === 'profile-details' ? 'nowrap' : 'normal', flexShrink: 0 }}>
+                    <div className="admin-header-right" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                         {activeTab === 'students' && (
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <div className="search-box-modern desktop-only" style={{ maxWidth: '300px', position: 'relative' }}>
+                                    <i className="fas fa-search" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Search students..."
+                                        value={userSearch}
+                                        onChange={(e) => setUserSearch(e.target.value)}
+                                        style={{ width: '100%', height: '36px', paddingLeft: '2.4rem', borderRadius: '8px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                                    />
+                                </div>
                                 <button
                                     onClick={() => downloadCSV(studentActivity, 'student_activity.csv')}
                                     title="Export CSV"
@@ -3461,16 +3473,16 @@ const AdminDashboard = () => {
                                 </button>
                             </div>
                         )}
-                        {activeTab === 'dashboard' && (
                             <>
                                 <button
                                     onClick={() => navigate('/')}
                                     style={{
                                         padding: '8px 12px',
                                         borderRadius: '10px',
-                                        border: '1px solid rgba(14, 165, 233, 0.2)',
-                                        background: 'rgba(14, 165, 233, 0.05)',
-                                        color: 'var(--primary)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        backdropFilter: 'blur(10px)',
+                                        color: '#fff',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -3487,9 +3499,10 @@ const AdminDashboard = () => {
                                     style={{
                                         padding: '8px 12px',
                                         borderRadius: '10px',
-                                        border: '1px solid rgba(255, 71, 123, 0.2)',
-                                        background: 'rgba(255, 71, 123, 0.05)',
-                                        color: 'var(--accent)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        backdropFilter: 'blur(10px)',
+                                        color: '#fff',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -3502,7 +3515,6 @@ const AdminDashboard = () => {
                                     <i className="fas fa-sign-out-alt"></i> <span className="desktop-only">Logout</span>
                                 </button>
                             </>
-                        )}
                         {activeTab === 'departments' && (
                             <button
                                 onClick={() => { setIsDeptFormOpen(!isDeptFormOpen); if (isDeptFormOpen) setEditingDept(null); }}

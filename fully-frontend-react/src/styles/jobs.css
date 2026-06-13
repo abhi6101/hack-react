@@ -835,7 +835,7 @@
 @media (max-width: 768px) {
   .papers-header-container { margin-bottom: 12px !important; }
   .mobile-filters-wrapper { display: flex; flex-wrap: wrap; gap: 0.5rem; width: 100%; }
-  .mobile-filter-search, .mobile-filter-category, .mobile-filter-sort { transition: all 0.3s ease; flex: 1 1 30%; min-width: 0; order: 0; }
+  .mobile-filter-search, .mobile-filter-category, .mobile-filter-sort { transition: all 0.3s ease; flex: 1 1 30%; min-width: 0; order: 0; margin-right: 10px; box-sizing: border-box; }
   .mobile-filters-wrapper.active-search .mobile-filter-search { flex: 1 1 100%; order: -1; }
   .mobile-filters-wrapper.active-search .mobile-filter-category, .mobile-filters-wrapper.active-search .mobile-filter-sort { flex: 1 1 48%; order: 1; }
   .mobile-filters-wrapper.active-category .mobile-filter-category { flex: 1 1 100%; order: -1; }

@@ -223,7 +223,7 @@ const Gallery = () => {
                     <p style={{ textAlign: 'center', padding: '2rem' }}>Loading gallery...</p>
                 ) : (
                     <div className="gallery-carousel-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', position: 'relative' }}>
-                        <button className="btn btn-outline desktop-only-arrow sleek-arrow sleek-arrow-left" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: -300, behavior: 'smooth' }); }}><i className="fas fa-chevron-left"></i></button>
+                        <button className="btn btn-outline desktop-only-arrow sleek-arrow sleek-arrow-left" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: -300, behavior: 'smooth' }); }} style={{ display: 'none' }}><i className="fas fa-chevron-left"></i></button>
                         <div className="photo-grid" id="photoGrid" style={{ padding: '0 2rem' }}>
                             {filteredImages.length > 0 ? filteredImages.map((img, index) => (
                                 <div key={img.id} className="photo-item surface-glow" onClick={() => setSelectedIndex(index)}>
@@ -237,7 +237,7 @@ const Gallery = () => {
                                 <p style={{ width: '100%', textAlign: 'center', padding: '2rem' }}>No photos in this category yet.</p>
                             )}
                         </div>
-                        <button className="btn btn-primary desktop-only-arrow sleek-arrow sleek-arrow-right" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: 300, behavior: 'smooth' }); }}><i className="fas fa-chevron-right"></i></button>
+                        <button className="btn btn-primary desktop-only-arrow sleek-arrow sleek-arrow-right" onClick={() => { document.getElementById('photoGrid').scrollBy({ left: 300, behavior: 'smooth' }); }} style={{ display: 'none' }}><i className="fas fa-chevron-right"></i></button>
                     </div>
                 )}
 
@@ -395,7 +395,7 @@ const Gallery = () => {
                 <div id="imageModal" className="modal lightbox-modal" onClick={() => setSelectedIndex(null)}>
                     <span className="close-modal lightbox-close" onClick={() => setSelectedIndex(null)}>&times;</span>
                     
-                    <button className="lightbox-nav lightbox-prev" onClick={handlePrev}>
+                    <button className="lightbox-nav lightbox-prev" onClick={handlePrev} style={{ display: 'none' }}>
                         <i className="fas fa-chevron-left"></i>
                     </button>
                     
@@ -424,7 +424,7 @@ const Gallery = () => {
                         </div>
                     </div>
 
-                    <button className="lightbox-nav lightbox-next" onClick={handleNext}>
+                    <button className="lightbox-nav lightbox-next" onClick={handleNext} style={{ display: 'none' }}>
                         <i className="fas fa-chevron-right"></i>
                     </button>
                 </div>

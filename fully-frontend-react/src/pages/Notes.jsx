@@ -613,6 +613,7 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
 
 
                 {/* Explorer Display Viewport */}
+                <h1 style={{ textAlign: 'center', margin: '0 0 2rem 0', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '800', background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Study Notes</h1>
                 {loading ? (
                     <div className="notes-grid" style={{ marginTop: '2rem' }}>
                         {Array(4).fill(0).map((_, i) => (
