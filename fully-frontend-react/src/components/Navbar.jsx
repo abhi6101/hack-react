@@ -66,6 +66,36 @@ const Navbar = ({ menuOpen = false }) => {
         window.location.reload();
     };
 
+    const getCareerLabel = () => {
+        if (location.pathname === '/jobs') return 'Jobs';
+        if (location.pathname === '/resume-builder') return 'Resume Builder';
+        if (location.pathname === '/interview') return 'Interviews';
+        return 'Career';
+    };
+    const isCareerActive = () => ['/jobs', '/resume-builder', '/interview'].includes(location.pathname);
+
+    const getAcademicsLabel = () => {
+        if (location.pathname === '/papers') return 'Previous Papers';
+        if (location.pathname === '/notes') return 'Study Notes';
+        if (location.pathname === '/upload-paper') return 'Upload Paper';
+        return 'Academics';
+    };
+    const isAcademicsActive = () => ['/papers', '/notes', '/upload-paper'].includes(location.pathname);
+
+    const getResourcesLabel = () => {
+        if (location.pathname === '/quiz') return 'Quiz';
+        if (location.pathname === '/courses') return 'Courses';
+        return 'Resources';
+    };
+    const isResourcesActive = () => ['/quiz', '/courses'].includes(location.pathname);
+
+    const getExploreLabel = () => {
+        if (location.pathname === '/gallery') return 'Gallery';
+        if (location.pathname === '/blog') return 'Blog';
+        return 'Explore';
+    };
+    const isExploreActive = () => ['/gallery', '/blog'].includes(location.pathname);
+
     // Get first name only for compact display
     const firstName = userName.split(' ')[0];
 
@@ -88,8 +118,8 @@ const Navbar = ({ menuOpen = false }) => {
                 <Link to="/" className={isActive('/')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-home"></i> Home</Link>
                 
                 <div className="dropdown">
-                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('career', e)}>
-                        <i className="fas fa-briefcase"></i> Career <i className="fas fa-chevron-down"></i>
+                    <button className={`dropdown-toggle ${careerOpen || isCareerActive() ? 'active' : ''}`} style={careerOpen || isCareerActive() ? { color: 'var(--primary)', borderBottom: '2px solid var(--primary)', textShadow: '0 0 10px rgba(0, 212, 255, 0.3)' } : {}} onClick={(e) => toggleDropdown('career', e)}>
+                        <i className="fas fa-briefcase"></i> {getCareerLabel()} <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${careerOpen ? 'show' : ''}`}>
                         <Link to="/jobs" className={isActive('/jobs')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-search-dollar"></i> Jobs</Link>
@@ -99,8 +129,8 @@ const Navbar = ({ menuOpen = false }) => {
                 </div>
 
                 <div className="dropdown">
-                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('academics', e)}>
-                        <i className="fas fa-graduation-cap"></i> Academics <i className="fas fa-chevron-down"></i>
+                    <button className={`dropdown-toggle ${academicsOpen || isAcademicsActive() ? 'active' : ''}`} style={academicsOpen || isAcademicsActive() ? { color: 'var(--primary)', borderBottom: '2px solid var(--primary)', textShadow: '0 0 10px rgba(0, 212, 255, 0.3)' } : {}} onClick={(e) => toggleDropdown('academics', e)}>
+                        <i className="fas fa-graduation-cap"></i> {getAcademicsLabel()} <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${academicsOpen ? 'show' : ''}`}>
                         <Link to="/papers" className={isActive('/papers')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-copy"></i> Previous Papers</Link>
@@ -110,19 +140,18 @@ const Navbar = ({ menuOpen = false }) => {
                 </div>
 
                 <div className="dropdown">
-                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('resources', e)}>
-                        <i className="fas fa-book-reader"></i> Resources <i className="fas fa-chevron-down"></i>
+                    <button className={`dropdown-toggle ${resourcesOpen || isResourcesActive() ? 'active' : ''}`} style={resourcesOpen || isResourcesActive() ? { color: 'var(--primary)', borderBottom: '2px solid var(--primary)', textShadow: '0 0 10px rgba(0, 212, 255, 0.3)' } : {}} onClick={(e) => toggleDropdown('resources', e)}>
+                        <i className="fas fa-book-reader"></i> {getResourcesLabel()} <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${resourcesOpen ? 'show' : ''}`}>
                         <Link to="/quiz" className={isActive('/quiz')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-brain"></i> Quiz</Link>
-
                         <Link to="/courses" className={isActive('/courses')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-book"></i> Courses</Link>
                     </div>
                 </div>
 
                 <div className="dropdown">
-                    <button className="dropdown-toggle" onClick={(e) => toggleDropdown('explore', e)}>
-                        <i className="fas fa-compass"></i> Explore <i className="fas fa-chevron-down"></i>
+                    <button className={`dropdown-toggle ${exploreOpen || isExploreActive() ? 'active' : ''}`} style={exploreOpen || isExploreActive() ? { color: 'var(--primary)', borderBottom: '2px solid var(--primary)', textShadow: '0 0 10px rgba(0, 212, 255, 0.3)' } : {}} onClick={(e) => toggleDropdown('explore', e)}>
+                        <i className="fas fa-compass"></i> {getExploreLabel()} <i className="fas fa-chevron-down"></i>
                     </button>
                     <div className={`dropdown-menu ${exploreOpen ? 'show' : ''}`}>
                         <Link to="/gallery" className={isActive('/gallery')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-images"></i> Gallery</Link>

@@ -265,10 +265,13 @@ const AdminDashboard = () => {
             if (res.status === 401) return handleUnauthorized();
             if (res.ok) {
                 const data = await res.json();
-                setCompanyStats(data);
+                setCompanyStats(Array.isArray(data) ? data : []);
+            } else {
+                setCompanyStats([]);
             }
         } catch (err) {
             console.error("Failed to load stats", err);
+            setCompanyStats([]);
         } finally {
             setLoadingStats(false);
         }
@@ -283,10 +286,13 @@ const AdminDashboard = () => {
             if (res.status === 401) return handleUnauthorized();
             if (res.ok) {
                 const data = await res.json();
-                setStudentActivity(data);
+                setStudentActivity(Array.isArray(data) ? data : []);
+            } else {
+                setStudentActivity([]);
             }
         } catch (err) {
             console.error("Failed to load student activity", err);
+            setStudentActivity([]);
         } finally {
             setLoadingActivity(false);
         }
@@ -301,10 +307,13 @@ const AdminDashboard = () => {
             if (res.status === 401) return handleUnauthorized();
             if (res.ok) {
                 const data = await res.json();
-                setAllProfiles(data);
+                setAllProfiles(Array.isArray(data) ? data : []);
+            } else {
+                setAllProfiles([]);
             }
         } catch (err) {
             console.error("Failed to load profiles", err);
+            setAllProfiles([]);
         } finally {
             setLoadingProfiles(false);
         }
@@ -319,10 +328,11 @@ const AdminDashboard = () => {
             if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to fetch paper view logs');
             const data = await response.json();
-            setPaperViewLogs(data);
+            setPaperViewLogs(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error loading paper logs:', error);
             showToast({ message: 'Failed to load paper view logs.', type: 'error' });
+            setPaperViewLogs([]);
         } finally {
             setLoadingPaperLogs(false);
         }
@@ -377,9 +387,10 @@ const AdminDashboard = () => {
             if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to fetch applications');
             const data = await response.json();
-            setApplications(data);
+            setApplications(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error loading applications:', error);
+            setApplications([]);
         } finally {
             setLoadingApplications(false);
         }
@@ -452,9 +463,15 @@ const AdminDashboard = () => {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.status === 401) return handleUnauthorized();
-            if (res.ok) setDepartments(await res.json());
+            if (res.ok) {
+                const data = await res.json();
+                setDepartments(Array.isArray(data) ? data : []);
+            } else {
+                setDepartments([]);
+            }
         } catch (e) {
             console.error(e);
+            setDepartments([]);
         } finally {
             setLoadingDepts(false);
         }
@@ -599,10 +616,11 @@ const AdminDashboard = () => {
             });
             if (!response.ok) throw new Error('Failed to fetch interview applications');
             const data = await response.json();
-            setInterviewApplications(data);
+            setInterviewApplications(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error loading interview apps:', error);
             setMessage({ text: 'Failed to load interview applications.', type: 'error' });
+            setInterviewApplications([]);
         } finally {
             setLoadingInterviewApps(false);
         }
@@ -634,10 +652,11 @@ const AdminDashboard = () => {
             });
             if (!response.ok) throw new Error('Failed to fetch gallery items');
             const data = await response.json();
-            setGalleryItems(data);
+            setGalleryItems(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error loading gallery:', error);
             setMessage({ text: 'Failed to load gallery items.', type: 'error' });
+            setGalleryItems([]);
         } finally {
             setLoadingGallery(false);
         }
@@ -877,9 +896,10 @@ const AdminDashboard = () => {
             if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to fetch jobs');
             const data = await response.json();
-            setJobs(data);
+            setJobs(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error loading jobs:', error);
+            setJobs([]);
         } finally {
             setLoadingJobs(false);
         }
@@ -892,9 +912,10 @@ const AdminDashboard = () => {
             if (response.status === 401) return handleUnauthorized();
             if (!response.ok) throw new Error('Failed to fetch users');
             const data = await response.json();
-            setUsers(data);
+            setUsers(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error loading users:', error);
+            setUsers([]);
         } finally {
             setLoadingUsers(false);
         }
