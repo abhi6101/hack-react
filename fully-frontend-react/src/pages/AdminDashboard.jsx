@@ -2681,27 +2681,7 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
-                        {/* Search bar top-right — title already in global page header */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1.5rem', width: '100%', gap: '12px' }}>
-                            {showInterviewSearchInput && (
-                                <div className="search-box-modern animate-in" style={{ width: '180px' }}>
-                                    <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
-                                    <input
-                                        type="text"
-                                        placeholder="Search apps..."
-                                        value={interviewSearch}
-                                        onChange={(e) => setInterviewSearch(e.target.value)}
-                                        style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
-                                    />
-                                </div>
-                            )}
-                            <button 
-                                onClick={() => setShowInterviewSearchInput(!showInterviewSearchInput)} 
-                                style={{ background: showInterviewSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)', border: showInterviewSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255,255,255,0.1)', color: showInterviewSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
-                            >
-                                <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
-                            </button>
-                        </div>
+                        {/* Search moved to global page header — see header-right activeTab === 'interview-applications' block */}
 
                         {loadingInterviewApps ? (
                             <TableSkeleton cols={6} rows={2} />
@@ -3367,6 +3347,42 @@ const AdminDashboard = () => {
                                 <i className="fas fa-plus" style={{ fontSize: '0.75rem' }}></i>
                                 Upload Notes
                             </button>
+                        )}
+                        {activeTab === 'interview-applications' && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                {/* Desktop: always-visible wide search bar */}
+                                <div className="search-box-modern desktop-only" style={{ width: '220px' }}>
+                                    <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Search interview apps..."
+                                        value={interviewSearch}
+                                        onChange={(e) => setInterviewSearch(e.target.value)}
+                                        style={{ width: '100%', height: '30px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.82rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                                    />
+                                </div>
+                                {/* Mobile: collapsible search */}
+                                <span className="mobile-only" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    {showInterviewSearchInput && (
+                                        <div className="search-box-modern animate-in" style={{ width: '130px' }}>
+                                            <i className="fas fa-search" style={{ position: 'absolute', left: '8px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}></i>
+                                            <input
+                                                type="text"
+                                                placeholder="Search..."
+                                                value={interviewSearch}
+                                                onChange={(e) => setInterviewSearch(e.target.value)}
+                                                style={{ width: '100%', height: '28px', paddingLeft: '1.8rem', borderRadius: '6px', fontSize: '0.78rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                                            />
+                                        </div>
+                                    )}
+                                    <button
+                                        onClick={() => setShowInterviewSearchInput(!showInterviewSearchInput)}
+                                        style={{ background: showInterviewSearchInput ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.05)', border: showInterviewSearchInput ? '1px solid rgba(0,212,255,0.2)' : '1px solid rgba(255,255,255,0.1)', color: showInterviewSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
+                                    >
+                                        <i className="fas fa-search" style={{ fontSize: '0.8rem' }}></i>
+                                    </button>
+                                </span>
+                            </div>
                         )}
                         {activeTab === 'applications' && (
                             <>
