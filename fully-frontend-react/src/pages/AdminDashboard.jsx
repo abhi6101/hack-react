@@ -36,7 +36,32 @@ const ToggleSwitch = ({ checked, onChange, disabled }) => (
         </span>
     </label>
 );
-
+const TableSkeleton = ({ cols = 4, rows = 5 }) => (
+    <div className="table-responsive" style={{ padding: '1rem', overflowX: 'auto' }}>
+        <table className="table" style={{ width: '100%', minWidth: '600px' }}>
+            <thead>
+                <tr>
+                    {Array.from({ length: cols }).map((_, i) => (
+                        <th key={i} style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                            <div className="skeleton skeleton-text" style={{ width: '60%', height: '16px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
+                        </th>
+                    ))}
+                </tr>
+            </thead>
+            <tbody>
+                {Array.from({ length: rows }).map((_, rowIndex) => (
+                    <tr key={rowIndex}>
+                        {Array.from({ length: cols }).map((_, colIndex) => (
+                            <td key={colIndex} style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                                <div className="skeleton skeleton-text" style={{ width: colIndex === 0 ? '80%' : '50%', height: '16px', background: 'rgba(255, 255, 255, 0.05)' }}></div>
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+);
 
 
 const AdminDashboard = () => {
@@ -1263,7 +1288,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
-                {loadingProfiles ? <div style={{ padding: '2rem', textAlign: 'center' }}>Loading profiles...</div> : (
+                {loadingProfiles ? <TableSkeleton cols={4} rows={6} /> : (
                     <div className="table-responsive" style={{ padding: '1rem' }}>
                         <table className="table">
                         <thead>
@@ -1342,7 +1367,7 @@ const AdminDashboard = () => {
             </div>
 
             {loadingPaperLogs ? (
-                <div className="loading-indicator">Loading paper view logs...</div>
+                <TableSkeleton cols={5} rows={5} />
             ) : (
                 <div className="table-container">
                     <table className="data-table">
@@ -1473,10 +1498,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {loadingActivity ? (
-                    <div className="loader-container">
-                        <div className="pulse-loader"></div>
-                        <p style={{ color: 'var(--text-secondary)', marginTop: '1rem' }}>Loading activity...</p>
-                    </div>
+                    <TableSkeleton cols={4} rows={5} />
                 ) : (
                     <div className="table-responsive" style={{ padding: '1rem' }}>
                         <table className="table">
@@ -1650,9 +1672,9 @@ const AdminDashboard = () => {
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
                                     {[
                                         { key: 'masterEmailEnabled', title: 'Master Switch', descOn: 'System emails are ACTIVE', descOff: 'ALL emails are BLOCKED', icon: 'fas fa-power-off', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false },
-                                        { key: 'newJobEmailEnabled', title: 'New Job Alerts', descOn: 'Emails to students when jobs are posted', descOff: 'Emails to students when jobs are posted', icon: 'fas fa-bullhorn', activeHex: '#f472b6', activeRgb: '244, 114, 182', disabled: !emailSettings.masterEmailEnabled, borderLogic: 'transparent' },
-                                        { key: 'statusUpdateEmailEnabled', title: 'Status Updates', descOn: 'Shortlisted, Selected, Rejected emails', descOff: 'Shortlisted, Selected, Rejected emails', icon: 'fas fa-envelope-open-text', activeHex: '#fbbf24', activeRgb: '251, 191, 36', disabled: !emailSettings.masterEmailEnabled, borderLogic: 'transparent' },
-                                        { key: 'accountEmailEnabled', title: 'Account Emails', descOn: 'Welcome, Password Reset, Verification', descOff: 'Welcome, Password Reset, Verification', icon: 'fas fa-user-shield', activeHex: '#a855f7', activeRgb: '168, 85, 247', disabled: !emailSettings.masterEmailEnabled, borderLogic: 'transparent' },
+                                        { key: 'newJobEmailEnabled', title: 'New Job Alerts', descOn: 'Emails to students when jobs are posted', descOff: 'Emails to students when jobs are posted', icon: 'fas fa-bullhorn', activeHex: '#f472b6', activeRgb: '244, 114, 182', disabled: !emailSettings.masterEmailEnabled },
+                                        { key: 'statusUpdateEmailEnabled', title: 'Status Updates', descOn: 'Shortlisted, Selected, Rejected emails', descOff: 'Shortlisted, Selected, Rejected emails', icon: 'fas fa-envelope-open-text', activeHex: '#fbbf24', activeRgb: '251, 191, 36', disabled: !emailSettings.masterEmailEnabled },
+                                        { key: 'accountEmailEnabled', title: 'Account Emails', descOn: 'Welcome, Password Reset, Verification', descOff: 'Welcome, Password Reset, Verification', icon: 'fas fa-user-shield', activeHex: '#a855f7', activeRgb: '168, 85, 247', disabled: !emailSettings.masterEmailEnabled },
                                         { key: 'paperDownloadEnabled', title: 'Paper Download Feature', descOn: 'Students CAN download previous year papers', descOff: 'Students CANNOT download papers (View only)', icon: 'fas fa-file-pdf', activeHex: '#00d4ff', activeRgb: '0, 212, 255', disabled: false },
                                         { key: 'notesDownloadEnabled', title: 'Study Notes Download Feature', descOn: 'Students CAN download PDF notes', descOff: 'Students CANNOT download notes (View only)', icon: 'fas fa-book', activeHex: '#00d4ff', activeRgb: '0, 212, 255', disabled: false },
                                         { key: 'screenshotRestrictionEnabled', title: 'Screenshot & Key Restriction', descOn: 'Screenshot & Print/Save keyboard blocks are ACTIVE', descOff: 'Screenshots and all keyboard shortcuts are ALLOWED', icon: 'fas fa-camera-retro', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false }
@@ -1660,14 +1682,14 @@ const AdminDashboard = () => {
                                         const isActive = emailSettings[item.key];
                                         const isMaster = item.key === 'masterEmailEnabled';
                                         const effectiveDisabled = !isMaster && item.disabled;
-                                        const effectiveOpacity = effectiveDisabled ? 0.5 : 1;
+                                        const effectiveOpacity = effectiveDisabled ? 0.4 : 1;
                                         const bgRgba = isActive ? `rgba(${item.activeRgb}, 0.15)` : 'rgba(239, 68, 68, 0.15)';
                                         const borderColor = isActive ? `rgba(${item.activeRgb}, 0.3)` : 'rgba(239, 68, 68, 0.3)';
                                         const iconColor = isActive ? item.activeHex : '#f87171';
-                                        const borderLeftColor = item.borderLogic ? item.borderLogic : (isActive ? item.activeHex : '#ef4444');
+                                        const borderLeftColor = isActive ? item.activeHex : '#ef4444';
 
                                         return (
-                                            <div className="card surface-glow-premium hover-scale" key={item.key} style={{ padding: '1.25rem', borderRadius: '16px', borderLeft: `4px solid ${borderLeftColor}`, display: 'flex', alignItems: 'center', gap: '1.25rem', background: 'rgba(20, 25, 40, 0.4)', opacity: effectiveOpacity, transition: 'all 0.3s ease' }}>
+                                            <div className="card surface-glow-premium hover-scale" key={item.key} style={{ padding: '1.25rem', borderRadius: '16px', borderLeft: `4px solid ${borderLeftColor}`, display: 'flex', alignItems: 'center', gap: '1.25rem', background: 'rgba(255, 255, 255, 0.03)', borderTop: '1px solid rgba(255,255,255,0.05)', borderRight: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', opacity: effectiveOpacity, transition: 'all 0.3s ease' }}>
                                                 <div style={{ width: '48px', height: '48px', borderRadius: '12px', flexShrink: 0, background: bgRgba, display: 'flex', alignItems: 'center', justifyContent: 'center', color: iconColor, fontSize: '1.3rem', border: `1px solid ${borderColor}` }}>
                                                     <i className={item.icon}></i>
                                                 </div>
