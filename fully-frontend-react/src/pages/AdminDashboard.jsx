@@ -1453,21 +1453,31 @@ const AdminDashboard = () => {
     const renderStudentMonitor = () => (
         <div className="users-management-page animate-in">
             <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
                     <div>
-                        <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-user-graduate" style={{ color: 'var(--primary)' }}></i> Student Monitor</h3>
+                        <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.3rem', color: 'var(--text-primary)' }}>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary), #00a8cc)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 4px 15px rgba(0, 212, 255, 0.3)' }}>
+                                <i className="fas fa-user-graduate"></i>
+                            </div>
+                            Student Monitor
+                        </h3>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                        <button className="btn-secondary" onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'nowrap', width: '100%' }} className="desktop-auto-width">
+                        <button className="btn-premium" onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} style={{ flex: 1, justifyContent: 'center' }}>
                             <i className="fas fa-file-csv"></i> Export CSV
                         </button>
-                        <button className="btn-secondary" onClick={fetchStudentActivity} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <button className="btn-outline" onClick={fetchStudentActivity} style={{ flex: 1, padding: '0.75rem 1.5rem', borderRadius: '12px', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', cursor: 'pointer', transition: 'all 0.3s' }}>
                             <i className="fas fa-sync-alt"></i> Refresh
                         </button>
                     </div>
                 </div>
 
-                {loadingActivity ? <div style={{ padding: '2rem', textAlign: 'center' }}>Loading activity...</div> : (
+                {loadingActivity ? (
+                    <div className="loader-container">
+                        <div className="pulse-loader"></div>
+                        <p style={{ color: 'var(--text-secondary)', marginTop: '1rem' }}>Loading activity...</p>
+                    </div>
+                ) : (
                     <div className="table-responsive" style={{ padding: '1rem' }}>
                         <table className="table">
                         <thead>
@@ -1637,117 +1647,40 @@ const AdminDashboard = () => {
                                     </p>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+                                    {[
+                                        { key: 'masterEmailEnabled', title: 'Master Switch', descOn: 'System emails are ACTIVE', descOff: 'ALL emails are BLOCKED', icon: 'fas fa-power-off', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false },
+                                        { key: 'newJobEmailEnabled', title: 'New Job Alerts', descOn: 'Emails to students when jobs are posted', descOff: 'Emails to students when jobs are posted', icon: 'fas fa-bullhorn', activeHex: '#f472b6', activeRgb: '244, 114, 182', disabled: !emailSettings.masterEmailEnabled, borderLogic: 'transparent' },
+                                        { key: 'statusUpdateEmailEnabled', title: 'Status Updates', descOn: 'Shortlisted, Selected, Rejected emails', descOff: 'Shortlisted, Selected, Rejected emails', icon: 'fas fa-envelope-open-text', activeHex: '#fbbf24', activeRgb: '251, 191, 36', disabled: !emailSettings.masterEmailEnabled, borderLogic: 'transparent' },
+                                        { key: 'accountEmailEnabled', title: 'Account Emails', descOn: 'Welcome, Password Reset, Verification', descOff: 'Welcome, Password Reset, Verification', icon: 'fas fa-user-shield', activeHex: '#a855f7', activeRgb: '168, 85, 247', disabled: !emailSettings.masterEmailEnabled, borderLogic: 'transparent' },
+                                        { key: 'paperDownloadEnabled', title: 'Paper Download Feature', descOn: 'Students CAN download previous year papers', descOff: 'Students CANNOT download papers (View only)', icon: 'fas fa-file-pdf', activeHex: '#00d4ff', activeRgb: '0, 212, 255', disabled: false },
+                                        { key: 'notesDownloadEnabled', title: 'Study Notes Download Feature', descOn: 'Students CAN download PDF notes', descOff: 'Students CANNOT download notes (View only)', icon: 'fas fa-book', activeHex: '#00d4ff', activeRgb: '0, 212, 255', disabled: false },
+                                        { key: 'screenshotRestrictionEnabled', title: 'Screenshot & Key Restriction', descOn: 'Screenshot & Print/Save keyboard blocks are ACTIVE', descOff: 'Screenshots and all keyboard shortcuts are ALLOWED', icon: 'fas fa-camera-retro', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false }
+                                    ].map(item => {
+                                        const isActive = emailSettings[item.key];
+                                        const isMaster = item.key === 'masterEmailEnabled';
+                                        const effectiveDisabled = !isMaster && item.disabled;
+                                        const effectiveOpacity = effectiveDisabled ? 0.5 : 1;
+                                        const bgRgba = isActive ? `rgba(${item.activeRgb}, 0.15)` : 'rgba(239, 68, 68, 0.15)';
+                                        const borderColor = isActive ? `rgba(${item.activeRgb}, 0.3)` : 'rgba(239, 68, 68, 0.3)';
+                                        const iconColor = isActive ? item.activeHex : '#f87171';
+                                        const borderLeftColor = item.borderLogic ? item.borderLogic : (isActive ? item.activeHex : '#ef4444');
 
-                                    {/* Master Switch */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.masterEmailEnabled ? '#22c55e' : '#ef4444'}` }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>🚨 Master Switch</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
-                                                    {emailSettings.masterEmailEnabled ? 'System emails are ACTIVE' : 'ALL emails are BLOCKED'}
-                                                </p>
+                                        return (
+                                            <div className="card surface-glow-premium hover-scale" key={item.key} style={{ padding: '1.25rem', borderRadius: '16px', borderLeft: `4px solid ${borderLeftColor}`, display: 'flex', alignItems: 'center', gap: '1.25rem', background: 'rgba(20, 25, 40, 0.4)', opacity: effectiveOpacity, transition: 'all 0.3s ease' }}>
+                                                <div style={{ width: '48px', height: '48px', borderRadius: '12px', flexShrink: 0, background: bgRgba, display: 'flex', alignItems: 'center', justifyContent: 'center', color: iconColor, fontSize: '1.3rem', border: `1px solid ${borderColor}` }}>
+                                                    <i className={item.icon}></i>
+                                                </div>
+                                                <div style={{ flex: 1 }}>
+                                                    <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: '600' }}>{item.title}</h4>
+                                                    <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{isActive ? item.descOn : item.descOff}</p>
+                                                </div>
+                                                <div>
+                                                    <ToggleSwitch checked={isActive} onChange={() => toggleEmailSetting(item.key, isActive)} disabled={effectiveDisabled} />
+                                                </div>
                                             </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.masterEmailEnabled}
-                                                onChange={() => toggleEmailSetting('masterEmailEnabled', emailSettings.masterEmailEnabled)}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* New Job Alerts */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>📢 New Job Alerts</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Emails to students when jobs are posted</p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.newJobEmailEnabled}
-                                                onChange={() => toggleEmailSetting('newJobEmailEnabled', emailSettings.newJobEmailEnabled)}
-                                                disabled={!emailSettings.masterEmailEnabled}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Status Updates */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>📝 Status Updates</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Shortlisted, Selected, Rejected emails</p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.statusUpdateEmailEnabled}
-                                                onChange={() => toggleEmailSetting('statusUpdateEmailEnabled', emailSettings.statusUpdateEmailEnabled)}
-                                                disabled={!emailSettings.masterEmailEnabled}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Account Emails */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', opacity: emailSettings.masterEmailEnabled ? 1 : 0.5 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>👤 Account Emails</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>Welcome, Password Reset, Verification</p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.accountEmailEnabled}
-                                                onChange={() => toggleEmailSetting('accountEmailEnabled', emailSettings.accountEmailEnabled)}
-                                                disabled={!emailSettings.masterEmailEnabled}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Paper Download Switch */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.paperDownloadEnabled ? '#00d4ff' : '#ef4444'}` }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>📄 Paper Download Feature</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
-                                                    {emailSettings.paperDownloadEnabled ? 'Students CAN download previous year papers' : 'Students CANNOT download papers (View only)'}
-                                                </p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.paperDownloadEnabled}
-                                                onChange={() => toggleEmailSetting('paperDownloadEnabled', emailSettings.paperDownloadEnabled)}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Notes Download Switch */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.notesDownloadEnabled ? '#00d4ff' : '#ef4444'}`, marginTop: '1rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>📚 Study Notes Download Feature</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
-                                                    {emailSettings.notesDownloadEnabled ? 'Students CAN download PDF notes' : 'Students CANNOT download notes (View only)'}
-                                                </p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.notesDownloadEnabled}
-                                                onChange={() => toggleEmailSetting('notesDownloadEnabled', emailSettings.notesDownloadEnabled)}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Screenshot and Key Restriction Switch */}
-                                    <div className="surface-glow" style={{ padding: '1.2rem', borderRadius: '8px', borderLeft: `4px solid ${emailSettings.screenshotRestrictionEnabled ? '#22c55e' : '#ef4444'}` }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <h4 style={{ margin: 0 }}>📸 Screenshot & Key Restriction</h4>
-                                                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '5px 0 0' }}>
-                                                    {emailSettings.screenshotRestrictionEnabled ? 'Screenshot & Print/Save keyboard blocks are ACTIVE' : 'Screenshots and all keyboard shortcuts are ALLOWED'}
-                                                </p>
-                                            </div>
-                                            <ToggleSwitch
-                                                checked={emailSettings.screenshotRestrictionEnabled}
-                                                onChange={() => toggleEmailSetting('screenshotRestrictionEnabled', emailSettings.screenshotRestrictionEnabled)}
-                                            />
-                                        </div>
-                                    </div>
-
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}

@@ -1610,3 +1610,10 @@ td {
 
 /* Hide scrollbars globally to prevent white lines on mobile simulators */
 ::-webkit-scrollbar { display: none; }
+
+@media (min-width: 768px) {
+    .desktop-auto-width {
+        width: auto !important;
+        flex: 0 0 auto !important;
+    }
+}
