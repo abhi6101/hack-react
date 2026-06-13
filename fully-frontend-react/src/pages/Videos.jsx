@@ -135,7 +135,7 @@ const Videos = () => {
             </div>
 
             <section className="video-list-section" style={{ padding: 0 }}>
-                <div className="video-list" id="videoList" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
+                <div className="video-list" id="videoList">
                     {filteredVideos.length === 0 ? (
                         <p className="no-results" style={{ gridColumn: '1 / -1', textAlign: 'center', color: 'var(--text-secondary)', padding: '3rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
                             <i className="fas fa-video-slash" style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.5 }}></i><br/>

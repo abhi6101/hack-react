@@ -365,6 +365,12 @@
         padding: 0.4rem 1rem !important;
         font-size: 0.85rem !important;
     }
+
+    .video-list {
+        display: grid;
+        grid-template-columns: 1fr; /* single column on mobile */
+        gap: 1.5rem;
+    }
     
     .video-card {
         border-radius: 20px !important;
