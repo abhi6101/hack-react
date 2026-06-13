@@ -238,7 +238,11 @@ const Interview = () => {
     };
 
     useEffect(() => {
-        fetchMyApplications();
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : {};
+        if (user.role === 'STUDENT' || !user.role) {
+            fetchMyApplications();
+        }
     }, []);
 
     const hasApplied = (interviewId) => {
