@@ -1360,11 +1360,11 @@ const AdminDashboard = () => {
 
     const renderPaperViewLogs = () => (
         <div className="surface-glow" style={{ padding: '1.5rem', borderRadius: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
                     <h2>Paper View Logs</h2>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.6rem' }}>
                     <div className="search-box-modern">
                         <i className="fas fa-search"></i>
                         <input
@@ -1374,12 +1374,14 @@ const AdminDashboard = () => {
                             onChange={(e) => setPaperLogSearch(e.target.value)}
                         />
                     </div>
-                    <button className="btn-secondary" onClick={() => downloadCSV(paperViewLogs, 'paper_view_logs.csv')}>
-                        <i className="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button className="btn-secondary" onClick={loadPaperViewLogs}>
-                        <i className="fas fa-sync-alt"></i> Refresh
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.6rem' }}>
+                        <button className="btn-secondary" onClick={() => downloadCSV(paperViewLogs, 'paper_view_logs.csv')}>
+                            <i className="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <button className="btn-secondary" onClick={loadPaperViewLogs}>
+                            <i className="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -2525,16 +2527,13 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
-                        {/* Consolidated Header Row */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
-                            <h2 style={{ fontSize: '1.8rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
-                                Job Applications
-                            </h2>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        {/* Header: only action buttons, title shown in global page header */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1.5rem', width: '100%', gap: '12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
                                 <button 
                                     className="btn btn-secondary" 
                                     onClick={() => downloadCSV(applications, 'job_applications.csv')} 
-                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'all 0.3s' }}
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'all 0.3s', whiteSpace: 'nowrap' }}
                                 >
                                     <i className="fas fa-file-csv"></i> Export
                                 </button>
@@ -2733,31 +2732,26 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
-                        {/* Consolidated Header Row */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
-                            <h2 style={{ fontSize: '1.8rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
-                                Interview Apps
-                            </h2>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                {showInterviewSearchInput && (
-                                    <div className="search-box-modern animate-in" style={{ width: '180px' }}>
-                                        <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
-                                        <input
-                                            type="text"
-                                            placeholder="Search apps..."
-                                            value={interviewSearch}
-                                            onChange={(e) => setInterviewSearch(e.target.value)}
-                                            style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
-                                        />
-                                    </div>
-                                )}
-                                <button 
-                                    onClick={() => setShowInterviewSearchInput(!showInterviewSearchInput)} 
-                                    style={{ background: showInterviewSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)', border: showInterviewSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255,255,255,0.1)', color: showInterviewSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
-                                >
-                                    <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
-                                </button>
-                            </div>
+                        {/* Search bar top-right — title already in global page header */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1.5rem', width: '100%', gap: '12px' }}>
+                            {showInterviewSearchInput && (
+                                <div className="search-box-modern animate-in" style={{ width: '180px' }}>
+                                    <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Search apps..."
+                                        value={interviewSearch}
+                                        onChange={(e) => setInterviewSearch(e.target.value)}
+                                        style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                                    />
+                                </div>
+                            )}
+                            <button 
+                                onClick={() => setShowInterviewSearchInput(!showInterviewSearchInput)} 
+                                style={{ background: showInterviewSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)', border: showInterviewSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255,255,255,0.1)', color: showInterviewSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
+                            >
+                                <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
+                            </button>
                         </div>
 
                         {loadingInterviewApps ? (
