@@ -2348,26 +2348,34 @@ const AdminDashboard = () => {
                         )}
 
                         <section className="card surface-glow" style={{ border: '1px solid rgba(255,255,255,0.05)' }}>
-                            <div className="card-header" style={{ padding: '1.5rem 2rem' }}>
-                                <div>
-                                    <h3 style={{ margin: 0 }}>Registered Workforce</h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '5px 0 0' }}>
-                                        {role === 'DEPT_ADMIN' ? `Displaying students from ${localStorage.getItem('adminBranch')}` : 'Full access to system registry'}
-                                    </p>
+                            <div className="card-header" style={{ padding: '1.5rem 2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', alignItems: 'stretch' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <h3 style={{ margin: 0, whiteSpace: 'nowrap' }}>Registered Workforce</h3>
+                                    {role === 'DEPT_ADMIN' && (
+                                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
+                                            Displaying students from {localStorage.getItem('adminBranch')}
+                                        </p>
+                                    )}
                                 </div>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    <div className="search-box-modern">
-                                        <i className="fas fa-search"></i>
-                                        <input
-                                            type="text"
-                                            placeholder="Search accounts..."
-                                            value={userSearch}
-                                            onChange={(e) => setUserSearch(e.target.value)}
-                                        />
+                                <div style={{ display: 'flex', gap: '1rem', width: '100%', alignItems: 'center' }}>
+                                    <div style={{ flex: '1 1 50%', display: 'flex' }}>
+                                        <div className="search-box-modern" style={{ width: '100%' }}>
+                                            <i className="fas fa-search" style={{ position: 'absolute', left: '12px' }}></i>
+                                            <input
+                                                type="text"
+                                                placeholder="Search accounts..."
+                                                value={userSearch}
+                                                onChange={(e) => setUserSearch(e.target.value)}
+                                                style={{ width: '100%', minWidth: '100%', maxWidth: '100%', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
                                     </div>
-                                    <button className="btn-icon" title="Refresh List" onClick={loadUsers}>
-                                        <i className="fas fa-sync-alt"></i>
-                                    </button>
+                                    <div style={{ flex: '1 1 50%', display: 'flex' }}>
+                                        <button className="btn-icon" title="Refresh List" onClick={loadUsers} style={{ width: '100%', height: '38px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                            <i className="fas fa-sync-alt"></i>
+                                            <span style={{ fontSize: '0.85rem', fontWeight: '600' }}>Refresh</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -3198,7 +3206,7 @@ const AdminDashboard = () => {
                 {activeTab !== 'students' && (
                 <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)' }}>
                     <div className="header-left">
-                        <h1 style={{ fontSize: '1.05rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
+                        <h1 style={{ fontSize: activeTab === 'users' ? '1.35rem' : '1.05rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
                     <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                         {activeTab === 'interviews' && (
