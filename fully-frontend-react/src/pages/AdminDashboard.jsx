@@ -1488,19 +1488,7 @@ const AdminDashboard = () => {
     const renderStudentMonitor = () => (
         <div className="users-management-page animate-in">
             {/* Header + Toolbar */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <h2 style={{ 
-                    margin: '0 0 1rem 0', 
-                    fontSize: '1.75rem', 
-                    fontFamily: 'sans-serif', 
-                    fontWeight: 'bold', 
-                    background: 'linear-gradient(90deg, #00d4ff, #ffffff)', 
-                    WebkitBackgroundClip: 'text', 
-                    WebkitTextFillColor: 'transparent',
-                    display: 'inline-block'
-                }}>
-                    Student Monitor
-                </h2>
+            <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'nowrap' }}>
                     <button 
                         onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} 
