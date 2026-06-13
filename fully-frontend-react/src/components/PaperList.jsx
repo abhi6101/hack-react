@@ -69,30 +69,22 @@ const PaperList = () => {
     };
 
     return (
-        <div className="card surface-glow" style={{ marginTop: '2rem' }}>
-            <div className="card-header">
-                <h3 style={{ marginBottom: 0 }}><i className="fas fa-database"></i> Managed Papers Archive</h3>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <span className="badge badge-primary">{filteredPapers.length} Papers</span>
-                    <button className="btn btn-secondary btn-sm" onClick={fetchPapers}><i className="fas fa-sync"></i> Refresh</button>
-                </div>
-            </div>
-
+        <div className="card surface-glow-premium" style={{ marginTop: '2rem' }}>
             {/* Filter Bar */}
             <div className="filter-bar" style={{
-                display: 'flex',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
                 gap: '1rem',
                 padding: '1rem',
                 background: 'rgba(255,255,255,0.03)',
                 borderBottom: '1px solid rgba(255,255,255,0.1)',
-                flexWrap: 'wrap',
-                alignItems: 'center'
+                alignItems: 'end'
             }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                     <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Branch</label>
                     <select
                         className="form-control"
-                        style={{ padding: '0.5rem', minWidth: '150px' }}
+                        style={{ padding: '0.5rem' }}
                         value={selectedBranch}
                         onChange={e => setSelectedBranch(e.target.value)}
                     >
@@ -105,7 +97,7 @@ const PaperList = () => {
                     <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Semester</label>
                     <select
                         className="form-control"
-                        style={{ padding: '0.5rem', minWidth: '120px' }}
+                        style={{ padding: '0.5rem' }}
                         value={selectedSemester}
                         onChange={e => setSelectedSemester(e.target.value)}
                     >
@@ -118,7 +110,7 @@ const PaperList = () => {
                     <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Subject</label>
                     <select
                         className="form-control"
-                        style={{ padding: '0.5rem', minWidth: '200px' }}
+                        style={{ padding: '0.5rem' }}
                         value={selectedSubject}
                         onChange={e => setSelectedSubject(e.target.value)}
                     >
@@ -127,45 +119,49 @@ const PaperList = () => {
                     </select>
                 </div>
 
-                {(selectedBranch || selectedSemester || selectedSubject) && (
-                    <button
-                        className="btn btn-sm btn-danger"
-                        onClick={resetFilters}
-                        style={{ height: '38px', marginTop: 'auto', padding: '0 1rem' }}
-                    >
-                        <i className="fas fa-times"></i> Clear Filters
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className="btn-premium" style={{ flex: 1, borderRadius: '10px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={fetchPapers}>
+                        <i className="fas fa-sync-alt" style={{ marginRight: '5px' }}></i> Refresh
                     </button>
-                )}
+                    {(selectedBranch || selectedSemester || selectedSubject) && (
+                        <button
+                            className="btn-premium"
+                            onClick={resetFilters}
+                            style={{ flex: 1, borderRadius: '10px', height: '38px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        >
+                            <i className="fas fa-times" style={{ marginRight: '5px' }}></i> Clear
+                        </button>
+                    )}
+                    {filteredPapers.length > 0 && (
+                        <button
+                            className="btn-premium"
+                            onClick={async () => {
+                                if (!window.confirm(`Are you sure you want to delete ALL ${filteredPapers.length} currently shown papers? This cannot be undone.`)) return;
 
-                {filteredPapers.length > 0 && (
-                    <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={async () => {
-                            if (!window.confirm(`Are you sure you want to delete ALL ${filteredPapers.length} currently shown papers? This cannot be undone.`)) return;
+                                setLoading(true);
+                                let successCount = 0;
 
-                            setLoading(true);
-                            let successCount = 0;
-
-                            for (const paper of filteredPapers) {
-                                try {
-                                    const res = await fetch(`${API_BASE_URL}/papers/${paper.id}`, {
-                                        method: 'DELETE',
-                                        headers: { 'Authorization': `Bearer ${token}` }
-                                    });
-                                    if (res.ok) successCount++;
-                                } catch (e) {
-                                    console.error("Failed to delete paper", paper.id, e);
+                                for (const paper of filteredPapers) {
+                                    try {
+                                        const res = await fetch(`${API_BASE_URL}/papers/${paper.id}`, {
+                                            method: 'DELETE',
+                                            headers: { 'Authorization': `Bearer ${token}` }
+                                        });
+                                        if (res.ok) successCount++;
+                                    } catch (e) {
+                                        console.error("Failed to delete paper", paper.id, e);
+                                    }
                                 }
-                            }
 
-                            showToast({ message: `Deleted ${successCount} papers.`, type: 'success' });
-                            fetchPapers(); // Refresh list
-                        }}
-                        style={{ height: '38px', marginTop: 'auto', padding: '0 1rem', marginLeft: 'auto' }}
-                    >
-                        <i className="fas fa-trash-alt"></i> Delete All Shown
-                    </button>
-                )}
+                                showToast({ message: `Deleted ${successCount} papers.`, type: 'success' });
+                                fetchPapers(); // Refresh list
+                            }}
+                            style={{ flex: 1, borderRadius: '10px', height: '38px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        >
+                            <i className="fas fa-trash-alt" style={{ marginRight: '5px' }}></i> Delete All
+                        </button>
+                    )}
+                </div>
             </div>
 
             {loading ? <div className="loading-indicator">Processing...</div> : (
@@ -213,11 +209,11 @@ const PaperList = () => {
                                                 href={`${API_BASE_URL}/public/papers/download/${p.id}?t=${Date.now()}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="btn btn-primary btn-sm"
+                                                className="btn-premium" style={{ borderRadius: '10px', padding: '6px 12px', display: 'flex', alignItems: 'center' }}
                                             >
                                                 <i className="fas fa-eye"></i>
                                             </a>
-                                            <button className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}><i className="fas fa-trash"></i></button>
+                                            <button className="btn-premium" style={{ borderRadius: '10px', padding: '6px 12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center' }} onClick={() => handleDelete(p.id)}><i className="fas fa-trash"></i></button>
                                         </div>
                                     </td>
                                 </tr>

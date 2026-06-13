@@ -222,6 +222,7 @@ const AdminDashboard = () => {
     const [isUserFormOpen, setIsUserFormOpen] = useState(false);
     const [isGalleryFormOpen, setIsGalleryFormOpen] = useState(false);
     const [isInterviewFormOpen, setIsInterviewFormOpen] = useState(false);
+    const [isPaperFormOpen, setIsPaperFormOpen] = useState(false);
     const [editingInterview, setEditingInterview] = useState(null);
 
     const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
@@ -3086,9 +3087,11 @@ const AdminDashboard = () => {
             case 'question-papers':
                 return (
                     <div className="users-management-page animate-in">
-                        <div style={{ marginBottom: '2.5rem' }}>
-                            <PaperWizard onUploadSuccess={() => setRefreshKey(prev => prev + 1)} />
-                        </div>
+                        {isPaperFormOpen && (
+                            <div style={{ marginBottom: '2.5rem' }}>
+                                <PaperWizard onUploadSuccess={() => setRefreshKey(prev => prev + 1)} />
+                            </div>
+                        )}
                         <PaperList key={refreshKey} />
                     </div>
                 );
@@ -3206,6 +3209,36 @@ const AdminDashboard = () => {
                         <h1 style={{ fontSize: activeTab === 'users' ? '1.35rem' : '1.05rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
                     <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        {activeTab === 'question-papers' && (
+                            <button
+                                onClick={() => setIsPaperFormOpen(prev => !prev)}
+                                style={{
+                                    padding: '6px 12px',
+                                    borderRadius: '10px',
+                                    border: isPaperFormOpen
+                                        ? '1px solid rgba(239, 68, 68, 0.4)'
+                                        : '1px solid rgba(0, 204, 255, 0.35)',
+                                    background: isPaperFormOpen
+                                        ? 'rgba(239, 68, 68, 0.1)'
+                                        : 'rgba(0, 204, 255, 0.1)',
+                                    color: isPaperFormOpen ? '#f87171' : '#00ccff',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    fontWeight: '600',
+                                    fontSize: '0.8rem',
+                                    transition: 'all 0.2s ease',
+                                    whiteSpace: 'nowrap'
+                                }}
+                                className="btn-premium"
+                            >
+                                {isPaperFormOpen
+                                    ? <><i className="fas fa-times" style={{ fontSize: '0.75rem', marginRight: '5px' }}></i> Close Form</>
+                                    : <><i className="fas fa-plus" style={{ fontSize: '0.7rem', marginRight: '5px' }}></i> Upload Papers</>
+                                }
+                            </button>
+                        )}
                         {activeTab === 'interviews' && (
                             <span className="mobile-only">
                                 <button
