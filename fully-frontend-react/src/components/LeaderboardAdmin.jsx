@@ -5,7 +5,7 @@ import API_BASE_URL from '../config';
 const ADMIN_API_URL = `${API_BASE_URL}/admin`;
 const PUBLIC_API_URL = `${API_BASE_URL}/public`;
 
-const TableSkeleton = ({ cols = 4, rows = 5 }) => (
+const TableSkeleton = ({ cols = 4, rows = 2 }) => (
     <div className="table-responsive" style={{ padding: '1rem', overflowX: 'auto', width: '100%' }}>
         <table className="table" style={{ width: '100%' }}>
             <thead>
@@ -88,7 +88,7 @@ const LeaderboardAdmin = () => {
                     <p>View top contributors and reset their points if necessary.</p>
                 </div>
                 <div className="table-responsive surface-glow" style={{ borderRadius: '16px', overflow: 'hidden' }}>
-                    <TableSkeleton cols={4} rows={5} />
+                    <TableSkeleton cols={4} rows={2} />
                 </div>
             </div>
         );

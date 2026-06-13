@@ -36,7 +36,7 @@ const ToggleSwitch = ({ checked, onChange, disabled }) => (
         </span>
     </label>
 );
-const TableSkeleton = ({ cols = 4, rows = 5 }) => (
+const TableSkeleton = ({ cols = 4, rows = 2 }) => (
     <div className="table-responsive" style={{ padding: '1rem', overflowX: 'auto', width: '100%' }}>
         <table className="table" style={{ width: '100%' }}>
             <thead>
@@ -839,6 +839,15 @@ const AdminDashboard = () => {
         if (activeTab === 'profile-details' && (isSuperAdmin || role === 'DEPT_ADMIN' || role === 'ADMIN')) {
             fetchAllProfiles();
         }
+        if (activeTab === 'paper-logs') {
+            loadPaperViewLogs();
+        }
+        if (activeTab === 'applications') {
+            loadApplications();
+        }
+        if (activeTab === 'interview-applications') {
+            loadInterviewApplications();
+        }
     }, [navigate, role, isSuperAdmin, activeTab]);
 
     // Pre-fill Branch for DEPT_ADMIN
@@ -1288,7 +1297,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
-                {loadingProfiles ? <TableSkeleton cols={4} rows={6} /> : (
+                {loadingProfiles ? <TableSkeleton cols={4} rows={2} /> : (
                     <div className="table-responsive" style={{ padding: '1rem' }}>
                         <table className="table">
                         <thead>
@@ -1367,7 +1376,7 @@ const AdminDashboard = () => {
             </div>
 
             {loadingPaperLogs ? (
-                <TableSkeleton cols={5} rows={5} />
+                <TableSkeleton cols={5} rows={2} />
             ) : (
                 <div className="table-container">
                     <table className="data-table">
@@ -1498,7 +1507,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {loadingActivity ? (
-                    <TableSkeleton cols={4} rows={5} />
+                    <TableSkeleton cols={4} rows={2} />
                 ) : (
                     <div className="table-responsive" style={{ padding: '1rem' }}>
                         <table className="table">
@@ -1923,7 +1932,7 @@ const AdminDashboard = () => {
                                     </button>
                                 )}
                             </div>
-                            {loadingJobs && <TableSkeleton cols={5} rows={5} />}
+                            {loadingJobs && <TableSkeleton cols={5} rows={2} />}
                             {!loadingJobs && (
                                 <div className="table-responsive">
                                     {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
@@ -2190,7 +2199,7 @@ const AdminDashboard = () => {
                             </div>
 
                             {loadingUsers ? (
-                                <TableSkeleton cols={5} rows={6} />
+                                <TableSkeleton cols={5} rows={2} />
                             ) : (
                                 <div className="table-container">
                                     {filteredUsers.filter(u =>
@@ -2309,7 +2318,7 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         {loadingApplications ? (
-                            <TableSkeleton cols={7} rows={5} />
+                            <TableSkeleton cols={7} rows={2} />
                         ) : applications.length > 0 ? (
                             <div className="table-responsive" style={{ padding: '1rem' }}>
                                 <table className="table">
@@ -2500,7 +2509,7 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         {loadingInterviewApps ? (
-                            <TableSkeleton cols={6} rows={5} />
+                            <TableSkeleton cols={6} rows={2} />
                         ) : interviewApplications.length > 0 ? (
                             <div className="table-responsive" style={{ padding: '1rem' }}>
                                 <table className="table">
@@ -2650,7 +2659,7 @@ const AdminDashboard = () => {
                                 <h3><i className="fas fa-images"></i> Gallery Management</h3>
                             </div>
                             {loadingGallery ? (
-                                <p style={{ padding: '2rem', textAlign: 'center' }}>Loading gallery items...</p>
+                                <TableSkeleton cols={5} rows={2} />
                             ) : galleryItems.length > 0 ? (
                                 <div className="table-responsive" style={{ padding: '1rem' }}>
                                     <table className="table">
@@ -2741,7 +2750,7 @@ const AdminDashboard = () => {
                             <h3><i className="fas fa-building"></i> Company Management</h3>
                         </div>
                         {loadingUsers ? (
-                            <p style={{ padding: '2rem', textAlign: 'center' }}>Loading companies...</p>
+                            <TableSkeleton cols={4} rows={2} />
                         ) : companyAdmins.length > 0 ? (
                             <div className="table-responsive" style={{ padding: '1rem' }}>
                                 <table className="table">
@@ -2867,7 +2876,7 @@ const AdminDashboard = () => {
                             )}
                         </div>
 
-                        {loadingDepts ? <div className="loading-indicator">Loading Departments...</div> : (
+                        {loadingDepts ? <TableSkeleton cols={4} rows={2} /> : (
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead><tr><th>Code</th><th>Name</th><th>HOD</th><th>Actions</th></tr></thead>

@@ -2,6 +2,33 @@ import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../config';
 import { useToast } from './CustomToast';
 
+const TableSkeleton = ({ cols = 5, rows = 2 }) => (
+    <div className="table-responsive" style={{ padding: '1rem', overflowX: 'auto', width: '100%' }}>
+        <table className="table" style={{ width: '100%' }}>
+            <thead>
+                <tr>
+                    {Array.from({ length: cols }).map((_, i) => (
+                        <th key={i} style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                            <div className="skeleton skeleton-text" style={{ width: '60%', height: '16px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
+                        </th>
+                    ))}
+                </tr>
+            </thead>
+            <tbody>
+                {Array.from({ length: rows }).map((_, rowIndex) => (
+                    <tr key={rowIndex}>
+                        {Array.from({ length: cols }).map((_, colIndex) => (
+                            <td key={colIndex} style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                                <div className="skeleton skeleton-text" style={{ width: colIndex === 0 ? '80%' : '50%', height: '16px', background: 'rgba(255, 255, 255, 0.05)' }}></div>
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+);
+
 const PendingPapersAdmin = () => {
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -57,7 +84,19 @@ const PendingPapersAdmin = () => {
         }
     };
 
-    if (loading) return <div>Loading pending papers...</div>;
+    if (loading) {
+        return (
+            <div style={{ background: 'var(--surface-bg)', padding: '20px', borderRadius: '12px' }}>
+                <h2>Pending Smart Uploads</h2>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
+                    Review and approve papers uploaded by students. Approving awards the student 50 points.
+                </p>
+                <div className="table-responsive surface-glow" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                    <TableSkeleton cols={5} rows={2} />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={{ background: 'var(--surface-bg)', padding: '20px', borderRadius: '12px' }}>
