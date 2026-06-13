@@ -1286,26 +1286,6 @@ const AdminDashboard = () => {
 
     const renderProfileDetails = () => (
         <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
-            {/* Consolidated Header Row */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1.5rem', width: '100%' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'nowrap' }}>
-                    <button 
-                        className="btn" 
-                        onClick={() => downloadCSV(allProfiles, 'student_profiles.csv')} 
-                        style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.3s' }}
-                    >
-                        <i className="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button 
-                        onClick={fetchAllProfiles} 
-                        style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', flexShrink: 0 }}
-                        title="Refresh"
-                    >
-                        <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
-                    </button>
-                </div>
-            </div>
-
             {loadingProfiles ? (
                 <TableSkeleton cols={6} rows={2} />
             ) : allProfiles.length > 0 ? (
@@ -3315,11 +3295,29 @@ const AdminDashboard = () => {
 
             <main className="admin-main">
                 {activeTab !== 'students' && (
-                <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'var(--dark-bg)', flexWrap: activeTab === 'profile-details' ? 'nowrap' : 'wrap', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="header-left">
                         <h1 style={{ fontSize: activeTab === 'applications' ? '1.5rem' : (activeTab === 'users' ? '1.35rem' : '1.05rem'), margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: activeTab === 'applications' ? '800' : '700', whiteSpace: 'nowrap' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
-                    <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center', whiteSpace: activeTab === 'profile-details' ? 'nowrap' : 'normal' }}>
+                        {activeTab === 'profile-details' && (
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <button 
+                                    className="btn" 
+                                    onClick={() => downloadCSV(allProfiles, 'student_profiles.csv')} 
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.3s' }}
+                                >
+                                    <i className="fas fa-file-csv"></i> Export CSV
+                                </button>
+                                <button 
+                                    onClick={fetchAllProfiles} 
+                                    style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', flexShrink: 0 }}
+                                    title="Refresh"
+                                >
+                                    <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
+                                </button>
+                            </div>
+                        )}
                         {activeTab === 'question-papers' && (
                             <button
                                 onClick={() => setIsPaperFormOpen(prev => !prev)}
