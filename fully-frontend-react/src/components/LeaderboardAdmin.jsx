@@ -80,14 +80,30 @@ const LeaderboardAdmin = () => {
         }
     };
 
+    const actionRow = (
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem', width: '100%', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            <input 
+                type="text" 
+                className="form-control desktop-only" 
+                placeholder="Search contributors..." 
+                style={{ flex: '1 1 300px', maxWidth: '400px' }} 
+            />
+            <div style={{ display: 'flex', gap: '10px', flex: '1 1 100%', minWidth: '200px' }}>
+                <button className="btn btn-primary" style={{ flex: 1, height: '42px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                    <i className="fas fa-file-export"></i> Export
+                </button>
+                <button className="btn btn-secondary" onClick={fetchLeaderboard} style={{ flex: 1, height: '42px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                    <i className="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+    );
+
     if (loading) {
         return (
             <div className="animate-in">
-                <div className="section-header">
-                    <h2>Leaderboard Management</h2>
-                    <p>View top contributors and reset their points if necessary.</p>
-                </div>
-                <div className="table-responsive surface-glow" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                {actionRow}
+                <div className="table-responsive surface-glow-premium" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', overflow: 'hidden' }}>
                     <TableSkeleton cols={4} rows={2} />
                 </div>
             </div>
@@ -96,26 +112,23 @@ const LeaderboardAdmin = () => {
 
     return (
         <div className="animate-in">
-            <div className="section-header">
-                <h2>Leaderboard Management</h2>
-                <p>View top contributors and reset their points if necessary.</p>
-            </div>
+            {actionRow}
 
             {leaderboard.length === 0 ? (
-                <div className="empty-state surface-glow">
-                    <i className="fas fa-trophy" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
-                    <h3>No Contributors Yet</h3>
-                    <p>The leaderboard is currently empty.</p>
+                <div className="empty-state surface-glow-premium" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '4rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <i className="fas fa-inbox" style={{ fontSize: '4.5rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}></i>
+                    <h3 style={{ margin: 0, color: 'var(--text-secondary)' }}>No Data</h3>
+                    <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>The leaderboard is currently empty.</p>
                 </div>
             ) : (
-                <div className="table-responsive surface-glow" style={{ borderRadius: '16px', overflow: 'hidden' }}>
-                    <table className="admin-table">
+                <div className="table-responsive surface-glow-premium" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', overflow: 'hidden' }}>
+                    <table className="admin-table" style={{ width: '100%' }}>
                         <thead>
                             <tr>
-                                <th>Rank</th>
-                                <th>User</th>
-                                <th>Points</th>
-                                <th>Actions</th>
+                                <th style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', textAlign: 'left' }}>Rank</th>
+                                <th style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', textAlign: 'left' }}>User</th>
+                                <th style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', textAlign: 'left' }}>Points</th>
+                                <th style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', textAlign: 'left' }}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -125,8 +138,9 @@ const LeaderboardAdmin = () => {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.05 }}
+                                    style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
                                 >
-                                    <td>
+                                    <td style={{ padding: '1rem' }}>
                                         <div style={{
                                             width: '30px', height: '30px', borderRadius: '50%', 
                                             background: idx === 0 ? '#FFD700' : idx === 1 ? '#C0C0C0' : idx === 2 ? '#CD7F32' : 'rgba(255,255,255,0.1)',
@@ -137,20 +151,20 @@ const LeaderboardAdmin = () => {
                                             #{idx + 1}
                                         </div>
                                     </td>
-                                    <td>
+                                    <td style={{ padding: '1rem' }}>
                                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
                                             <span style={{ fontWeight: 'bold' }}>{user.name}</span>
                                             <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>@{user.username}</span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td style={{ padding: '1rem' }}>
                                         <span style={{ color: '#00d4ff', fontWeight: 'bold' }}>{user.contributionPoints} pts</span>
                                     </td>
-                                    <td>
+                                    <td style={{ padding: '1rem' }}>
                                         <button 
-                                            className="btn-danger" 
+                                            className="btn btn-danger" 
                                             onClick={() => handleResetPoints(user.id, user.username)}
-                                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', fontSize: '0.85rem', borderRadius: '8px', border: 'none', background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', cursor: 'pointer' }}
                                         >
                                             <i className="fas fa-eraser"></i> Reset to 0
                                         </button>
