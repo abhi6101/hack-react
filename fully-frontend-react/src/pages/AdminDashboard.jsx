@@ -3500,6 +3500,7 @@ const AdminDashboard = () => {
                                 </button>
                             </div>
                         )}
+                        {activeTab === 'menu' && (
                             <>
                                 <button
                                     onClick={() => navigate('/')}
@@ -3542,6 +3543,7 @@ const AdminDashboard = () => {
                                     <i className="fas fa-sign-out-alt"></i> <span className="desktop-only">Logout</span>
                                 </button>
                             </>
+                        )}
                         {activeTab === 'departments' && (
                             <button
                                 onClick={() => { setIsDeptFormOpen(!isDeptFormOpen); if (isDeptFormOpen) setEditingDept(null); }}
