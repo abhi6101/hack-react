@@ -216,6 +216,7 @@ const AdminDashboard = () => {
     const [editingUser, setEditingUser] = useState(null);
     const [editingJob, setEditingJob] = useState(null);
     const [isJobFormOpen, setIsJobFormOpen] = useState(false);
+    const [isUserFormOpen, setIsUserFormOpen] = useState(false);
     const [editingInterview, setEditingInterview] = useState(null);
 
     const [selectedProfileForVerification, setSelectedProfileForVerification] = useState(null);
@@ -995,6 +996,7 @@ const AdminDashboard = () => {
             branch: user.branch || ''
         });
         setEditingUser(user);
+        setIsUserFormOpen(true);
         // Scroll to the form
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -2152,7 +2154,7 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="users-management-page animate-in">
-                        {!isCompanyAdmin && (
+                        {!isCompanyAdmin && (isUserFormOpen || editingUser) && (
                             <section className="card surface-glow-premium" style={{ marginBottom: '2.5rem', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
                                 <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                                     <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -2160,7 +2162,7 @@ const AdminDashboard = () => {
                                         {editingUser ? 'Update Professional Account' : 'Onboard New User'}
                                     </h3>
                                     {editingUser && (
-                                        <button className="btn btn-outline-sm" onClick={() => { setEditingUser(null); clearUserForm(); }}>
+                                        <button className="btn btn-outline-sm" onClick={() => { setEditingUser(null); clearUserForm(); setIsUserFormOpen(false); }}>
                                             <i className="fas fa-times"></i> Cancel Edit
                                         </button>
                                     )}
@@ -3220,6 +3222,36 @@ const AdminDashboard = () => {
                                     <i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job
                                 </button>
                             </span>
+                        )}
+                        {activeTab === 'users' && !isCompanyAdmin && (
+                            <button
+                                onClick={() => {
+                                    setIsUserFormOpen(prev => !prev);
+                                    if (isUserFormOpen) { setEditingUser(null); }
+                                }}
+                                style={{
+                                    padding: '6px 14px',
+                                    borderRadius: '8px',
+                                    border: isUserFormOpen
+                                        ? '1px solid rgba(239,68,68,0.4)'
+                                        : '1px solid rgba(0,204,255,0.35)',
+                                    background: isUserFormOpen
+                                        ? 'rgba(239,68,68,0.1)'
+                                        : 'rgba(0,204,255,0.1)',
+                                    color: isUserFormOpen ? '#f87171' : '#00ccff',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontWeight: '600',
+                                    fontSize: '0.8rem',
+                                    transition: 'all 0.25s ease',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                <i className={`fas ${isUserFormOpen ? 'fa-times' : 'fa-user-plus'}`} style={{ fontSize: '0.75rem' }}></i>
+                                {isUserFormOpen ? 'Close' : 'Add User'}
+                            </button>
                         )}
                         {activeTab === 'dashboard' && (
                             <>
