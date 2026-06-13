@@ -3201,13 +3201,17 @@ const AdminDashboard = () => {
                         {activeTab === 'jobs' && (
                             <span className="mobile-only">
                                 <button
-                                    onClick={() => setIsJobFormOpen(!isJobFormOpen)}
+                                    onClick={() => { setIsJobFormOpen(!isJobFormOpen); if (isJobFormOpen) setEditingJob(null); }}
                                     style={{
                                         padding: '6px 12px',
                                         borderRadius: '8px',
-                                        border: '1px solid rgba(0, 204, 255, 0.35)',
-                                        background: 'rgba(0, 204, 255, 0.1)',
-                                        color: '#00ccff',
+                                        border: isJobFormOpen
+                                            ? '1px solid rgba(239,68,68,0.4)'
+                                            : '1px solid rgba(0, 204, 255, 0.35)',
+                                        background: isJobFormOpen
+                                            ? 'rgba(239,68,68,0.1)'
+                                            : 'rgba(0, 204, 255, 0.1)',
+                                        color: isJobFormOpen ? '#f87171' : '#00ccff',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -3218,7 +3222,10 @@ const AdminDashboard = () => {
                                         whiteSpace: 'nowrap'
                                     }}
                                 >
-                                    <i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job
+                                    {isJobFormOpen
+                                        ? <><i className="fas fa-times" style={{ fontSize: '0.75rem' }}></i> Close</>
+                                        : <><i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job</>
+                                    }
                                 </button>
                             </span>
                         )}
