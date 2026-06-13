@@ -90,13 +90,22 @@ function Layout({ children }) {
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);
+    const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
     // Start keep-alive service when app loads
     useEffect(() => {
+        const handleOffline = () => setIsOffline(true);
+        const handleOnline = () => setIsOffline(false);
+
+        window.addEventListener('offline', handleOffline);
+        window.addEventListener('online', handleOnline);
+
         keepAliveService.start();
 
         // Cleanup on unmount
         return () => {
+            window.removeEventListener('offline', handleOffline);
+            window.removeEventListener('online', handleOnline);
             keepAliveService.stop();
         };
     }, []);
@@ -105,7 +114,15 @@ function App() {
         <CustomToastProvider>
             <AlertProvider>
                 <ToastProvider>
-
+                    {isOffline && (
+                        <div style={{
+                            position: 'fixed', top: 0, left: 0, right: 0, background: '#ef4444', color: 'white',
+                            textAlign: 'center', padding: '8px', zIndex: 99999, fontSize: '0.85rem', fontWeight: 600,
+                            boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                        }}>
+                            <i className="fas fa-wifi-slash" style={{ marginRight: '8px' }}></i> Offline Mode - Showing cached data
+                        </div>
+                    )}
                     <Router>
                         <Layout>
                             <Routes>

@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/user-bottom-nav.css';
 
 const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const isLoggedIn = !!localStorage.getItem('authToken');
     const name = localStorage.getItem('name') || '';
     const username = localStorage.getItem('username') || '';
 
-    const handleLogout = () => {
+    const handleLogoutClick = () => {
+        setShowLogoutConfirm(true);
+    };
+
+    const confirmLogout = () => {
         localStorage.clear();
         setIsMobileMenuOpen(false);
         window.location.href = '/';
+    };
+
+    const cancelLogout = () => {
+        setShowLogoutConfirm(false);
     };
 
     const handleNavigation = () => {
@@ -78,7 +87,7 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
                             </div>
                         </div>
                         <button
-                            onClick={handleLogout}
+                            onClick={handleLogoutClick}
                             className="mobile-menu-logout-btn"
                         >
                             <i className="fas fa-sign-out-alt"></i>
@@ -172,6 +181,30 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
                     </div>
                 </div>
             ))}
+
+            {showLogoutConfirm && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'rgba(0,0,0,0.8)', zIndex: 10000,
+                    display: 'flex', alignItems: 'flex-end', justifyContent: 'center'
+                }}>
+                    <div style={{
+                        background: '#0f172a', /* Premium Dark Glassmorphism */
+                        width: '100%', padding: '2rem 1.5rem',
+                        borderTopLeftRadius: '24px', borderTopRightRadius: '24px',
+                        textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)',
+                        animation: 'slideUp 0.3s ease-out'
+                    }}>
+                        <div style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '2px', margin: '0 auto 1.5rem auto' }}></div>
+                        <h3 style={{ color: '#fff', fontSize: '1.25rem', marginBottom: '0.5rem', fontWeight: 600 }}>Confirm Logout</h3>
+                        <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.95rem' }}>Are you sure you want to log out?</p>
+                        <div style={{ display: 'flex', gap: '1rem' }}>
+                            <button onClick={cancelLogout} style={{ flex: 1, padding: '0.9rem', borderRadius: '12px', background: 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', fontWeight: 600, transition: 'all 0.2s' }}>Cancel</button>
+                            <button onClick={confirmLogout} style={{ flex: 1, padding: '0.9rem', borderRadius: '12px', background: '#ef4444', color: '#fff', border: 'none', fontWeight: 600, transition: 'all 0.2s' }}>Logout</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
