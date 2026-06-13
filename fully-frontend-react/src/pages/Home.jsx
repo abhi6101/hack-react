@@ -323,7 +323,7 @@ const Home = () => {
 
 
             {/* Hero Section */}
-            <section className="hero">
+            <section className="hero" style={{ paddingTop: '5rem' }}>
                 <div className="hero-main-container">
                     <motion.div
                         className="hero-content"
