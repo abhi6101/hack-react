@@ -2055,27 +2055,8 @@ const AdminDashboard = () => {
                                     <h3 style={{ margin: 0, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                         <i className="fas fa-briefcase"></i> Posted Jobs
                                     </h3>
-                                    {showJobSearchInput && (
-                                        <span className="search-box-modern animate-in" style={{ width: '200px', marginLeft: '0.5rem', flexShrink: 1, display: 'inline-flex', alignItems: 'center' }}>
-                                            <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
-                                            <input
-                                                type="text"
-                                                placeholder="Search jobs..."
-                                                value={jobSearch}
-                                                onChange={(e) => setJobSearch(e.target.value)}
-                                                style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
-                                            />
-                                        </span>
-                                    )}
                                 </span>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                                    <button
-                                        onClick={() => setShowJobSearchInput(!showJobSearchInput)}
-                                        title="Search Jobs"
-                                        style={{ color: showJobSearchInput ? 'var(--primary)' : 'var(--text-primary)', background: showJobSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)', border: showJobSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255, 255, 255, 0.1)', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
-                                    >
-                                        <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
-                                    </button>
                                     <button
                                         onClick={loadJobs}
                                         title="Refresh List"
