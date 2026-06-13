@@ -44,9 +44,7 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
                 { path: '/papers', icon: 'fa-copy', label: 'Question Papers' },
                 ...(isLoggedIn ? [{ path: '/upload-paper', icon: 'fa-upload', label: 'Contribute Paper' }] : []),
                 ...(isLoggedIn ? [{ path: '/notes', icon: 'fa-sticky-note', label: 'Subject Notes' }] : []),
-                { path: '/quiz', icon: 'fa-brain', label: 'Interactive Quiz' },
-
-                { path: '/courses', icon: 'fa-book', label: 'Skill Courses' }
+                { path: '/quiz', icon: 'fa-brain', label: 'Interactive Quiz' }
             ]
         },
         {
@@ -54,7 +52,6 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
             icon: 'fa-compass',
             items: [
                 { path: '/gallery', icon: 'fa-images', label: 'Campus Gallery' },
-                { path: '/blog', icon: 'fa-blog', label: 'Placement Blog' },
                 { path: '/contact', icon: 'fa-envelope', label: 'Help & Support' },
                 ...(['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'].includes(localStorage.getItem('userRole')) ? [{ path: '/admin', icon: 'fa-shield-alt', label: 'Admin Portal' }] : [])
             ]
