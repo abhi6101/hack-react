@@ -115,7 +115,7 @@ const Navbar = ({ menuOpen = false }) => {
                     </button>
                     <div className={`dropdown-menu ${resourcesOpen ? 'show' : ''}`}>
                         <Link to="/quiz" className={isActive('/quiz')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-brain"></i> Quiz</Link>
-                        <Link to="/videos" className={isActive('/videos')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-video"></i> Study Videos</Link>
+
                         <Link to="/courses" className={isActive('/courses')} onClick={() => setIsMenuOpen(false)}><i className="fas fa-book"></i> Courses</Link>
                     </div>
                 </div>

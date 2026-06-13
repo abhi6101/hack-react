@@ -31,7 +31,7 @@ import CourseDetail from './pages/CourseDetail';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Gallery from './pages/Gallery';
-import Videos from './pages/Videos';
+
 import Contact from './pages/Contact';
 import VerifyAccount from './pages/VerifyAccount';
 import UploadPaper from './pages/UploadPaper';
@@ -135,7 +135,7 @@ function App() {
                                 <Route path="/blog" element={<Blog />} />
                                 <Route path="/blog/:slug" element={<BlogPost />} />
                                 <Route path="/gallery" element={<Gallery />} />
-                                <Route path="/videos" element={<Videos />} />
+
                                 <Route path="/contact" element={<Contact />} />
                             </Routes>
                         </Layout>

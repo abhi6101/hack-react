@@ -45,7 +45,7 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
                 ...(isLoggedIn ? [{ path: '/upload-paper', icon: 'fa-upload', label: 'Contribute Paper' }] : []),
                 ...(isLoggedIn ? [{ path: '/notes', icon: 'fa-sticky-note', label: 'Subject Notes' }] : []),
                 { path: '/quiz', icon: 'fa-brain', label: 'Interactive Quiz' },
-                { path: '/videos', icon: 'fa-video', label: 'Lecture Videos' },
+
                 { path: '/courses', icon: 'fa-book', label: 'Skill Courses' }
             ]
         },
