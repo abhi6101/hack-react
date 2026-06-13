@@ -1618,7 +1618,6 @@ td {
         padding-top: 1.5rem;
         padding-bottom: 1rem;
         margin-bottom: 1rem;
-        box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5);
     }
 
     .operations-col {
@@ -1634,9 +1633,9 @@ td {
     }
 
     .card-header {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 1rem !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
     }
 
     .card-header > div {
