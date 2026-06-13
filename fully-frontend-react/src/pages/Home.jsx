@@ -343,9 +343,9 @@ const Home = () => {
 
                             <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                                 <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', borderRadius: '12px', background: '#00d4ff', color: '#000', fontWeight: '700', textDecoration: 'none', border: '1px solid #00d4ff', transition: 'all 0.3s ease', flex: 1, minWidth: '140px', textAlign: 'center' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                                    Find Jobs
+                                    Explore Jobs
                                 </Link>
-                                <Link to="/resume" className="cta-btn secondary-btn" style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.4)', color: '#fff', fontWeight: '600', textDecoration: 'none', transition: 'all 0.3s ease', flex: 1, minWidth: '140px', textAlign: 'center' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.borderColor = '#00d4ff'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                                <Link to="/resume-builder" className="cta-btn secondary-btn" style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', borderRadius: '12px', background: 'transparent', backdropFilter: 'blur(10px)', border: '1px solid #00d4ff', color: '#00d4ff', fontWeight: '600', textDecoration: 'none', transition: 'all 0.3s ease', flex: 1, minWidth: '140px', textAlign: 'center' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                                     Build Resume
                                 </Link>
                             </div>
@@ -658,6 +658,17 @@ const Home = () => {
                 <style jsx>{`
                     @media (max-width: 768px) {
                         .mobile-moments-grid-container { display: block !important; }
+                        .hero-ctas {
+                            flex-direction: column !important;
+                            gap: 12px !important;
+                            padding: 0 1rem;
+                        }
+                        .hero-ctas .cta-btn {
+                            width: 100% !important;
+                            margin: 0 !important;
+                            padding: 12px 0 !important;
+                            font-size: 0.95rem !important;
+                        }
                     }
                 `}</style>
             </section>
