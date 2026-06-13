@@ -2508,36 +2508,7 @@ const AdminDashboard = () => {
 
                 return (
                     <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
-                        {/* Header: only action buttons, title shown in global page header */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1.5rem', width: '100%', gap: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-                                <button 
-                                    className="btn btn-secondary" 
-                                    onClick={() => downloadCSV(applications, 'job_applications.csv')} 
-                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'all 0.3s', whiteSpace: 'nowrap' }}
-                                >
-                                    <i className="fas fa-file-csv"></i> Export
-                                </button>
-                                {showAppSearchInput && (
-                                    <div className="search-box-modern animate-in" style={{ width: '180px' }}>
-                                        <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
-                                        <input
-                                            type="text"
-                                            placeholder="Search apps..."
-                                            value={appSearch}
-                                            onChange={(e) => setAppSearch(e.target.value)}
-                                            style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
-                                        />
-                                    </div>
-                                )}
-                                <button 
-                                    onClick={() => setShowAppSearchInput(!showAppSearchInput)} 
-                                    style={{ background: showAppSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)', border: showAppSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255,255,255,0.1)', color: showAppSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
-                                >
-                                    <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
-                                </button>
-                            </div>
-                        </div>
+                        {/* Buttons moved to global page header — see header-right activeTab === 'applications' block */}
 
                         {loadingApplications ? (
                             <TableSkeleton cols={7} rows={2} />
@@ -3396,6 +3367,37 @@ const AdminDashboard = () => {
                                 <i className="fas fa-plus" style={{ fontSize: '0.75rem' }}></i>
                                 Upload Notes
                             </button>
+                        )}
+                        {activeTab === 'applications' && (
+                            <>
+                                <button
+                                    className="btn btn-secondary"
+                                    onClick={() => downloadCSV(applications, 'job_applications.csv')}
+                                    style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '5px 12px', borderRadius: '8px', fontSize: '0.82rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                                >
+                                    <i className="fas fa-file-csv"></i> Export
+                                </button>
+                                <span className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {showAppSearchInput && (
+                                        <div className="search-box-modern animate-in" style={{ width: '160px' }}>
+                                            <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
+                                            <input
+                                                type="text"
+                                                placeholder="Search apps..."
+                                                value={appSearch}
+                                                onChange={(e) => setAppSearch(e.target.value)}
+                                                style={{ width: '100%', height: '30px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.82rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                                            />
+                                        </div>
+                                    )}
+                                    <button
+                                        onClick={() => setShowAppSearchInput(!showAppSearchInput)}
+                                        style={{ background: showAppSearchInput ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.05)', border: showAppSearchInput ? '1px solid rgba(0,212,255,0.2)' : '1px solid rgba(255,255,255,0.1)', color: showAppSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
+                                    >
+                                        <i className="fas fa-search" style={{ fontSize: '0.85rem' }}></i>
+                                    </button>
+                                </span>
+                            </>
                         )}
                         {activeTab === 'dashboard' && (
                             <>
