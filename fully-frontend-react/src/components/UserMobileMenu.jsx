@@ -32,7 +32,6 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
             title: 'Placement & Career',
             icon: 'fa-briefcase',
             items: [
-                ...(isLoggedIn ? [{ path: '/jobs', icon: 'fa-briefcase', label: 'Jobs Listing' }] : []),
                 { path: '/interview', icon: 'fa-comments', label: 'Interview Drives' },
                 ...(isLoggedIn ? [{ path: '/resume-builder', icon: 'fa-file-alt', label: 'Build Resume' }] : [])
             ]
@@ -41,7 +40,6 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
             title: 'Study Resources',
             icon: 'fa-book-reader',
             items: [
-                { path: '/papers', icon: 'fa-copy', label: 'Question Papers' },
                 ...(isLoggedIn ? [{ path: '/upload-paper', icon: 'fa-upload', label: 'Contribute Paper' }] : []),
                 ...(isLoggedIn ? [{ path: '/notes', icon: 'fa-sticky-note', label: 'Subject Notes' }] : []),
                 { path: '/quiz', icon: 'fa-brain', label: 'Interactive Quiz' }

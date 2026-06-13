@@ -16,7 +16,11 @@ const AdminMobileMenu = ({ menuGroups, menuItems, role, setActiveTab }) => {
             <h2 style={{ marginBottom: '1.5rem', color: 'var(--text-primary)' }}>App Menu</h2>
             
             {menuGroups.map(group => {
-                const groupItems = menuItems.filter(item => group.items.includes(item.id) && item.roles.some(r => r.toUpperCase() === String(role).toUpperCase()));
+                const groupItems = menuItems.filter(item => 
+                    group.items.includes(item.id) && 
+                    item.roles.some(r => r.toUpperCase() === String(role).toUpperCase()) &&
+                    !['dashboard', 'users', 'jobs', 'students'].includes(item.id)
+                );
                 
                 if (groupItems.length === 0) return null;
 
