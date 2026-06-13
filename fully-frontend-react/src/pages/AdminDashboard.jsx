@@ -3192,11 +3192,10 @@ const AdminDashboard = () => {
             </aside>
 
             <main className="admin-main">
+                {activeTab !== 'students' && (
                 <header className="main-header" style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'var(--surface-bg)' }}>
                     <div className="header-left">
-                        {activeTab !== 'students' && (
-                            <h1 style={{ fontSize: '1.8rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '800' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
-                        )}
+                        <h1 style={{ fontSize: '1.8rem', margin: 0, background: 'linear-gradient(90deg, #fff, var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: '800' }}>{menuItems.find(i => i.id === activeTab)?.label}</h1>
                     </div>
                     <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                         {activeTab === 'jobs' && (
@@ -3297,6 +3296,7 @@ const AdminDashboard = () => {
                         )}
                     </div>
                 </header>
+                )}
 
                 <div className="content-container">
                     {renderContent()}
