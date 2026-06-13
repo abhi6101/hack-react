@@ -1,0 +1,142 @@
+commit 2b96c7e7e506917df03f7827ae210ea52980025d
+Author: abhi6101 <abhijain6101@gmail.com>
+Date:   Fri Jun 12 19:47:36 2026 +0530
+
+    Standardize skeleton loaders and redesign Home page
+
+diff --git a/fully-frontend-react/src/pages/Interview.jsx b/fully-frontend-react/src/pages/Interview.jsx
+index be56ecf..048f13b 100644
+--- a/fully-frontend-react/src/pages/Interview.jsx
++++ b/fully-frontend-react/src/pages/Interview.jsx
+@@ -9,6 +9,7 @@ import API_BASE_URL from '../config';
+ import '../styles/jobs.css';
+ import '../styles/interview.css';
+ import '../styles/papers.css';
++import SkeletonCard from '../components/SkeletonCard';
+ 
+ const mockInterviewData = [
+     {
+@@ -424,11 +425,7 @@ const Interview = () => {
+                     <div className="interview-grid">
+                         {loading ? (
+                             Array(4).fill(0).map((_, i) => (
+-                                <div className="job-card skeleton-card" key={`skel-${i}`}>
+-                                    <div className="skeleton-line title"></div>
+-                                    <div className="skeleton-line subtitle"></div>
+-                                    <div className="skeleton-content"></div>
+-                                </div>
++                                <SkeletonCard key={`skel-${i}`} type="interview" />
+                             ))
+                         ) : filteredInterviews.length > 0 ? (
+                             filteredInterviews.map(renderCard)
+diff --git a/fully-frontend-react/src/pages/Jobs.jsx b/fully-frontend-react/src/pages/Jobs.jsx
+index 9311d60..f6b9940 100644
+--- a/fully-frontend-react/src/pages/Jobs.jsx
++++ b/fully-frontend-react/src/pages/Jobs.jsx
+@@ -6,7 +6,7 @@ import { useAlert } from '../components/CustomAlert';
+ import { useToast } from '../components/CustomToast';
+ import AuthPromptModal from '../components/AuthPromptModal';
+ import '../styles/jobs.css';
+-import '../styles/skeleton.css';
++import SkeletonCard from '../components/SkeletonCard';
+ 
+ const Jobs = () => {
+     const { showAlert } = useAlert();
+@@ -549,11 +549,7 @@ const Jobs = () => {
+                 <div className="job-list" id="jobList">
+                     {/* Skeleton Loading */}
+                     {loading && Array(6).fill(0).map((_, i) => (
+-                        <div className="job-card skeleton-card" key={i}>
+-                            <div className="skeleton-line title"></div>
+-                            <div className="skeleton-line subtitle"></div>
+-                            <div className="skeleton-content"></div>
+-                        </div>
++                        <SkeletonCard key={i} type="job" />
+                     ))}
+ 
+                     {error && <div className="error-message">{error}</div>}
+diff --git a/fully-frontend-react/src/pages/Notes.jsx b/fully-frontend-react/src/pages/Notes.jsx
+index 651b77d..4ba5980 100644
+--- a/fully-frontend-react/src/pages/Notes.jsx
++++ b/fully-frontend-react/src/pages/Notes.jsx
+@@ -6,6 +6,8 @@ import { useToast } from '../components/CustomToast';
+ import { motion, AnimatePresence } from 'framer-motion';
+ import AuthPromptModal from '../components/AuthPromptModal';
+ import API_BASE_URL from '../config';
++import JSZip from 'jszip';
++import SkeletonCard from '../components/SkeletonCard';
+ import '../styles/papers.css'; // Reuses the unified glassmorphic layout
+ 
+ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDeleteFile, isAdmin, getToken, notesDownloadEnabled }) => {
+@@ -661,26 +663,7 @@ const Notes = ({ isAdminView }) => {
+                 {loading ? (
+                     <div className="notes-grid" style={{ marginTop: '2rem' }}>
+                         {Array(4).fill(0).map((_, i) => (
+-                            <div key={`skel-${i}`} className="subject-card" style={{ 
+-                                background: 'transparent', 
+-                                border: '1px solid rgba(255,255,255,0.05)', 
+-                                borderRadius: '16px', 
+-                                padding: '0.8rem',
+-                                display: 'flex',
+-                                flexDirection: 'column',
+-                                justifyContent: 'space-between',
+-                                height: '100%'
+-                            }}>
+-                                <div style={{ width: '100%', textAlign: 'center', animation: 'pulse 1.5s infinite', opacity: 0.7 }}>
+-                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', margin: '0 auto 0.5rem' }}></div>
+-                                    <div style={{ width: '80%', height: '1rem', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px', margin: '0 auto 0.5rem' }}></div>
+-                                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+-                                        <div style={{ width: '40px', height: '0.8rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
+-                                        <div style={{ width: '60px', height: '0.8rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}></div>
+-                                    </div>
+-                                </div>
+-                                <div style={{ width: '60px', height: '1rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px', margin: '0.8rem auto 0', animation: 'pulse 1.5s infinite', opacity: 0.7 }}></div>
+-                            </div>
++                            <SkeletonCard key={`skel-${i}`} type="note" />
+                         ))}
+                     </div>
+                 ) : filteredRoots.length === 0 ? (
+diff --git a/fully-frontend-react/src/pages/Papers.jsx b/fully-frontend-react/src/pages/Papers.jsx
+index 59ea1bc..6f26007 100644
+--- a/fully-frontend-react/src/pages/Papers.jsx
++++ b/fully-frontend-react/src/pages/Papers.jsx
+@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
+ import { Helmet } from 'react-helmet-async';
+ import AuthPromptModal from '../components/AuthPromptModal';
+ import API_BASE_URL from '../config';
+-
+ import Typewriter from '../components/Typewriter';
+ import '../styles/papers.css';
++import SkeletonCard from '../components/SkeletonCard';
+ 
+ const Papers = () => {
+     const navigate = useNavigate();
+@@ -553,27 +553,7 @@ const Papers = () => {
+                 <div className="subject-grid">
+                     {loading ? (
+                         Array(8).fill(0).map((_, i) => (
+-                            <div 
+-                                key={`skel-sub-${i}`} 
+-                                className="subject-folder" 
+-                                style={{ 
+-                                    animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
+-                                    background: 'rgba(30, 41, 59, 0.8)', 
+-                                    borderColor: 'rgba(255, 255, 255, 0.05)',
+-                                    pointerEvents: 'none'
+-                                }}
+-                            >
+-                                <div className="folder-icon-wrapper">
+-                                    <div style={{ width: '45px', height: '45px', borderRadius: '12px', background: 'rgba(255,255,255,0.1)' }}></div>
+-                                </div>
+-                                <div className="folder-info" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+-                                    <div style={{ height: '1.2rem', width: '70%', background: 'rgba(255,255,255,0.1)', borderRadius: '6px' }}></div>
+-                                    <div style={{ height: '0.8rem', width: '40%', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}></div>
+-                                </div>
+-                                <div className="folder-arrow">
+-                                    <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}></div>
+-                                </div>
+-                            </div>
++                            <SkeletonCard key={`skel-sub-${i}`} type="paper" />
+                         ))
+                     ) : subjects.length === 0 ? (
+                         <div className="empty-state surface-glow" style={{ textAlign: 'center', padding: '6rem 2rem', borderRadius: '24px', gridColumn: '1/-1' }}>

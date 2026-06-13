@@ -1485,92 +1485,178 @@ const AdminDashboard = () => {
         );
     };
 
+    const [expandedStudentCards, setExpandedStudentCards] = React.useState({});
+    const toggleStudentCard = (id) => setExpandedStudentCards(prev => ({ ...prev, [id]: !prev[id] }));
+
     const renderStudentMonitor = () => (
-        <div className="users-management-page animate-in">
-            {/* Header + Toolbar */}
-            <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'nowrap' }}>
-                    <button 
-                        onClick={() => downloadCSV(studentActivity, 'student_activity.csv')} 
-                        style={{ 
-                            flex: 1, 
-                            height: '44px',
-                            background: 'rgba(0, 212, 255, 0.1)', 
-                            border: '1px solid rgba(0, 212, 255, 0.2)', 
-                            color: '#00d4ff', 
-                            borderRadius: '12px', 
-                            fontWeight: '600', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center', 
-                            gap: '0.5rem',
-                            backdropFilter: 'blur(5px)',
-                            cursor: 'pointer'
+        <div className="users-management-page animate-in" style={{ paddingBottom: '80px' }}>
+            {/* Compact Inline Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', gap: '0.75rem' }}>
+                <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap' }}>
+                    Student Monitor
+                </h2>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    {/* Export CSV slim button */}
+                    <button
+                        onClick={() => downloadCSV(studentActivity, 'student_activity.csv')}
+                        title="Export CSV"
+                        style={{
+                            height: '34px',
+                            padding: '0 10px',
+                            background: 'transparent',
+                            border: '1px solid rgba(0, 204, 255, 0.35)',
+                            color: '#00ccff',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            fontSize: '0.75rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap'
                         }}
                     >
-                        <i className="far fa-file-alt"></i> Export CSV
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        CSV
                     </button>
-                    <button 
-                        onClick={fetchStudentActivity} 
-                        style={{ 
-                            width: '44px', 
-                            height: '44px', 
-                            background: 'rgba(255, 255, 255, 0.05)', 
-                            border: '1px solid rgba(255, 255, 255, 0.1)', 
-                            color: '#fff', 
-                            borderRadius: '12px', 
-                            display: 'flex', 
-                            alignItems: 'center', 
+                    {/* Refresh icon button */}
+                    <button
+                        onClick={fetchStudentActivity}
+                        title="Refresh"
+                        style={{
+                            width: '34px',
+                            height: '34px',
+                            background: 'rgba(255,255,255,0.04)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            color: '#aaa',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
                             justifyContent: 'center',
                             cursor: 'pointer'
                         }}
                     >
-                        <i className="fas fa-sync-alt"></i>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <polyline points="1 20 1 14 7 14"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
                     </button>
                 </div>
             </div>
 
-            <section className="card" style={{ border: 'none', background: 'transparent', boxShadow: 'none', padding: 0 }}>
-                {loadingActivity ? (
-                    <TableSkeleton cols={4} rows={2} />
-                ) : (
-                    <div className="table-responsive" style={{ padding: 0 }}>
-                        <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Branch</th>
-                                <th>Last Active</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {studentActivity.length === 0 ? (
-                                <tr>
-                                    <td colSpan="4">
-                                        <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-                                            <i className="fas fa-users-slash" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
-                                            <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No students found.</p>
+            {/* Student Cards */}
+            {loadingActivity ? (
+                <TableSkeleton cols={2} rows={4} />
+            ) : studentActivity.length === 0 ? (
+                <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" style={{ marginBottom: '1rem' }}>
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <line x1="23" y1="11" x2="17" y2="11"/>
+                    </svg>
+                    <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.95rem' }}>No students found.</p>
+                </div>
+            ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    {studentActivity.map((student, idx) => {
+                        const isOpen = !!expandedStudentCards[student.id ?? idx];
+                        const cardKey = student.id ?? idx;
+                        const emailUser = student.email ? student.email.split('@')[0] : '—';
+                        const displayId = student.id ? String(student.id).replace(/[^0-9]/g, '').slice(-6) || student.id : '—';
+                        return (
+                            <div
+                                key={cardKey}
+                                style={{
+                                    background: '#0f1318',
+                                    border: '1px solid rgba(255,255,255,0.08)',
+                                    borderRadius: '12px',
+                                    padding: '0.85rem 1rem',
+                                    transition: 'border-color 0.2s ease'
+                                }}
+                            >
+                                {/* Card Top Row: ID + Email + Actions */}
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', marginBottom: '0.2rem' }}>
+                                            <span style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>
+                                                {student.username || student.name || 'Unknown'}
+                                            </span>
+                                            <span style={{ fontWeight: '700', fontSize: '0.75rem', color: '#00ccff', letterSpacing: '0.03em' }}>
+                                                #{displayId}
+                                            </span>
                                         </div>
-                                    </td>
-                                </tr>
-                            ) : (
-                                studentActivity.map(student => (
-                                    <tr key={student.id}>
-                                        <td style={{ fontWeight: '500' }}>{student.username || student.name || 'Unknown'}</td>
-                                        <td style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{student.email}</td>
-                                        <td>{student.branch}</td>
-                                        <td style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                            {student.lastLoginDate ? new Date(student.lastLoginDate).toLocaleString() : 'Never'}
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                        <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.45)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            {emailUser}
+                                        </div>
+                                    </div>
+                                    {/* Edit + Delete + Expand */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                                        <button
+                                            onClick={() => startEditUser && startEditUser(student)}
+                                            title="Edit"
+                                            style={{ width: '30px', height: '30px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '7px', color: '#aaa', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                                        >
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={() => deleteUser && deleteUser(student.id)}
+                                            title="Delete"
+                                            style={{ width: '30px', height: '30px', background: 'rgba(255,71,71,0.07)', border: '1px solid rgba(255,71,71,0.15)', borderRadius: '7px', color: '#ff6b6b', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                                        >
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="3 6 5 6 21 6"/>
+                                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                                <path d="M10 11v6"/>
+                                                <path d="M14 11v6"/>
+                                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={() => toggleStudentCard(cardKey)}
+                                            title={isOpen ? 'Collapse' : 'Expand'}
+                                            style={{ width: '30px', height: '30px', background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.25s ease', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                                        >
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="6 9 12 15 18 9"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Expandable Details */}
+                                {isOpen && (
+                                    <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem 1rem' }}>
+                                        <div>
+                                            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>Branch</div>
+                                            <div style={{ fontSize: '0.82rem', color: '#e2e8f0', fontWeight: '600' }}>{student.branch || '—'}</div>
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>Last Active</div>
+                                            <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)' }}>
+                                                {student.lastLoginDate ? new Date(student.lastLoginDate).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : 'Never'}
+                                            </div>
+                                        </div>
+                                        {student.course && (
+                                            <div style={{ gridColumn: '1 / -1' }}>
+                                                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>Course</div>
+                                                <div style={{ fontSize: '0.82rem', color: '#e2e8f0', fontWeight: '600' }}>{student.course}</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             )}
-            </section>
         </div>
     );
 
