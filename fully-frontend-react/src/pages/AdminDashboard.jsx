@@ -2046,12 +2046,12 @@ const AdminDashboard = () => {
 
                         <section className="card surface-glow">
                             <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.5rem', width: '100%', boxSizing: 'border-box' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
                                     <h3 style={{ margin: 0, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                         <i className="fas fa-briefcase"></i> Posted Jobs
                                     </h3>
                                     {showJobSearchInput && (
-                                        <div className="search-box-modern animate-in" style={{ width: '200px', marginLeft: '0.5rem', flexShrink: 1 }}>
+                                        <span className="search-box-modern animate-in" style={{ width: '200px', marginLeft: '0.5rem', flexShrink: 1, display: 'inline-flex', alignItems: 'center' }}>
                                             <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
                                             <input
                                                 type="text"
@@ -2060,10 +2060,10 @@ const AdminDashboard = () => {
                                                 onChange={(e) => setJobSearch(e.target.value)}
                                                 style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
                                             />
-                                        </div>
+                                        </span>
                                     )}
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                                </span>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
                                     <button
                                         onClick={() => setShowJobSearchInput(!showJobSearchInput)}
                                         title="Search Jobs"
@@ -2087,7 +2087,7 @@ const AdminDashboard = () => {
                                             <i className="fas fa-trash-alt" style={{ fontSize: '0.9rem' }}></i>
                                         </button>
                                     )}
-                                </div>
+                                </span>
                             </div>
                             {loadingJobs && <TableSkeleton cols={5} rows={2} />}
                             {!loadingJobs && (
