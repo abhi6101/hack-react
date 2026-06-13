@@ -1947,6 +1947,7 @@ const AdminDashboard = () => {
                             </div>
                             {loadingJobs && <TableSkeleton cols={5} rows={2} />}
                             {!loadingJobs && (
+                                <>
                                 <div className="table-responsive desktop-only-table">
                                     {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
                                         <table id="jobsTable">
@@ -2032,6 +2033,7 @@ const AdminDashboard = () => {
                                         ))
                                     )}
                                 </div>
+                                </>
                             )}
                         </section>
                     </div>
