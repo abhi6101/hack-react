@@ -197,6 +197,7 @@ const AdminDashboard = () => {
     const [jobSearch, setJobSearch] = useState('');
     const [showJobSearchInput, setShowJobSearchInput] = useState(false);
     const [interviewSearch, setInterviewSearch] = useState('');
+    const [showInterviewSearchInput, setShowInterviewSearchInput] = useState(false);
     const [appSearch, setAppSearch] = useState('');
     const [showAppSearchInput, setShowAppSearchInput] = useState(false);
     const [globalSearch, setGlobalSearch] = useState('');
@@ -1281,52 +1282,48 @@ const AdminDashboard = () => {
 
 
     const renderProfileDetails = () => (
-        <div className="users-management-page animate-in">
-            <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+        <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
+            {/* Consolidated Header Row */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
+                <h2 style={{ fontSize: '1.8rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
                     Student Details
                 </h2>
-            </div>
-            <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                    <div>
-                        <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-id-card" style={{ color: 'var(--primary)' }}></i> All Student Profiles</h3>
-                    </div>
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                        <button className="btn-secondary" onClick={() => downloadCSV(allProfiles, 'student_profiles.csv')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                            <i className="fas fa-file-csv"></i> Export CSV
-                        </button>
-                        <button className="btn-secondary" onClick={fetchAllProfiles} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                            <i className="fas fa-sync-alt"></i> Refresh
-                        </button>
-                    </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <button 
+                        className="btn btn-secondary" 
+                        onClick={() => downloadCSV(allProfiles, 'student_profiles.csv')} 
+                        style={{ background: 'transparent', border: '1px solid #00d4ff', color: '#00d4ff', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'all 0.3s' }}
+                    >
+                        <i className="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button 
+                        onClick={fetchAllProfiles} 
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
+                        title="Refresh"
+                    >
+                        <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
+                    </button>
                 </div>
+            </div>
 
-                {loadingProfiles ? <TableSkeleton cols={4} rows={2} /> : (
+            {loadingProfiles ? (
+                <TableSkeleton cols={6} rows={2} />
+            ) : allProfiles.length > 0 ? (
+                <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', padding: 0 }}>
                     <div className="table-responsive" style={{ padding: '1rem' }}>
                         <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Enrollment</th>
-                                <th>Branch/Sem</th>
-                                <th>Batch</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {allProfiles.length === 0 ? (
+                            <thead>
                                 <tr>
-                                    <td colSpan="6">
-                                        <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-                                            <i className="fas fa-id-badge" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
-                                            <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No detailed profiles found.</p>
-                                        </div>
-                                    </td>
+                                    <th>Name</th>
+                                    <th>Enrollment</th>
+                                    <th>Branch/Sem</th>
+                                    <th>Batch</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
-                            ) : (
-                                allProfiles.map(profile => (
+                            </thead>
+                            <tbody>
+                                {allProfiles.map(profile => (
                                     <tr key={profile.id}>
                                         <td style={{ fontWeight: '500' }}>{profile.fullName}</td>
                                         <td>{profile.enrollmentNumber}</td>
@@ -1340,18 +1337,22 @@ const AdminDashboard = () => {
                                             )}
                                         </td>
                                         <td>
-                                            <button className="action-btn-modern view-btn" onClick={() => setSelectedProfileForVerification(profile)}>
+                                            <button className="action-btn-modern view-btn" onClick={() => setSelectedProfileForVerification(profile)} title="Verify Profile">
                                                 <i className="fas fa-id-card"></i> Verify
                                             </button>
                                         </td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '4rem 2rem' }}>
+                    <i className="fas fa-id-badge" style={{ fontSize: '4.5rem', color: 'rgba(0,212,255,0.15)', marginBottom: '1.5rem' }}></i>
+                    <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', fontWeight: '500', margin: 0 }}>No detailed profiles found.</p>
                 </div>
             )}
-            </section>
         </div>
     );
 
@@ -2721,103 +2722,112 @@ const AdminDashboard = () => {
                         </section>
                     </div>
                 );
-            case 'interview-applications':
+            case 'interview-applications': {
+                const filteredInterviewApps = interviewApplications.filter(app =>
+                    app.applicantName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
+                    app.companyName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
+                    app.applicantEmail?.toLowerCase().includes(interviewSearch.toLowerCase())
+                );
+
                 return (
-                    <div className="users-management-page animate-in">
-                        <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <h2 style={{ fontSize: '2.2rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+                    <div className="users-management-page animate-in" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 120px)' }}>
+                        {/* Consolidated Header Row */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
+                            <h2 style={{ fontSize: '1.8rem', fontWeight: '800', background: 'linear-gradient(135deg, #fff 30%, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
                                 Interview Apps
                             </h2>
-                        </div>
-                        <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                            <div className="card-header" style={{ background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent)', padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                                <div>
-                                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}><i className="fas fa-user-check" style={{ color: 'var(--primary)' }}></i> Interview Drive Applications</h3>
-                                </div>
-                                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                                    <div className="search-box-modern">
-                                        <i className="fas fa-search"></i>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                {showInterviewSearchInput && (
+                                    <div className="search-box-modern animate-in" style={{ width: '180px' }}>
+                                        <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
                                         <input
                                             type="text"
-                                            placeholder="Search interview apps..."
+                                            placeholder="Search apps..."
                                             value={interviewSearch}
                                             onChange={(e) => setInterviewSearch(e.target.value)}
+                                            style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
                                         />
                                     </div>
-                                </div>
+                                )}
+                                <button 
+                                    onClick={() => setShowInterviewSearchInput(!showInterviewSearchInput)} 
+                                    style={{ background: showInterviewSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255,255,255,0.05)', border: showInterviewSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255,255,255,0.1)', color: showInterviewSearchInput ? '#00d4ff' : 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
+                                >
+                                    <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
+                                </button>
                             </div>
+                        </div>
+
                         {loadingInterviewApps ? (
                             <TableSkeleton cols={6} rows={2} />
-                        ) : interviewApplications.length > 0 ? (
-                            <div className="table-responsive" style={{ padding: '1rem' }}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Applicant Name</th>
-                                            <th>Company</th>
-                                            <th>Date</th>
-                                            <th>Resume</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {interviewApplications.filter(app =>
-                                            app.applicantName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
-                                            app.companyName?.toLowerCase().includes(interviewSearch.toLowerCase()) ||
-                                            app.applicantEmail?.toLowerCase().includes(interviewSearch.toLowerCase())
-                                        ).map(app => (
-                                            <tr key={app.id}>
-                                                <td>
-                                                    <div style={{ fontWeight: '600' }}>{app.applicantName}</div>
-                                                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{app.applicantEmail}</div>
-                                                </td>
-                                                <td>{app.companyName}</td>
-                                                <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
-                                                <td>
-                                                    <button
-                                                        className="action-btn-modern edit-btn"
-                                                        onClick={() => {
-                                                            const filename = app.resumePath.split('/').pop();
-                                                            window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
-                                                        }}
-                                                        title="Download Resume"
-                                                    >
-                                                        <i className="fas fa-file-pdf"></i>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'SHORTLISTED' ? 'admin' : app.status === 'REJECTED' ? 'super-admin' : 'dept-admin'}`}>
-                                                        {app.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <select
-                                                        value={app.status}
-                                                        onChange={(e) => updateInterviewAppStatus(app.id, e.target.value)}
-                                                        className="form-control"
-                                                        style={{ width: 'auto', padding: '0.5rem' }}
-                                                    >
-                                                        <option value="PENDING">Pending</option>
-                                                        <option value="SHORTLISTED">Shortlist</option>
-                                                        <option value="REJECTED">Reject</option>
-                                                        <option value="SELECTED">Select</option>
-                                                    </select>
-                                                </td>
+                        ) : filteredInterviewApps.length > 0 ? (
+                            <section className="card surface-glow-premium" style={{ border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', padding: 0 }}>
+                                <div className="table-responsive" style={{ padding: '1rem' }}>
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Applicant Name</th>
+                                                <th>Company</th>
+                                                <th>Date</th>
+                                                <th>Resume</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            {filteredInterviewApps.map(app => (
+                                                <tr key={app.id}>
+                                                    <td>
+                                                        <div style={{ fontWeight: '600' }}>{app.applicantName}</div>
+                                                        <div style={{ fontSize: '0.8rem', color: '#888' }}>{app.applicantEmail}</div>
+                                                    </td>
+                                                    <td>{app.companyName}</td>
+                                                    <td>{new Date(app.interviewDate).toLocaleDateString()}</td>
+                                                    <td>
+                                                        <button
+                                                            className="action-btn-modern edit-btn"
+                                                            onClick={() => {
+                                                                const filename = app.resumePath.split('/').pop();
+                                                                window.open(`${API_BASE_URL}/resume/download/${filename}`, '_blank');
+                                                            }}
+                                                            title="Download Resume"
+                                                        >
+                                                            <i className="fas fa-file-pdf"></i>
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge-role role-${app.status === 'SELECTED' ? 'user' : app.status === 'SHORTLISTED' ? 'admin' : app.status === 'REJECTED' ? 'super-admin' : 'dept-admin'}`}>
+                                                            {app.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <select
+                                                            value={app.status}
+                                                            onChange={(e) => updateInterviewAppStatus(app.id, e.target.value)}
+                                                            className="form-control"
+                                                            style={{ width: 'auto', padding: '0.5rem' }}
+                                                        >
+                                                            <option value="PENDING">Pending</option>
+                                                            <option value="SHORTLISTED">Shortlist</option>
+                                                            <option value="REJECTED">Reject</option>
+                                                            <option value="SELECTED">Select</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
                         ) : (
-                            <div className="empty-state-modern" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-                                <i className="fas fa-inbox" style={{ fontSize: '3rem', color: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }}></i>
-                                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>No interview applications received yet.</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '4rem 2rem' }}>
+                                <i className="fas fa-inbox" style={{ fontSize: '4.5rem', color: 'rgba(0,212,255,0.15)', marginBottom: '1.5rem' }}></i>
+                                <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', fontWeight: '500', margin: 0 }}>No interview applications received yet.</p>
                             </div>
                         )}
-                        </section>
                     </div>
                 );
+            }
             case 'gallery':
                 return (
                     <div className="users-management-page animate-in">
