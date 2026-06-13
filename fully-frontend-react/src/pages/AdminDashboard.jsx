@@ -1524,19 +1524,19 @@ const AdminDashboard = () => {
                     <div className="dashboard-overview animate-in">
 
                         {/* 2. Unified Hero Stats Row */}
-                        <div className="stats-grid" style={{ marginBottom: '2.5rem' }}>
-                            <div className="stat-card-modern primary">
-                                <div className="stat-icon"><i className="fas fa-briefcase"></i></div>
+                        <div className="stats-grid" style={{ marginBottom: '2.5rem', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                            <div className="stat-card-modern primary" style={{ padding: '1.25rem' }}>
+                                <div className="stat-icon" style={{ width: '40px', height: '40px', fontSize: '1.2rem' }}><i className="fas fa-briefcase"></i></div>
                                 <div className="stat-details">
-                                    <h3>Open Vacancies</h3>
-                                    <div className="stat-value">{loadingJobs ? '...' : jobs.length}</div>
+                                    <h3 style={{ fontSize: '0.85rem' }}>Open Vacancies</h3>
+                                    <div className="stat-value" style={{ fontSize: '1.5rem' }}>{loadingJobs ? '...' : jobs.length}</div>
                                 </div>
                             </div>
-                            <div className="stat-card-modern accent">
-                                <div className="stat-icon"><i className="fas fa-user-graduate"></i></div>
+                            <div className="stat-card-modern accent" style={{ padding: '1.25rem' }}>
+                                <div className="stat-icon" style={{ width: '40px', height: '40px', fontSize: '1.2rem' }}><i className="fas fa-user-graduate"></i></div>
                                 <div className="stat-details">
-                                    <h3>Students Registry</h3>
-                                    <div className="stat-value">{loadingUsers ? '...' : totalStudents}</div>
+                                    <h3 style={{ fontSize: '0.85rem' }}>Students Registry</h3>
+                                    <div className="stat-value" style={{ fontSize: '1.5rem' }}>{loadingUsers ? '...' : totalStudents}</div>
                                 </div>
                             </div>
                         </div>
