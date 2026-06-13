@@ -195,6 +195,7 @@ const AdminDashboard = () => {
     });
     const [userSearch, setUserSearch] = useState('');
     const [jobSearch, setJobSearch] = useState('');
+    const [showJobSearchInput, setShowJobSearchInput] = useState(false);
     const [interviewSearch, setInterviewSearch] = useState('');
     const [appSearch, setAppSearch] = useState('');
     const [globalSearch, setGlobalSearch] = useState('');
@@ -1868,7 +1869,12 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 );
-            case 'jobs':
+            case 'jobs': {
+                const filteredJobs = jobs.filter(j => 
+                    j.title?.toLowerCase().includes(jobSearch.toLowerCase()) || 
+                    j.company_name?.toLowerCase().includes(jobSearch.toLowerCase())
+                );
+
                 return (
                     <div className="jobs-management-page animate-in">
 
@@ -2039,29 +2045,61 @@ const AdminDashboard = () => {
                         </section>
 
                         <section className="card surface-glow">
-                            <div className="card-header">
-                                <h3><i className="fas fa-briefcase"></i> Posted Jobs</h3>
-                                {isSuperAdmin && jobs.length > 0 && (
+                            <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.5rem', width: '100%', boxSizing: 'border-box' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                                    <h3 style={{ margin: 0, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <i className="fas fa-briefcase"></i> Posted Jobs
+                                    </h3>
+                                    {showJobSearchInput && (
+                                        <div className="search-box-modern animate-in" style={{ width: '200px', marginLeft: '0.5rem', flexShrink: 1 }}>
+                                            <i className="fas fa-search" style={{ position: 'absolute', left: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}></i>
+                                            <input
+                                                type="text"
+                                                placeholder="Search jobs..."
+                                                value={jobSearch}
+                                                onChange={(e) => setJobSearch(e.target.value)}
+                                                style={{ width: '100%', height: '32px', paddingLeft: '2.2rem', borderRadius: '6px', fontSize: '0.85rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
                                     <button
-                                        onClick={handleDeleteAllJobs}
-                                        className="btn btn-danger"
-                                        style={{ fontSize: '0.72rem', padding: '0.3rem 0.65rem', borderRadius: '8px', gap: '4px', whiteSpace: 'nowrap' }}
+                                        onClick={() => setShowJobSearchInput(!showJobSearchInput)}
+                                        title="Search Jobs"
+                                        style={{ color: showJobSearchInput ? 'var(--primary)' : 'var(--text-primary)', background: showJobSearchInput ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)', border: showJobSearchInput ? '1px solid rgba(0, 212, 255, 0.2)' : '1px solid rgba(255, 255, 255, 0.1)', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
                                     >
-                                        <i className="fas fa-trash-alt" style={{ fontSize: '0.68rem' }}></i> Delete All
+                                        <i className="fas fa-search" style={{ fontSize: '0.9rem' }}></i>
                                     </button>
-                                )}
+                                    <button
+                                        onClick={loadJobs}
+                                        title="Refresh List"
+                                        style={{ color: 'var(--text-primary)', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+                                    >
+                                        <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
+                                    </button>
+                                    {isSuperAdmin && jobs.length > 0 && (
+                                        <button
+                                            onClick={handleDeleteAllJobs}
+                                            title="Delete All Jobs"
+                                            style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+                                        >
+                                            <i className="fas fa-trash-alt" style={{ fontSize: '0.9rem' }}></i>
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                             {loadingJobs && <TableSkeleton cols={5} rows={2} />}
                             {!loadingJobs && (
                                 <>
                                 <div className="table-responsive desktop-only-table">
-                                    {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
+                                    {filteredJobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
                                         <table id="jobsTable">
                                             <thead>
                                                 <tr><th>Title</th><th>Company</th><th>Last Date</th><th>Salary</th><th>Actions</th></tr>
                                             </thead>
                                             <tbody id="jobsList">
-                                                {jobs.map(job => (
+                                                {filteredJobs.map(job => (
                                                     <tr key={job.id}>
                                                         <td>{job.title}</td>
                                                         <td>{job.company_name}</td>
@@ -2090,8 +2128,8 @@ const AdminDashboard = () => {
                                 
                                 {/* Mobile Job Cards */}
                                 <div className="mobile-job-cards mobile-only">
-                                    {jobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
-                                        jobs.map(job => (
+                                    {filteredJobs.length === 0 ? <p style={{ padding: '1rem' }}>No jobs posted yet.</p> : (
+                                        filteredJobs.map(job => (
                                             <div key={job.id} className="mobile-job-card">
                                                 <div className="job-card-top">
                                                     <h4 className="job-title">{job.title}</h4>
@@ -2144,6 +2182,7 @@ const AdminDashboard = () => {
                         </section>
                     </div>
                 );
+            }
             case 'users': {
                 const filteredUsers = users.filter(user => {
                     if (role === 'DEPT_ADMIN') {
