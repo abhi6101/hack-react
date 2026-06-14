@@ -486,11 +486,72 @@ button.loading .spinner {
         transform: translateY(0); /* Override initial desktop pop-in transform if needed */
     }
 
-    /* Focus Mode Hiding */
-    .login-body-wrapper.is-focused .home-link,
+    /* Focus Mode Hiding with Smooth Transitions */
+    .mobile-branding-area,
+    .login-card h1,
+    .admin-toggle-btn,
+    .form-options,
+    .home-link {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: 200px; /* generous max-height for natural flow */
+        opacity: 1;
+        overflow: hidden;
+        transform: translateY(0);
+        transform-origin: top;
+    }
+
+    /* Target the home-link parent div specifically for height collapse */
+    .login-card > div:first-of-type {
+        transition: all 0.4s ease;
+        max-height: 50px;
+        overflow: hidden;
+    }
+    .login-body-wrapper.is-focused .login-card > div:first-of-type {
+        max-height: 0;
+        margin: 0;
+    }
+
+    .login-body-wrapper.is-focused .mobile-branding-area,
+    .login-body-wrapper.is-focused .login-card h1,
     .login-body-wrapper.is-focused .admin-toggle-btn,
     .login-body-wrapper.is-focused .form-options,
+    .login-body-wrapper.is-focused .home-link {
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        border: none !important;
+        transform: translateY(-15px);
+        pointer-events: none;
+    }
+
+    /* Bottom Bar Fix */
+    .login-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(10, 10, 16, 0.95);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 1;
+        transform: translateY(0);
+        z-index: 10;
+        margin: 0;
+    }
+
     .login-body-wrapper.is-focused .login-footer {
-        display: none !important;
+        opacity: 0;
+        transform: translateY(100%);
+        pointer-events: none;
+    }
+
+    .login-card {
+        padding-bottom: 80px; /* Ensure space for fixed footer so nothing is hidden behind it */
     }
 }
