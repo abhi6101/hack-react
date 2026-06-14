@@ -546,7 +546,7 @@ const Jobs = () => {
                             </AnimatePresence>
                         </div>
                     </div>
-                    </div>
+
 
                 <div className="job-list" id="jobList" style={{ marginTop: '2rem' }}>
                     {/* Skeleton Loading */}
