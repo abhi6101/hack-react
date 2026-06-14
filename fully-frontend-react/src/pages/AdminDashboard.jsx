@@ -2309,7 +2309,7 @@ const AdminDashboard = () => {
                                                     {currentUserRank > 20 && <option value="COMPANY_ADMIN">COMPANY ADMIN</option>}
                                                     {currentUserRank > 40 && <option value="DEPT_ADMIN">DEPT ADMIN</option>}
                                                     {currentUserRank > 60 && <option value="ADMIN">ADMIN</option>}
-                                                    {currentUserRank >= 80 && <option value="SUPER_ADMIN">SUPER ADMIN</option>}
+                                                    {currentUserRank >= 80 && <option value="SUPER_ADMIN">SUB-SUPER ADMIN</option>}
                                                 </select>
                                             </div>
 
@@ -2497,8 +2497,8 @@ const AdminDashboard = () => {
                                                             </div>
                                                         </td>
                                                         <td data-label="Role">
-                                                            <span className={`badge-role role-${user.role.toLowerCase().replace('_', '-')}`} style={user.role === 'USER' ? { backgroundColor: '#064e3b', color: '#4ade80', border: 'none' } : {}}>
-                                                                {user.role}
+                                                            <span className={user.id === 1 ? 'badge-role role-system-owner' : `badge-role role-${user.role.toLowerCase().replace('_', '-')}`} style={user.role === 'USER' ? { backgroundColor: '#064e3b', color: '#4ade80', border: 'none' } : {}}>
+                                                                {user.id === 1 ? 'SYSTEM OWNER' : (user.role === 'SUPER_ADMIN' ? 'SUB-SUPER ADMIN' : user.role)}
                                                             </span>
                                                         </td>
                                                         <td data-label="" className="mobile-expandable-cell">

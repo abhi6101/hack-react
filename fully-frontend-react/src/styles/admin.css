@@ -1190,11 +1190,19 @@ td {
     letter-spacing: 0.5px;
 }
 
+.role-system-owner {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.25) 0%, rgba(249, 115, 22, 0.25) 100%);
+    color: #f59e0b;
+    border: 1px solid rgba(234, 179, 8, 0.45);
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.2);
+}
+
 .role-super-admin {
     background: rgba(255, 71, 123, 0.15);
     color: #ff477b;
     border: 1px solid rgba(255, 71, 123, 0.3);
 }
+
 
 .role-admin {
     background: rgba(0, 212, 255, 0.15);
@@ -1729,6 +1737,13 @@ td {
 .mobile-only {
     display: none !important;
 }
+.job-form-drawer {
+    display: none;
+}
+.job-form-drawer.open {
+    display: block;
+}
+
 
 @media (max-width: 767px) {
     .mobile-jobs-header {
