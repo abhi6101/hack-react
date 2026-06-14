@@ -125,15 +125,18 @@
 }
 
 @media (max-width: 768px) {
+    .hide-on-mobile { display: none; }
     .interview-grid { grid-template-columns: 1fr; }
     .papers-header-container { flex-direction: column; align-items: flex-start; gap: 15px; }
     .filter-row { width: 100% !important; }
     
     /* Header Slimming */
     .papers-header-container.layout-centered {
-        padding: 4px 1rem !important;
+        padding: 2px 1rem !important;
         margin-bottom: 8px !important;
         border-radius: 8px !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     .main-page-heading {
         font-size: 1.1rem !important;
@@ -141,18 +144,19 @@
 
     /* Job Card Compaction */
     .improved-card {
-        padding: 12px 15px !important;
+        padding: 8px 12px !important;
     }
 
     /* Top Row: Single horizontal row */
     .job-header-main {
         align-items: center !important;
-        margin-bottom: 8px !important;
+        margin-bottom: 4px !important;
     }
     .company-logo-square {
         width: 35px !important;
         height: 35px !important;
         font-size: 1rem !important;
+        line-height: 1 !important;
     }
     .title-area {
         display: flex !important;
@@ -180,8 +184,8 @@
         display: flex !important;
         flex-wrap: wrap !important;
         gap: 12px !important;
-        padding: 8px 10px !important;
-        margin: 8px 0 !important;
+        padding: 6px 8px !important;
+        margin: 4px 0 !important;
     }
     .meta-cell.full-span {
         width: 100% !important;
@@ -192,11 +196,14 @@
 
     /* Eligibility Section */
     .eligibility-tag {
-        margin: 4px 0 8px 0 !important;
+        margin: 2px 0 4px 0 !important;
         font-size: 0.85rem !important;
     }
 
     /* Apply Button */
+    .improved-card .job-actions {
+        margin-top: 4px !important;
+    }
     .job-actions .apply-btn,
     .job-actions .btn-success {
         padding: 8px 16px !important;

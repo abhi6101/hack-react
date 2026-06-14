@@ -154,3 +154,57 @@ a { color: var(--primary); text-decoration: none; } a:hover { color: white; }
 .option-text {
     font-size: 1rem; font-weight: 500; color: #fff;
 }
+
+/* --- Mobile View Optimization (max-width: 768px) --- */
+@media (max-width: 768px) {
+    /* Overall Pull-Up */
+    .mobile-quiz-container {
+        padding-top: 70px !important;
+        padding-bottom: 20px !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    /* Center Title & Reduce vertical padding of header card */
+    .mobile-quiz-header {
+        text-align: center !important;
+        padding: 0.8rem 1rem !important;
+        margin-bottom: 0.8rem !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    
+    .mobile-quiz-header .papers-header-left {
+        width: 100% !important;
+        text-align: center !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* Reduce internal padding of quiz category cards */
+    .mobile-quiz-grid {
+        gap: 0.8rem !important;
+    }
+
+    .mobile-quiz-card {
+        padding: 1rem 0.5rem !important;
+        min-height: auto !important; 
+    }
+
+    .mobile-quiz-card i {
+        font-size: 1.5rem !important;
+        margin-bottom: 0.4rem !important;
+    }
+
+    /* Typography Scale */
+    .mobile-quiz-card .subject-name {
+        font-size: 0.85rem !important;
+    }
+
+    .mobile-quiz-card .subject-desc {
+        font-size: 0.65rem !important;
+        margin-top: 0.2rem !important;
+    }
+}

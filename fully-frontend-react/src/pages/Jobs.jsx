@@ -585,19 +585,21 @@ const Jobs = () => {
                             <div className="job-card" key={job.id} style={{ animationDelay: `${index * 0.1}s` }}>
                                 <div className="job-header">
                                     <h3 className="job-title">{job.title.replace('Sggggoftware', 'Software')}</h3>
-                                    <div className="job-company" style={{ marginLeft: '2px' }}>
-                                        <i className="fas fa-building" style={{ width: '16px', textAlign: 'center' }}></i> {job.company_name}
+                                    <div className="job-company-badge-row mobile-flex-row">
+                                        <div className="job-company">
+                                            <i className="fas fa-building"></i> {job.company_name}
+                                        </div>
+                                        <span className={`job-type ${jobTypeClass}`}>{jobTypeText}</span>
                                     </div>
-                                    <span className={`job-type ${jobTypeClass}`} style={{ marginTop: '0.5rem' }}>{jobTypeText}</span>
                                 </div>
                                 <div className="job-content">
                                     <p className="job-description">{job.description}</p>
-                                    <div className="job-meta">
+                                    <div className="job-meta mobile-meta-row">
                                         <span className="job-meta-item">
-                                            <i className="fas fa-rupee-sign"></i> ₹{job.salary.toLocaleString('en-IN')} per annum
+                                            <i className="fas fa-rupee-sign"></i> {job.salary.toLocaleString('en-IN')}
                                         </span>
                                         <span className="job-meta-item">
-                                            <i className="fas fa-calendar-alt"></i> Apply before {formatDate(job.last_date)}
+                                            <i className="fas fa-calendar-alt"></i> {formatDate(job.last_date)}
                                         </span>
                                     </div>
                                     <div className="job-actions">

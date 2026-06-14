@@ -327,7 +327,7 @@ const Interview = () => {
 
 <div className="papers-header-container layout-centered" style={{ background: 'rgba(255,255,255,0.05)', padding: '15px 2rem', borderRadius: '16px', marginBottom: '20px', justifyContent: 'center' }}>
     <div className="papers-header-left" style={{ width: '100%', textAlign: 'center' }}>
-        <h2 className="main-page-heading" style={{ margin: 0 }}>Available Job Drives</h2>
+        <h2 className="main-page-heading" style={{ margin: 0 }}><span className="hide-on-mobile">Available </span>Job Drives</h2>
     </div>
 </div>
 
