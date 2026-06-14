@@ -159,28 +159,9 @@ a { color: var(--primary); text-decoration: none; } a:hover { color: white; }
 @media (max-width: 768px) {
     /* Overall Pull-Up */
     .mobile-quiz-container {
-        padding-top: 70px !important;
         padding-bottom: 20px !important;
         padding-left: 1rem !important;
         padding-right: 1rem !important;
-    }
-
-    /* Center Title & Reduce vertical padding of header card */
-    .mobile-quiz-header {
-        text-align: center !important;
-        padding: 0.8rem 1rem !important;
-        margin-bottom: 0.8rem !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-    }
-    
-    .mobile-quiz-header .papers-header-left {
-        width: 100% !important;
-        text-align: center !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
     }
 
     /* Reduce internal padding of quiz category cards */

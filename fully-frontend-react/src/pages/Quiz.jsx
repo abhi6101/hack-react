@@ -157,8 +157,8 @@ const Quiz = () => {
             {step === 'subject-selection' && (
                 <section id="subject-selection" className="quiz-step active" style={{ padding: 0 }}>
                     <div className="papers-header-container mobile-quiz-header" style={{ marginBottom: '1.5rem' }}>
-                        <div className="papers-header-left" style={{ textAlign: 'center', width: '100%' }}>
-                            <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>
+                        <div className="papers-header-left">
+                            <h2>
                                 <i className="fas fa-brain" style={{ color: 'var(--primary)', marginRight: '10px' }}></i>
                                 Quiz <span style={{ color: 'var(--primary)' }}>Master</span>
                             </h2>
@@ -180,7 +180,7 @@ const Quiz = () => {
             {step === 'quiz' && (
                 <section id="quiz" className="quiz-step active" style={{ padding: 0 }}>
                     {/* Slim Header Container */}
-                    <div className="papers-header-container slim-interview-header" style={{ marginBottom: '24px', borderRadius: '24px', border: '1px solid rgba(0, 212, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', alignItems: 'center' }}>
+                    <div className="papers-header-container slim-interview-header">
                         <div className="papers-header-left">
                             <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', fontWeight: '700' }}>{currentSubject?.name} Quiz</h2>
                         </div>

@@ -365,10 +365,10 @@ const ResumeBuilder = () => {
         <div className="papers-page-wrapper">
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
-            <div className="container mobile-resume-container" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
-            <div className="papers-header-container mobile-resume-header" style={{ textAlign: 'center', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '2rem', marginBottom: '2rem' }}>
-                <div className="papers-header-left" style={{ display: 'flex', justifyContent: 'center', width: 'auto' }}>
-                    <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 2.5rem)', display: 'block', overflow: 'visible', maxWidth: '100%', fontWeight: '800', lineHeight: '1.2', textAlign: 'center' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
+            <div className="container upload-paper-wrapper" style={{ minHeight: '100vh', padding: '112px 2rem 50px', position: 'relative', zIndex: 2 }}>
+            <div className="papers-header-container" style={{ marginBottom: '2rem' }}>
+                <div className="papers-header-left">
+                    <h2 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 2.5rem)', fontWeight: '800', lineHeight: '1.2' }}>ATS-Friendly <span style={{ color: 'var(--primary)' }}>Resume Builder</span></h2>
                     <p className="sr-only">Create a professional, clean resume in seconds.</p>
                 </div>
                 <div className="papers-header-right hide-on-mobile" style={{ width: 'auto', display: 'flex', justifyContent: 'center' }}>
@@ -747,18 +747,6 @@ const ResumeBuilder = () => {
                     }
                 }
                 @media (max-width: 768px) {
-                    .mobile-resume-container {
-                        padding: 70px 1rem 20px !important;
-                    }
-                    .mobile-resume-header {
-                        padding: 0.5rem 1rem !important;
-                        margin-bottom: 1rem !important;
-                        gap: 0.5rem !important;
-                    }
-                    .papers-header-left h2 {
-                        font-size: 1.1rem !important;
-                        text-align: left !important;
-                    }
                     .resume-form-container {
                         padding: 0.5rem !important;
                         gap: 1rem !important;

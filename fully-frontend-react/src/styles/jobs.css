@@ -888,36 +888,6 @@
 
 /* JOBS MOBILE SPACING REFINEMENT */
 @media (max-width: 768px) {
-  .mobile-jobs-page-wrapper { padding-top: 60px !important; }
-  .mobile-jobs-container { margin-top: 0 !important; padding-top: 8px !important; }
-  
-  /* Slim Down Header Card for Mobile */
-  .papers-header-container { 
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 0 !important;
-    margin-bottom: 1rem !important; 
-    gap: 0.5rem !important; 
-    border-radius: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  .papers-header-left {
-    width: auto !important;
-    padding-top: 0 !important;
-    text-align: left !important;
-    flex: 1 1 auto !important;
-  }
-  
-  .papers-header-left h2 {
-    font-size: 1.25rem !important;
-    text-align: left !important;
-  }
-  
   .papers-header-right.mobile-filters-wrapper {
     width: auto !important;
     flex: 0 1 auto !important;

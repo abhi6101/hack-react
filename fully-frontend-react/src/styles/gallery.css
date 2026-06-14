@@ -495,42 +495,29 @@
 
 /* Gallery Mobile Overrides */
 @media (max-width: 768px) {
-    /* 1. Header Compression */
     .gallery-header-container {
-        margin-bottom: 0.5rem !important;
-        padding: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 0.5rem !important;
+        position: relative !important;
     }
-    .gallery-header-container .papers-header-left {
-        margin: 0 !important;
-    }
-    .gallery-header-container .papers-header-left h2 {
-        font-size: 1.3rem !important;
-        white-space: nowrap;
-    }
+    /* 1. Header Absolute Positioning for Share Button */
     .gallery-header-container .papers-header-right {
-        width: auto !important;
+        position: absolute !important;
+        right: 16px !important;
         margin: 0 !important;
-        display: flex !important;
-        justify-content: flex-end !important;
     }
     .share-photo-btn {
-        width: auto !important;
-        padding: 0.5rem 1rem !important;
+        width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     .share-photo-btn .share-text {
         display: none !important;
     }
-    .share-photo-btn::after {
-        content: "Share";
-        font-size: 0.9rem;
+    .share-photo-btn i {
+        margin: 0 !important;
     }
 
     /* 2. Filter Bar Styling */
@@ -578,9 +565,6 @@
         display: none !important;
     }
     
-    /* 4. Eliminate Empty Space */
-    .container {
-        padding: 80px 1rem 20px !important;
-    }
+
 }
 

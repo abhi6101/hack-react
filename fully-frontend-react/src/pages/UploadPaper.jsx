@@ -132,16 +132,6 @@ const UploadPaper = () => {
                     }
                 }
                 @media (max-width: 768px) {
-                    .upload-page-container {
-                        padding: 70px 5% 20px !important;
-                    }
-                    .slim-upload-header {
-                        padding: 0.2rem 1rem !important;
-                        margin-bottom: 0.5rem !important;
-                    }
-                    .slim-upload-header h2 {
-                        font-size: 1.3rem !important;
-                    }
                     .upload-wizard-card {
                         padding: 1.2rem !important;
                     }
@@ -189,12 +179,12 @@ const UploadPaper = () => {
                 }
                 `}
             </style>
-            <div className="upload-page-container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
+            <div className="upload-page-container upload-paper-wrapper" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
                 
                 {/* Gallery-Style Split Header */}
-                <div className="papers-header-container slim-upload-header" style={{ marginBottom: '1.5rem', padding: '0.6rem 2rem', display: 'flex', justifyContent: 'center' }}>
-                    <div className="papers-header-left" style={{ textAlign: 'center', width: '100%' }}>
-                        <h2 style={{ margin: 0, fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '700' }}>Smart Paper <span style={{ color: 'var(--primary)' }}>Upload</span></h2>
+                <div className="papers-header-container slim-upload-header" style={{ marginBottom: '1.5rem' }}>
+                    <div className="papers-header-left">
+                        <h2>Smart Paper <span style={{ color: 'var(--primary)' }}>Upload</span></h2>
                     </div>
                 </div>
 
