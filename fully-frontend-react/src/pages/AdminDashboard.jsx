@@ -2525,9 +2525,9 @@ const AdminDashboard = () => {
                                                                     <button
                                                                         className="action-btn-modern edit-btn"
                                                                         onClick={() => startEditUser(user)}
-                                                                        disabled={currentUserRank <= getRank(user)}
-                                                                        title={currentUserRank <= getRank(user) ? "Insufficient Hierarchy Authority" : "Edit User"}
-                                                                        style={currentUserRank <= getRank(user) ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
+                                                                        disabled={isCompanyAdmin || currentUserRank <= getRank(user)}
+                                                                        title={isCompanyAdmin || currentUserRank <= getRank(user) ? "Insufficient Hierarchy Authority" : "Edit User"}
+                                                                        style={isCompanyAdmin || currentUserRank <= getRank(user) ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
                                                                     >
                                                                         <i className="fas fa-pencil-alt"></i>
                                                                     </button>
@@ -2535,9 +2535,9 @@ const AdminDashboard = () => {
                                                                 <button
                                                                     className="action-btn-modern delete-btn"
                                                                     onClick={() => deleteUser(user.id)}
-                                                                    disabled={currentUserRank <= getRank(user) || user.id === 1}
-                                                                    title={currentUserRank <= getRank(user) || user.id === 1 ? "Insufficient Hierarchy Authority" : "Delete User"}
-                                                                    style={currentUserRank <= getRank(user) || user.id === 1 ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
+                                                                    disabled={isCompanyAdmin || currentUserRank <= getRank(user) || user.id === 1}
+                                                                    title={isCompanyAdmin || currentUserRank <= getRank(user) || user.id === 1 ? "Insufficient Hierarchy Authority" : "Delete User"}
+                                                                    style={isCompanyAdmin || currentUserRank <= getRank(user) || user.id === 1 ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
                                                                 >
                                                                     <i className="fas fa-trash-alt"></i>
                                                                 </button>
