@@ -226,6 +226,7 @@ const AdminDashboard = () => {
         });
     };
     const [editingUser, setEditingUser] = useState(null);
+    const [isUserCreating, setIsUserCreating] = useState(false);
     const [editingJob, setEditingJob] = useState(null);
     const [isJobFormOpen, setIsJobFormOpen] = useState(false);
     const [isDeptFormOpen, setIsDeptFormOpen] = useState(false);
@@ -932,6 +933,7 @@ const AdminDashboard = () => {
 
     const handleUserSubmit = async (e) => {
         e.preventDefault();
+        setIsUserCreating(true);
         const endpoint = editingUser
             ? `${ADMIN_API_URL}/users/${editingUser.id}`
             : `${ADMIN_API_URL}/users`;
@@ -995,6 +997,8 @@ const AdminDashboard = () => {
         } catch (err) {
             console.error('❌ Network error:', err);
             setMessage({ text: 'Failed to save user', type: 'error' });
+        } finally {
+            setIsUserCreating(false);
         }
         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     };
@@ -2397,9 +2401,9 @@ const AdminDashboard = () => {
                                             )}
                                         </div>
                                         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
-                                            <button type="submit" className="btn-premium">
-                                                <span>{editingUser ? 'Update Professional Account' : 'Initialize Account'}</span>
-                                                <i className="fas fa-chevron-right"></i>
+                                            <button type="submit" className="btn-premium" disabled={isUserCreating}>
+                                                <span>{isUserCreating ? 'Your account is creating in 3 to 5 seconds...' : (editingUser ? 'Update Professional Account' : 'Initialize Account')}</span>
+                                                {isUserCreating ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-chevron-right"></i>}
                                             </button>
                                         </div>
                                     </form>
