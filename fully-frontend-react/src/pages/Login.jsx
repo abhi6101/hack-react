@@ -15,6 +15,10 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [lockedTimeLeft, setLockedTimeLeft] = useState(0);
+    const [isInputFocused, setIsInputFocused] = useState(false);
+
+    const handleFocus = () => setIsInputFocused(true);
+    const handleBlur = () => setIsInputFocused(false);
 
     // Load remembered credentials based on mode
     useEffect(() => {
@@ -189,8 +193,11 @@ const Login = () => {
     };
 
     return (
-        <div className="login-body-wrapper">
+        <div className={`login-body-wrapper ${isInputFocused ? 'is-focused' : ''}`}>
             <section className="login-section">
+                <div className="mobile-branding-area">
+                    <i className="fas fa-user-lock"></i>
+                </div>
                 <motion.div
                     className="login-card surface-glow"
                     initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -202,7 +209,7 @@ const Login = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
                     >
-                        <Link to="/" style={{
+                        <Link to="/" className="home-link" style={{
                             position: 'relative',
                             display: 'inline-flex',
                             alignItems: 'center',
@@ -257,6 +264,7 @@ const Login = () => {
                         </button>
                         <button
                             type="button"
+                            className="admin-toggle-btn"
                             onClick={() => setLoginMode('admin')}
                             style={{
                                 flex: 1,
@@ -295,6 +303,8 @@ const Login = () => {
                                 aria-label={loginMode === 'student' ? 'Computer Code' : 'Username'}
                                 value={identifier}
                                 onChange={handleIdentifierChange}
+                                onFocus={handleFocus}
+                                onBlur={handleBlur}
                                 inputMode={loginMode === 'student' ? 'numeric' : 'text'}
                             />
                         </div>
@@ -311,6 +321,8 @@ const Login = () => {
                                     aria-label="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
                                 />
                                 <i
                                     className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password-toggle-icon`}
