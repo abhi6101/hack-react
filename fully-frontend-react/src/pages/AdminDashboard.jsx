@@ -3172,9 +3172,9 @@ const AdminDashboard = () => {
                                     >
                                         <div className="accordion-title">
                                             <i className={`fas ${group.icon}`}></i>
-                                            <span>{group.title}</span>
+                                            <span className="category-title">{group.title}</span>
                                         </div>
-                                        <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'} accordion-arrow`}></i>
+                                        <i className={`fas fa-chevron-down accordion-arrow`}></i>
                                     </button>
                                     
                                     {isExpanded && (
@@ -3204,11 +3204,11 @@ const AdminDashboard = () => {
                     </ul>
                 </nav>
 
-                <div className="sidebar-footer" style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <button className="btn w-100" style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '12px', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '10px' }} onClick={() => navigate('/')}>
+                <div className="sidebar-footer">
+                    <button className="footer-btn portal-btn" onClick={() => navigate('/')}>
                         <i className="fas fa-external-link-alt"></i> Portal
                     </button>
-                    <button className="btn w-100 mt-2" style={{ background: 'rgba(239, 68, 68, 0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#f87171', borderRadius: '12px', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '10px' }} onClick={handleLogout}>
+                    <button className="footer-btn logout-btn" onClick={handleLogout}>
                         <i className="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
