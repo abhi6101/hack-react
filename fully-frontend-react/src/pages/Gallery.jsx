@@ -181,7 +181,7 @@ const Gallery = () => {
                     </div>
                     <div className="papers-header-right">
                         <button
-                            className="btn"
+                            className="btn share-photo-btn"
                             onClick={() => setShowUploadModal(true)}
                             style={{
                                 width: '180px',
@@ -200,7 +200,7 @@ const Gallery = () => {
                                 transition: 'all 0.3s ease'
                             }}
                         >
-                            <i className="fas fa-camera"></i> <span>Share Photo</span>
+                            <i className="fas fa-camera"></i> <span className="share-text">Share Photo</span>
                         </button>
                     </div>
                 </div>

@@ -124,7 +124,72 @@ const UploadPaper = () => {
         <div className="papers-page-wrapper">
             <div className="decorative-blob blob-1"></div>
             <div className="decorative-blob blob-2"></div>
-            <div style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
+            <style>
+                {`
+                @media (min-width: 1024px) {
+                    .take-photo-btn {
+                        display: none !important;
+                    }
+                }
+                @media (max-width: 768px) {
+                    .upload-page-container {
+                        padding: 70px 5% 20px !important;
+                    }
+                    .slim-upload-header {
+                        padding: 0.2rem 1rem !important;
+                        margin-bottom: 0.5rem !important;
+                    }
+                    .slim-upload-header h2 {
+                        font-size: 1.3rem !important;
+                    }
+                    .upload-wizard-card {
+                        padding: 1.2rem !important;
+                    }
+                    .stepper-container {
+                        margin-bottom: 0.8rem !important;
+                    }
+                    .stepper-circle {
+                        width: 16px !important;
+                        height: 16px !important;
+                        font-size: 0.6rem !important;
+                    }
+                    .instructions-container {
+                        margin-bottom: 0.8rem !important;
+                    }
+                    .instructions-container h3 {
+                        font-size: 1rem !important;
+                        margin-bottom: 0.2rem !important;
+                    }
+                    .instructions-container p {
+                        font-size: 13px !important;
+                        line-height: 1.2 !important;
+                    }
+                    .upload-buttons-container {
+                        gap: 10px !important;
+                        margin-bottom: 1rem !important;
+                    }
+                    .upload-method-card {
+                        padding: 0.8rem 0.5rem !important;
+                    }
+                    .upload-method-card .icon-container {
+                        width: 40px !important;
+                        height: 40px !important;
+                        margin-bottom: 0.5rem !important;
+                    }
+                    .upload-method-card .icon-container i {
+                        font-size: 1.2rem !important;
+                    }
+                    .upload-method-card h4 {
+                        font-size: 0.9rem !important;
+                    }
+                    .next-btn-container button {
+                        padding: 0.8rem !important;
+                        font-size: 0.9rem !important;
+                    }
+                }
+                `}
+            </style>
+            <div className="upload-page-container" style={{ minHeight: '100vh', padding: '100px 5% 50px', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
                 
                 {/* Gallery-Style Split Header */}
                 <div className="papers-header-container slim-upload-header" style={{ marginBottom: '1.5rem', padding: '0.6rem 2rem', display: 'flex', justifyContent: 'center' }}>
@@ -139,11 +204,11 @@ const UploadPaper = () => {
                         <div className="upload-wizard-card" style={{ background: 'rgba(22, 22, 34, 0.75)', borderRadius: '24px', padding: '2.5rem', border: '1px solid rgba(0, 212, 255, 0.2)', position: 'relative', overflow: 'hidden', boxShadow: '0 0 20px rgba(0, 212, 255, 0.1)', backdropFilter: 'blur(20px)' }}>
                     
                     {/* Thinner, Modern Progress Bar at Top */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', position: 'relative' }}>
+                    <div className="stepper-container" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(255,255,255,0.05)', zIndex: 0 }}></div>
                         <div style={{ position: 'absolute', top: '50%', left: 0, width: `${((step - 1) / 3) * 100}%`, height: '1px', background: 'var(--primary)', zIndex: 1, transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 8px var(--primary)' }}></div>
                         {[1, 2, 3, 4].map(num => (
-                            <div key={num} style={{ 
+                            <div key={num} className="stepper-circle" style={{ 
                                 width: '20px', height: '20px', borderRadius: '50%', 
                                 background: step === num ? 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)' : 'var(--surface-bg)', 
                                 color: step === num ? '#fff' : (step > num ? 'var(--primary)' : '#fff'),
@@ -162,22 +227,14 @@ const UploadPaper = () => {
                     <AnimatePresence mode="wait">
                         {step === 1 && (
                             <motion.div key="step1" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
-                                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                <div className="instructions-container" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                                     <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem' }}>Select Capture Method</h3>
                                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto' }}>
                                         Take photos of an official university exam paper. Ensure the text is clear and legible.
                                     </p>
                                 </div>
                                 
-                                <style jsx>{`
-                                    @media (min-width: 1024px) {
-                                        .take-photo-btn {
-                                            display: none !important;
-                                        }
-                                    }
-                                `}</style>
-                                
-                                <div style={{ display: 'flex', gap: '20px', marginBottom: '2rem', justifyContent: 'center' }}>
+                                <div className="upload-buttons-container" style={{ display: 'flex', gap: '20px', marginBottom: '2rem', justifyContent: 'center' }}>
                                     <div 
                                         className="take-photo-btn upload-method-card"
                                         onClick={() => cameraInputRef.current.click()}
@@ -189,7 +246,7 @@ const UploadPaper = () => {
                                         onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.5)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1)'; e.currentTarget.style.background = 'rgba(0, 212, 255, 0.05)'; }}
                                         onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
-                                        <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                        <div className="icon-container" style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
                                             <i className="fas fa-camera" style={{ fontSize: '1.8rem', color: 'transparent', WebkitTextStroke: '1.5px #00d4ff' }}></i>
                                         </div>
                                         <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Take Photo</h4>
@@ -205,7 +262,7 @@ const UploadPaper = () => {
                                         onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.5)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1)'; e.currentTarget.style.background = 'rgba(0, 212, 255, 0.05)'; }}
                                         onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
                                     >
-                                        <div style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
+                                        <div className="icon-container" style={{ width: '64px', height: '64px', background: 'rgba(0, 212, 255, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid rgba(0, 212, 255, 0.2)' }}>
                                             <i className="fas fa-images" style={{ fontSize: '1.8rem', color: 'transparent', WebkitTextStroke: '1.5px #00d4ff' }}></i>
                                         </div>
                                         <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Gallery</h4>
@@ -258,7 +315,7 @@ const UploadPaper = () => {
                                     </div>
                                 )}
 
-                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <div className="next-btn-container" style={{ display: 'flex', justifyContent: 'center' }}>
                                     <button onClick={handleNext} className="btn" style={{ width: '100%', maxWidth: '300px', padding: '1rem', background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', color: '#fff', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', border: 'none', transition: 'all 0.3s ease', opacity: files.length === 0 ? 0.5 : 1, cursor: files.length === 0 ? 'not-allowed' : 'pointer', boxShadow: files.length > 0 ? '0 10px 25px rgba(0, 212, 255, 0.3)' : 'none' }} disabled={files.length === 0} onMouseOver={e => { if(files.length > 0) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 212, 255, 0.5)'; } }} onMouseOut={e => { if(files.length > 0) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 212, 255, 0.3)'; } }}>
                                         Next Step <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
                                     </button>

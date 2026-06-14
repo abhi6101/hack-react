@@ -128,6 +128,79 @@
     .interview-grid { grid-template-columns: 1fr; }
     .papers-header-container { flex-direction: column; align-items: flex-start; gap: 15px; }
     .filter-row { width: 100% !important; }
+    
+    /* Header Slimming */
+    .papers-header-container.layout-centered {
+        padding: 4px 1rem !important;
+        margin-bottom: 8px !important;
+        border-radius: 8px !important;
+    }
+    .main-page-heading {
+        font-size: 1.1rem !important;
+    }
+
+    /* Job Card Compaction */
+    .improved-card {
+        padding: 12px 15px !important;
+    }
+
+    /* Top Row: Single horizontal row */
+    .job-header-main {
+        align-items: center !important;
+        margin-bottom: 8px !important;
+    }
+    .company-logo-square {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 1rem !important;
+    }
+    .title-area {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+    }
+    .job-title {
+        font-size: 1.1rem !important;
+        margin: 0 !important;
+    }
+    .job-company-info {
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+    .company-text {
+        font-size: 0.9rem !important;
+        color: var(--text-secondary, #aaa) !important;
+    }
+
+    /* Schedule Row: Date and Time on same line */
+    .meta-grid-info {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        padding: 8px 10px !important;
+        margin: 8px 0 !important;
+    }
+    .meta-cell.full-span {
+        width: 100% !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        padding-top: 8px !important;
+        margin-top: -4px !important;
+    }
+
+    /* Eligibility Section */
+    .eligibility-tag {
+        margin: 4px 0 8px 0 !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Apply Button */
+    .job-actions .apply-btn,
+    .job-actions .btn-success {
+        padding: 8px 16px !important;
+    }
 }
 
 @media (max-width: 480px) {

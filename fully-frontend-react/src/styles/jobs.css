@@ -887,5 +887,50 @@
 @media (max-width: 768px) {
   .mobile-jobs-page-wrapper { padding-top: 75px !important; }
   .mobile-jobs-container { margin-top: 0 !important; }
-  .papers-header-container { margin-bottom: 1rem !important; gap: 0.5rem !important; }
+  
+  /* Slim Down Header Card for Mobile */
+  .papers-header-container { 
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0.5rem 0.75rem !important;
+    margin-bottom: 0.5rem !important; 
+    gap: 0.5rem !important; 
+    border-radius: 12px !important;
+  }
+
+  .papers-header-left {
+    width: auto !important;
+    padding-top: 0 !important;
+    text-align: left !important;
+    flex: 1 1 auto !important;
+  }
+  
+  .papers-header-left h2 {
+    font-size: 1.15rem !important;
+    text-align: left !important;
+  }
+  
+  .papers-header-right.mobile-filters-wrapper {
+    width: auto !important;
+    flex: 0 1 auto !important;
+    justify-content: flex-end !important;
+  }
+  
+  .mobile-filter-sort {
+    margin: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  .custom-dropdown {
+    height: 32px !important;
+    padding: 0 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  #jobList {
+    margin-top: 0.5rem !important;
+  }
 }
+

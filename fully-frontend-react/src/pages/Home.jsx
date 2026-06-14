@@ -658,16 +658,66 @@ const Home = () => {
                 <style jsx>{`
                     @media (max-width: 768px) {
                         .mobile-moments-grid-container { display: block !important; }
+                        
+                        /* 1. Headline Compression */
+                        .hero {
+                            padding-top: 4rem !important;
+                            padding-bottom: 0 !important;
+                        }
+                        .hero-heading {
+                            font-size: 2.2rem !important;
+                            margin-bottom: 0.5rem !important;
+                            line-height: 1.2 !important;
+                        }
+                        .hero-subheadline {
+                            font-size: 1rem !important;
+                            margin-top: 0.5rem !important;
+                            margin-bottom: 0.5rem !important;
+                        }
+                        .hero-text-content {
+                            margin-bottom: 1rem !important;
+                        }
+
+                        /* 2. Horizontal Action Buttons */
                         .hero-ctas {
-                            flex-direction: column !important;
-                            gap: 12px !important;
-                            padding: 0 1rem;
+                            flex-direction: row !important;
+                            gap: 10px !important;
+                            padding: 0 0.5rem !important;
+                            margin-top: 1rem !important;
+                            width: 100%;
                         }
                         .hero-ctas .cta-btn {
-                            width: 100% !important;
+                            flex: 1 !important;
+                            width: 50% !important;
+                            min-width: 0 !important;
                             margin: 0 !important;
-                            padding: 12px 0 !important;
-                            font-size: 0.95rem !important;
+                            padding: 8px 0 !important; /* slimmer */
+                            font-size: 0.9rem !important;
+                        }
+                        
+                        /* 3. Compact Badge */
+                        .mobile-only {
+                            margin-top: 0.8rem !important;
+                        }
+                        .mobile-only > div {
+                            padding: 0.2rem 0.6rem !important;
+                        }
+                        .mobile-only span {
+                            font-size: 0.75rem !important;
+                        }
+
+                        /* 4. Section Transition */
+                        .hero-main-container {
+                            gap: 0 !important;
+                        }
+                        .hero-illustration-wrapper {
+                            padding-bottom: 0 !important;
+                            margin-top: -1rem !important;
+                            transform: scale(0.85); /* Optional: make image slightly smaller */
+                        }
+                        .community-champions-section {
+                            padding-top: 0 !important;
+                            margin-top: -1.5rem !important;
                         }
                     }
                 `}</style>

@@ -69,7 +69,7 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
         <div className="user-mobile-menu-container animate-in">
             
             {/* Student Portal - Always at the top */}
-            <div className="mobile-menu-group card surface-glow" style={{ marginBottom: '1.5rem', padding: '1.25rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="mobile-menu-group card surface-glow mobile-profile-container">
                 {isLoggedIn ? (
                     <div className="user-profile-card">
                         <div className="user-profile-header">
@@ -95,87 +95,42 @@ const UserMobileMenu = ({ setIsMobileMenuOpen }) => {
                         </button>
                     </div>
                 ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div className="mobile-category-grid">
                         <Link
                             to="/login"
                             onClick={handleNavigation}
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem',
-                                padding: '0.9rem',
-                                background: 'rgba(255, 255, 255, 0.02)',
-                                border: '1px solid rgba(255, 255, 255, 0.05)',
-                                borderRadius: '12px',
-                                color: 'var(--text-secondary)',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                textDecoration: 'none'
-                            }}
                             className="mobile-menu-item"
                         >
-                            <i className="fas fa-sign-in-alt" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}></i>
-                            <span style={{ fontSize: '0.8rem', fontWeight: '500', textAlign: 'center' }}>Sign In</span>
+                            <i className="fas fa-sign-in-alt"></i>
+                            <span>Sign In</span>
                         </Link>
                         <Link
                             to="/register"
                             onClick={handleNavigation}
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem',
-                                padding: '0.9rem',
-                                background: 'rgba(255, 255, 255, 0.02)',
-                                border: '1px solid rgba(255, 255, 255, 0.05)',
-                                borderRadius: '12px',
-                                color: 'var(--text-secondary)',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                textDecoration: 'none'
-                            }}
                             className="mobile-menu-item"
                         >
-                            <i className="fas fa-user-plus" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}></i>
-                            <span style={{ fontSize: '0.8rem', fontWeight: '500', textAlign: 'center' }}>Register</span>
+                            <i className="fas fa-user-plus"></i>
+                            <span>Register</span>
                         </Link>
                     </div>
                 )}
             </div>
 
             {menuGroups.map(group => (
-                <div key={group.title} className="mobile-menu-group card surface-glow" style={{ marginBottom: '1.5rem', padding: '1.25rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: '600' }}>
+                <div key={group.title} className="mobile-menu-group card surface-glow mobile-category-container">
+                    <h3 className="mobile-category-header">
                         <i className={`fas ${group.icon}`}></i> {group.title}
                     </h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div className="mobile-category-grid">
                         {group.items.map(item => (
                             <Link
                                 key={item.path}
                                 to={item.path}
                                 onClick={handleNavigation}
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem',
-                                    padding: '0.9rem',
-                                    background: 'rgba(255, 255, 255, 0.02)',
-                                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                                    borderRadius: '12px',
-                                    color: 'var(--text-secondary)',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s ease',
-                                    textDecoration: 'none'
-                                }}
                                 className="mobile-menu-item"
                             >
-                                <i className={`fas ${item.icon}`} style={{ fontSize: '1.25rem', color: 'var(--primary)' }}></i>
-                                <span style={{ fontSize: '0.8rem', fontWeight: '500', textAlign: 'center' }}>{item.label}</span>
+                                <i className={`fas ${item.icon}`}></i>
+                                <span>{item.label}</span>
                             </Link>
                         ))}
                     </div>

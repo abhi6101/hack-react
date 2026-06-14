@@ -747,8 +747,48 @@ const ResumeBuilder = () => {
                     }
                 }
                 @media (max-width: 768px) {
+                    .mobile-resume-container {
+                        padding: 70px 1rem 20px !important;
+                    }
+                    .mobile-resume-header {
+                        padding: 0.5rem 1rem !important;
+                        margin-bottom: 1rem !important;
+                        gap: 0.5rem !important;
+                    }
+                    .papers-header-left h2 {
+                        font-size: 1.1rem !important;
+                        text-align: left !important;
+                    }
+                    .resume-form-container {
+                        padding: 0.5rem !important;
+                        gap: 1rem !important;
+                        border: none !important;
+                        background: transparent !important;
+                    }
+                    .section-card {
+                        padding: 1rem !important;
+                        border-radius: 12px !important;
+                    }
+                    .section-header {
+                        margin-bottom: 0.5rem !important;
+                        font-size: 1.1rem !important;
+                    }
+                    .section-header i.fa-user {
+                        display: none !important;
+                    }
                     .form-grid-2 {
                         grid-template-columns: 1fr !important;
+                        gap: 0.5rem !important;
+                    }
+                    .form-group {
+                        gap: 0.1rem !important;
+                    }
+                    .form-label {
+                        font-size: 0.8rem !important;
+                    }
+                    .form-input {
+                        padding: 0.5rem 0.8rem !important;
+                        font-size: 0.9rem !important;
                     }
                 }
             `}</style>

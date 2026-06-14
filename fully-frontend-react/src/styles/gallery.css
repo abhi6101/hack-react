@@ -495,18 +495,92 @@
 
 /* Gallery Mobile Overrides */
 @media (max-width: 768px) {
+    /* 1. Header Compression */
     .gallery-header-container {
-        margin-bottom: 2rem !important;
-        padding: 1rem !important;
-        gap: 1.5rem !important;
+        margin-bottom: 0.5rem !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: row !important;
         align-items: center !important;
+        justify-content: space-between !important;
+        gap: 0.5rem !important;
+    }
+    .gallery-header-container .papers-header-left {
+        margin: 0 !important;
+    }
+    .gallery-header-container .papers-header-left h2 {
+        font-size: 1.3rem !important;
+        white-space: nowrap;
     }
     .gallery-header-container .papers-header-right {
-        width: 100% !important;
+        width: auto !important;
+        margin: 0 !important;
         display: flex !important;
-        justify-content: center !important;
+        justify-content: flex-end !important;
+    }
+    .share-photo-btn {
+        width: auto !important;
+        padding: 0.5rem 1rem !important;
+    }
+    .share-photo-btn .share-text {
+        display: none !important;
+    }
+    .share-photo-btn::after {
+        content: "Share";
+        font-size: 0.9rem;
+    }
+
+    /* 2. Filter Bar Styling */
+    .gallery-categories-container {
+        margin-bottom: 1rem !important;
+    }
+    .gallery-categories {
+        padding: 0.3rem !important;
+        margin-bottom: 0 !important;
+        border-radius: 8px !important;
+    }
+    .gallery-categories .btn-outline {
+        padding: 4px 10px !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* 3. Gallery Grid Transformation */
+    .gallery-carousel-wrapper .photo-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        padding: 0 !important;
+    }
+    .photo-item {
+        aspect-ratio: 1 / 1 !important;
+        height: auto !important;
+        border-radius: 8px !important;
+        margin-bottom: 0 !important;
+    }
+    .photo-item img {
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+    }
+    .photo-info {
+        padding: 0.3rem 0.5rem !important;
+        height: auto !important;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent) !important;
+        border: none !important;
+    }
+    .photo-info h4 {
+        font-size: 0.75rem !important;
+    }
+    .photo-info span {
+        display: none !important;
+    }
+    
+    /* 4. Eliminate Empty Space */
+    .container {
+        padding: 80px 1rem 20px !important;
     }
 }
 
