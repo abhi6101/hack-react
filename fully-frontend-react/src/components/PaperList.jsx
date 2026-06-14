@@ -48,6 +48,21 @@ const PaperList = () => {
         }
     };
 
+    const handleView = async (id) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/public/papers/download/${id}?action=VIEW&t=${Date.now()}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error("Failed to load PDF");
+            const blob = await res.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            window.open(blobUrl, '_blank');
+        } catch (e) {
+            console.error("View error:", e);
+            showToast({ message: 'Failed to access document.', type: 'error' });
+        }
+    };
+
     // Calculate Unique Options for Filters
     const branches = [...new Set(papers.map(p => p.branch))].sort();
     const semesters = [...new Set(papers.map(p => p.semester))].sort((a, b) => a - b);
@@ -205,14 +220,13 @@ const PaperList = () => {
                                     <td><span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{p.category}</span></td>
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>
-                                            <a
-                                                href={`${API_BASE_URL}/public/papers/download/${p.id}?t=${Date.now()}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="btn-premium" style={{ borderRadius: '10px', padding: '6px 12px', display: 'flex', alignItems: 'center' }}
+                                            <button
+                                                onClick={() => handleView(p.id)}
+                                                className="btn-premium" style={{ borderRadius: '10px', padding: '6px 12px', display: 'flex', alignItems: 'center', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)' }}
+                                                title="View Paper"
                                             >
                                                 <i className="fas fa-eye"></i>
-                                            </a>
+                                            </button>
                                             <button className="btn-premium" style={{ borderRadius: '10px', padding: '6px 12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center' }} onClick={() => handleDelete(p.id)}><i className="fas fa-trash"></i></button>
                                         </div>
                                     </td>
