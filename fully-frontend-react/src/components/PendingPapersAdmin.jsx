@@ -132,15 +132,31 @@ const PendingPapersAdmin = () => {
                                     <td>
                                         <div style={{ display: 'flex', gap: '10px' }}>
                                             {paper.driveFileId && (
-                                                <a 
-                                                    href={paper.driveFileId} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer" 
+                                                <button 
+                                                    onClick={async () => {
+                                                        const token = localStorage.getItem('authToken');
+                                                        showToast({ message: 'Opening paper securely...', type: 'info' });
+                                                        try {
+                                                            const res = await fetch(`${API_BASE_URL}/papers/pending/${paper.id}/view`, {
+                                                                headers: { 'Authorization': `Bearer ${token}` }
+                                                            });
+                                                            if (res.ok) {
+                                                                const blob = await res.blob();
+                                                                const blobUrl = window.URL.createObjectURL(blob);
+                                                                window.open(blobUrl, '_blank');
+                                                                setTimeout(() => window.URL.revokeObjectURL(blobUrl), 60000);
+                                                            } else {
+                                                                showToast({ message: 'Failed to open paper securely.', type: 'error' });
+                                                            }
+                                                        } catch (error) {
+                                                            showToast({ message: 'Network error', type: 'error' });
+                                                        }
+                                                    }}
                                                     className="btn" 
-                                                    style={{ padding: '5px 15px', fontSize: '0.8rem', borderRadius: '6px', background: 'rgba(0, 212, 255, 0.1)', color: 'var(--primary)', border: '1px solid rgba(0,212,255,0.3)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                                                    style={{ padding: '5px 15px', fontSize: '0.8rem', borderRadius: '6px', background: 'rgba(0, 212, 255, 0.1)', color: 'var(--primary)', border: '1px solid rgba(0,212,255,0.3)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
                                                 >
                                                     <i className="fas fa-eye"></i> View
-                                                </a>
+                                                </button>
                                             )}
                                             <button 
                                                 className="btn-primary" 

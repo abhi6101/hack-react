@@ -3323,7 +3323,15 @@ const AdminDashboard = () => {
                         )}
                         {activeTab === 'interviews' && (
                                 <button
-                                    onClick={() => { setIsInterviewFormOpen(prev => !prev); if (isInterviewFormOpen) { setEditingInterview(null); clearInterviewForm(); } }}
+                                    onClick={() => {
+                                        if (isInterviewFormOpen || editingInterview) {
+                                            setIsInterviewFormOpen(false);
+                                            setEditingInterview(null);
+                                            clearInterviewForm();
+                                        } else {
+                                            setIsInterviewFormOpen(true);
+                                        }
+                                    }}
                                     style={{
                                         padding: '6px 12px',
                                         borderRadius: '8px',
@@ -3360,17 +3368,24 @@ const AdminDashboard = () => {
                                     <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
                                 </button>
                                 <button
-                                    onClick={() => { setIsJobFormOpen(!isJobFormOpen); if (isJobFormOpen) setEditingJob(null); }}
+                                    onClick={() => { 
+                                        if (isJobFormOpen || editingJob) {
+                                            setIsJobFormOpen(false);
+                                            setEditingJob(null);
+                                        } else {
+                                            setIsJobFormOpen(true);
+                                        }
+                                    }}
                                     style={{
                                         padding: '6px 12px',
                                         borderRadius: '8px',
-                                        border: isJobFormOpen
+                                        border: (isJobFormOpen || editingJob)
                                             ? '1px solid rgba(239,68,68,0.4)'
                                             : '1px solid rgba(0, 204, 255, 0.35)',
-                                        background: isJobFormOpen
+                                        background: (isJobFormOpen || editingJob)
                                             ? 'rgba(239,68,68,0.1)'
                                             : 'rgba(0, 204, 255, 0.1)',
-                                        color: isJobFormOpen ? '#f87171' : '#00ccff',
+                                        color: (isJobFormOpen || editingJob) ? '#f87171' : '#00ccff',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -3381,7 +3396,7 @@ const AdminDashboard = () => {
                                         whiteSpace: 'nowrap'
                                     }}
                                 >
-                                    {isJobFormOpen
+                                    {(isJobFormOpen || editingJob)
                                         ? <><i className="fas fa-times" style={{ fontSize: '0.75rem' }}></i> Close</>
                                         : <><i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job</>
                                     }
@@ -3391,8 +3406,12 @@ const AdminDashboard = () => {
                         {activeTab === 'users' && !isCompanyAdmin && (
                             <button
                                 onClick={() => {
-                                    setIsUserFormOpen(prev => !prev);
-                                    if (isUserFormOpen) { setEditingUser(null); }
+                                    if (isUserFormOpen || editingUser) {
+                                        setIsUserFormOpen(false);
+                                        setEditingUser(null);
+                                    } else {
+                                        setIsUserFormOpen(true);
+                                    }
                                 }}
                                 style={{
                                     padding: '6px 14px',
