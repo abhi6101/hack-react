@@ -3297,7 +3297,6 @@ const AdminDashboard = () => {
                             </button>
                         )}
                         {activeTab === 'interviews' && (
-                            <span className="mobile-only">
                                 <button
                                     onClick={() => { setIsInterviewFormOpen(prev => !prev); if (isInterviewFormOpen) { setEditingInterview(null); clearInterviewForm(); } }}
                                     style={{
@@ -3325,7 +3324,6 @@ const AdminDashboard = () => {
                                         : <><i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Interview</>
                                     }
                                 </button>
-                            </span>
                         )}
                         {activeTab === 'jobs' && (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -3336,7 +3334,6 @@ const AdminDashboard = () => {
                                 >
                                     <i className="fas fa-sync-alt" style={{ fontSize: '0.9rem' }}></i>
                                 </button>
-                                <span className="mobile-only">
                                 <button
                                     onClick={() => { setIsJobFormOpen(!isJobFormOpen); if (isJobFormOpen) setEditingJob(null); }}
                                     style={{
@@ -3364,7 +3361,6 @@ const AdminDashboard = () => {
                                         : <><i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i> Post Job</>
                                     }
                                 </button>
-                            </span>
                             </div>
                         )}
                         {activeTab === 'users' && !isCompanyAdmin && (
