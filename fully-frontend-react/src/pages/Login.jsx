@@ -195,9 +195,6 @@ const Login = () => {
     return (
         <div className={`login-body-wrapper ${isInputFocused ? 'is-focused' : ''}`}>
             <section className="login-section">
-                <div className="mobile-branding-area">
-                    <i className="fas fa-user-lock"></i>
-                </div>
                 <motion.div
                     className="login-card surface-glow"
                     initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -220,7 +217,7 @@ const Login = () => {
                             fontWeight: '600',
                             marginBottom: '1rem'
                         }}>
-                            <i className="fas fa-home"></i> Home
+                            <i className="fas fa-chevron-left"></i> <span className="home-text">Home</span>
                         </Link>
                     </motion.div>
 

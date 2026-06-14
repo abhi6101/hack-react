@@ -445,77 +445,79 @@ button.loading .spinner {
 }
 
 /* --- 9. Mobile Optimization & Focus Mode --- */
-.mobile-branding-area {
-    display: none;
-}
-
 @media (max-width: 768px) {
     .login-body-wrapper {
-        background: linear-gradient(180deg, #111119 0%, #0A0A10 100%) !important;
+        background: radial-gradient(circle, #1a1c2c 0%, #0d0e14 100%) !important;
     }
 
     .login-section {
         flex-direction: column;
-        justify-content: flex-end;
-        padding: 0;
+        justify-content: center; /* Center perfectly */
+        padding: 1rem;
     }
 
-    /* Branding Area occupies top ~40% space pushing card down */
-    .mobile-branding-area {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 40vh;
-        width: 100%;
-        color: var(--primary);
-        font-size: 5rem;
-        text-shadow: 0 0 20px var(--primary-glow);
+    /* Top Left Back Arrow */
+    .home-text {
+        display: none;
+    }
+    
+    .home-link {
+        position: absolute !important;
+        top: 20px;
+        left: 20px;
+        font-size: 1.2rem !important;
+        color: var(--text-secondary) !important;
+        margin-bottom: 0 !important;
+        z-index: 10;
+        transition: opacity 0.4s ease;
     }
 
-    /* Bottom-Sheet Layout */
     .login-card {
-        border-radius: 24px 24px 0 0;
+        border-radius: 16px; /* Restored rounded corners */
         margin: 0;
-        min-height: 60vh; /* Fills bottom elegantly */
+        min-height: auto;
         width: 100%;
         max-width: 100%;
-        padding: 2rem 1.5rem;
-        border-bottom: none;
-        border-left: none;
-        border-right: none;
-        transform: translateY(0); /* Override initial desktop pop-in transform if needed */
+        padding: 2.5rem 1.5rem;
+        /* Restored border for centered card */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(0);
+    }
+
+    /* When focused, slide the card up slightly to ensure visibility above keyboard */
+    .login-body-wrapper.is-focused .login-card {
+        transform: translateY(-15%);
     }
 
     /* Focus Mode Hiding with Smooth Transitions */
-    .mobile-branding-area,
     .login-card h1,
     .admin-toggle-btn,
     .form-options,
-    .home-link {
+    .login-footer {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        max-height: 200px; /* generous max-height for natural flow */
+        max-height: 200px;
         opacity: 1;
         overflow: hidden;
         transform: translateY(0);
         transform-origin: top;
     }
+    
+    .login-footer {
+        margin-top: 1rem;
+        text-align: center;
+    }
 
-    /* Target the home-link parent div specifically for height collapse */
+    /* Target the home-link parent div to clear any margin */
     .login-card > div:first-of-type {
-        transition: all 0.4s ease;
-        max-height: 50px;
-        overflow: hidden;
-    }
-    .login-body-wrapper.is-focused .login-card > div:first-of-type {
-        max-height: 0;
-        margin: 0;
+        margin: 0; 
     }
 
-    .login-body-wrapper.is-focused .mobile-branding-area,
+    /* Hide elements when input is focused */
     .login-body-wrapper.is-focused .login-card h1,
     .login-body-wrapper.is-focused .admin-toggle-btn,
     .login-body-wrapper.is-focused .form-options,
-    .login-body-wrapper.is-focused .home-link {
+    .login-body-wrapper.is-focused .login-footer {
         max-height: 0;
         opacity: 0;
         margin-top: 0 !important;
@@ -526,32 +528,15 @@ button.loading .spinner {
         transform: translateY(-15px);
         pointer-events: none;
     }
-
-    /* Bottom Bar Fix */
-    .login-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: rgba(10, 10, 16, 0.95);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid var(--border-color);
-        padding: 1rem;
-        text-align: center;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        opacity: 1;
-        transform: translateY(0);
-        z-index: 10;
-        margin: 0;
-    }
-
-    .login-body-wrapper.is-focused .login-footer {
+    
+    /* Hide home link on focus as well */
+    .login-body-wrapper.is-focused .home-link {
         opacity: 0;
-        transform: translateY(100%);
         pointer-events: none;
     }
 
-    .login-card {
-        padding-bottom: 80px; /* Ensure space for fixed footer so nothing is hidden behind it */
+    /* Hide any app-level nav bars if they exist */
+    nav {
+        display: none !important;
     }
 }
