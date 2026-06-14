@@ -130,6 +130,21 @@ const AdminDashboard = () => {
     const role = normalizedRole || 'USER';
     const myCompanyName = localStorage.getItem('companyName');
 
+    const getRank = (user) => {
+        if (!user) return -1;
+        if (user.id === 1) return 100;
+        if (user.role === 'SUPER_ADMIN') return 80;
+        if (user.role === 'ADMIN') return 60;
+        if (user.role === 'DEPT_ADMIN') return 40;
+        if (user.role === 'COMPANY_ADMIN') return 20;
+        return 0; // USER
+    };
+    
+    // Attempt to find current user in the users array
+    const currentUsername = localStorage.getItem('username');
+    const currentUser = users.find(u => u.username === currentUsername);
+    const currentUserRank = currentUser ? getRank(currentUser) : getRank({role});
+
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     // Helper function to handle 401 errors
@@ -2279,7 +2294,7 @@ const AdminDashboard = () => {
                                                 <select
                                                     className="form-control-modern"
                                                     value={userForm.role}
-                                                    disabled={role === 'DEPT_ADMIN'}
+                                                    disabled={currentUserRank <= 40} // Only ADMIN and above can create other admins
                                                     onChange={e => {
                                                         const newRole = e.target.value;
                                                         setUserForm(prev => ({
@@ -2291,10 +2306,10 @@ const AdminDashboard = () => {
                                                     }}
                                                 >
                                                     <option value="USER">STUDENT / USER</option>
-                                                    <option value="ADMIN">ADMIN</option>
-                                                    <option value="SUPER_ADMIN">SUPER ADMIN</option>
-                                                    <option value="COMPANY_ADMIN">COMPANY ADMIN</option>
-                                                    <option value="DEPT_ADMIN">DEPT ADMIN</option>
+                                                    {currentUserRank > 20 && <option value="COMPANY_ADMIN">COMPANY ADMIN</option>}
+                                                    {currentUserRank > 40 && <option value="DEPT_ADMIN">DEPT ADMIN</option>}
+                                                    {currentUserRank > 60 && <option value="ADMIN">ADMIN</option>}
+                                                    {currentUserRank >= 80 && <option value="SUPER_ADMIN">SUPER ADMIN</option>}
                                                 </select>
                                             </div>
 
@@ -2506,17 +2521,23 @@ const AdminDashboard = () => {
                                                         </td>
                                                         <td data-label="">
                                                             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
-                                                                <button
-                                                                    className="action-btn-modern edit-btn"
-                                                                    onClick={() => startEditUser(user)}
-                                                                    disabled={isCompanyAdmin}
-                                                                >
-                                                                    <i className="fas fa-pencil-alt"></i>
-                                                                </button>
+                                                                {user.id !== 1 && (
+                                                                    <button
+                                                                        className="action-btn-modern edit-btn"
+                                                                        onClick={() => startEditUser(user)}
+                                                                        disabled={currentUserRank <= getRank(user)}
+                                                                        title={currentUserRank <= getRank(user) ? "Insufficient Hierarchy Authority" : "Edit User"}
+                                                                        style={currentUserRank <= getRank(user) ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
+                                                                    >
+                                                                        <i className="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                )}
                                                                 <button
                                                                     className="action-btn-modern delete-btn"
                                                                     onClick={() => deleteUser(user.id)}
-                                                                    disabled={isCompanyAdmin || user.role === 'SUPER_ADMIN'}
+                                                                    disabled={currentUserRank <= getRank(user) || user.id === 1}
+                                                                    title={currentUserRank <= getRank(user) || user.id === 1 ? "Insufficient Hierarchy Authority" : "Delete User"}
+                                                                    style={currentUserRank <= getRank(user) || user.id === 1 ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
                                                                 >
                                                                     <i className="fas fa-trash-alt"></i>
                                                                 </button>
