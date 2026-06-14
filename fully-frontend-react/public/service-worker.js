@@ -23,8 +23,12 @@ self.addEventListener('fetch', event => {
         }
         // If not in cache and network fails, return cached index.html for SPA routing
         if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
+          return caches.match('/index.html').then(htmlResponse => {
+            return htmlResponse || new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
+          });
         }
+        // Prevent TypeError by always returning a Response
+        return new Response('', { status: 503, statusText: 'Service Unavailable' });
       });
     })
   );
