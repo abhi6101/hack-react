@@ -60,20 +60,37 @@ function Layout({ children }) {
         // Optionally refresh the page or update state
     };
 
-    // Close menu when route changes
+    // Close menu when route changes, unless the history state indicates it should be open
     useEffect(() => {
-        setIsMobileMenuOpen(false);
+        if (window.history.state && window.history.state.menuOpen) {
+            setIsMobileMenuOpen(true);
+        } else {
+            setIsMobileMenuOpen(false);
+        }
     }, [location]);
 
-    // Prevent body scroll when mobile menu is open
+    // Prevent body scroll when mobile menu is open, and handle back button logic
     useEffect(() => {
+        const handlePopState = (e) => {
+            if (isMobileMenuOpen) {
+                // If the hardware back button is pressed while menu is open, close it
+                setIsMobileMenuOpen(false);
+            }
+        };
+
         if (isMobileMenuOpen) {
             document.body.style.overflow = 'hidden';
+            // Push state so the first back button click closes the menu
+            window.history.pushState({ menuOpen: true }, null, window.location.pathname);
+            window.addEventListener('popstate', handlePopState);
         } else {
             document.body.style.overflow = '';
+            window.removeEventListener('popstate', handlePopState);
         }
+
         return () => {
             document.body.style.overflow = '';
+            window.removeEventListener('popstate', handlePopState);
         };
     }, [isMobileMenuOpen]);
 
