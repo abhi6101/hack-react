@@ -910,3 +910,71 @@
   }
 }
 
+/* --- DESKTOP PREMIUM DASHBOARD OPTIMIZATIONS --- */
+@media (min-width: 1024px) {
+    /* 1. Slim Header */
+    .mobile-jobs-container .papers-header-container {
+        padding: 1rem 2rem !important;
+        background: linear-gradient(135deg, rgba(22, 22, 34, 0.95) 0%, rgba(30, 30, 50, 0.9) 100%),
+                    radial-gradient(circle at top right, rgba(67, 97, 238, 0.2), transparent 400px),
+                    rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        margin-bottom: 1.5rem !important; /* Minimal gap */
+    }
+
+    /* Typography */
+    .mobile-jobs-container .papers-header-left h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+
+    /* 2. Enhanced Search & Filter Bar */
+    .mobile-filters-wrapper {
+        max-width: 100% !important; /* Override inline */
+        justify-content: center !important;
+        margin-bottom: 2.5rem !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .mobile-filter-search {
+        flex: 0 0 40% !important; /* Width 40% */
+        box-shadow: 0 5px 20px rgba(67, 97, 238, 0.15) !important;
+        border: 1px solid rgba(67, 97, 238, 0.4) !important;
+    }
+
+    .mobile-filter-category, .mobile-filter-sort {
+        flex: 0 0 auto !important;
+        min-width: 200px !important;
+    }
+
+    /* 3. Grid Optimization */
+    .job-list {
+        gap: 24px !important;
+    }
+
+    /* Ensure 4 column grid */
+    .job-list {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* Hover effect */
+    .job-card {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease !important;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-5px) !important;
+        border-color: rgba(67, 97, 238, 0.6) !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(67, 97, 238, 0.3) !important;
+    }
+    
+    /* Ensure content pull up */
+    .mobile-jobs-page-wrapper {
+        padding-top: 80px !important;
+    }
+}
