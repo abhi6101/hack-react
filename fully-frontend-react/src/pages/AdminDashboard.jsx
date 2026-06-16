@@ -863,6 +863,9 @@ const AdminDashboard = () => {
         }
     };
 
+    // BUG FIX #1: Split into TWO separate effects.
+    // Effect 1: Runs ONCE on mount — loads core data that is always needed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const allowedRoles = ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'DEPT_ADMIN'];
         const currentToken = getToken();
@@ -878,31 +881,31 @@ const AdminDashboard = () => {
             });
             return;
         }
+        // Core data — fetch once on mount, not on every tab change
         loadJobs();
         fetchInterviews();
+        loadDepartments();
         if (isSuperAdmin || role === 'DEPT_ADMIN' || role === 'ADMIN') {
             loadUsers();
             if (isSuperAdmin) fetchCompanyStats();
         }
-        if (isSuperAdmin || activeTab === 'jobs' || activeTab === 'departments') {
-            loadDepartments();
-        }
+    }, []); // ← EMPTY ARRAY: runs exactly once after first render
+
+    // Effect 2: Lazy-loads tab-specific data ONLY when the user navigates to that tab.
+    // This prevents the 5-10 simultaneous API calls that fired on every tab click before.
+    useEffect(() => {
         if (activeTab === 'students') {
             fetchStudentActivity();
-        }
-        if (activeTab === 'profile-details' && (isSuperAdmin || role === 'DEPT_ADMIN' || role === 'ADMIN')) {
+        } else if (activeTab === 'profile-details' && (isSuperAdmin || role === 'DEPT_ADMIN' || role === 'ADMIN')) {
             fetchAllProfiles();
-        }
-        if (activeTab === 'paper-logs') {
+        } else if (activeTab === 'paper-logs') {
             loadPaperViewLogs();
-        }
-        if (activeTab === 'applications') {
+        } else if (activeTab === 'applications') {
             loadApplications();
-        }
-        if (activeTab === 'interview-applications') {
+        } else if (activeTab === 'interview-applications') {
             loadInterviewApplications();
         }
-    }, [navigate, role, isSuperAdmin, activeTab]);
+    }, [activeTab]); // ← Only runs when the active tab actually changes
 
     // Pre-fill Branch for DEPT_ADMIN
     useEffect(() => {

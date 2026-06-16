@@ -33,7 +33,11 @@ const StudentDashboard = () => {
             return;
         }
         fetchData();
-    }, [navigate, showAlert]);
+    // BUG FIX #2: Removed `showAlert` from deps. showAlert is recreated on every
+    // AlertProvider render (not memoized), so including it caused an infinite loop:
+    // render → new showAlert ref → effect re-fires → fetchData() → setState → re-render → repeat.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigate]);
 
     const handleLogout = () => {
         localStorage.clear();

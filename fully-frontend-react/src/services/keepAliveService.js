@@ -13,7 +13,18 @@ class KeepAliveService {
     }
 
     async pingServer() {
+        // BUG FIX #4: Only ping when a user is authenticated.
+        // Previously this pinged for ALL visitors (including anonymous users on /home),
+        // generating constant unnecessary bandwidth from every browser session.
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            return false; // No logged-in user — skip this ping cycle
+        }
+
         try {
+            // API_BASE_URL already has /api stripped, so we add /api/health explicitly.
+            // e.g., if config = "https://backend.render.com/api" → base = "https://backend.render.com"
+            //        → ping URL = "https://backend.render.com/api/health" ✓
             const response = await fetch(`${API_BASE_URL}/api/health`, {
                 method: 'GET',
                 headers: {

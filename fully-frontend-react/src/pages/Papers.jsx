@@ -272,20 +272,21 @@ const Papers = () => {
         try {
             const token = getToken();
             const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-            const res = await fetch(`${API_BASE_URL}/papers?branch=${branch}`, {
-                headers: headers
-            });
+
+            // BUG FIX #3: For students, filter by semester on the SERVER side.
+            // Previously, ALL papers were fetched and then filtered client-side,
+            // causing every student visit to download the full paper archive.
+            // Now we only request the data we actually need.
+            let url = `${API_BASE_URL}/papers?branch=${branch}`;
+            if (userRole === 'STUDENT' && userSemester) {
+                url += `&semester=${userSemester}`;
+            }
+
+            const res = await fetch(url, { headers });
             if (res.ok) {
                 const all = await res.json();
                 setBranchPapers(all);
-                let sems = [...new Set(all.map(p => p.semester))].sort((a, b) => a - b);
-                
-                // --- STRICT FILTER FOR STUDENTS ---
-                if (userRole === 'STUDENT' && userSemester) {
-                    // Only show their current semester box
-                    sems = [userSemester];
-                }
-                
+                const sems = [...new Set(all.map(p => p.semester))].sort((a, b) => a - b);
                 setAvailableSems(sems);
             } else if (res.status === 401 && token) {
                 localStorage.clear();
