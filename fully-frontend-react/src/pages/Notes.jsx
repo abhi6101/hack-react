@@ -59,12 +59,14 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
                         >
                             <i className="fas fa-eye"></i> View
                         </div>
-                        <div 
-                            onClick={(e) => { e.stopPropagation(); handleDownloadFile(node); }}
-                            style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#3B82F6', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                        >
-                            <i className="fas fa-download"></i> Download
-                        </div>
+                        {(notesDownloadEnabled || isAdmin) && (
+                            <div 
+                                onClick={(e) => { e.stopPropagation(); handleDownloadFile(node); }}
+                                style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: '#3B82F6', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                            >
+                                <i className="fas fa-download"></i> Download
+                            </div>
+                        )}
                         {isAdmin && handleDeleteFile && (
                             <div 
                                 onClick={(e) => { e.stopPropagation(); handleDeleteFile(node); }}
@@ -810,12 +812,14 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
                                                                                         >
                                                                                             <i className="fas fa-eye"></i> View
                                                                                         </button>
-                                                                                        <button 
-                                                                                            onClick={(e) => { e.stopPropagation(); handleDownloadFile(fileNode); }}
-                                                                                            style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#fff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                                                                                        >
-                                                                                            <i className="fas fa-download"></i> Download
-                                                                                        </button>
+                                                                                        {(notesDownloadEnabled || isAdmin) && (
+                                                                                            <button 
+                                                                                                onClick={(e) => { e.stopPropagation(); handleDownloadFile(fileNode); }}
+                                                                                                style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #007aff 100%)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', color: '#fff', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                                                                            >
+                                                                                                <i className="fas fa-download"></i> Download
+                                                                                            </button>
+                                                                                        )}
                                                                                         {isAdmin && handleDeleteFile && (
                                                                                             <button 
                                                                                                 onClick={(e) => { e.stopPropagation(); handleDeleteFile(fileNode); }}

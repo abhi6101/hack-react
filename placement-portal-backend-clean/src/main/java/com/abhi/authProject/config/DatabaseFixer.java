@@ -88,6 +88,14 @@ public class DatabaseFixer implements CommandLineRunner {
         } catch (Exception e) {
             System.err.println("⚠️ DatabaseFixer warning altering global_settings table: " + e.getMessage());
         }
+
+        System.out.println("🔨 Ensuring notes_download_enabled column exists in global_settings table...");
+        try {
+            jdbcTemplate.execute("ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS notes_download_enabled BOOLEAN DEFAULT FALSE");
+            System.out.println("✅ GlobalSettings notes download column checked/added successfully.");
+        } catch (Exception e) {
+            System.err.println("⚠️ DatabaseFixer warning altering global_settings table: " + e.getMessage());
+        }
         System.out.println("🔨 Ensuring uploaded_by can be null in student_papers table...");
         try {
             jdbcTemplate.execute("ALTER TABLE student_papers ALTER COLUMN uploaded_by DROP NOT NULL");

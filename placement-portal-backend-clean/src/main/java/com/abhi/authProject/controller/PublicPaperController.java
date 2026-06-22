@@ -39,8 +39,10 @@ public class PublicPaperController {
         boolean screenshotRestrictionEnabled = settingsService.getSettings().isScreenshotRestrictionEnabled();
         boolean paperWithoutLoginEnabled = settingsService.getSettings().isPaperWithoutLoginEnabled();
         boolean notesWithoutLoginEnabled = settingsService.getSettings().isNotesWithoutLoginEnabled();
+        boolean notesDownloadEnabled = settingsService.getSettings().isNotesDownloadEnabled();
         java.util.Map<String, Boolean> response = new java.util.HashMap<>();
         response.put("paperDownloadEnabled", downloadEnabled);
+        response.put("notesDownloadEnabled", notesDownloadEnabled);
         response.put("screenshotRestrictionEnabled", screenshotRestrictionEnabled);
         response.put("paperWithoutLoginEnabled", paperWithoutLoginEnabled);
         response.put("notesWithoutLoginEnabled", notesWithoutLoginEnabled);

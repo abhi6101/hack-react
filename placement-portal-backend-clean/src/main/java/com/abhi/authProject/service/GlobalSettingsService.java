@@ -42,6 +42,7 @@ public class GlobalSettingsService {
         existing.setStatusUpdateEmailEnabled(newSettings.isStatusUpdateEmailEnabled());
         existing.setAccountEmailEnabled(newSettings.isAccountEmailEnabled());
         existing.setPaperDownloadEnabled(newSettings.isPaperDownloadEnabled());
+        existing.setNotesDownloadEnabled(newSettings.isNotesDownloadEnabled());
         existing.setScreenshotRestrictionEnabled(newSettings.isScreenshotRestrictionEnabled());
         existing.setPaperWithoutLoginEnabled(newSettings.isPaperWithoutLoginEnabled());
         existing.setNotesWithoutLoginEnabled(newSettings.isNotesWithoutLoginEnabled());
