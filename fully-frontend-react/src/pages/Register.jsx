@@ -316,11 +316,11 @@ const Register = () => {
         calculatedSemester = Math.max(1, Math.min(calculatedSemester, config.maxSemesters));
 
         if (config.type === 'year') {
-            // BCA: Year-wise (show ±1 year)
+            // BCA: Year-wise (show all years)
             const calculatedYear = Math.min(yearsElapsed + 1, config.maxSemesters);
             const options = [];
 
-            for (let year = Math.max(1, calculatedYear - 1); year <= Math.min(config.maxSemesters, calculatedYear + 1); year++) {
+            for (let year = 1; year <= config.maxSemesters; year++) {
                 options.push({
                     value: year,
                     label: `Year ${year}${year === calculatedYear ? ' (Current)' : ''} `
@@ -329,10 +329,10 @@ const Register = () => {
 
             return options;
         } else {
-            // IMCA, MCA: Semester-wise (show ±1 semester)
+            // IMCA, MCA: Semester-wise (show all semesters 1 to maxSemesters)
             const options = [];
 
-            for (let sem = Math.max(1, calculatedSemester - 1); sem <= Math.min(config.maxSemesters, calculatedSemester + 1); sem++) {
+            for (let sem = 1; sem <= config.maxSemesters; sem++) {
                 options.push({
                     value: sem,
                     label: `Semester ${sem}${sem === calculatedSemester ? ' (Current)' : ''} `
