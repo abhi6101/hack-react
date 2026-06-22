@@ -859,6 +859,27 @@ const Register = () => {
                                 <i className="fas fa-upload"></i> {content.secondaryBtnText}
                             </button>
                         )}
+                        {verificationStage === 'ID_AUTO_CAPTURE' && (
+                            <button 
+                                className="btn" 
+                                style={{ 
+                                    width: '100%', 
+                                    background: 'rgba(255,255,255,0.05)', 
+                                    border: '1px solid rgba(255,255,255,0.1)', 
+                                    color: '#fff', 
+                                    fontSize: '0.9rem',
+                                    marginTop: '0.5rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem'
+                                }} 
+                                onClick={handleManualBypass}
+                                disabled={isScanning}
+                            >
+                                <i className="fas fa-edit"></i> Fill Details Manually
+                            </button>
+                        )}
                         {/* Hidden file input for ID upload */}
                         <input type="file" id="id-upload-input" accept="image/*" style={{ display: 'none' }} onChange={handleFileUpload} />
                         <style>{`
@@ -967,6 +988,12 @@ const Register = () => {
         setShowCamera(false);
     };
 
+    const handleManualBypass = () => {
+        stopCamera();
+        setScannedData(null);
+        setStep(4);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); setError(''); setSuccess('');
@@ -994,34 +1021,34 @@ const Register = () => {
                 startYear: formData.role === 'USER' ? formData.startYear : undefined,
 
                 // Verified Identity Data (from ID card)
-                fullName: scannedData?.name,
-                fatherName: scannedData?.fatherName,
-                institution: scannedData?.institution,
-                session: scannedData?.session,
+                fullName: scannedData?.name || formData.fullName,
+                fatherName: scannedData?.fatherName || formData.fatherName,
+                institution: scannedData?.institution || "IPS Academy, Indore",
+                session: scannedData?.session || `${formData.startYear}-${parseInt(formData.startYear) + (formData.branch === 'IMCA' ? 5 : (formData.branch === 'MCA' ? 2 : (formData.branch === 'BCA' ? 3 : 4)))}`,
 
                 // Mobile Numbers (from ID card or manual entry)
-                mobilePrimary: formData.mobilePrimary || scannedData?.mobilePrimary,
-                mobileSecondary: formData.mobileSecondary || scannedData?.mobileSecondary,
+                mobilePrimary: formData.mobilePrimary || scannedData?.mobilePrimary || '',
+                mobileSecondary: formData.mobileSecondary || scannedData?.mobileSecondary || '',
                 mobileCount: scannedData?.mobileCount || (formData.mobilePrimary ? (formData.mobileSecondary ? 2 : 1) : 0),
                 mobileSource: scannedData?.mobileCount > 0 ? 'ID_CARD_AUTO' : 'MANUAL_ENTRY',
 
                 // Verified Identity Data (from Aadhar)
-                dob: formData.dob,
-                gender: formData.gender,
-                address: scannedData?.address || formData.address,
+                dob: formData.dob || '',
+                gender: formData.gender || '',
+                address: scannedData?.address || formData.address || '',
 
                 // Image Mapping for Backend (CRITICAL FIX)
-                idCardImage: idCameraImg,
-                profilePictureUrl: selfieImg,
+                idCardImage: idCameraImg || null,
+                profilePictureUrl: selfieImg || null,
 
 
                 // Verification Metadata
                 verificationData: {
-                    idCardImageUrl: idCameraImg, // Base64 or upload to storage first
-                    selfieImageUrl: selfieImg,
+                    idCardImageUrl: idCameraImg || null, // Base64 or upload to storage first
+                    selfieImageUrl: selfieImg || null,
                     deviceLocation: location,
                     verifiedAt: new Date().toISOString(),
-                    faceMatchScore: "98.5%" // You can calculate this if implementing face recognition
+                    faceMatchScore: scannedData ? "98.5%" : "N/A (Manual Entry)"
                 }
             };
 
@@ -1851,27 +1878,27 @@ const Register = () => {
                         {error && <div className="alert alert-error" style={{ display: 'block' }}>{error}</div>}
                         {success && <div className="alert alert-success" style={{ display: 'block' }}>{success}</div>}
                         <form id="registrationForm" onSubmit={handleSubmit}>
-                            <div className="verification-summary" style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(74, 222, 128, 0.2)' }}>
-                                <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <i className="fas fa-shield-alt" style={{ color: '#4ade80' }}></i> Verified Identity Proofs
-                                </h3>
+                            {scannedData ? (
+                                <div className="verification-summary" style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(74, 222, 128, 0.2)' }}>
+                                    <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <i className="fas fa-shield-alt" style={{ color: '#4ade80' }}></i> Verified Identity Proofs
+                                    </h3>
 
-                                {/* THE 2 PHOTOS DISPLAY - Selfie is hidden */}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '0.5rem' }}>
+                                    {/* THE 2 PHOTOS DISPLAY - Selfie is hidden */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '0.5rem' }}>
 
-                                    {/* 1. ID Card */}
-                                    {idCameraImg && (
-                                        <div style={{ textAlign: 'center' }}>
-                                            <div style={{ width: '100%', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '2px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.2)', marginBottom: '0.5rem' }}>
-                                                <img src={idCameraImg} alt="ID Scan" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        {/* 1. ID Card */}
+                                        {idCameraImg && (
+                                            <div style={{ textAlign: 'center' }}>
+                                                <div style={{ width: '100%', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '2px solid #4ade80', boxShadow: '0 4px 12px rgba(74, 222, 128, 0.2)', marginBottom: '0.5rem' }}>
+                                                    <img src={idCameraImg} alt="ID Scan" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                </div>
+                                                <p style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: '600' }}>✓ College ID</p>
                                             </div>
-                                            <p style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: '600' }}>✓ College ID</p>
-                                        </div>
-                                    )}
+                                        )}
 
 
-                                </div>
-                                {scannedData && (
+                                    </div>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.9rem', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
                                         <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FULL NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.name}</div></div>
                                         {scannedData.fatherName && <div><strong style={{ color: '#888', display: 'block', fontSize: '0.75rem', marginBottom: '2px' }}>FATHER'S NAME</strong><div style={{ color: '#fff', fontWeight: '500' }}>{scannedData.fatherName}</div></div>}
@@ -1885,13 +1912,64 @@ const Register = () => {
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#aaa', fontSize: '0.8rem' }}>Verification Status:</span><span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><i className="fas fa-check-circle"></i> VERIFIED HUMAN</span></div>
                                         </div>
                                     </div>
-                                )}
+                                </div>
+                            ) : (
+                                <div className="manual-registration-info" style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(96, 165, 250, 0.2)' }}>
+                                    <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa' }}>
+                                        <i className="fas fa-info-circle"></i> Manual Registration Mode
+                                    </h3>
+                                    <p style={{ fontSize: '0.85rem', color: '#aaa', margin: 0 }}>
+                                        You are registering manually. Please verify and fill all fields accurately.
+                                    </p>
+                                </div>
+                            )}
 
-                            </div>
                             <div className="form-group">
-                                <label htmlFor="fullName">Full Name <i className="fas fa-lock text-green-400" title="Verified from ID"></i></label>
-                                <input type="text" id="fullName" name="fullName" value={formData.fullName} readOnly={true} className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
-                                <small style={{ color: '#34d399' }}>Verified from ID Card</small>
+                                <label htmlFor="fullName">
+                                    Full Name *{' '}
+                                    {!!scannedData && (
+                                        <i className="fas fa-lock text-green-400" title="Verified from ID"></i>
+                                    )}
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="fullName" 
+                                    name="fullName" 
+                                    required 
+                                    placeholder="Enter your full name"
+                                    value={formData.fullName} 
+                                    onChange={handleChange}
+                                    readOnly={!!scannedData} 
+                                    className={!!scannedData ? "locked-field" : ""} 
+                                    style={!!scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} 
+                                />
+                                <small style={!!scannedData ? { color: '#34d399' } : {}}>
+                                    {!!scannedData ? '✓ Verified from ID Card' : 'Provide your full legal name'}
+                                </small>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="fatherName">
+                                    Father's Name *{' '}
+                                    {!!scannedData && scannedData.fatherName && (
+                                        <i className="fas fa-lock text-green-400" title="Verified from ID"></i>
+                                    )}
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="fatherName" 
+                                    name="fatherName" 
+                                    required 
+                                    placeholder="Enter father's name"
+                                    value={formData.fatherName} 
+                                    onChange={handleChange}
+                                    readOnly={!!scannedData && !!scannedData.fatherName} 
+                                    className={!!scannedData && !!scannedData.fatherName ? "locked-field" : ""} 
+                                    style={!!scannedData && !!scannedData.fatherName ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} 
+                                />
+                                <small style={!!scannedData && !!scannedData.fatherName ? { color: '#34d399' } : {}}>
+                                    {!!scannedData && !!scannedData.fatherName ? '✓ Verified from ID Card' : 'Provide your father\'s name'}
+                                </small>
                             </div>
 
                             <div className="form-group">

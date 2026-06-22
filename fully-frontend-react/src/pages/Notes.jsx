@@ -8,12 +8,12 @@ import AuthPromptModal from '../components/AuthPromptModal';
 import API_BASE_URL from '../config';
 import '../styles/papers.css'; // Reuses the unified glassmorphic layout
 
-const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDeleteFile, isAdmin, getToken, notesDownloadEnabled }) => {
+const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDeleteFile, isAdmin, getToken, notesDownloadEnabled, notesWithoutLoginEnabled }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     
     if (!node.isDirectory) {
         const token = getToken();
-        const isLocked = !token; // All files require login to view now
+        const isLocked = !token && !notesWithoutLoginEnabled; // All files require login to view now unless toggle is enabled
 
         // Determine icon and color based on file extension
         let fileIcon = 'fa-file-alt';
@@ -129,6 +129,7 @@ const TreeNode = ({ node, level, handleViewFile, handleDownloadFile, handleDelet
                                 isAdmin={isAdmin}
                                 getToken={getToken}
                                 notesDownloadEnabled={notesDownloadEnabled}
+                                notesWithoutLoginEnabled={notesWithoutLoginEnabled}
                             />
                         ))}
                     </motion.div>
@@ -176,6 +177,7 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
     const [uploadFiles, setUploadFiles] = useState([]); // Array of files
     const [uploadPaths, setUploadPaths] = useState([]); // Array of relative paths matching files
     const [notesDownloadEnabled, setNotesDownloadEnabled] = useState(false);
+    const [notesWithoutLoginEnabled, setNotesWithoutLoginEnabled] = useState(false);
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [selectedUnit, setSelectedUnit] = useState(null);
 
@@ -191,6 +193,11 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
             if (res.ok) {
                 const data = await res.json();
                 setNotesDownloadEnabled(data.notesDownloadEnabled);
+                setNotesWithoutLoginEnabled(data.notesWithoutLoginEnabled);
+
+                if (!getToken() && !data.notesWithoutLoginEnabled) {
+                    setShowAuthModal(true);
+                }
             }
         } catch (e) {
             console.error("Failed to fetch settings", e);
@@ -199,10 +206,13 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
 
     useEffect(() => {
         fetchUserProfile();
-        fetchNotes();
         fetchDepartments();
         fetchSettings();
     }, []);
+
+    useEffect(() => {
+        fetchNotes();
+    }, [notesWithoutLoginEnabled]);
 
     const fetchUserProfile = async () => {
         const token = getToken();
@@ -236,6 +246,9 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
     };
 
     const fetchNotes = async () => {
+        if (!getToken() && !notesWithoutLoginEnabled) {
+            return;
+        }
         setLoading(true);
         const token = getToken();
         const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
@@ -526,25 +539,31 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
     const handleViewFile = (note) => {
         const token = getToken();
 
-        if (!token) {
+        if (!token && !notesWithoutLoginEnabled) {
             setShowAuthModal(true);
             return;
         }
 
-        // Token exists, proceed to open PDF
-        window.open(`${API_BASE_URL}/notes/download/${note.id}?token=${token}`, '_blank');
+        // Token exists or notes without login is allowed, proceed to open PDF
+        const url = token 
+            ? `${API_BASE_URL}/notes/download/${note.id}?token=${token}`
+            : `${API_BASE_URL}/notes/download/${note.id}`;
+        window.open(url, '_blank');
     };
 
     const handleDownloadFile = async (note) => {
         const token = getToken();
 
-        if (!token) {
+        if (!token && !notesWithoutLoginEnabled) {
             setShowAuthModal(true);
             return;
         }
 
         try {
-            const res = await fetch(`${API_BASE_URL}/notes/download/${note.id}?token=${token}&action=DOWNLOAD`);
+            const url = token 
+                ? `${API_BASE_URL}/notes/download/${note.id}?token=${token}&action=DOWNLOAD`
+                : `${API_BASE_URL}/notes/download/${note.id}?action=DOWNLOAD`;
+            const res = await fetch(url);
             if (!res.ok) throw new Error("Failed to download file");
             const blob = await res.blob();
             const blobUrl = window.URL.createObjectURL(blob);
@@ -770,7 +789,7 @@ const Notes = ({ isAdminView, isUploadingNotes, setIsUploadingNotes }) => {
                                                                     else if (ext === '.xls' || ext === '.xlsx' || ext === '.csv') { fileIcon = 'fa-file-excel'; iconColor = '#10B981'; }
                                                                     else if (ext === '.txt') { fileIcon = 'fa-file-lines'; iconColor = '#D1D5DB'; }
 
-                                                                    const isLocked = !getToken();
+                                                                    const isLocked = !getToken() && !notesWithoutLoginEnabled;
 
                                                                     return (
                                                                         <tr key={fileNode.name}>

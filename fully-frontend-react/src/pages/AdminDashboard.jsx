@@ -448,7 +448,9 @@ const AdminDashboard = () => {
         accountEmailEnabled: false,
         paperDownloadEnabled: false,
         notesDownloadEnabled: false,
-        screenshotRestrictionEnabled: true
+        screenshotRestrictionEnabled: true,
+        paperWithoutLoginEnabled: false,
+        notesWithoutLoginEnabled: false
     });
     const [loadingSettings, setLoadingSettings] = useState(false);
 
@@ -1877,7 +1879,9 @@ const AdminDashboard = () => {
                                         { key: 'accountEmailEnabled', title: 'Account Emails', descOn: 'Welcome, Password Reset, Verification', descOff: 'Welcome, Password Reset, Verification', icon: 'fas fa-user-shield', activeHex: '#a855f7', activeRgb: '168, 85, 247', disabled: !emailSettings.masterEmailEnabled },
                                         { key: 'paperDownloadEnabled', title: 'Paper Download Feature', descOn: 'Students CAN download previous year papers', descOff: 'Students CANNOT download papers (View only)', icon: 'fas fa-file-pdf', activeHex: '#00d4ff', activeRgb: '0, 212, 255', disabled: false },
                                         { key: 'notesDownloadEnabled', title: 'Study Notes Download Feature', descOn: 'Students CAN download PDF notes', descOff: 'Students CANNOT download notes (View only)', icon: 'fas fa-book', activeHex: '#00d4ff', activeRgb: '0, 212, 255', disabled: false },
-                                        { key: 'screenshotRestrictionEnabled', title: 'Screenshot & Key Restriction', descOn: 'Screenshot & Print/Save keyboard blocks are ACTIVE', descOff: 'Screenshots and all keyboard shortcuts are ALLOWED', icon: 'fas fa-camera-retro', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false }
+                                        { key: 'screenshotRestrictionEnabled', title: 'Screenshot & Key Restriction', descOn: 'Screenshot & Print/Save keyboard blocks are ACTIVE', descOff: 'Screenshots and all keyboard shortcuts are ALLOWED', icon: 'fas fa-camera-retro', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false },
+                                        { key: 'paperWithoutLoginEnabled', title: 'Papers without Login', descOn: 'Users CAN view/download papers without login', descOff: 'Users MUST login to view/download papers', icon: 'fas fa-unlock', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false },
+                                        { key: 'notesWithoutLoginEnabled', title: 'Notes without Login', descOn: 'Users CAN view/download notes without login', descOff: 'Users MUST login to view/download notes', icon: 'fas fa-unlock', activeHex: '#22c55e', activeRgb: '34, 197, 94', disabled: false }
                                     ].map(item => {
                                         const isActive = emailSettings[item.key];
                                         const isMaster = item.key === 'masterEmailEnabled';

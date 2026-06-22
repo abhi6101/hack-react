@@ -60,6 +60,7 @@ const Papers = () => {
     const [securityViolationMessage, setSecurityViolationMessage] = useState(null);
     const [paperDownloadEnabled, setPaperDownloadEnabled] = useState(false);
     const [screenshotRestrictionEnabled, setScreenshotRestrictionEnabled] = useState(true);
+    const [paperWithoutLoginEnabled, setPaperWithoutLoginEnabled] = useState(false);
     const [branchPapers, setBranchPapers] = useState([]);
     const [globalSearchQuery, setGlobalSearchQuery] = useState('');
     const [showAuthModal, setShowAuthModal] = useState(false);
@@ -76,6 +77,11 @@ const Papers = () => {
                 const data = await res.json();
                 setPaperDownloadEnabled(data.paperDownloadEnabled);
                 setScreenshotRestrictionEnabled(data.screenshotRestrictionEnabled);
+                setPaperWithoutLoginEnabled(data.paperWithoutLoginEnabled);
+                
+                if (!getToken() && !data.paperWithoutLoginEnabled) {
+                    setShowAuthModal(true);
+                }
             }
         } catch (e) {
             console.error("Failed to fetch paper settings", e);
@@ -261,13 +267,17 @@ const Papers = () => {
         if (selectedSemester) {
             fetchPapers(selectedSemester);
         }
-    }, [selectedSemester, branch]);
+    }, [selectedSemester, branch, paperWithoutLoginEnabled]);
 
     useEffect(() => {
         fetchAvailableMetadata();
-    }, [branch]);
+    }, [branch, paperWithoutLoginEnabled]);
 
     const fetchAvailableMetadata = async () => {
+        if (!getToken() && !paperWithoutLoginEnabled) {
+            setLoadingSemesters(false);
+            return;
+        }
         setLoadingSemesters(true);
         try {
             const token = getToken();
@@ -300,6 +310,9 @@ const Papers = () => {
     };
 
     const fetchPapers = async (sem) => {
+        if (!getToken() && !paperWithoutLoginEnabled) {
+            return;
+        }
         setLoading(true);
         try {
             const token = getToken();
@@ -326,16 +339,16 @@ const Papers = () => {
 
     const handleDownload = async (paper) => {
         const token = getToken();
-        if (!token) {
+        if (!token && !paperWithoutLoginEnabled) {
             setShowAuthModal(true);
             return;
         }
 
         setLoading(true);
         try {
-            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?action=VIEW&t=${Date.now()}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const url = `${API_BASE_URL}/public/papers/download/${paper.id}?action=VIEW&t=${Date.now()}`;
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+            const res = await fetch(url, { headers });
             if (!res.ok) throw new Error("Failed to load PDF");
             const blob = await res.blob();
             const blobUrl = window.URL.createObjectURL(blob);
@@ -351,7 +364,7 @@ const Papers = () => {
 
     const handleActualDownload = async (paper) => {
         const token = getToken();
-        if (!token) {
+        if (!token && !paperWithoutLoginEnabled) {
             setShowAuthModal(true);
             return;
         }
@@ -366,9 +379,9 @@ const Papers = () => {
         setDownloadStatus(prev => ({ ...prev, [paper.id]: 'DOWNLOADING' }));
 
         try {
-            const res = await fetch(`${API_BASE_URL}/public/papers/download/${paper.id}?action=DOWNLOAD&t=${Date.now()}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const url = `${API_BASE_URL}/public/papers/download/${paper.id}?action=DOWNLOAD&t=${Date.now()}`;
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+            const res = await fetch(url, { headers });
             if (!res.ok) throw new Error("Failed to download PDF");
             const blob = await res.blob();
             const blobUrl = window.URL.createObjectURL(blob);
@@ -693,7 +706,7 @@ const Papers = () => {
                                     </div>
                                 </motion.button>
 
-                                {getToken() && paperDownloadEnabled && (
+                                {(getToken() || paperWithoutLoginEnabled) && paperDownloadEnabled && (
                                     <motion.button
                                         className="download-btn-premium"
                                         onClick={() => handleActualDownload(paper)}
