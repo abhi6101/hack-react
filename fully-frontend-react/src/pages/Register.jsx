@@ -2016,15 +2016,47 @@ const Register = () => {
                                 </small>
                             </div>
 
-                            {formData.dob && (
+                            {(!scannedData || formData.dob) && (
                                 <div className="form-row" style={{ display: 'flex', gap: '1rem' }}>
                                     <div className="form-group" style={{ flex: 1 }}>
-                                        <label>Date of Birth <i className="fas fa-lock text-green-400"></i></label>
-                                        <input type="text" value={formData.dob} readOnly className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
+                                        <label>Date of Birth * {!!scannedData && <i className="fas fa-lock text-green-400"></i>}</label>
+                                        <input 
+                                            type={scannedData ? "text" : "date"} 
+                                            id="dob"
+                                            name="dob"
+                                            required
+                                            value={formData.dob} 
+                                            onChange={handleChange}
+                                            readOnly={!!scannedData} 
+                                            className={!!scannedData ? "locked-field" : ""} 
+                                            style={!!scannedData ? { background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' } : {}} 
+                                        />
                                     </div>
                                     <div className="form-group" style={{ flex: 1 }}>
-                                        <label>Gender <i className="fas fa-lock text-green-400"></i></label>
-                                        <input type="text" value={formData.gender} readOnly className="locked-field" style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} />
+                                        <label>Gender * {!!scannedData && <i className="fas fa-lock text-green-400"></i>}</label>
+                                        {scannedData ? (
+                                            <input 
+                                                type="text" 
+                                                value={formData.gender} 
+                                                readOnly 
+                                                className="locked-field" 
+                                                style={{ background: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399', cursor: 'not-allowed' }} 
+                                            />
+                                        ) : (
+                                            <select 
+                                                id="gender"
+                                                name="gender"
+                                                required
+                                                value={formData.gender} 
+                                                onChange={handleChange}
+                                                style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', width: '100%' }}
+                                            >
+                                                <option value="" style={{ background: '#1e293b', color: '#fff' }}>-- Select Gender --</option>
+                                                <option value="Male" style={{ background: '#1e293b', color: '#fff' }}>Male</option>
+                                                <option value="Female" style={{ background: '#1e293b', color: '#fff' }}>Female</option>
+                                                <option value="Other" style={{ background: '#1e293b', color: '#fff' }}>Other</option>
+                                            </select>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -2108,7 +2140,7 @@ const Register = () => {
                                                 style={{ flex: 1 }}
                                             />
                                         </div>
-                                        <small>⚠️ We couldn't detect mobile number from ID card. Please enter manually.</small>
+                                        <small>{scannedData ? "⚠️ We couldn't detect mobile number from ID card. Please enter manually." : "Enter your primary mobile number."}</small>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="mobileSecondary">Secondary Mobile Number (Optional)</label>
