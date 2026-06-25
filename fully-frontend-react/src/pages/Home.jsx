@@ -333,15 +333,23 @@ const Home = () => {
                         style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}
                     >
 
-                        <motion.div variants={fadeInUp} className="hero-text-content">
-                            <h1 id="heroHeadingDesktop" className="hero-heading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800' }}>
-                                Bridge the Gap from <span className="text-gradient">Campus to Career</span>
+                        <motion.div variants={fadeInUp} className="hero-text-content" style={{ textAlign: 'left' }}>
+                            <h1 id="heroHeadingDesktop" className="hero-heading" style={{ minHeight: 'auto', display: 'inline-block', fontWeight: '800', lineHeight: '1.2' }}>
+                                BUILDING<br/>
+                                <span className="text-gradient">CAREER</span><br/>
+                                PATHWAYS
                             </h1>
-                            <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem' }}>
-                                Connect with top recruiters from <span style={{ color: '#fff', fontWeight: 600 }}>100+ global tech giants</span> and land your perfect role.
+                            <div className="hero-pills" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+                                <span style={{ background: 'rgba(0, 212, 255, 0.1)', border: '1px solid rgba(0, 212, 255, 0.3)', borderRadius: '20px', padding: '0.4rem 1rem', color: '#00d4ff', fontWeight: '600', fontSize: '0.85rem' }}>📄 AI RESUME BUILDER</span>
+                                <span style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '20px', padding: '0.4rem 1rem', color: '#10b981', fontWeight: '600', fontSize: '0.85rem' }}>💼 PLACEMENT PORTAL</span>
+                                <span style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '20px', padding: '0.4rem 1rem', color: '#8b5cf6', fontWeight: '600', fontSize: '0.85rem' }}>📚 ACADEMIC VAULT</span>
+                                <span style={{ background: 'rgba(236, 72, 153, 0.1)', border: '1px solid rgba(236, 72, 153, 0.3)', borderRadius: '20px', padding: '0.4rem 1rem', color: '#ec4899', fontWeight: '600', fontSize: '0.85rem' }}>🔐 SECURE AUTHENTICATION</span>
+                            </div>
+                            <p className="hero-subheadline" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginTop: '1rem', maxWidth: '90%' }}>
+                                Enabling students to transition seamlessly from campus life to corporate success.
                             </p>
 
-                            <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                            <div className="hero-ctas" style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', justifyContent: 'flex-start' }}>
                                 <Link to="/jobs" className="cta-btn primary-btn" style={{ padding: '0.8rem 2rem', fontSize: '1rem', borderRadius: '12px', background: '#00d4ff', color: '#000', fontWeight: '700', textDecoration: 'none', border: '1px solid #00d4ff', transition: 'all 0.3s ease', textAlign: 'center' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                                     Explore Jobs
                                 </Link>
@@ -374,14 +382,49 @@ const Home = () => {
                         transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
                         style={{ position: 'relative' }}
                     >
-                        <div className="hero-illustration-wrapper" style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', paddingTop: '1rem' }}>
+                        <div className="hero-illustration-wrapper" style={{ position: 'relative', width: '100%', height: '500px', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '1rem' }}>
                             {/* Glowing geometric background */}
                             <div style={{ position: 'absolute', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,212,255,0) 70%)', borderRadius: '50%', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(30px)' }}></div>
-                            <div style={{ position: 'absolute', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', top: '20%', left: '60%', transform: 'translate(-50%, -50%)', zIndex: 0, filter: 'blur(40px)' }}></div>
+                            
+                            {/* Orbiting Animation Container */}
+                            <div className="orbit-container" style={{ position: 'relative', width: '400px', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2 }}>
+                                {/* Center Hub */}
+                                <div className="orbit-center" style={{ position: 'relative', zIndex: 10, width: '100px', height: '100px', borderRadius: '50%', background: 'radial-gradient(circle, #00d4ff 0%, #005f73 100%)', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 30px rgba(0,212,255,0.6)', border: '2px solid rgba(255,255,255,0.2)' }}>
+                                    <i className="fas fa-graduation-cap" style={{ fontSize: '3rem', color: '#fff' }}></i>
+                                </div>
+                                
+                                {/* Ring 1 */}
+                                <div className="orbit-ring ring-1" style={{ position: 'absolute', width: '250px', height: '250px', border: '1px dashed rgba(255,255,255,0.2)', borderRadius: '50%', animation: 'spin 25s linear infinite' }}>
+                                    <div className="orbit-node" style={{ position: 'absolute', top: '-25px', left: 'calc(50% - 25px)' }}>
+                                        <div className="orbit-icon" style={{ width: '50px', height: '50px', background: 'rgba(16, 185, 129, 0.2)', backdropFilter: 'blur(5px)', border: '1px solid #10b981', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 15px rgba(16, 185, 129, 0.5)', animation: 'reverse-spin 25s linear infinite' }}>
+                                            <i className="fas fa-file-alt" style={{ color: '#10b981', fontSize: '1.5rem' }}></i>
+                                        </div>
+                                    </div>
+                                    <div className="orbit-node" style={{ position: 'absolute', bottom: '-25px', left: 'calc(50% - 25px)' }}>
+                                        <div className="orbit-icon" style={{ width: '50px', height: '50px', background: 'rgba(139, 92, 246, 0.2)', backdropFilter: 'blur(5px)', border: '1px solid #8b5cf6', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 15px rgba(139, 92, 246, 0.5)', animation: 'reverse-spin 25s linear infinite' }}>
+                                            <i className="fas fa-book-open" style={{ color: '#8b5cf6', fontSize: '1.5rem' }}></i>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div className="boy-image-container" style={{ position: 'relative', zIndex: 1, paddingBottom: '20px' }}>
-                                <img src="/images/Boy.png" alt="Career Aspirant" className="hero-boy-img" style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }} />
-                                <div className="image-glow-effect"></div>
+                                {/* Ring 2 */}
+                                <div className="orbit-ring ring-2" style={{ position: 'absolute', width: '380px', height: '380px', border: '1px dashed rgba(255,255,255,0.15)', borderRadius: '50%', animation: 'spin 35s linear infinite reverse' }}>
+                                    <div className="orbit-node" style={{ position: 'absolute', top: '15%', left: '15%', marginLeft: '-25px', marginTop: '-25px' }}>
+                                        <div className="orbit-icon" style={{ width: '50px', height: '50px', background: 'rgba(0, 212, 255, 0.2)', backdropFilter: 'blur(5px)', border: '1px solid #00d4ff', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 15px rgba(0, 212, 255, 0.5)', animation: 'spin 35s linear infinite' }}>
+                                            <i className="fas fa-briefcase" style={{ color: '#00d4ff', fontSize: '1.5rem' }}></i>
+                                        </div>
+                                    </div>
+                                    <div className="orbit-node" style={{ position: 'absolute', top: '15%', right: '15%', marginRight: '-25px', marginTop: '-25px' }}>
+                                        <div className="orbit-icon" style={{ width: '50px', height: '50px', background: 'rgba(236, 72, 153, 0.2)', backdropFilter: 'blur(5px)', border: '1px solid #ec4899', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 15px rgba(236, 72, 153, 0.5)', animation: 'spin 35s linear infinite' }}>
+                                            <i className="fas fa-building" style={{ color: '#ec4899', fontSize: '1.5rem' }}></i>
+                                        </div>
+                                    </div>
+                                    <div className="orbit-node" style={{ position: 'absolute', bottom: '-25px', left: 'calc(50% - 25px)' }}>
+                                        <div className="orbit-icon" style={{ width: '50px', height: '50px', background: 'rgba(245, 158, 11, 0.2)', backdropFilter: 'blur(5px)', border: '1px solid #f59e0b', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 15px rgba(245, 158, 11, 0.5)', animation: 'spin 35s linear infinite' }}>
+                                            <i className="fas fa-shield-alt" style={{ color: '#f59e0b', fontSize: '1.5rem' }}></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </motion.div>
@@ -719,6 +762,14 @@ const Home = () => {
                             padding-top: 0 !important;
                             margin-top: -1.5rem !important;
                         }
+                    }
+                    @keyframes spin {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                    @keyframes reverse-spin {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(-360deg); }
                     }
                 `}</style>
             </section>
